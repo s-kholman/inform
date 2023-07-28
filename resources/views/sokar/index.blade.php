@@ -2,8 +2,10 @@
 @section('title', 'Учет спец одежды в лаборатории - "Сокар"')
 
 @section('info')
+
     <div class="container">
         <div class="row">
+            <p>Лаборатория "СОКАР" - учет спец. одежды</p>
             <div class="col">
                 <div>
                     <a href="/color">Цвета</a>
