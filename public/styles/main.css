@@ -1,0 +1,51 @@
+body {
+    font: 14px Arial, Helvetica, sans-serif; /* Рубленый шрифт текста */
+    margin: 0; /* Отступы на странице */
+}
+h1 {
+    font-size: 36px; /* Размер шрифта заголовка шапки */
+    margin: 0; /* Убираем отступы */
+    color: #fc6; /* Цвет текста заголовка шапки */
+}
+h2 {
+    margin-top: 0; /* Убираем отступ сверху */
+}
+.header {
+    background: #0080c0; /* Цвет фона шапки */
+    padding: 10px; /* Поля вокруг текста */
+}
+.sidebar {
+    float: left; /* Обтекание справа */
+    border: 1px solid #333; /* Рамка левого меню */
+    width: 300px; /* Ширина левой колонки */
+    padding: 5px; /* Поля внутри блока */
+    margin: 10px 10px 20px 5px; /* Значения отступа от блока */
+}
+.content {
+    margin: 10px 5px 20px 333px; /* Значения отступа от левого блока */
+    padding: 5px; /* Поля внутри блока */
+    border: 1px solid #333; /* Рамка контента */
+    position: relative;
+// display: inline-block;
+}
+.footer {
+    background: #333; /* Цвет фона подвал (футера) */
+    padding: 5px; /* Поля внутри блока */
+    color: #fff; /* Цвет текста футера */
+    clear: left; /* Отменяем действие float */
+}
+.data {
+//border: 1px solid green;
+    width: 200px;
+//float: left;
+    display: inline-block;
+//height: 200px;
+    margin: 5px;
+    vertical-align: top;
+}
+.infoposev{
+    display: inline-block;
+}
+.MyDivTable{
+    vertical-align: top;
+}

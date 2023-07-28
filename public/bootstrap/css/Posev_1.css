@@ -1,0 +1,104 @@
+td[name='1'] {
+
+    background-color: #efdd71; /* Цвет фона ячеек */
+}
+td[name='2'] {
+
+    background: #909393; /* Цвет фона ячеек */
+}
+td[name='3'] {
+
+    background: #80f844; /* Цвет фона ячеек */
+}
+td[name='4'] {
+
+    background: #f89253; /* Цвет фона ячеек */
+}
+td[name='5'] {
+
+    background: #c9ff91; /* Цвет фона ячеек */
+}
+td[name='8'] {
+
+    background: #b4f6e6; /* Цвет фона ячеек */
+}
+td[name='9'] {
+
+    background: #cb4883; /* Цвет фона ячеек */
+}
+td[name='10'] {
+
+    background: #f89253; /* Цвет фона ячеек */
+}
+
+th[name='fio'] {
+    writing-mode: vertical-rl;
+    transform: rotate(-180deg);
+
+}
+
+table[name='itogi']{
+    width: 150px;
+}
+#container {
+    position: relative;
+}
+.MyDivTable{
+    vertical-align: top;
+}
+
+.data {
+    width: 200px;
+    display: inline-block;
+    margin: 5px;
+    vertical-align: top;
+}
+
+#day_block {
+    width:15%;
+    height:60px;
+// background:#f1f1f1;
+    float:left;
+    margin: 0 1px 1px 0;
+    text-align:center;
+    padding: 1px;
+}
+#kultura_block {
+    width:20%;
+    height:60px;
+//background:#f1f1f1;
+    float:left;
+    margin: 0 1px 1px 0;
+    text-align:center;
+    padding: 1px;
+}
+#date_block {
+    width:20%;
+    height:60px;
+//background:#f1f1f1;
+    float:left;
+    margin: 0 1px 1px 0;
+    text-align:center;
+    padding: 1px;
+}
+#ga_block {
+    width:10%;
+    height:60px;
+//background:#f1f1f1;
+    float:left;
+    margin: 0 1px 1px 0;
+    text-align:center;
+    padding: 1px;
+}
+#line_block {
+    width:25%;
+    height:60px;
+//background:#f1f1f1;
+    float:left;
+    margin: 0 1px 1px 0;
+    text-align:center;
+    padding: 1px;
+}
+.navbar-collapse {
+    text-align: right;
+}
