@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('filial_id')->constrained()->onDelete('cascade');
             $table->foreignId('pole_id')->constrained()->onDelete('cascade');
             $table->string('gidrant', 3);
-            $table->string('sector', 1);
+            $table->string('sector', 2);
             $table->date('date');
             $table->integer('poliv');
             $table->integer('speed')->nullable();
