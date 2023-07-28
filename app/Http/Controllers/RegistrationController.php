@@ -64,7 +64,7 @@ class RegistrationController extends Controller
             'infoFull' => true
         ]);
 
-        //SendSMS::dispatch('Registration - '.$validated['last_name']. '  '. $validated['first_name'] . ' ' . now());
+
         Sms::create([
             'smsText' => 'Заполненна информация по ' . $validated['last_name'] . ' ' .Str::substr($validated['first_name'], 0, 1),
             'phone' => '+79026223673',
