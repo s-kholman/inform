@@ -61,7 +61,7 @@
                                     {{ __('Регистрация') }}
                                 </a>
                                 @if (Route::has('password.request'))
-                                    <a hidden class="btn btn-link" href="{{ route('password.request') }}">
+                                    <a class="btn btn-info" href="{{ route('password.request') }}">
                                         {{ __('Забыли пароль ?') }}
                                     </a>
                                 @endif
