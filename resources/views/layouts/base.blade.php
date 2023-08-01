@@ -155,9 +155,11 @@
                                 <a href="/storage_add" class="nav-link px-0"> <span class="d-none d-sm-inline">Склад</span></a>
                             </li>
                             <li>
-                                <a href="/nomenklature_add" class="nav-link px-0"> <span class="d-none d-sm-inline">Номенклатура</span></a>
+                                <a href="/nomenklature" class="nav-link px-0"> <span class="d-none d-sm-inline">Номенклатура</span></a>
                             </li>
-
+                            <li>
+                                <a href="/szr" class="nav-link px-0"> <span class="d-none d-sm-inline">СЗР</span></a>
+                            </li>
                             <li>
                                 <a href="/box_filling" class="nav-link px-0"> <span class="d-none d-sm-inline">Продукция по боксам</span></a>
                             </li>
