@@ -68,10 +68,10 @@ class SzrController extends Controller
 
         if (Szr::where('name', 'ILIKE', '%'.$validated['name'].'%')->count() < 1)
         {
-            Szr::Create(
-                ['name' => $validated['name']],
-                ['szr_classes_id' => $validated['select']]
-            );
+            Szr::Create([
+                'name' => $validated['name'],
+                'szr_classes_id' => $validated['select']
+                ]);
         }
 
 
