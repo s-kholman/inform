@@ -6,6 +6,7 @@ use App\Models\Pole;
 use App\Models\Sevooborot;
 use App\Models\Size;
 use App\Models\Spraying;
+use App\Models\Szr;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -22,6 +23,7 @@ class SprayingController extends Controller
         'pole' => 'numeric',
         'kultura' => 'numeric',
         'date' => 'date',
+        'szrClasses' => 'numeric',
         'szr' => 'numeric',
         'doza' => 'numeric',
         'volume' => 'numeric',
@@ -59,14 +61,22 @@ class SprayingController extends Controller
 
         $sevooborot_arr = [];
         $squaret_arr = [];
+        $szr_arr = [];
 
         foreach (Sevooborot::all() as $value){
             $sevooborot_arr [$value->pole_id] [$value->id] =  $value->Nomenklature->name  . ' ' . $this->display_null($value->Reproduktion->name ?? null) . ' ('. $value->square .' Га)';
             $squaret_arr [$value->pole_id] [$value->id] =  $value->square;
         }
+
+        foreach (Szr::all() as $value){
+            $szr_arr [$value->szr_classes_id] [$value->id] = $value->name;
+        }
+
         return view('spraying.create', [
             'sevooborot_arr' => json_encode($sevooborot_arr, JSON_UNESCAPED_UNICODE),
-            'squaret_arr' => json_encode($squaret_arr, JSON_UNESCAPED_UNICODE)]);
+            'squaret_arr' => json_encode($squaret_arr, JSON_UNESCAPED_UNICODE),
+            'szr_arr' => json_encode($szr_arr, JSON_UNESCAPED_UNICODE)
+        ]);
     }
 
     /**

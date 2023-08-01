@@ -4,32 +4,50 @@ namespace App\Http\Controllers;
 
 use App\Models\Szr;
 use App\Models\Nomenklature;
+use App\Models\SzrClasses;
+use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Http\Request;
 
 class SzrController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:destroy, App\Models\svyaz')->only('destroy', 'update');
+        $this->middleware('auth')->except('index');
+    }
+
     private const ERROR_MESSAGES = [
         'required' => 'Заполните это поле',
-        'max' => 'Значение не должно быть длинне :max символов'
+        'numeric' => 'Выберите из списка',
+        'max' => 'Значение не должно быть длинне :max символов',
+        'unique' => 'Значение не уникально'
     ];
 
-    private const ADD_VALIDATOR = [
+    private const ADD_VALIDATOR_EDIT = [
         'name' => 'required|max:255',
+        'select' => 'numeric'
+        ];
+
+    private const ADD_VALIDATOR = [
+        'name' => 'required|max:255|unique:szrs,name',
+        'select' => 'numeric'
     ];
     private const TITLE = [
       'title' => 'Справочник - СЗР',
       'label' => 'Введите название СЗР',
-      'error' => 'szr',
-      'route' => 'szr'
+      'parent' => 'Класификация СЗР',
+      'route' => 'szr',
+      'parrent_name' => 'szrClasses'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = Szr::orderby('name')->get();
+        $value = Szr::orderby('szr_classes_id', 'DESC')->orderby('name')->get();
+        $parrent_value = SzrClasses::orderby('name')->get();
 
-        return view('crud.one_index', ['const' => self::TITLE, 'value'=>$value]);
+        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parrent_value'=>$parrent_value]);
     }
 
     /**
@@ -45,10 +63,18 @@ class SzrController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated = $request->validate(self::ADD_VALIDATOR, self::ERROR_MESSAGES);
-        Szr::create([
-            'name' => $validated['name']
-        ]);
+
+        if (Szr::where('name', 'ILIKE', '%'.$validated['name'].'%')->count() < 1)
+        {
+            Szr::Create(
+                ['name' => $validated['name']],
+                ['szr_classes_id' => $validated['select']]
+            );
+        }
+
+
 
         return redirect()->route(self::TITLE['route'].'.index');
     }
@@ -66,7 +92,9 @@ class SzrController extends Controller
      */
     public function edit(Szr $szr)
     {
-        return view('crud.one_edit', ['const' => self::TITLE, 'value'=>$szr]);
+        $parrent_value = SzrClasses::orderby('name')->get();
+
+        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$szr, 'parent_value'=>$parrent_value]);
     }
 
     /**
@@ -74,8 +102,11 @@ class SzrController extends Controller
      */
     public function update(Request $request, Szr $szr)
     {
-        $validated = $request->validate(self::ADD_VALIDATOR, self::ERROR_MESSAGES);
-        $szr->update(['name' => $validated['name']]);
+        $validated = $request->validate(self::ADD_VALIDATOR_EDIT, self::ERROR_MESSAGES);
+        $szr->update([
+            'name' => $validated['name'],
+            'szr_classes_id' => $validated['select']
+        ]);
         return redirect()->route(self::TITLE['route'].'.index');
     }
 
@@ -84,7 +115,12 @@ class SzrController extends Controller
      */
     public function destroy(Szr $szr)
     {
-        $szr->delete();
+        try {
+            $szr->delete();
+        } catch (\Illuminate\Database\QueryException $e){
+
+        }
+
         return redirect()->route(self::TITLE['route'].'.index');
     }
 }
