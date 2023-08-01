@@ -72,6 +72,7 @@ class SzrController extends Controller
                 'name' => $validated['name'],
                 'szr_classes_id' => $validated['select']
                 ]);
+
         }
 
 
