@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kultura;
 use App\Models\Nomenklature;
 use Illuminate\Http\Request;
 
@@ -10,27 +11,31 @@ class NomenklatureController extends Controller
     private const ERROR_MESSAGES = [
         'required' => 'Заполните это поле',
         'numeric' => 'Заполните это поле',
-        'max' => 'Значение не должно быть длинне :max символов'
+        'max' => 'Значение не должно быть длинне :max символов',
+        'unique' => 'Значение не уникально'
     ];
 
     private const ADD_VALIDATOR = [
-        'nomenklature' => 'required|max:255',
-        'kultura' => 'required|numeric'
+        'name' => 'required|max:255',
+        'select' => 'required|numeric'
     ];
     private const TITLE = [
         'title' => 'Справочник - Номенклатура',
         'label' => 'Введите название номенклатуы',
-        'error' => 'nomenklature',
-        'route' => 'nomenklature'
+        'parent' => 'Культура',
+        'route' => 'nomenklature',
+        'parrent_name' => 'Kultura'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = Nomenklature::orderby('name')->get();
+        $value = Nomenklature::orderby('kultura_id', 'DESC')->orderby('name')->get();
+        $parrent_value = Kultura::orderby('name')->get();
 
-        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value]);
+        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parrent_value'=>$parrent_value]);
+
     }
 
     /**

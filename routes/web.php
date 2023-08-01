@@ -34,9 +34,6 @@ Route::get('/fio_add', [InfoController::class, 'showAddFioForm'])->name('fio_add
 Route::post('/sutki_add', [InfoController::class, 'storeSutki'])->name('sutki.add')->middleware('can:destroy, App\Models\svyaz');
 Route::get('/sutki_add', [InfoController::class, 'showAddSutkiForm'])->middleware('can:destroy, App\Models\svyaz');
 
-
-//Route::post('/kultura_add', [InfoController::class, 'storeKultura'])->name('kultura.add')->middleware('can:destroy, App\Models\svyaz');
-//Route::get('/kultura_add', [InfoController::class, 'showAddKulturaForm'])->middleware('can:destroy, App\Models\svyaz');
 Route::post('/vidposeva_add', [InfoController::class, 'storeVidposeva'])->name('vidposeva.add')->middleware('can:destroy, App\Models\svyaz');
 Route::get('/vidposeva_add', [InfoController::class, 'showAddVidposevaForm'])->middleware('can:destroy, App\Models\svyaz');
 
@@ -108,10 +105,6 @@ Route::get('/forgot-password', function () {
 
 Route::get('/storage_add', [BoxController::class, 'storageShow']);
 Route::post('/storage_add', [BoxController::class, 'storageAdd'])->name('storage.add');
-
-//Route::get('/nomenklature_add', [BoxController::class, 'nomenklatureShow']);
-//Route::post('/nomenklature_add', [BoxController::class, 'nomenklatureAdd'])->name('nomenklature.add');
-
 Route::get('/box_filling', [BoxController::class, 'boxFillingShow'])->name('box_filling')->middleware('can:destroy, App\Models\svyaz');
 Route::post('/box_filling', [BoxController::class, 'boxFillingAdd'])->name('box.filling')->middleware('can:destroy, App\Models\svyaz');;
 Route::get('/box_disssembly_show/d/{id}', [BoxController::class, 'boxDisssemblyShow'])->middleware('can:destroy, App\Models\svyaz');;
@@ -157,6 +150,7 @@ Route::post('/spisanieDate', [\App\Http\Controllers\SokarSpisanieController::cla
 Route::resource('nomenklature', \App\Http\Controllers\NomenklatureController::class);
 Route::resource('kultura', InfoController::class);//->only(['index', 'show']); /// Дописать
 
+Route::resource('szrclass', \App\Http\Controllers\SzrClassesController::class);
 Route::resource('filial', \App\Http\Controllers\FilialController::class);
 Route::resource('szr', \App\Http\Controllers\SzrController::class);
 Route::resource('spraying', \App\Http\Controllers\SprayingController::class);
