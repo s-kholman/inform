@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 
 class RegisterController extends Controller
@@ -57,6 +58,13 @@ class RegisterController extends Controller
     {
         /*Убранно валидации имя пользователя
         'name' => ['required', 'string', 'max:255'],*/
+
+        /*
+         * Правим проверку на валидность адресов, не различал регистр
+         * Теперь все адреса приводим к нижнему регистру и отправляем на валидацию
+        */
+        $data['email'] = Str::lower($data['email']);
+
         return Validator::make($data, [
 
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
