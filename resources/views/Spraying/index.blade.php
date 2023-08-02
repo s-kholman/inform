@@ -3,8 +3,14 @@
 
 @section('info')
 
-    @can('showAdd', 'App\Models\svyaz')
-        <div class="col-3"><a class="btn btn-outline-success" href="{{route('spraying.create')}}">Внести опрыскивание</a></div>
+    @can('viewAny', 'App\Models\spraying')
+        <div class="container">
+            <div class="row">
+                <div class="col-3"><a class="btn btn-outline-success" href="{{route('spraying.create')}}">Внести опрыскивание</a></div>
+                <div class="col-3"><a class="btn btn-outline-success" href="/spraying/report">Отчеты</a> </div>
+            </div>
+        </div>
+
     @endcan
 
 

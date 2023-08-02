@@ -3,7 +3,7 @@
 
 @section('info')
     <div class="container">
-        <div class="col-4">
+        <div class="col-xl-6 col-lg-12 col-sm-12">
             <p>Если поля не найдены, необходимо внести в справочник <a href="/pole">"Поле"</a> - севооборот</p>
             <form action="{{ route('spraying.store') }}" method="POST">
                 @csrf
@@ -112,6 +112,19 @@
 @endsection('info')
 @section('script')
     <script>
+
+        /*
+        * Функция сортировки многомерного массива
+        * Для отображения в зависимом select в алфовитном порядке
+        */
+        function compareSecondColumn(a, b) {
+            if (a[1] === b[1]) {
+                return 0;
+            } else {
+                return (a[1] < b[1]) ? -1 : 1;
+            }
+        }
+
         //Вывести отдельно в файл
         //Пресмотреть все названия элиментов
         //Формировать сначало в переменную затем присваивать ее в HTML форму
@@ -127,8 +140,7 @@
         selectSecond.disabled = true;
         //Выполняется при выборе в select пункта id должен быть selectFirst
 
-        szrClasses.onchange = function ()
-        {
+        szrClasses.onchange = function () {
             selectSzr.innerHTML = "<option value='0'>Выберите СЗР</option>";
             selectSzr.disabled = true;
             if (this.value != 0) {
@@ -136,8 +148,9 @@
                 //По текущему значению select забераем массив с данными
                 selectSZRValue = Object.entries(selectSzrObject[this.value]);
 
-                if (selectSZRValue.length > 0)
-                {
+                selectSZRValue.sort(compareSecondColumn);
+
+                if (selectSZRValue.length > 0) {
                     selectSzr.disabled = false;
                 }
 
@@ -148,7 +161,7 @@
                 }
 
 
-            }else {
+            } else {
                 selectSzr.disabled = true;
             }
 

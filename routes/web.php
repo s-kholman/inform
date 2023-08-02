@@ -146,13 +146,15 @@ Route::resource('sokarfio', \App\Http\Controllers\SokarFIOController::class);
 Route::resource('spisanie', \App\Http\Controllers\SokarSpisanieController::class);
 Route::post('/spisanieDate', [\App\Http\Controllers\SokarSpisanieController::class, 'spisanieDate'])->name('spisanie.spisanieDate');
 
-
+Route::get('/spraying/report/{id?}', [\App\Http\Controllers\SprayingReportController::class, 'index'])->name('spraying.report.index');
+Route::post('/spraying/report/{id}', [\App\Http\Controllers\SprayingReportController::class, 'report'])->name('spraying.report.show');
 Route::resource('nomenklature', \App\Http\Controllers\NomenklatureController::class);
 Route::resource('kultura', InfoController::class);//->only(['index', 'show']); /// Дописать
 
 Route::resource('szrclass', \App\Http\Controllers\SzrClassesController::class);
 Route::resource('filial', \App\Http\Controllers\FilialController::class);
 Route::resource('szr', \App\Http\Controllers\SzrController::class);
+
 Route::resource('spraying', \App\Http\Controllers\SprayingController::class);
 
 
