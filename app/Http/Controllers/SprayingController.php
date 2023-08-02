@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Pole;
 use App\Models\Sevooborot;
-use App\Models\Size;
 use App\Models\Spraying;
 use App\Models\Szr;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 
 class SprayingController extends Controller
 {
@@ -31,8 +27,10 @@ class SprayingController extends Controller
     ];
     public function __construct()
     {
-        //$this->middleware('can:destroy, App\Models\svyaz')->only('destroy');
-        $this->middleware('can:viewAny, App\Models\poliv');
+        //$this->middleware('can:delete, App\Models\Spraying')->only('destroy');
+        $this->middleware('can:viewAny, App\Models\Spraying');
+
+       // $this->authorizeResource(Spraying::class, 'spraying');
 
     }
     private function  display_null($value){
@@ -86,13 +84,13 @@ class SprayingController extends Controller
     {
         $validation = $request->validate(self::STORE_VALIDATOR, self::ERROR_MESSAGES);
         Spraying::create([
-            'pole_id' => $request->pole,
-            'date' => $request->date,
-            'sevooborot_id' =>  $request->kultura,
-            'szr_id' => $request->szr,
-            'doza' => $request->doza,
-            'volume' => $request->volume,
-            'comments'=> $request->comment
+            'pole_id' => $validation['pole'],
+            'date' => $validation['date'],
+            'sevooborot_id' =>  $validation['kultura'],
+            'szr_id' => $validation['szr'],
+            'doza' => $validation['doza'],
+            'volume' => $validation['volume'],
+            'comments'=> $validation['comment']
         ]);
 
         return redirect()->route('spraying.index');
@@ -129,7 +127,12 @@ class SprayingController extends Controller
      */
     public function destroy(Spraying $spraying)
     {
-        $spraying->delete();
-        return redirect()->route('spraying.index');
+
+        if (auth()->user()->can('delete', $spraying))
+        {
+            $spraying->delete();
+        }
+        return redirect()->route('spraying.index', $spraying);
     }
+
 }
