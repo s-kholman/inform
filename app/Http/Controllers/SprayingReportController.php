@@ -26,7 +26,9 @@ class SprayingReportController extends Controller
         }
 
 
-        return view('spraying.report.index', ['id' => $request->id, 'arr_value' => $arr_value]);
+
+        return view('spraying.report.one_date', ['id' => $request->id, 'arr_value' => $arr_value, 'date' => $request->date]);
+
     } else
         {
             return view('/spraying');

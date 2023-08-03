@@ -22,43 +22,9 @@
 
 
             <div class="col-12">
-                @forelse($arr_value as $filial_id => $item)
-                    @if ($loop->first)
-                        <table class="table table-bordered">
-                            @endif
-                            <tr>
-                                <td colspan="3"><b>{{\App\Models\filial::where('id', $filial_id)->value('name')}}</b>
-                                </td>
-                            </tr>
-                            @foreach($item as $pole_name => $szr)
-                                @foreach($szr as $name => $value)
-                                    @if($loop->first)
-                                        <tr>
-                                            <td rowspan="{{count($szr)+1}}">{{$pole_name}}</td>
-                                    @endif
-                                    <tr>
-                                        <td>{{$name}} </td>
-                                        <td> {{$value}}</td>
-                                    </tr>
-                                    @if($loop->last)
-                                    </tr>
-                                    @endif
-                                @endforeach
 
-
-
-                            @endforeach
-
-                            @if($loop->last)
-                        </table>
-                    @endif
-                @empty
-                    <p>Нет данных по опрыскиванию на эту дату</p>
-
-                @endforelse
 
             </div>
-
 
         </div>
     </div>

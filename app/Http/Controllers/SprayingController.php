@@ -44,6 +44,7 @@ class SprayingController extends Controller
     {
         $arr = [];
 
+
         foreach (Spraying::with('pole.filial')->get() as $value){
             $arr [$value['pole'] ['filial'] ['name']][$value['pole']['id']] = $value;
         }
@@ -90,7 +91,12 @@ class SprayingController extends Controller
             'szr_id' => $validation['szr'],
             'doza' => $validation['doza'],
             'volume' => $validation['volume'],
-            'comments'=> $validation['comment']
+
+            'comments'=> $validation['comment'],
+            'user_id' => auth()->user()->id
+
+
+
         ]);
 
         return redirect()->route('spraying.index');
@@ -130,6 +136,9 @@ class SprayingController extends Controller
 
         if (auth()->user()->can('delete', $spraying))
         {
+
+            $spraying->update(['user_id' => auth()->user()->id]);
+
             $spraying->delete();
         }
         return redirect()->route('spraying.index', $spraying);
