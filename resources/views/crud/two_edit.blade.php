@@ -20,7 +20,7 @@
                 <option value="">Выберите значение</option>
                 @foreach($parent_value as $item)
 
-                    @if ($item->id == $value->szr_classes_id)
+                    @if ($item->id == $value->$name_id)
                         <option selected value="{{ $item->id }}">  {{ $item->name }} </option>
 
                     @else

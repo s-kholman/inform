@@ -3,22 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CrudOneRequest;
-use App\Models\Agregat;
+use App\Models\Vidposeva;
 use Illuminate\Http\Request;
 
-class AgregatController extends Controller
+class VidposevaController extends Controller
 {
     private const TITLE = [
-        'title' => 'Справочник - Агрегатов',
-        'label' => 'Введите название посевного агрегата',
-        'route' => 'agregat'
+        'title' => 'Справочник - Вид посева',
+        'label' => 'Введите название филиала',
+        'route' => 'vidposeva'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = Agregat::orderby('name')->get();
+        $value = Vidposeva::orderby('name')->get();
 
         return view('crud.one_index', ['const' => self::TITLE, 'value'=>$value]);
     }
@@ -37,7 +37,7 @@ class AgregatController extends Controller
     public function store(CrudOneRequest $request)
     {
         $validated = $request->validated();
-        Agregat::create([
+        Vidposeva::create([
             'name' => $validated['name']
         ]);
 
@@ -47,7 +47,7 @@ class AgregatController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Agregat $agregat)
+    public function show(Vidposeva $vidposeva)
     {
         //
     }
@@ -55,27 +55,27 @@ class AgregatController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Agregat $agregat)
+    public function edit(Vidposeva $vidposeva)
     {
-        return view('crud.one_edit', ['const' => self::TITLE, 'value'=>$agregat]);
+        return view('crud.one_edit', ['const' => self::TITLE, 'value'=>$vidposeva]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CrudOneRequest $request, Agregat $agregat)
+    public function update(CrudOneRequest $request, Vidposeva $vidposeva)
     {
         $validated = $request->validated();
-        $agregat->update(['name' => $validated['name']]);
+        $vidposeva->update(['name' => $validated['name']]);
         return redirect()->route(self::TITLE['route'].'.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Agregat $agregat)
+    public function destroy(Vidposeva $vidposeva)
     {
-        $agregat->delete();
+        $vidposeva->delete();
         return redirect()->route(self::TITLE['route'].'.index');
     }
 }

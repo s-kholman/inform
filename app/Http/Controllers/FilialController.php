@@ -2,23 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CrudOneRequest;
 use App\Models\filial;
 use Illuminate\Http\Request;
 
 class FilialController extends Controller
 {
-    private const ERROR_MESSAGES = [
-        'required' => 'Заполните это поле',
-        'max' => 'Значение не должно быть длинне :max символов'
-    ];
-
-    private const ADD_VALIDATOR = [
-        'name' => 'required|max:255',
-    ];
     private const TITLE = [
         'title' => 'Справочник - Филиалы',
         'label' => 'Введите название филиала',
-        'error' => 'filial',
         'route' => 'filial'
     ];
     /**
@@ -42,9 +34,9 @@ class FilialController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CrudOneRequest $request)
     {
-        $validated = $request->validate(self::ADD_VALIDATOR, self::ERROR_MESSAGES);
+        $validated = $request->validated();
         filial::create([
             'name' => $validated['name']
         ]);
@@ -71,9 +63,9 @@ class FilialController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, filial $filial)
+    public function update(CrudOneRequest $request, filial $filial)
     {
-        $validated = $request->validate(self::ADD_VALIDATOR, self::ERROR_MESSAGES);
+        $validated = $request->validated();
         $filial->update(['name' => $validated['name']]);
         return redirect()->route(self::TITLE['route'].'.index');
     }
