@@ -25,7 +25,7 @@
             @endguest
             @auth
                 <div class="col-3 d-flex justify-content-end align-items-center" >
-                    <a class="btn btn-outline-info" href="{{route('profile.show')}}">Профиль</a>
+                    <a class="btn btn-outline-info" href="{{route('profile.index')}}">Профиль</a>
                 </div>
                 <div class="col-1 d-flex justify-content-end align-items-center">
                 <a class="btn btn-sm btn-outline-secondary" href="{{ route('logout') }}"
@@ -119,13 +119,13 @@
                                 <a href="/agregat" class="nav-link px-0"> <span class="d-none d-sm-inline">Агрегат</span></a>
                             </li>
                             <li>
-                                <a href="/fio_add" class="nav-link px-0"> <span class="d-none d-sm-inline">ФИО</span></a>
+                                <a href="/fio" class="nav-link px-0"> <span class="d-none d-sm-inline">ФИО</span></a>
                             </li>
                             <li>
-                                <a href="/sutki_add" class="nav-link px-0"> <span class="d-none d-sm-inline">Сутки</span></a>
+                                <a href="/sutki" class="nav-link px-0"> <span class="d-none d-sm-inline">Сутки</span></a>
                             </li>
                             <li>
-                                <a href="/vidposeva_add" class="nav-link px-0"> <span class="d-none d-sm-inline">Вид посева</span></a>
+                                <a href="/vidposeva" class="nav-link px-0"> <span class="d-none d-sm-inline">Вид посева</span></a>
                             </li>
                             <li>
                                 <a href="/kultura" class="nav-link px-0"> <span class="d-none d-sm-inline">Культура</span></a>
@@ -145,14 +145,14 @@
                                 </li>
 
                             <li>
-                                <a href="/post_add" class="nav-link px-0"> <span class="d-none d-sm-inline">Должность</span></a>
+                                <a href="/post" class="nav-link px-0"> <span class="d-none d-sm-inline">Должность</span></a>
                             </li>
                             <li>
                                 <a href="/activation" class="nav-link px-0"> <span class="d-none d-sm-inline">Активация пользователей</span></a>
                             </li>
 
                             <li>
-                                <a href="/storage_add" class="nav-link px-0"> <span class="d-none d-sm-inline">Склад</span></a>
+                                <a href="/box" class="nav-link px-0"> <span class="d-none d-sm-inline">Склад</span></a>
                             </li>
                             <li>
                                 <a href="/nomenklature" class="nav-link px-0"> <span class="d-none d-sm-inline">Номенклатура</span></a>
@@ -164,7 +164,7 @@
                                 <a href="/box_filling" class="nav-link px-0"> <span class="d-none d-sm-inline">Продукция по боксам</span></a>
                             </li>
                             <li>
-                                <a href="/pole" class="nav-link px-0"> <span class="d-none d-sm-inline">Поля для полива</span></a>
+                                <a href="/pole" class="nav-link px-0"> <span class="d-none d-sm-inline">Поля</span></a>
                             </li>
 
 

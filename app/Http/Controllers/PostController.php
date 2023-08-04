@@ -3,22 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CrudOneRequest;
-use App\Models\Agregat;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
-class AgregatController extends Controller
+class PostController extends Controller
 {
+
     private const TITLE = [
-        'title' => 'Справочник - Агрегатов',
-        'label' => 'Введите название посевного агрегата',
-        'route' => 'agregat'
+        'title' => 'Справочник - Должности',
+        'label' => 'Введите наименование должности',
+        'route' => 'post'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = Agregat::orderby('name')->get();
+        $value = Post::orderby('name')->get();
 
         return view('crud.one_index', ['const' => self::TITLE, 'value'=>$value]);
     }
@@ -37,7 +38,7 @@ class AgregatController extends Controller
     public function store(CrudOneRequest $request)
     {
         $validated = $request->validated();
-        Agregat::create([
+        Post::create([
             'name' => $validated['name']
         ]);
 
@@ -47,7 +48,7 @@ class AgregatController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Agregat $agregat)
+    public function show(string $id)
     {
         //
     }
@@ -55,27 +56,27 @@ class AgregatController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Agregat $agregat)
+    public function edit(Post $post)
     {
-        return view('crud.one_edit', ['const' => self::TITLE, 'value'=>$agregat]);
+        return view('crud.one_edit', ['const' => self::TITLE, 'value'=>$post]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CrudOneRequest $request, Agregat $agregat)
+    public function update(CrudOneRequest $request, Post $post)
     {
         $validated = $request->validated();
-        $agregat->update(['name' => $validated['name']]);
+        $post->update(['name' => $validated['name']]);
         return redirect()->route(self::TITLE['route'].'.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Agregat $agregat)
+    public function destroy(Post $post)
     {
-        $agregat->delete();
+        $post->delete();
         return redirect()->route(self::TITLE['route'].'.index');
     }
 }

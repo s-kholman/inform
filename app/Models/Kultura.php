@@ -12,4 +12,10 @@ class Kultura extends Model
     public function Vidposeva(){
         return $this->belongsTo(Vidposeva::class);
     }
+
+    //Создаю как стандарт в зависимые справочники для получения доступа в blade шаблоне
+    public function ParrentName()
+    {
+        return $this->hasOne(Vidposeva::class,'id','vidposeva_id');
+    }
 }
