@@ -7,6 +7,7 @@ use App\Jobs\SendSMS;
 use App\Models\Sms;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -56,17 +57,12 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        /*Убранно валидации имя пользователя
-        'name' => ['required', 'string', 'max:255'],*/
-
         /*
          * Правим проверку на валидность адресов, не различал регистр
          * Теперь все адреса приводим к нижнему регистру и отправляем на валидацию
         */
         $data['email'] = Str::lower($data['email']);
-
         return Validator::make($data, [
-
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -80,24 +76,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
-        /*Ставим в очередь отправку SMS*/
-        //SendSMS::dispatch('Register user - '.$data['email']. ' - '. now());
-
         /**
          * Сделанна новая отправка СМС через мобильное приложение
          */
-        Sms::create([
-            'smsText' => 'Регистрация пользователя ' . $data['email'],
-            'phone' => '+79026223673',
-            'smsType' => 1,
-            'smsActive' => true
-        ]);
+        try {
+            Sms::create([
+                'smsText' => 'Регистрация пользователя ' . $data['email'],
+                'phone' => '+79026223673',
+                'smsType' => 1,
+                'smsActive' => true
+            ]);
+        } catch (QueryException $e)
+        {
 
-
-        /*Логин дублируется E-Mail-ом и из формы убрано поле логин
-        name' => $data['name'],*/
-
+        }
         return User::create([
             'name' => $data['email'],
             'email' => $data['email'],

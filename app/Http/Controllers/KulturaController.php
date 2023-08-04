@@ -2,20 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Szr;
-use App\Models\Nomenklature;
-use App\Models\SzrClasses;
-use Doctrine\DBAL\Query\QueryException;
+use App\Models\Kultura;
+use App\Models\Vidposeva;
 use Illuminate\Http\Request;
 
-class SzrController extends Controller
+class KulturaController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('can:destroy, App\Models\svyaz')->only('destroy', 'update');
-        $this->middleware('auth')->except('index');
-    }
-
     private const ERROR_MESSAGES = [
         'required' => 'Заполните это поле',
         'numeric' => 'Выберите из списка',
@@ -26,26 +18,26 @@ class SzrController extends Controller
     private const ADD_VALIDATOR_EDIT = [
         'name' => 'required|max:255',
         'select' => 'numeric'
-        ];
+    ];
 
     private const ADD_VALIDATOR = [
         'name' => 'required|max:255|unique:szrs,name',
         'select' => 'numeric'
     ];
     private const TITLE = [
-      'title' => 'Справочник - СЗР',
-      'label' => 'Введите название СЗР',
-      'parent' => 'Класификация СЗР',
-      'route' => 'szr',
-      'parrent_name' => 'szrClasses'
+        'title' => 'Справочник - Культура',
+        'label' => 'Введите название культуры',
+        'parent' => 'Вид посева',
+        'route' => 'kultura',
+        'parrent_name' => 'Vidposeva'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = Szr::orderby('szr_classes_id', 'DESC')->orderby('name')->get();
-        $parrent_value = SzrClasses::orderby('name')->get();
+        $value = Kultura::orderby('vidposeva_id', 'DESC')->orderby('name')->get();
+        $parrent_value = Vidposeva::orderby('name')->get();
 
         return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parrent_value'=>$parrent_value]);
     }
@@ -64,12 +56,12 @@ class SzrController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate(self::ADD_VALIDATOR, self::ERROR_MESSAGES);
-        if (Szr::where('name', 'ILIKE', '%'.$validated['name'].'%')->count() < 1)
+        if (Kultura::where('name', 'ILIKE', '%'.$validated['name'].'%')->count() < 1)
         {
-            Szr::Create([
+            Kultura::Create([
                 'name' => $validated['name'],
-                'szr_classes_id' => $validated['select']
-                ]);
+                'vidposeva_id' => $validated['select']
+            ]);
         }
         return redirect()->route(self::TITLE['route'].'.index');
     }
@@ -77,7 +69,7 @@ class SzrController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Szr $szr)
+    public function show(Kultura $kultura)
     {
         //
     }
@@ -85,22 +77,23 @@ class SzrController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Szr $szr)
+    public function edit(Kultura $kultura)
     {
-        $parrent_value = SzrClasses::orderby('name')->get();
-        $get_name_id = $szr->getFillable();
-        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$szr, 'parent_value'=>$parrent_value, 'name_id' => $get_name_id['1']]);
+        $parrent_value = Vidposeva::orderby('name')->get();
+        $get_name_id = $kultura->getFillable();
+        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$kultura, 'parent_value'=>$parrent_value, 'name_id' => $get_name_id['1']]);
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Szr $szr)
+    public function update(Request $request, Kultura $kultura)
     {
         $validated = $request->validate(self::ADD_VALIDATOR_EDIT, self::ERROR_MESSAGES);
-        $szr->update([
+        $kultura->update([
             'name' => $validated['name'],
-            'szr_classes_id' => $validated['select']
+            'vidposeva_id' => $validated['select']
         ]);
         return redirect()->route(self::TITLE['route'].'.index');
     }
@@ -108,10 +101,10 @@ class SzrController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Szr $szr)
+    public function destroy(Kultura $kultura)
     {
         try {
-            $szr->delete();
+            $kultura->delete();
         } catch (\Illuminate\Database\QueryException $e){
         }
         return redirect()->route(self::TITLE['route'].'.index');

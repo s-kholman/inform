@@ -3,22 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CrudOneRequest;
-use App\Models\Agregat;
+use App\Models\Sutki;
 use Illuminate\Http\Request;
 
-class AgregatController extends Controller
+class SutkiController extends Controller
 {
     private const TITLE = [
-        'title' => 'Справочник - Агрегатов',
-        'label' => 'Введите название посевного агрегата',
-        'route' => 'agregat'
+        'title' => 'Справочник - Периуды суток',
+        'label' => 'Введите название периуд',
+        'route' => 'sutki'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = Agregat::orderby('name')->get();
+        $value = Sutki::orderby('name')->get();
 
         return view('crud.one_index', ['const' => self::TITLE, 'value'=>$value]);
     }
@@ -37,7 +37,7 @@ class AgregatController extends Controller
     public function store(CrudOneRequest $request)
     {
         $validated = $request->validated();
-        Agregat::create([
+        Sutki::create([
             'name' => $validated['name']
         ]);
 
@@ -47,7 +47,7 @@ class AgregatController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Agregat $agregat)
+    public function show(Sutki $sutki)
     {
         //
     }
@@ -55,27 +55,27 @@ class AgregatController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Agregat $agregat)
+    public function edit(Sutki $sutki)
     {
-        return view('crud.one_edit', ['const' => self::TITLE, 'value'=>$agregat]);
+        return view('crud.one_edit', ['const' => self::TITLE, 'value'=>$sutki]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CrudOneRequest $request, Agregat $agregat)
+    public function update(CrudOneRequest $request, Sutki $sutki)
     {
         $validated = $request->validated();
-        $agregat->update(['name' => $validated['name']]);
+        $sutki->update(['name' => $validated['name']]);
         return redirect()->route(self::TITLE['route'].'.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Agregat $agregat)
+    public function destroy(Sutki $sutki)
     {
-        $agregat->delete();
+        $sutki->delete();
         return redirect()->route(self::TITLE['route'].'.index');
     }
 }

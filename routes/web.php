@@ -21,21 +21,9 @@ use Illuminate\Http\Request;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::resource('agregat', \App\Http\Controllers\AgregatController::class);
+
 Route::get('/', [InfoController::class, 'index_g'])->name('/');
 Route::get('/otchet/{key}', [InfoController::class, 'otchet'])->name('otchet');
-
-Route::post('/post_add', [InfoController::class, 'storePost'])->name('post.add')->middleware('can:destroy, App\Models\svyaz');
-Route::get('/post_add', [InfoController::class, 'showAddPostForm'])->middleware('can:destroy, App\Models\svyaz');
-
-Route::post('/fio_add', [InfoController::class, 'storeFio'])->name('fio.add')->middleware('can:destroy, App\Models\svyaz');
-Route::get('/fio_add', [InfoController::class, 'showAddFioForm'])->name('fio_add')->middleware('can:destroy, App\Models\svyaz');
-
-Route::post('/sutki_add', [InfoController::class, 'storeSutki'])->name('sutki.add')->middleware('can:destroy, App\Models\svyaz');
-Route::get('/sutki_add', [InfoController::class, 'showAddSutkiForm'])->middleware('can:destroy, App\Models\svyaz');
-
-Route::post('/vidposeva_add', [InfoController::class, 'storeVidposeva'])->name('vidposeva.add')->middleware('can:destroy, App\Models\svyaz');
-Route::get('/vidposeva_add', [InfoController::class, 'showAddVidposevaForm'])->middleware('can:destroy, App\Models\svyaz');
 
 Route::post('/svyaz_add', [InfoController::class, 'storeSvyaz'])->name('svyaz.add')->middleware('auth');
 Route::get('/svyaz_add', [InfoController::class, 'showAddSvyazForm'])->name('svyaz_add')->middleware('can:destroy, App\Models\svyaz');
@@ -48,31 +36,23 @@ Route::get('/posev_add', [InfoController::class, 'showAddPosevForm'])->name('pos
 Route::get('/test', [InfoController::class, 'showTestForm'])->name('test');
 Route::post('/test', [InfoController::class, 'showTest'])->name('test.show');
 
-Route::get('/login', [InfoController::class, 'showLoginForm'])->name('login');
-Route::get('/register', [InfoController::class, 'showRegisterForm'])->name('register');
-
+Route::view('/login', 'login');
+Route::view('/register', 'register');
 
 Route::get('/limit_add',[LimitsController::class, 'showLimitForm'])->name('limit_add')->middleware('can:destroy, App\Models\svyaz');;
 Route::post('/limit_add', [LimitsController::class, 'storeLimit'])->name('limit.save')->middleware('can:destroy, App\Models\svyaz');
 Route::post('/parser_add', [LimitsController::class, 'parserLimit'])->name('parser.save')->middleware('can:destroy, App\Models\svyaz');;
 Route::delete('/limit_delete/{limitID}', [LimitsController::class, 'limitdestroy'])->name('limit.destroy')->middleware('can:destroy, App\Models\svyaz');
 
-
-
-
-Route::get('/limit_view/{phoneDetail?}',
-
-    [LimitsController::class, 'showLimit'])
+Route::get('/limit_view/{phoneDetail?}',[LimitsController::class, 'showLimit'])
     ->name('limit_view')
     ->middleware('can:limitView, App\Models\svyaz')
     ->where('phoneDetail','[0-9]+');
 
-
-
 Route::get('/edit_limit/{limitID}', [LimitsController::class, 'limitEdit'])->name('limit.edit')->middleware('can:destroy, App\Models\svyaz');;
 
-Route::get('/profile', [RegistrationController::class, 'profileShow'])->name('profile.show')->middleware('auth');
-Route::post('/profile', [RegistrationController::class, 'storeProfile'])->name('store.profile')->middleware('auth');
+Route::get('/profile', [RegistrationController::class, 'index'])->name('profile.index')->middleware('auth');
+Route::post('/profile', [RegistrationController::class, 'store'])->name('profile.store')->middleware('auth');
 
 Route::get('/unifi', [RegistrationController::class, 'unifi'])->name('unifi_show');
 
@@ -80,8 +60,6 @@ Route::get('/activation', [ActivationController::class, 'activation'])->name('ac
 Route::get('/user/{id}', [ActivationController::class, 'userView'])->name('user.view')->middleware('can:destroy, App\Models\svyaz');
 Route::delete( '/user/edit/{id}', [ActivationController::class, 'userEdit'])->name('user.edit')->middleware('can:destroy, App\Models\svyaz');
 Route::delete( '/user/activation/{id}', [ActivationController::class, 'userActivation'])->name('user.activation')->middleware('can:destroy, App\Models\svyaz');
-
-Route::get('/home', [InfoController::class, 'index_g'])->name('home');
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -103,8 +81,7 @@ Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->middleware('guest')->name('password.request');
 
-Route::get('/storage_add', [BoxController::class, 'storageShow']);
-Route::post('/storage_add', [BoxController::class, 'storageAdd'])->name('storage.add');
+
 Route::get('/box_filling', [BoxController::class, 'boxFillingShow'])->name('box_filling')->middleware('can:destroy, App\Models\svyaz');
 Route::post('/box_filling', [BoxController::class, 'boxFillingAdd'])->name('box.filling')->middleware('can:destroy, App\Models\svyaz');;
 Route::get('/box_disssembly_show/d/{id}', [BoxController::class, 'boxDisssemblyShow'])->middleware('can:destroy, App\Models\svyaz');;
@@ -112,7 +89,7 @@ Route::get('/box_sampling_show/s/{id}', [BoxController::class, 'boxSamplingShow'
 Route::post('/box_disssembly_show', [BoxController::class, 'boxDisssemblyAdd'])->name('box.disassembly')->middleware('can:destroy, App\Models\svyaz');;
 Route::post('/box_sampling_show', [BoxController::class, 'boxSamplingAdd'])->name('box.sampling')->middleware('can:destroy, App\Models\svyaz');
 Route::get('/box_itog', [BoxController::class, 'boxItog']);
-Route::get('/storage/detail/{id}', [BoxController::class, 'storageDetail']);
+//Route::get('/storage/detail/{id}', [BoxController::class, 'storageDetail']);
 
 Route::post('/sms_get', [SmsController::class, 'smsGet'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->middleware('throttle:smsIn');
@@ -149,13 +126,18 @@ Route::post('/spisanieDate', [\App\Http\Controllers\SokarSpisanieController::cla
 Route::get('/spraying/report/{id?}', [\App\Http\Controllers\SprayingReportController::class, 'index'])->name('spraying.report.index');
 Route::post('/spraying/report/{id}', [\App\Http\Controllers\SprayingReportController::class, 'report'])->name('spraying.report.show');
 Route::resource('nomenklature', \App\Http\Controllers\NomenklatureController::class);
-Route::resource('kultura', InfoController::class);//->only(['index', 'show']); /// Дописать
+Route::resource('kultura', \App\Http\Controllers\KulturaController::class);
 
 Route::resource('szrclass', \App\Http\Controllers\SzrClassesController::class);
 Route::resource('filial', \App\Http\Controllers\FilialController::class);
 Route::resource('szr', \App\Http\Controllers\SzrController::class);
-
+Route::resource('sutki', \App\Http\Controllers\SutkiController::class);
+Route::resource('agregat', \App\Http\Controllers\AgregatController::class);
+Route::resource('vidposeva', \App\Http\Controllers\VidposevaController::class);
+Route::resource('fio', \App\Http\Controllers\FioController::class);
+Route::resource('box', \App\Http\Controllers\StorageController::class);
 Route::resource('spraying', \App\Http\Controllers\SprayingController::class);
+Route::resource('post', \App\Http\Controllers\PostController::class);
 
 
 

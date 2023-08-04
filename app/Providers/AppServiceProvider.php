@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\URL;
 class AppServiceProvider extends ServiceProvider
 {
     protected $policies = [
-        'App\Models\svyaz' => 'App\Policies\SvyazPolicy'
+        'App\Models\svyaz' => 'App\Policies\SvyazPolicy',
+        'App\Model\Registration' => 'App\Policies\RegistrationPolicy'
     ];
     /**
      * Register any application services.

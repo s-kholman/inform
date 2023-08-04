@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\RegistrationController;
+use App\Models\Sms;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
