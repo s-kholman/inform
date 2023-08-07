@@ -22,7 +22,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', [InfoController::class, 'index_g'])->name('/');
+Route::get('/', [InfoController::class, 'index'])->name('/');
 Route::get('/otchet/{key}', [InfoController::class, 'otchet'])->name('otchet');
 
 Route::post('/svyaz_add', [InfoController::class, 'storeSvyaz'])->name('svyaz.add')->middleware('auth');

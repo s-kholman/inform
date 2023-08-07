@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class NomenklatureController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:destroy, App\Models\svyaz')->only('destroy', 'update');
+        $this->middleware('auth')->except('index');
+    }
+
     private const ERROR_MESSAGES = [
         'required' => 'Заполните это поле',
         'numeric' => 'Заполните это поле',
@@ -90,6 +96,10 @@ class NomenklatureController extends Controller
      */
     public function destroy(Nomenklature $nomenklature)
     {
-        //
+        try {
+            $nomenklature->delete();
+        } catch (\Illuminate\Database\QueryException $e){
+        }
+        return redirect()->route(self::TITLE['route'].'.index');
     }
 }
