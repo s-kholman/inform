@@ -5,7 +5,7 @@
 
     @csrf
     <div class="container  ">
-        @can('showAdd', 'App\Models\svyaz')
+        @can('closeDateUpdate', 'App\Models\svyaz')
             <div class="col-3"><a class="btn btn-outline-success" href="{{route('posev_add')}}">Внести информацию </a></div>
         @endcan
         <table class="table  table-bordered a1 caption-top ">

@@ -57,22 +57,9 @@
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Полив</span></a>
                     </li>
 
-                    <a href="#submenu4" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                        <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Опрыскивание</span></a>
-                    <ul class="collapse nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
-
-                        <li class="w-100">
-                            <a href="/spraying" class="nav-link px-0"> <span class="d-none d-sm-inline">Опрыскивание</span></a>
-                        </li>
-                        @can('showAdd', 'App\Models\svyaz')
-                            <li class="w-100">
-                                <a href="/pole" class="nav-link px-0"> <span class="d-none d-sm-inline">Справочник - поля</span></a>
-                            </li>
-                            <li class="w-100">
-                                <a href="/nomenklature" class="nav-link px-0"> <span class="d-none d-sm-inline">Справочник - Номенклатура</span></a>
-                            </li>
-                        @endcan
-                    </ul>
+                    <li class="nav-item">
+                        <a class="nav-link align-middle px-0" href="/spraying" class="nav-link px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Опрыскивание</span></a>
                     </li>
 
                         <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
@@ -88,7 +75,7 @@
                             <li class="w-100">
                                 <a href="/otchet/3" class="nav-link px-0"> <span class="d-none d-sm-inline">Овощи</span></a>
                             </li>
-                            @can('showAdd', 'App\Models\svyaz')
+                            @can('closeDateUpdate', 'App\Models\svyaz')
                                 <li class="w-100">
                                     <a href="/posev_add" class="nav-link px-0 link-info"> <span class="d-none d-sm-inline">Внести информацию</span></a>
                                 </li>

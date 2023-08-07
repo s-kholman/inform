@@ -17,6 +17,7 @@ use App\Models\Registration;
 use App\Models\Sms;
 use App\Models\Sutki;
 use App\Models\svyaz;
+use App\Models\User;
 use App\Models\Vidposeva;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -35,10 +36,6 @@ class InfoController extends Controller
         'max' => 'Значение не должно быть длинне :max символов'
     ];
 
-    private const SUTKI_VALIDATOR = [
-        'sutki' => 'required|max:20',
-    ];
-
     private const SVYAZ_VALIDATOR = [
         'fio' => 'required',
         'filial' => 'required',
@@ -47,13 +44,10 @@ class InfoController extends Controller
     ];
 
 
-    public function index_g()
+    public function index()
     {
         if (Auth::check()) {
-            $user_reg = Auth::user()->registration;
-            if ($user_reg) {
-                return view('index', ['user_reg' => $user_reg]);
-            }
+            return view('index', ['user_reg' => User::with('Registration')->findOrFail(Auth::user()->id)]);
         }
         return view('index');
     }
@@ -92,6 +86,11 @@ class InfoController extends Controller
 
     public function showAddPosevForm()
     {
+        /**
+         * Пересмотреть запросы на коллекции или получать результат за счет запроса
+         * Убрать все за if нет смысла сначало подготовить данные, а потом проверять доступ пользователя
+         */
+
         //Подготавливаем дынные для динамических форм культура
         foreach (Kultura::all() as $toFormat) {
             $kultura [$toFormat->vidposeva_id] [$toFormat->id] = $toFormat->name;
