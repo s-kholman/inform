@@ -4,48 +4,42 @@
 @section('info')
 
     @can('viewAny', 'App\Models\spraying')
-        <div class="container">
+        <div class="container gx-4">
             <div class="row">
-                <div class="col-3"><a class="btn btn-outline-success" href="{{route('spraying.create')}}">Внести опрыскивание</a></div>
-                <div class="col-3"><a class="btn btn-outline-success" href="/spraying/report">Отчеты</a> </div>
+                <div class="col-4 p-3"></div>
+                <div class="col-4 p-3" ><a class="btn btn-outline-success" href="{{route('spraying.create')}}">Внести опрыскивание</a></div>
+                <div class="col-4 p-3"><a class="btn btn-outline-success" href="/spraying/report">Отчеты</a> </div>
             </div>
         </div>
-
     @endcan
 
 
 
+<div class="container gx-4">
+    <div class="row  ">
 
-                @forelse($arr as $value)
+        <div class="col-xl-2 border border-1">
+            <p>Справочники</p>
+            <div><a href="/pole">Поля/севооборот</a></div>
+            <div><a href="/nomenklature">Номенклатура</a></div>
+            <div><a href="/szr">СЗР</a></div>
+        </div>
 
-                        @if($loop->first)
-                            <table class="table table-bordered table-sm">
-                                <thead>
-                                <tr>
-                                    @foreach($arr as $filial => $name)
-                                        <th class="text-center">{{$filial}}</th>
-                                    @endforeach
-                                </tr>
-                                </thead>
-                                <tr>
-                        @endif
+        <div class="col-xl-10">
+            <div class="row">
+                            @foreach($arr as $filial => $name)
+                            <div class="col"> {{$filial}}
+                                @foreach($name as $item)
+                                    <div>  <a href="spraying/{{$item['pole']['id']}}">{{$item['pole']['name']}}</a></div>
+                                @endforeach
+                            </div>
+                                @endforeach
+            </div>
+        </div>
 
-                                    <td>
-                                        @foreach($value as $item)
-                                            <a href="spraying/{{$item['pole']['id']}}">{{$item['pole']['name']}}</a><br>
-                                        @endforeach
-                                    </td>
+    </div>
+</div>
 
 
-
-                        @if($loop->last)
-                                </tr>
-                        @endif
-
-                @empty
-
-                @endforelse
-
-    </table>
 
 @endsection('info')

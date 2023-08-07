@@ -47,4 +47,9 @@ class SvyazPolicy
        // return response("User can't perform this action.", 401);
     }
 
+    public function closeDateUpdate ()
+    {
+        return false;
+    }
+
 }
