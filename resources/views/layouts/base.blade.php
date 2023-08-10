@@ -56,6 +56,12 @@
                         <a class="nav-link align-middle px-0" href="/poliv_show" class="nav-link px-0">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Полив</span></a>
                     </li>
+                    @can('viewAny', 'App\Models\DailyUse')
+                    <li class="nav-item">
+                        <a class="nav-link align-middle px-0" href="/printers" class="nav-link px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Принтера</span></a>
+                    </li>
+                    @endcan
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/spraying" class="nav-link px-0">

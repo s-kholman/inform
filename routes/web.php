@@ -151,6 +151,7 @@ Route::get('/rashod', [\App\Http\Controllers\LifeController::class, 'rashod']);
 
 Route::get('/printers', [\App\Http\Controllers\PrinterController::class, 'index']);
 Route::get('/daily', [\App\Http\Controllers\PrinterController::class, 'daily']);
+Route::get('/job', [\App\Http\Controllers\PrinterController::class, 'job']);
 
 
 Auth::routes();
