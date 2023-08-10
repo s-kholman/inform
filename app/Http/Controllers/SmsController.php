@@ -38,6 +38,14 @@ class SmsController extends Controller
     const SMSIN = 2;
 
     public function smsGet (Request $request){
+        /**
+         * RateLimiter - ограничение запросов
+         */
+        RateLimiter::attempt('DailyUse',  1, function (){
+            dispatch(new DailyUse());
+            return null;
+        },  60*60);
+
         if ($request->token == env('SMS_TOKEN') AND $request->type == 'get_sms'){
             if (Sms::where('smsActive', true)->where('smsType', self::SMSGET)->count()) {
                 foreach (Sms::where('smsActive', true)->where('smsType', self::SMSGET)->get() as $value){
@@ -52,13 +60,6 @@ class SmsController extends Controller
     }
 
     public function smsIn (Request $request){
-        /**
-         * RateLimiter - ограничение запросов
-         */
-        RateLimiter::attempt('DailyUse',  1, function (){
-            dispatch(new DailyUse());
-            return null;
-        },  60*60);
 
         if ($request->token ==  env('SMS_TOKEN') AND Str::length($request->phone) == 12){
             Sms::create([
