@@ -47,7 +47,7 @@ class InfoController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            return view('index', ['user_reg' => User::with('Registration')->findOrFail(Auth::user()->id)]);
+            return view('index', ['user_reg' => Auth::user()->Registration]);
         }
         return view('index');
     }
