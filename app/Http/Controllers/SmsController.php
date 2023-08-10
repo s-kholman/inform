@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DailyUse;
 use App\Models\PhoneLimit;
 use App\Models\Registration;
 use App\Models\Sms;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use UniFi_API\Client;
@@ -36,7 +38,7 @@ class SmsController extends Controller
     const SMSIN = 2;
 
     public function smsGet (Request $request){
-        if ($request->token == 'esi30fek' AND $request->type == 'get_sms'){
+        if ($request->token == env('SMS_TOKEN') AND $request->type == 'get_sms'){
             if (Sms::where('smsActive', true)->where('smsType', self::SMSGET)->count()) {
                 foreach (Sms::where('smsActive', true)->where('smsType', self::SMSGET)->get() as $value){
                     $smsSend [$value->id] = ['phone' => $value->phone, 'text' => $value->smsText];
@@ -50,15 +52,21 @@ class SmsController extends Controller
     }
 
     public function smsIn (Request $request){
+        /**
+         * RateLimiter - ограничение запросов
+         */
+        RateLimiter::attempt('DailyUse',  1, function (){
+            dispatch(new DailyUse());
+            return null;
+        },  60*60);
 
-        if ($request->token == 'esi30fek' AND Str::length($request->phone) == 12){
+        if ($request->token ==  env('SMS_TOKEN') AND Str::length($request->phone) == 12){
             Sms::create([
                 'smsText' => substr(htmlspecialchars(Str::upper($request->text)),0,100),
                 'phone' => $request->phone,
                 'smsType' => self::SMSIN,
                 'smsActive' => true]);
         }
-        //return;
         self::smsParser();
     }
 
