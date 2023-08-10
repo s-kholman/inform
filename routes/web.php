@@ -136,9 +136,21 @@ Route::resource('agregat', \App\Http\Controllers\AgregatController::class);
 Route::resource('vidposeva', \App\Http\Controllers\VidposevaController::class);
 Route::resource('fio', \App\Http\Controllers\FioController::class);
 Route::resource('box', \App\Http\Controllers\StorageController::class);
-Route::resource('spraying', \App\Http\Controllers\SprayingController::class);
+Route::resource('spraying', \App\Http\Controllers\SprayingController::class)->middleware('auth');
 Route::resource('post', \App\Http\Controllers\PostController::class);
 
+//Route::view('/printers','printers.index');
+Route::resource('brend', \App\Http\Controllers\BrendController::class);
+Route::resource('device_name', \App\Http\Controllers\DeviceNameController::class);
+Route::resource('service_name', \App\Http\Controllers\ServiceNameController::class);
+Route::resource('service', \App\Http\Controllers\ServiceController::class);
+Route::resource('status', \App\Http\Controllers\StatusController::class);
+
+Route::get('/life', [\App\Http\Controllers\LifeController::class, 'life']);
+Route::get('/rashod', [\App\Http\Controllers\LifeController::class, 'rashod']);
+
+Route::get('/printers', [\App\Http\Controllers\PrinterController::class, 'index']);
+Route::get('/daily', [\App\Http\Controllers\PrinterController::class, 'daily']);
 
 
 Auth::routes();
