@@ -78,6 +78,21 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'pgsql_printer' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL'),
+            'host' => '192.168.0.133',
+            'port' => '5432',
+            'database' => 'krimm',
+            'username' => 'krimm',
+            'password' =>  '51357955',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
         'export' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
