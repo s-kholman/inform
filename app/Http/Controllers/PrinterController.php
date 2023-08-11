@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CurrentStatus;
 use App\Models\DailyUse;
+use App\Models\Device;
+use App\Models\Service;
 use Carbon\Carbon;
 use FreeDSx\Snmp\Exception\ConnectionException;
 use Illuminate\Http\Request;
@@ -12,6 +14,11 @@ use Nelisys\Snmp;
 
 class PrinterController extends Controller
 {
+    public function show($device_id, $currentStatus)
+    {
+        return view('printer.show', ['id' => $device_id, 'currentStatus' => $currentStatus]);
+    }
+
     public function index()
     {
 
@@ -53,9 +60,9 @@ class PrinterController extends Controller
                     ];
             } elseif ($value[0]->isEmpty() && $value[1]->isEmpty()){
                 $result [$id] = [
-                    'toner' => 0,
-                    'count' => 0,
-                    'toDayCount' => 0
+                    'toner' => 'н/д',
+                    'count' => 'н/д',
+                    'toDayCount' => 'н/д'
                 ];
             }
         }
@@ -66,77 +73,77 @@ class PrinterController extends Controller
     }
 
     public function daily()
-    {
-        dump(time());
-        /**
-         * Получаем коллекцию, вместе со связью
-         */
-        $status = CurrentStatus::with('status')->get();
-        /**
-         * Сортируем коллекцию
-         * Удаляем дубли устройств
-         * Сортируем по названию филиала через связь
-         * Удаляем в статусе false, также через связь
-         */
-        $device = $status->
-        sortByDesc('date')->
-        unique(['device_id'])->
-        sortBy('filial.name')->
-        whereNotIn('status.active', false);
+{
+    dump(time());
+    /**
+     * Получаем коллекцию, вместе со связью
+     */
+    $status = CurrentStatus::with('status')->get();
+    /**
+     * Сортируем коллекцию
+     * Удаляем дубли устройств
+     * Сортируем по названию филиала через связь
+     * Удаляем в статусе false, также через связь
+     */
+    $device = $status->
+    sortByDesc('date')->
+    unique(['device_id'])->
+    sortBy('filial.name')->
+    whereNotIn('status.active', false);
 
-        /**
-         * Цикл по колеекции
-         * Проверяем с помощь ping доступность устройств в сети
-         * Создаем объект для SNMP и задаем начальные параметры
-         * Во втором цикле получаем MIB_OID
-         * Помещаем выполнение в try если устройство не сможет дать ответ
-         * Собираем выходной массив с данными опроса устройств
-         */
-        foreach ($device as $item) {
-            exec("ping -n 1 -w 100 " . $item->ip . " 2>NUL > NUL && (echo 0) || (echo 1)", $output, $status);
-            if (!$output[0]) {
-                $model = $item->devicename;
-                $snmp = new \Ndum\Laravel\Snmp();
-                $snmp->newClient($item->ip, '2', 'public');
-                foreach ($model->miboid->pluck('name')->toArray() as $oid)
+    /**
+     * Цикл по колеекции
+     * Проверяем с помощь ping доступность устройств в сети
+     * Создаем объект для SNMP и задаем начальные параметры
+     * Во втором цикле получаем MIB_OID
+     * Помещаем выполнение в try если устройство не сможет дать ответ
+     * Собираем выходной массив с данными опроса устройств
+     */
+    foreach ($device as $item) {
+        exec("ping -n 1 -w 100 " . $item->ip . " 2>NUL > NUL && (echo 0) || (echo 1)", $output, $status);
+        if (!$output[0]) {
+            $model = $item->devicename;
+            $snmp = new \Ndum\Laravel\Snmp();
+            $snmp->newClient($item->ip, '2', 'public');
+            foreach ($model->miboid->pluck('name')->toArray() as $oid)
+            {
+                try
                 {
-                    try
-                    {
-                        $out [$item->device_id] [$oid] = $snmp->getValue($oid);
-
-                    }
-                    catch (ConnectionException)
-                    {
-
-                    }
+                    $out [$item->device_id] [$oid] = $snmp->getValue($oid);
 
                 }
+                catch (ConnectionException)
+                {
+
+                }
+
             }
-
-       }
-        /**
-         * Проверяем по бренду какие данные записывать
-         * Проверяем наличие данных вообще
-         * В случае kyocera высчитываем остаток тонера function kyocera
-         * Страницы получаем с function count
-         */
-
-        foreach ($out as $device => $value)
-        {
-            DailyUse::updateOrCreate(
-                [
-                    'device_id' => $device,
-                    'date' =>Carbon::now()
-                ],
-                [
-                    'toner' => $this->kyocera($value),
-                    'count' => $this->count($value)
-                ]);
         }
-        dump(time());
-        return 'Выполнение скрипта оконченно';
 
     }
+    /**
+     * Проверяем по бренду какие данные записывать
+     * Проверяем наличие данных вообще
+     * В случае kyocera высчитываем остаток тонера function kyocera
+     * Страницы получаем с function count
+     */
+
+    foreach ($out as $device => $value)
+    {
+        DailyUse::updateOrCreate(
+            [
+                'device_id' => $device,
+                'date' =>Carbon::now()
+            ],
+            [
+                'toner' => $this->kyocera($value),
+                'count' => $this->count($value, $device)
+            ]);
+    }
+    dump(time());
+    return 'Выполнение скрипта оконченно';
+
+}
 
     private function kyocera ($data)
     {
@@ -148,16 +155,20 @@ class PrinterController extends Controller
         return $toner;
     }
 
-    private function count ($data)
+    private function count ($value, $device)
     {
-        if (array_key_exists('1.3.6.1.4.1.1347.43.10.1.1.12.1.1', $data)){
-            return $data['1.3.6.1.4.1.1347.43.10.1.1.12.1.1'];
-        } elseif (array_key_exists('1.3.6.1.2.1.43.10.2.1.4.1.1', $data)){
-            return $data['1.3.6.1.2.1.43.10.2.1.4.1.1'];
+        /**
+         * Количество страниц запрошенные с принтера
+         * Если в массиве есть ключи, передаем их значения
+         * Если ключей не обнаруженно, то передаем последнее сохранненое значение
+         */
+        if (array_key_exists('1.3.6.1.4.1.1347.43.10.1.1.12.1.1', $value)){
+            return $value['1.3.6.1.4.1.1347.43.10.1.1.12.1.1'];
+        } elseif (array_key_exists('1.3.6.1.2.1.43.10.2.1.4.1.1', $value)){
+            return $value['1.3.6.1.2.1.43.10.2.1.4.1.1'];
         } else {
-            return 0;
+            return DailyUse::where('device_id',$device)->latest('date')->take(1)->value('count');
         }
-
     }
 
     public function job()
