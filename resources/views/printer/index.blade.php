@@ -2,8 +2,17 @@
 @section('title', 'Состояние принтеров')
 
 @section('info')
-
     <div class="container">
+        <div class="row">
+            <div class="col-6"><a href="/reference">Справочники</a></div>
+            <div class="col-6 text-end">
+                <form method="post" action="">
+                    @csrf
+                    <input class="form-control-sm " type="date" value="{{\Carbon\Carbon::today()->subDay(1)->format('Y-m-d')}}">
+                    <input class="button" type="submit" value="Показать">
+                </form>
+            </div>
+        </div>
         <div class="row text-center">
             <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">№ п/п</div>
             <div class="col-xs-4 col-sm-5 col-md-5 col-lg-4 col-xl-4 col-xxl-4 border border-2">Филиал</div>
@@ -16,7 +25,7 @@
         @foreach($device as $id => $value)
         <div class="row text-center">
             <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$loop->index+1}}</div>
-            <div class="col-xs-4 col-sm-5 col-md-5 col-lg-4 col-xl-4 col-xxl-4 border border-2">{{$value->filial->name}}</div>
+            <div class="col-xs-4 col-sm-5 col-md-5 col-lg-4 col-xl-4 col-xxl-4 border border-2"><a href={{route('printer.show', ['id' => $value->device_id, 'currentStatus' => $value])}}>{{$value->filial->name}}</a></div>
             <div class="col-lg-3 col-xl-2 col-xxl-2 border border-2 d-none d-lg-block">{{$value->ip}}</div>
             <div class="col-xl-2 col-xxl-2 border border-2 d-none d-xl-block">{{$value->status->name}}</div>
             <div class="col-xs-1 col-sm-2 col-md-2 col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$result[$id]['toner']}}</div>

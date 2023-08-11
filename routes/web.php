@@ -146,12 +146,19 @@ Route::resource('service_name', \App\Http\Controllers\ServiceNameController::cla
 Route::resource('service', \App\Http\Controllers\ServiceController::class);
 Route::resource('status', \App\Http\Controllers\StatusController::class);
 
+
 Route::get('/life', [\App\Http\Controllers\LifeController::class, 'life']);
 Route::get('/rashod', [\App\Http\Controllers\LifeController::class, 'rashod']);
-
+Route::get('/printer/{id}/current/show', [\App\Http\Controllers\CurrentStatusController::class, 'show'])->name('printer.current.show');
+Route::get('/current/{currentStatus}/edit', [\App\Http\Controllers\CurrentStatusController::class, 'edit'])->name('printer.current.edit');
+Route::post('/current/store',[\App\Http\Controllers\CurrentStatusController::class, 'store'])->name('printer.current.store');
 Route::get('/printers', [\App\Http\Controllers\PrinterController::class, 'index']);
+Route::get('/printer/{id}/show/{currentStatus}', [\App\Http\Controllers\PrinterController::class, 'show'])->name('printer.show');
 Route::get('/daily', [\App\Http\Controllers\PrinterController::class, 'daily']);
 Route::get('/job', [\App\Http\Controllers\PrinterController::class, 'job']);
+
+
+Route::view('/reference', 'printer.reference');
 
 
 Auth::routes();

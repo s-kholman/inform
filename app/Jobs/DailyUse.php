@@ -6,7 +6,6 @@ use App\Models\CurrentStatus;
 use Carbon\Carbon;
 use FreeDSx\Snmp\Exception\ConnectionException;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -29,7 +28,6 @@ class DailyUse implements ShouldQueue
      */
     public function handle(): void
     {
-
         /**
          * Получаем коллекцию, вместе со связью
          */
@@ -92,12 +90,9 @@ class DailyUse implements ShouldQueue
                 ],
                 [
                     'toner' => $this->kyocera($value),
-                    'count' => $this->count($value)
+                    'count' => $this->count($value, $device)
                 ]);
         }
-
-
-
     }
 
     private function kyocera ($data)
@@ -110,16 +105,15 @@ class DailyUse implements ShouldQueue
         return $toner;
     }
 
-    private function count ($data)
+    private function count ($value, $device)
     {
-        if (array_key_exists('1.3.6.1.4.1.1347.43.10.1.1.12.1.1', $data)){
-            return $data['1.3.6.1.4.1.1347.43.10.1.1.12.1.1'];
-        } elseif (array_key_exists('1.3.6.1.2.1.43.10.2.1.4.1.1', $data)){
-            return $data['1.3.6.1.2.1.43.10.2.1.4.1.1'];
+
+        if (array_key_exists('1.3.6.1.4.1.1347.43.10.1.1.12.1.1', $value)){
+            return $value['1.3.6.1.4.1.1347.43.10.1.1.12.1.1'];
+        } elseif (array_key_exists('1.3.6.1.2.1.43.10.2.1.4.1.1', $value)){
+            return $value['1.3.6.1.2.1.43.10.2.1.4.1.1'];
         } else {
-            return 0;
+            return DailyUse::where('device_id',$device)->latest('date')->take(1)->value('count');
         }
-
     }
-
 }
