@@ -2,17 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CurrentStatus;
+use App\Models\Device;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
+    private const TITLE = [
+        'title' => 'Справочник - принтера на обслуживании',
+        'label' => 'Введите ',
+        'route' => 'service'
+    ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $status = CurrentStatus::with('status')->get();
+        $device = $status->
+        sortByDesc('date')->
+        sortByDesc('created_at')->
+        unique(['device_id'])->
+        sortBy('filial.name')->
+        whereNotIn('status.active', true);
+        return view('printer.service.index', ['const' => self::TITLE, 'device'=>$device]);
     }
 
     /**
@@ -28,15 +43,22 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Service::create([
+            'service_names_id' => $request['service_name'],
+            'date' => $request['date'],
+            'device_id' => $request['device_id'],
+            'filial_id' => $request['filial_id']
+        ]);
+
+        return redirect()->route('printer.current.show', ['id' => $request['device_id']]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Service $service)
+    public function show(Device $device)
     {
-        //
+        dd($device);
     }
 
     /**
@@ -62,4 +84,22 @@ class ServiceController extends Controller
     {
         //
     }
+
+    public function device(CurrentStatus $currentStatus)
+    {
+        return view('printer.service.create', ['currentStatus' => $currentStatus]);
+    }
+
+    public function cartridge(Device $device)
+    {
+        $sql = DB::table('daily_uses')
+            ->select('date', 'count')
+            ->selectRaw(' toner - lead(toner) OVER (order by date) AS itog ')
+            ->where('device_id',  $device->id)
+            ->get();
+        ;
+        $cartridge = $sql->where('itog', '<', -1)->sortByDesc('date');
+        return view('printer.service.toner',['cartridge' => $cartridge]);
+    }
+
 }

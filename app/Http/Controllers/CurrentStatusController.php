@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CurrentRequest;
 use App\Models\CurrentStatus;
 use App\Models\DailyUse;
 use App\Models\Service;
@@ -28,9 +29,20 @@ class CurrentStatusController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CurrentRequest $request)
     {
-        dd($request);
+        $validated = $request->validated();
+       //dd($validated);
+        CurrentStatus::create([
+            'device_id' => $validated['device_id'],
+            'hostname' => $validated['hostname'],
+            'ip' => $validated['ip'],
+            'filial_id' => $validated['filial'],
+            'status_id' => $validated['status'],
+            'date' => $validated['date'],
+            'device_names_id' => 4
+        ]);
+        return redirect()->route('printer.index');
     }
 
     /**
