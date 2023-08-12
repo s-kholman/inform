@@ -9,21 +9,39 @@ use App\Models\Service;
 use Carbon\Carbon;
 use FreeDSx\Snmp\Exception\ConnectionException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Nelisys\Snmp;
 
 class PrinterController extends Controller
 {
-    public function show($device_id, $currentStatus)
+    public function show($device_id, CurrentStatus $currentStatus)
     {
         return view('printer.show', ['id' => $device_id, 'currentStatus' => $currentStatus]);
     }
 
-    public function index()
+    public function testSNMP ()
+    {
+        /*$snmp = new \Ndum\Laravel\Snmp();
+        $snmp->newClient('192.168.0.24', '2', 'public');
+        $dd = $snmp->getValue('1.3.6.1.2.1.43.11.1.1.9.1.1');
+        dd($dd);*/
+        $sql = DB::table('daily_uses')
+            ->select('date', 'count')
+            ->selectRaw(' toner - lead(toner) OVER (order by date) AS itog ')
+            ->where('device_id',  18)
+            ->get();
+        ;
+        $cartridg = $sql->where('itog', '<', -1)->sortByDesc('date')->take(4);
+        dd($cartridg);
+    }
+
+    public function index(Request $request)
     {
 
         /**
-         * $status Получаем текущие настройки устройств со статусом
+         * Смотрим переменную $date если в POST ничего не пришло, то берем текущею
+         * $status Получаем текущие устройства со статусом
          * $device Форматируем коллекцию (сортируем, оставляем только неповторяющиеся, сортирум по филиалу, удаляем в стутсе false
          * В первом цикле берем последнию запись, но не за сегодня
          * Во втором запросе получаем данные за сегодня
@@ -31,17 +49,22 @@ class PrinterController extends Controller
          * в toDayCount ложим разницу между двумя значениями
          * В переменную $summa ложим сумму коллекции по столбцу
          */
-        $status = CurrentStatus::with('status')->get();
+
+        $date = $request->date;
+        if ($date == null){
+            $date = Carbon::now();
+        }
+
+        $status = CurrentStatus::with('status')->where('date','<=', $date)->get();
         $device = $status->
         sortByDesc('date')->
+        sortByDesc('created_at')->
         unique(['device_id'])->
         sortBy('filial.name')->
         whereNotIn('status.active', false);
-
         foreach ($device as $id => $value){
-         $dual [$id] [] =  DailyUse::where('device_id',$value->device_id)->where('date', '<>', Carbon::now())->latest('date')->take(1)->get();
-         $dual [$id] []=  DailyUse::where('device_id',$value->device_id)->where('date', Carbon::now())->get();
-
+         $dual [$id] [] =  DailyUse::where('device_id',$value->device_id)->where('date', '<', $date)->latest('date')->take(1)->get();
+         $dual [$id] []=  DailyUse::where('device_id',$value->device_id)->where('date', $date)->get();
     }
 
         foreach ($dual as $id => $value)
@@ -69,7 +92,7 @@ class PrinterController extends Controller
 
         $summa = collect($result)->sum('toDayCount');
 
-        return view('printer.index', ['device' => $device, 'result' => $result, 'summa' => $summa]);
+        return view('printer.index', ['device' => $device, 'result' => $result, 'summa' => $summa, 'date' => $date]);
     }
 
     public function daily()
@@ -177,6 +200,11 @@ class PrinterController extends Controller
             dispatch(new \App\Jobs\DailyUse());
             return null;
         },  60*5);
+    }
+
+    public function toDayGet (Request $request)
+    {
+        dd($request);
     }
 
 }

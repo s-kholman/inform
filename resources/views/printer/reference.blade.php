@@ -7,7 +7,8 @@
         <div class="row"><a href="/brend">Бренд</a></div>
         <div class="row"><a href="/service_name">Наименование работ</a></div>
         <div class="row"><a href="/status">Статусы устройства</a></div>
-
+        <div class="row"><a href="/mibOid">Внесение MID OID</a></div>
+        <div class="row"><a href="/service">Принтеры без опроса</a></div>
     </div>
 
 @endsection('info')
