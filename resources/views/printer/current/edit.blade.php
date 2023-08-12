@@ -25,9 +25,28 @@
         <form action="{{route('printer.current.store')}}" method="POST">
             @csrf
         <div class="row text-dark">
-            <div class="col-2 border border-2"><input type="text" name="hostname" value="{{$currentStatus->hostname}}" class="form-control"></div>
-            <div class="col-2 border border-2"><input type="text" name="ip" value="{{$currentStatus->ip}}" class="form-control"></div>
-            <div class="col-2 border border-2"><input type="text" name="mac" value="{{$currentStatus->device->mac}}" class="form-control"></div>
+            <div class="col-2 border border-2"><input type="text" name="hostname" value="{{$currentStatus->hostname}}" class="form-control @error('hostname') is-invalid @enderror">
+                @error('hostname')
+                <span class="invalid-feedback">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+            <div class="col-2 border border-2"><input type="text" name="ip" value="{{$currentStatus->ip}}" class="form-control @error('ip') is-invalid @enderror">
+                @error('ip')
+                <span class="invalid-feedback">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+            <div class="col-2 border border-2"><input readonly type="text" name="mac" value="{{$currentStatus->device->mac}}" class="form-control  @error('mac') is-invalid @enderror">
+                @error('mac')
+                <span class="invalid-feedback">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+
+            </div>
             <div class="col-2 border border-2">
                 <select name="filial" id="txtFilial" class="form-select @error('filial') is-invalid @enderror">
                     <option value="">Выберите значение</option>
@@ -67,6 +86,10 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
+
+                <input hidden name="device_id" value="{{$currentStatus->device_id}}">
+                <input hidden name="device_names_id" value="{{$currentStatus->device_names_id}}">
+
             </div>
             <div class="col-2 border border-2"><input type="date" name="date" value="{{\Carbon\Carbon::today()->format('Y-m-d')}}" class="form-control"></div>
             <div class="row">

@@ -145,15 +145,22 @@ Route::resource('device_name', \App\Http\Controllers\DeviceNameController::class
 Route::resource('service_name', \App\Http\Controllers\ServiceNameController::class);
 Route::resource('service', \App\Http\Controllers\ServiceController::class);
 Route::resource('status', \App\Http\Controllers\StatusController::class);
+Route::resource('mibOid', \App\Http\Controllers\MidOidController::class);
+Route::get('/device/{currentStatus}', [\App\Http\Controllers\ServiceController::class, 'device']);
+Route::get('/cartridge/{device}', [\App\Http\Controllers\ServiceController::class, 'cartridge']);
 
 
 Route::get('/life', [\App\Http\Controllers\LifeController::class, 'life']);
 Route::get('/rashod', [\App\Http\Controllers\LifeController::class, 'rashod']);
+Route::get('/testSNMP', [\App\Http\Controllers\PrinterController::class, 'testSNMP']);
+
 Route::get('/printer/{id}/current/show', [\App\Http\Controllers\CurrentStatusController::class, 'show'])->name('printer.current.show');
 Route::get('/current/{currentStatus}/edit', [\App\Http\Controllers\CurrentStatusController::class, 'edit'])->name('printer.current.edit');
 Route::post('/current/store',[\App\Http\Controllers\CurrentStatusController::class, 'store'])->name('printer.current.store');
-Route::get('/printers', [\App\Http\Controllers\PrinterController::class, 'index']);
+Route::get('/printers', [\App\Http\Controllers\PrinterController::class, 'index'])->name('printer.index');
 Route::get('/printer/{id}/show/{currentStatus}', [\App\Http\Controllers\PrinterController::class, 'show'])->name('printer.show');
+Route::post('/printer', [\App\Http\Controllers\PrinterController::class, 'index'])->name('printer.toDayGet');
+
 Route::get('/daily', [\App\Http\Controllers\PrinterController::class, 'daily']);
 Route::get('/job', [\App\Http\Controllers\PrinterController::class, 'job']);
 

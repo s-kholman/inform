@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\belongsTo;
 class CurrentStatus extends Model
 {
     use HasFactory;
-    protected $fillable = ['id','device_id','hostname','ip','filial_id','status_id','date'];
+    protected $fillable = ['id','device_id','hostname','ip','filial_id','status_id','date', 'device_names_id'];
 
     public function status()
     {
