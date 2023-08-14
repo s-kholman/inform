@@ -71,7 +71,7 @@ class SprayingController extends Controller
             $szr_arr [$value->szr_classes_id] [$value->id] = $value->name;
         }
 
-        return view('spraying.сreateDeviceAction', [
+        return view('spraying.create', [
             'sevooborot_arr' => json_encode($sevooborot_arr, JSON_UNESCAPED_UNICODE),
             'squaret_arr' => json_encode($squaret_arr, JSON_UNESCAPED_UNICODE),
             'szr_arr' => json_encode($szr_arr, JSON_UNESCAPED_UNICODE)
