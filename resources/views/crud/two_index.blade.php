@@ -32,8 +32,9 @@
             </form>
     </div>
     @forelse($value as $value)
-        <div class="row col-6 border border-1">
-            <div class="col-6">{{$value->ParrentName->name}}</div> <div class="col-6"><a href="\{{$const['route']}}\{{$value->id}}\edit">{{$value->name}}</a></div>
+        <div class="row">
+            <div class="col-3 border border-1">{{$value->ParrentName->name}}</div>
+            <div class="col-3 border border-1"><a href="\{{$const['route']}}\{{$value->id}}\edit">{{$value->name}}</a></div>
         </div>
     @empty
     @endforelse

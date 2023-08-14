@@ -5,7 +5,7 @@
             <form action="{{ route('box.sampling') }}" method="POST">
                 @csrf
 <div>
-    <b>{{\App\Models\Storage::where('id', $id)->value('name')}}</b>
+    <b>{{\App\Models\StorageName::where('id', $id)->value('name')}}</b>
 </div>
                 <input hidden name="id" value="{{$id}}">
 

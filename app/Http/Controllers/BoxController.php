@@ -7,7 +7,7 @@ use App\Models\Box;
 use App\Models\Disassembly;
 use App\Models\Nomenklature;
 use App\Models\Sampling;
-use App\Models\Storage;
+use App\Models\StorageName;
 use App\Rules\Procents;
 use Illuminate\Http\Request;
 
@@ -19,7 +19,7 @@ class BoxController extends Controller
 
     }
     public function storageAdd(Request $request){
-        $storageAdd = new Storage();
+        $storageAdd = new StorageName();
         $storageAdd->name = $request->storage;
         $storageAdd->save();
 
@@ -145,7 +145,7 @@ class BoxController extends Controller
                 'DVnotStandart' => round($value->quautity/100*$disassembly[0]->notstandart),
                 'DVwaste' => round($value->quautity/100*$disassembly[0]->waste),
                 'DVland' => round($value->quautity/100*$disassembly[0]->land),
-                'storage' => Storage::where('id', $value->storage_id)->value('name'),
+                'storage' => StorageName::where('id', $value->storage_id)->value('name'),
                 'field' => $value->field,
                 'quautity' => $value->quautity,
                 'nomenklature' => Nomenklature::where('id', $value->nomenklature_id)->value('name'),

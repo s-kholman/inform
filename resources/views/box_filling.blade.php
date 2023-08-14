@@ -8,7 +8,7 @@
                 <select name="storage" id="selectstorage" class="form-select ">
                     <option value="">Выберите Склад</option>
 
-                        @foreach(\App\Models\Storage::all() as $value)
+                        @foreach(\App\Models\StorageName::all() as $value)
                             <option value="{{ $value->id }}"> {{ $value->name }} </option>
                         @endforeach
 
@@ -38,7 +38,7 @@
                 <th>Бокс</th><th>Поле</th><th>Номенклатура</th><th>На хранении</th><th colspan="2">Внести данные</th>
     @foreach(\App\Models\Box::all() as $value)
         <tr>
-            <td>{{\App\Models\Storage::where('id', $value->storage_id)->value('name')}}</td>
+            <td>{{\App\Models\StorageName::where('id', $value->storage_id)->value('name')}}</td>
             <td>{{$value->field}}</td>
             <td>{{\App\Models\Nomenklature::where('id', $value->nomenklature_id)->value('name')}}</td>
             <td>{{$value->quautity}}</td>
