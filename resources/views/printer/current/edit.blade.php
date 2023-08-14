@@ -101,6 +101,6 @@
         </div>
         </form>
     </div>
-
+    <div class="row-cols-4 p-5"><a class="btn btn-info" href="{{ url()->previous() }}">К списку отчетов</a></div>
 @endsection('info')
 

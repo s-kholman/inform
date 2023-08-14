@@ -21,7 +21,7 @@ class MidOidController extends Controller
     {
         $value = MibOid::orderby('name')->get();
 
-        return view('printer.miboid.index', ['const' => self::TITLE, 'value'=>$value]);
+        return view('Printer.miboid.index', ['const' => self::TITLE, 'value'=>$value]);
     }
 
     /**
@@ -60,7 +60,7 @@ class MidOidController extends Controller
      */
     public function edit(MibOid $mibOid)
     {
-        return view('printer.miboid.edit', ['const' => self::TITLE, 'value'=>$mibOid]);
+        return view('Printer.miboid.edit', ['const' => self::TITLE, 'value'=>$mibOid]);
     }
 
     /**

@@ -43,9 +43,6 @@ class SevooborotController extends Controller
     public function create(Pole $pole)
     {
 
-
-
-        //return view('test', ['request' => $pole]);
         foreach (Nomenklature::orderby('name')->get() as $value){
             //$nomen_arr [$value->kultura_id] [$value->id] =  $value->name;
             $nomen_arr [$value->kultura_id] [$value->name] =  $value->id;
@@ -59,7 +56,7 @@ class SevooborotController extends Controller
             'nomen_arr' => json_encode($nomen_arr, JSON_UNESCAPED_UNICODE),
             'reprod_arr' => json_encode($reprod_arr, JSON_UNESCAPED_UNICODE)]);
 
-        //return view('sevooborot.create', ['pole' => $pole]);
+        //return view('sevooborot.сreate', ['pole' => $pole]);
     }
 
     /**

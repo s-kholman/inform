@@ -19,4 +19,5 @@
         <a href="\{{$const['route']}}\{{$value->id}}\edit">{{$value->name}}</a> <br>
     @empty
     @endforelse
+    <div class="row-cols-4 p-5"><a class="btn btn-info" href="{{ url()->previous() }}">Назад</a></div>
 @endsection('info')

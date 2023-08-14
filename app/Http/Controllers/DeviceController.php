@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Printer\device\DeviceIndexAction;
+use App\Actions\Printer\device\DeviceСreateAction;
+use App\Http\Requests\DeviceRequest;
 use App\Models\Device;
 use Illuminate\Http\Request;
+
 
 class DeviceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(DeviceIndexAction $deviceIndexAction)
     {
-        //
+        return view('printer.device.index');
     }
 
     /**
@@ -20,15 +24,17 @@ class DeviceController extends Controller
      */
     public function create()
     {
-        //
+        return view('printer.device.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(DeviceRequest $request, DeviceСreateAction $deviceСreateAction)
     {
-        //
+        $deviceСreateAction($request);
+
+        return redirect()->route('device.index');
     }
 
     /**
@@ -36,7 +42,7 @@ class DeviceController extends Controller
      */
     public function show(Device $device)
     {
-        //
+        return view('printer.device.show', ['device' => $device]);
     }
 
     /**
@@ -44,7 +50,7 @@ class DeviceController extends Controller
      */
     public function edit(Device $device)
     {
-        //
+        return view('printer.device.edit', ['device' => $device]);
     }
 
     /**
@@ -60,6 +66,8 @@ class DeviceController extends Controller
      */
     public function destroy(Device $device)
     {
-        //
+        $device->delete();
+
+        return redirect()->route('device.index');
     }
 }

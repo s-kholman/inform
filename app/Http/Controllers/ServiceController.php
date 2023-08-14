@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Printer\IndexAction;
 use App\Models\CurrentStatus;
+use App\Models\DailyUse;
 use App\Models\Device;
 use App\Models\Service;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,6 +18,7 @@ class ServiceController extends Controller
         'label' => 'Введите ',
         'route' => 'service'
     ];
+
     /**
      * Display a listing of the resource.
      */
@@ -27,7 +31,7 @@ class ServiceController extends Controller
         unique(['device_id'])->
         sortBy('filial.name')->
         whereNotIn('status.active', true);
-        return view('printer.service.index', ['const' => self::TITLE, 'device'=>$device]);
+        return view('printer.service.index', ['const' => self::TITLE, 'device' => $device]);
     }
 
     /**
@@ -56,9 +60,59 @@ class ServiceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Device $device)
+    public function show(IndexAction $indexAction)
     {
-        dd($device);
+        $device = $indexAction(Carbon::now());
+
+        $result = $device['result'];
+        foreach ($device['device'] as $id => $value) {
+
+            $ff = $value->DeviceNames->toArray();
+            $filial = $value->filial->name;
+
+
+            $countToServiceDay = Service::
+            whereHas('DeviceNames', function ($query) {
+                $query->where('brend_id', 1);})->
+            with('DeviceNames')->
+            where('device_id', $value->device_id)->
+            latest('date')->take(1)->get();
+
+            if ($countToServiceDay->isNotEmpty() && $ff['0']['brend_id'] == 1) {
+                $count = DailyUse::
+                where('date', '<=', $countToServiceDay[0]->date)->
+                where('device_id', $value->device_id)->
+                latest('date')->
+                take(1)->
+                get();
+
+                if ($count->isNotEmpty()) {
+                    $serviceCount [] = ['count' => $result[$id]['count'] - $count[0]->count, 'device' => $value->device_id, 'filial' => $filial];
+                }
+            } elseif ($ff['0']['brend_id'] == 1) {
+                $serviceCount [] = ['count' => $result[$id]['count'], 'device' => $value->device_id, 'filial' => $filial];
+
+            }
+        }
+
+        $collection = collect($serviceCount);
+
+        $already = $collection->filter(function ($value, $key) {
+
+            return $value['count'] >= 20000;
+        });
+        $soon = $collection->filter(function ($value, $key) {
+            return $value['count'] >= 15000 and $value['count'] < 20000;
+        });
+        $itog = $already->merge($soon);
+
+
+return view('printer.service.service', ['itog' =>$itog]);
+
+
+
+
+
     }
 
     /**
@@ -92,14 +146,16 @@ class ServiceController extends Controller
 
     public function cartridge(Device $device)
     {
+        /**
+         * Не нашел аналога ф-ии "lead", использовал сырой запрос
+         */
         $sql = DB::table('daily_uses')
             ->select('date', 'count')
             ->selectRaw(' toner - lead(toner) OVER (order by date) AS itog ')
-            ->where('device_id',  $device->id)
+            ->where('device_id', $device->id)
             ->get();
-        ;
-        $cartridge = $sql->where('itog', '<', -1)->sortByDesc('date');
-        return view('printer.service.toner',['cartridge' => $cartridge]);
+        $cartridge = $sql->where('itog', '<', -1)->where('itog', '<>', null)->sortByDesc('date');
+        return view('printer.service.toner', ['cartridge' => $cartridge]);
     }
 
 }
