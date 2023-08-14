@@ -145,7 +145,7 @@
                             </li>
 
                             <li>
-                                <a href="/box" class="nav-link px-0"> <span class="d-none d-sm-inline">Склад</span></a>
+                                <a href="/storagename" class="nav-link px-0"> <span class="d-none d-sm-inline">Склад</span></a>
                             </li>
                             <li>
                                 <a href="/nomenklature" class="nav-link px-0"> <span class="d-none d-sm-inline">Номенклатура</span></a>

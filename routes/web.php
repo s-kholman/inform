@@ -82,13 +82,7 @@ Route::get('/forgot-password', function () {
 })->middleware('guest')->name('password.request');
 
 
-Route::get('/box_filling', [BoxController::class, 'boxFillingShow'])->name('box_filling')->middleware('can:destroy, App\Models\svyaz');
-Route::post('/box_filling', [BoxController::class, 'boxFillingAdd'])->name('box.filling')->middleware('can:destroy, App\Models\svyaz');;
-Route::get('/box_disssembly_show/d/{id}', [BoxController::class, 'boxDisssemblyShow'])->middleware('can:destroy, App\Models\svyaz');;
-Route::get('/box_sampling_show/s/{id}', [BoxController::class, 'boxSamplingShow'])->middleware('can:destroy, App\Models\svyaz');;
-Route::post('/box_disssembly_show', [BoxController::class, 'boxDisssemblyAdd'])->name('box.disassembly')->middleware('can:destroy, App\Models\svyaz');;
-Route::post('/box_sampling_show', [BoxController::class, 'boxSamplingAdd'])->name('box.sampling')->middleware('can:destroy, App\Models\svyaz');
-Route::get('/box_itog', [BoxController::class, 'boxItog']);
+
 //Route::get('/storage/detail/{id}', [BoxController::class, 'storageDetail']);
 
 Route::post('/sms_get', [SmsController::class, 'smsGet'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
@@ -128,14 +122,26 @@ Route::post('/spraying/report/{id}', [\App\Http\Controllers\SprayingReportContro
 Route::resource('nomenklature', \App\Http\Controllers\NomenklatureController::class);
 Route::resource('kultura', \App\Http\Controllers\KulturaController::class);
 
-Route::resource('szrclass', \App\Http\Controllers\SzrClassesController::class);
+/**
+ * Ресурсы производственного отдела
+ */
+Route::resource('storagename', \App\Http\Controllers\Storage\StorageNameController::class);
+Route::get('/box_filling', [BoxController::class, 'boxFillingShow'])->name('box_filling')->middleware('can:destroy, App\Models\svyaz');
+Route::post('/box_filling', [BoxController::class, 'boxFillingAdd'])->name('box.filling')->middleware('can:destroy, App\Models\svyaz');;
+Route::get('/box_disssembly_show/d/{id}', [BoxController::class, 'boxDisssemblyShow'])->middleware('can:destroy, App\Models\svyaz');;
+Route::get('/box_sampling_show/s/{id}', [BoxController::class, 'boxSamplingShow'])->middleware('can:destroy, App\Models\svyaz');;
+Route::post('/box_disssembly_show', [BoxController::class, 'boxDisssemblyAdd'])->name('box.disassembly')->middleware('can:destroy, App\Models\svyaz');;
+Route::post('/box_sampling_show', [BoxController::class, 'boxSamplingAdd'])->name('box.sampling')->middleware('can:destroy, App\Models\svyaz');
+Route::get('/box_itog', [BoxController::class, 'boxItog']);
+
+//Route::resource('szrclass', \App\Http\Controllers\SzrClassesController::class);
 Route::resource('filial', \App\Http\Controllers\FilialController::class);
 Route::resource('szr', \App\Http\Controllers\SzrController::class);
 Route::resource('sutki', \App\Http\Controllers\SutkiController::class);
 Route::resource('agregat', \App\Http\Controllers\AgregatController::class);
 Route::resource('vidposeva', \App\Http\Controllers\VidposevaController::class);
 Route::resource('fio', \App\Http\Controllers\FioController::class);
-Route::resource('box', \App\Http\Controllers\StorageController::class);
+
 Route::resource('spraying', \App\Http\Controllers\SprayingController::class)->middleware('auth');
 Route::resource('post', \App\Http\Controllers\PostController::class);
 

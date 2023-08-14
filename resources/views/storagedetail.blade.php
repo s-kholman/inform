@@ -1,10 +1,10 @@
 @extends('layouts.base')
-@section('title', 'Детализация корпоративной связи')
+@section('title', 'Детализация чего-то со складом')
 
 @section('info')
     <div class="container">
         <table class="table table-bordered table-striped">
-            <caption class="border rounded-3 p-3 caption-top"><p class="text-center"><b>{{\App\Models\Storage::where('id',$storageid->storage_id)->value('name')}}</b></p></caption>
+            <caption class="border rounded-3 p-3 caption-top"><p class="text-center"><b>{{\App\Models\StorageName::where('id',$storageid->storage_id)->value('name')}}</b></p></caption>
             <thead>
             <th class="text-center">Дата</th>
             <th class="text-center">50</th>

@@ -11,7 +11,7 @@
         <div class="row"><a href="/service">Принтеры без опроса</a></div>
         <div class="row"><a href="/device">Добавить новое устройство</a></div>
         <div class="row"><a href="/service/show">Устройства на обслуживание</a></div>
-        <div class="row-cols-4 p-5"><a class="btn btn-info" href="{{ url()->previous() }}">К списку устройств</a></div>
+        <div class="row-cols-4 p-5"><a class="btn btn-info" href="/printers">К списку устройств</a></div>
     </div>
 
 @endsection('info')
