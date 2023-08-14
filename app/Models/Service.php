@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Service extends Model
 {
@@ -19,5 +20,20 @@ class Service extends Model
     public function ServiceName()
     {
         return $this->belongsTo(ServiceName::class, 'service_names_id');
+    }
+
+    public function Device() : belongsTo
+    {
+        return $this->belongsTo(Device::class);
+    }
+
+    public function temp()
+    {
+        return $this->hasMany(Device::class, 'id', 'device_id');
+    }
+
+    public function DeviceNames ()
+    {
+       return $this->through('temp')->has('model');
     }
 }

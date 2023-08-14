@@ -36,4 +36,5 @@
 
     @empty
     @endforelse
+    <div class="row-cols-4 p-5"><a class="btn btn-info" href="/reference">Назад</a></div>
 @endsection('info')

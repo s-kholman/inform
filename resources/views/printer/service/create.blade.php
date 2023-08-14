@@ -25,4 +25,5 @@
             <input class="form-control" type="submit" name="save" value="Сохранить">
         </form>
     </div>
+    <div class="row-cols-4 p-5"><a class="btn btn-info" href="{{ url()->previous() }}">Назад</a></div>
 @endsection('info')

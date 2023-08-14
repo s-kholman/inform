@@ -26,7 +26,7 @@
             <input type="submit" class="btn btn-primary" value="Сохранить">
         </form>
     </div>
-    <a class="btn btn-info" href="/{{$const['route']}}">Назад</a>
+    <div class="row-cols-4 p-5"><a class="btn btn-info" href="{{ url()->previous() }}">Назад</a></div>
     <form action="{{ route($const['route'].'.destroy', [$const['route'] => $value->id])}}" method="POST">
         @csrf
         @method('DELETE')

@@ -10,6 +10,9 @@
         <div class="row"><a href="{{route('printer.current.edit', ['currentStatus' => $currentStatus])}}">Перемещение/изменение состояния</a></div>
         <div class="row"><a href="/device/{{$currentStatus->id}}">Внести ремонт/обслуживание</a></div>
         <div class="row"><a href="/cartridge/{{$id}}">Замена картриджей</a></div>
+        <div class="row-cols-4 p-5"><a class="btn btn-info" href="/printers">К списку устройств</a></div>
+
+
     </div>
 
 @endsection('info')

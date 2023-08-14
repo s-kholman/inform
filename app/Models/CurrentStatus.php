@@ -23,7 +23,7 @@ class CurrentStatus extends Model
 
     public function device() : belongsTo
     {
-        return $this->belongsTo(Device::class);
+        return $this->belongsTo(Device::class, 'device_names_id', 'id');
     }
 
     public function devicename() : belongsTo
@@ -31,14 +31,14 @@ class CurrentStatus extends Model
         return $this->belongsTo(DeviceName::class, 'device_names_id', 'id');
     }
 
-    public function temp() : belongsTo
+    public function temp()
     {
-        return $this->belongsTo(DeviceName::class);
+        return $this->hasMany(Device::class, 'id', 'device_id');
     }
 
-    public function brend ()
+    public function DeviceNames ()
     {
-        return $this->through('temp')->has('ParrentName');
+        return $this->through('temp')->has('model');
     }
 
 

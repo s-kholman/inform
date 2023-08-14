@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CurrentRequest;
 use App\Models\CurrentStatus;
 use App\Models\DailyUse;
+use App\Models\Device;
 use App\Models\Service;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CurrentStatusController extends Controller
@@ -42,7 +44,7 @@ class CurrentStatusController extends Controller
             'date' => $validated['date'],
             'device_names_id' => 4
         ]);
-        return redirect()->route('printer.index');
+        return redirect()->route('Printer.index', ['date' => Carbon::now()]);
     }
 
     /**
@@ -78,7 +80,7 @@ class CurrentStatusController extends Controller
         }
         $merded = collect($status)->merge(collect($service))->sortBy('date');
 
-        return view('printer.current.show', ['service' => $merded]);
+        return view('Printer.current.show', ['service' => $merded]);
     }
 
     /**

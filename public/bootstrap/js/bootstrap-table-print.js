@@ -627,7 +627,7 @@
 
 	hiddenKeys[IE_PROTO] = true;
 
-	// `Object.create` method
+	// `Object.сreateDeviceAction` method
 	// https://tc39.github.io/ecma262/#sec-object.create
 	var objectCreate = Object.create || function create(O, Properties) {
 	  var result;
@@ -1011,7 +1011,7 @@
 	});
 
 	_export({ target: 'Object', stat: true, forced: !nativeSymbol, sham: !descriptors }, {
-	  // `Object.create` method
+	  // `Object.сreateDeviceAction` method
 	  // https://tc39.github.io/ecma262/#sec-object.create
 	  create: $create,
 	  // `Object.defineProperty` method
@@ -1903,7 +1903,7 @@
 	$.extend($.fn.bootstrapTable.defaults.icons, {
 	  print: {
 	    bootstrap3: 'glyphicon-print icon-share',
-	    'bootstrap-table': 'icon-printer'
+	    'bootstrap-table': 'icon-Printer'
 	  }[$.fn.bootstrapTable.theme] || 'fa-print'
 	});
 
