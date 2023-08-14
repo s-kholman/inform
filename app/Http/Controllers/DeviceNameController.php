@@ -82,7 +82,7 @@ class DeviceNameController extends Controller
     {
         $parrent_value = Brend::orderby('name')->get();
         $get_name_id = $deviceName->getFillable();
-        return view('printer.edit', ['const' => self::TITLE, 'value'=>$deviceName, 'parent_value'=>$parrent_value, 'name_id' => $get_name_id['1']]);
+        return view('Printer.edit', ['const' => self::TITLE, 'value'=>$deviceName, 'parent_value'=>$parrent_value, 'name_id' => $get_name_id['1']]);
     }
 
     /**

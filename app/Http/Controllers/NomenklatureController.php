@@ -14,6 +14,11 @@ class NomenklatureController extends Controller
         $this->middleware('auth')->except('index');
     }
 
+    private const ADD_VALIDATOR_EDIT = [
+        'name' => 'required|max:255',
+        'select' => 'numeric'
+    ];
+
     private const ERROR_MESSAGES = [
         'required' => 'Заполните это поле',
         'numeric' => 'Заполните это поле',
@@ -60,8 +65,8 @@ class NomenklatureController extends Controller
         $validated = $request->validate(self::ADD_VALIDATOR, self::ERROR_MESSAGES);
 
         Nomenklature::create([
-            'name' => $validated['nomenklature'],
-            'kultura_id' => $validated['kultura']
+            'name' => $validated['name'],
+            'kultura_id' => $validated['select']
         ]);
 
         return redirect()->route(self::TITLE['route'].'.index');
@@ -80,7 +85,9 @@ class NomenklatureController extends Controller
      */
     public function edit(Nomenklature $nomenklature)
     {
-        //
+        $parrent_value = Kultura::orderby('name')->get();
+        $get_name_id = $nomenklature->getFillable();
+        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$nomenklature, 'parent_value'=>$parrent_value, 'name_id' => $get_name_id['1']]);
     }
 
     /**
@@ -88,7 +95,12 @@ class NomenklatureController extends Controller
      */
     public function update(Request $request, Nomenklature $nomenklature)
     {
-        //
+        $validated = $request->validate(self::ADD_VALIDATOR_EDIT, self::ERROR_MESSAGES);
+        $nomenklature->update([
+            'name' => $validated['name'],
+            'vidposeva_id' => $validated['select']
+        ]);
+        return redirect()->route(self::TITLE['route'].'.index');
     }
 
     /**

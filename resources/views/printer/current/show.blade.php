@@ -22,6 +22,7 @@
         @empty
             <div class="row">Данные не найденны</div>
         @endforelse
+        <div class="row-cols-4 p-5"><a class="btn btn-info" href="{{ url()->previous() }}">К списку отчетов</a></div>
     </div>
 
 @endsection('info')
