@@ -33,7 +33,7 @@ class PostController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(CrudOneRequest $request)
     {
@@ -62,7 +62,7 @@ class PostController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(CrudOneRequest $request, Post $post)
     {
@@ -72,7 +72,7 @@ class PostController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(Post $post)
     {

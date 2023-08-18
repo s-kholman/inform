@@ -28,7 +28,7 @@ class DeviceController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(DeviceRequest $request, DeviceСreateAction $deviceСreateAction)
     {
@@ -54,7 +54,7 @@ class DeviceController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(Request $request, Device $device)
     {
@@ -62,7 +62,7 @@ class DeviceController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(Device $device)
     {

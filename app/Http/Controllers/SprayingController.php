@@ -70,7 +70,9 @@ class SprayingController extends Controller
         foreach (Szr::all() as $value){
             $szr_arr [$value->szr_classes_id] [$value->id] = $value->name;
         }
-
+        /**
+         * Вынести из blade запрос полей перенести в класс и сделать сортировку по имени
+         */
         return view('spraying.create', [
             'sevooborot_arr' => json_encode($sevooborot_arr, JSON_UNESCAPED_UNICODE),
             'squaret_arr' => json_encode($squaret_arr, JSON_UNESCAPED_UNICODE),
@@ -79,7 +81,7 @@ class SprayingController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(Request $request)
     {
@@ -121,7 +123,7 @@ class SprayingController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(Request $request, Spraying $spraying)
     {
@@ -129,7 +131,7 @@ class SprayingController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(Spraying $spraying)
     {

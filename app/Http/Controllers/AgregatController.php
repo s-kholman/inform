@@ -32,7 +32,7 @@ class AgregatController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(CrudOneRequest $request)
     {
@@ -61,7 +61,7 @@ class AgregatController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(CrudOneRequest $request, Agregat $agregat)
     {
@@ -71,7 +71,7 @@ class AgregatController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(Agregat $agregat)
     {

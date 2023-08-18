@@ -50,7 +50,7 @@ class PoleController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(Request $request)
     {
@@ -100,7 +100,7 @@ class PoleController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(Request $request, Pole $pole)
     {
@@ -131,7 +131,7 @@ class PoleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(Pole $pole)
     {
