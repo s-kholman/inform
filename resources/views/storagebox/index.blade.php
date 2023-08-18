@@ -13,23 +13,23 @@
         @forelse($storage as $value)
             @if ($loop->first)
                 <div class="row border border-1">
-                    <div class="col-xl-2 col-xxl-2">Склады</div>
-                    <div class="col-xl-3 col-xxl-3">Номенклатура</div>
-                    <div class="col-xl-1 col-xxl-1">Тип</div>
-                    <div class="col-xl-1 col-xxl-1">Объем</div>
-                    <div class="col-xl-5 col-xxl-5">Поля</div>
+                    <div class="col-2">Склады</div>
+                    <div class="col-3">Номенклатура</div>
+                    <div class="col-1">Тип</div>
+                    <div class="col-1">Объем</div>
+                    <div class="col-5">Поля</div>
                 </div>
             @endif
             <div class="row border-top border-end border-start border-3 @if ($loop->index % 2 == 0)border-info @endif">
-                <div class="text-wrap col-xl-2 col-xxl-2"><b><a href="{{route('storagebox.show', ['storagebox' => $value])}}">{{$value->storageName->name}}</a></b></div>
-                <div class="col-xl-3 col-xxl-3"><a
+                <div class="text-wrap col-2"><b><a href="{{route('storagebox.show', ['storagebox' => $value])}}">{{$value->storageName->name}}</a></b></div>
+                <div class="col-3"><a
                         href="{{route('gues.index', ['id' => $value])}}">{{$value->nomenklature->name}} {{$value->reproduktion->name}}</a>
                 </div>
-                <div class="col-xl-1 col-xxl-1">@if($value->type == 1) Товарный @elseif($value->type == 2)
+                <div class="col-1">@if($value->type == 1) Товарный @elseif($value->type == 2)
                         Семенной @else  @endif</div>
-                <div class="col-xl-1 col-xxl-1"><a
+                <div class="col-1"><a
                         href="{{route('take.index', ['id' => $value])}}">{{$value->volume}}</a></div>
-                <div class="text-wrap col-xl-5 col-xxl-5">{{$value->field}}</div>
+                <div class="text-wrap col-5">{{$value->field}}</div>
             </div>
             <div
                 class="row text-center border-end border-bottom  border-start border-2 @if ($loop->index % 2 == 0)border-info @endif">
@@ -37,7 +37,7 @@
 
                 @foreach($name as $key => $name_)
 
-                    <div class="col-xl-2 col-xxl-2 border border-1">
+                    <div class="col-2 col-2 border border-1">
 
                         <div class="row">
                             <div class="col-xl-12 col-xxl-12 border border-1">{{$name_}}</div>
