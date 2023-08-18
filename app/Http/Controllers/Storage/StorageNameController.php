@@ -28,7 +28,7 @@ class StorageNameController extends Controller
     ];
     private const TITLE = [
         'title' => 'Справочник - Склады - Места хранения',
-        'label' => 'Введите Склада - Места хранения',
+        'label' => 'Введите наименование склада / места хранения',
         'parent' => 'К какому филиалу относится',
         'route' => 'storagename',
         'parrent_name' => 'filial'
