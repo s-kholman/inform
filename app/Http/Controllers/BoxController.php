@@ -13,11 +13,12 @@ use Illuminate\Http\Request;
 
 class BoxController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     * УДАЛИТЬ
+     */
 
-    public function storageShow(){
-        return view('storage_add');
-
-    }
     public function storageAdd(Request $request){
         $storageAdd = new StorageName();
         $storageAdd->name = $request->storage;
@@ -25,16 +26,8 @@ class BoxController extends Controller
 
         return view('storage_add');
     }
-    public function nomenklatureShow(){
-        return view('nomenklature_add');
-    }
-    public function nomenklatureAdd(Request $request){
-        $nomenklatureAdd = new Nomenklature();
-        $nomenklatureAdd->name = $request->nomenklature;
-        $nomenklatureAdd->kultura_id = $request->kultura;
-        $nomenklatureAdd->save();
-        return view('nomenklature_add');
-    }
+
+
 
     public function boxFillingShow(){
         return view('box_filling');
@@ -145,7 +138,7 @@ class BoxController extends Controller
                 'DVnotStandart' => round($value->quautity/100*$disassembly[0]->notstandart),
                 'DVwaste' => round($value->quautity/100*$disassembly[0]->waste),
                 'DVland' => round($value->quautity/100*$disassembly[0]->land),
-                'storage' => StorageName::where('id', $value->storage_id)->value('name'),
+                'storagebox' => StorageName::where('id', $value->storage_id)->value('name'),
                 'field' => $value->field,
                 'quautity' => $value->quautity,
                 'nomenklature' => Nomenklature::where('id', $value->nomenklature_id)->value('name'),
@@ -166,18 +159,18 @@ class BoxController extends Controller
                 }
             }
             $i++;
-           // return view('test', ['request' => $box_itog]);
+
         }
 
         return view('box_itog', ['itogs' => $box_itog]);
-       // return view('test', ['request' => $box_itog]);
+
     }
 
     public function storageDetail($id){
 
         $storageDetail = Disassembly::where('box_id', $id)->get();
         $storageid = Box::find($id);
-//return view('test', ['request' => $storageDetail]);
+
         return view('storagedetail', ['storageDetail' => $storageDetail, 'storageid' => $storageid]);
     }
 }

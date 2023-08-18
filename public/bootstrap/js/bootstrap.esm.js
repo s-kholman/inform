@@ -266,7 +266,7 @@ const getNextActiveElement = (list, activeElement, shouldGetNext, isCycleAllowed
 const namespaceRegex = /[^.]*(?=\..*)\.|.*/;
 const stripNameRegex = /\..*/;
 const stripUidRegex = /::\d+$/;
-const eventRegistry = {}; // Events storage
+const eventRegistry = {}; // Events storagebox
 let uidEvent = 1;
 const customEvents = {
   mouseenter: 'mouseover',

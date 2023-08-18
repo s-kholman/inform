@@ -36,7 +36,7 @@ class SokarSkladController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(Request $request)
     {
@@ -70,7 +70,7 @@ class SokarSkladController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(Request $request, SokarSklad $sokarSklad)
     {
@@ -78,7 +78,7 @@ class SokarSkladController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(SokarSklad $sokarSklad)
     {

@@ -67,7 +67,10 @@
                         <a class="nav-link align-middle px-0" href="/spraying" class="nav-link px-0">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Опрыскивание</span></a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link align-middle px-0" href="/storagebox" class="nav-link px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">По боксам</span></a>
+                    </li>
                         <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
                             <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Посевная - 2023</span></a>
                         <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
