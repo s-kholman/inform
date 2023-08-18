@@ -40,7 +40,7 @@ class SokarFIOController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(Request $request)
     {
@@ -79,7 +79,7 @@ class SokarFIOController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(Request $request, SokarFIO $sokarFIO)
     {
@@ -87,7 +87,7 @@ class SokarFIOController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(SokarFIO $sokarFIO)
     {

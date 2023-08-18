@@ -29,7 +29,7 @@ class CurrentStatusController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(CurrentRequest $request)
     {
@@ -92,7 +92,7 @@ class CurrentStatusController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(Request $request, CurrentStatus $currentStatus)
     {
@@ -100,7 +100,7 @@ class CurrentStatusController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(CurrentStatus $currentStatus)
     {

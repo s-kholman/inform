@@ -52,7 +52,8 @@ class SevooborotController extends Controller
             $reprod_arr [$value->kultura_id] [$value->id] =  $value->name;
         }
 
-        return view('sevooborot.create', ['pole' => $pole,
+        return view('sevooborot.create', [
+            'pole' => $pole,
             'nomen_arr' => json_encode($nomen_arr, JSON_UNESCAPED_UNICODE),
             'reprod_arr' => json_encode($reprod_arr, JSON_UNESCAPED_UNICODE)]);
 
@@ -60,7 +61,7 @@ class SevooborotController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(Request $request, Pole $pole)
     {
@@ -101,7 +102,7 @@ class SevooborotController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(Request $request, Pole $pole, Sevooborot $sevooborot)
     {
@@ -109,7 +110,7 @@ class SevooborotController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(Pole $pole, Sevooborot $sevooborot)
     {

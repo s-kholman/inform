@@ -33,7 +33,7 @@ class MidOidController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(MidOidRequest $request)
     {
@@ -64,7 +64,7 @@ class MidOidController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(MidOidRequest $request, MibOid $mibOid)
     {
@@ -77,7 +77,7 @@ class MidOidController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(MibOid $mibOid)
     {

@@ -43,7 +43,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storagebox.
      */
     public function store(Request $request)
     {
@@ -124,7 +124,7 @@ return view('printer.service.service', ['itog' =>$itog]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storagebox.
      */
     public function update(Request $request, Service $service)
     {
@@ -132,7 +132,7 @@ return view('printer.service.service', ['itog' =>$itog]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storagebox.
      */
     public function destroy(Service $service)
     {

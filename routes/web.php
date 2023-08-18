@@ -81,10 +81,6 @@ Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->middleware('guest')->name('password.request');
 
-
-
-//Route::get('/storage/detail/{id}', [BoxController::class, 'storageDetail']);
-
 Route::post('/sms_get', [SmsController::class, 'smsGet'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->middleware('throttle:smsIn');
 
@@ -126,13 +122,10 @@ Route::resource('kultura', \App\Http\Controllers\KulturaController::class);
  * Ресурсы производственного отдела
  */
 Route::resource('storagename', \App\Http\Controllers\Storage\StorageNameController::class);
-Route::get('/box_filling', [BoxController::class, 'boxFillingShow'])->name('box_filling')->middleware('can:destroy, App\Models\svyaz');
-Route::post('/box_filling', [BoxController::class, 'boxFillingAdd'])->name('box.filling')->middleware('can:destroy, App\Models\svyaz');;
-Route::get('/box_disssembly_show/d/{id}', [BoxController::class, 'boxDisssemblyShow'])->middleware('can:destroy, App\Models\svyaz');;
-Route::get('/box_sampling_show/s/{id}', [BoxController::class, 'boxSamplingShow'])->middleware('can:destroy, App\Models\svyaz');;
-Route::post('/box_disssembly_show', [BoxController::class, 'boxDisssemblyAdd'])->name('box.disassembly')->middleware('can:destroy, App\Models\svyaz');;
-Route::post('/box_sampling_show', [BoxController::class, 'boxSamplingAdd'])->name('box.sampling')->middleware('can:destroy, App\Models\svyaz');
-Route::get('/box_itog', [BoxController::class, 'boxItog']);
+Route::resource('storagebox', \App\Http\Controllers\Storage\StorageBoxController::class);
+Route::resource('gues', \App\Http\Controllers\GuesController::class);
+Route::resource('take', \App\Http\Controllers\TakeController::class);
+
 
 //Route::resource('szrclass', \App\Http\Controllers\SzrClassesController::class);
 Route::resource('filial', \App\Http\Controllers\FilialController::class);
