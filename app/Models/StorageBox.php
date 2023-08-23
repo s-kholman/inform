@@ -15,7 +15,7 @@ class StorageBox extends Model
 
     public function storageName()
     {
-       return $this->belongsTo(StorageName::class);
+       return $this->belongsTo(StorageName::class)->orderBy('name');
     }
 
     public function nomenklature()

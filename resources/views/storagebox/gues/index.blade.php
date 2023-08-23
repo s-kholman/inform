@@ -15,7 +15,7 @@
                 <label class="float-end" for="fifty">50+</label>
             </div>
             <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 p-2">
-                <input type="number" step="0.01" value="{{old('fifty')}}" class="display form-control @error('fifty') is-invalid @enderror" id="fifty" name="fifty">
+                <input autofocus type="number" step="0.01" value="{{old('fifty')}}" class="display form-control @error('fifty') is-invalid @enderror" id="fifty" name="fifty">
                 @error('fifty')
                 <span class="invalid-feedback">
                     <strong>{{$message}}</strong>
