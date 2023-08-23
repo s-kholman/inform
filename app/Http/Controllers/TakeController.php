@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\StorageBox\StorageBoxTakeSumAction;
 use App\Http\Requests\TakeRequest;
 use App\Http\Requests\TakeStoreRequest;
+use App\Models\Gues;
 use App\Models\StorageBox;
 use App\Models\Take;
 use Illuminate\Http\Request;
@@ -13,6 +14,10 @@ use \Illuminate\Support\Facades\Validator;
 
 class TakeController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Take::class, 'take');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -75,7 +80,7 @@ class TakeController extends Controller
      */
     public function show(Take $take)
     {
-        //
+        return view('storagebox.take.destroy', ['take' => $take]);
     }
 
     /**
@@ -99,6 +104,10 @@ class TakeController extends Controller
      */
     public function destroy(Take $take)
     {
-        //
+        $take->delete();
+        $take_all = Take::where('storage_box_id', $take->storage_box_id)->get();
+        $gues = Gues::where('storage_box_id', $take->storage_box_id)->get();
+        $all = collect($take_all)->merge(collect($gues))->sortBy('created_at')->sortBy('date');
+        return view('storagebox.report.index', ['all' => $all]);
     }
 }

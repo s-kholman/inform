@@ -33,9 +33,6 @@ Route::get('/svyaz_delete{svyaz}', [InfoController::class, 'deleteSvyaz'])->name
 Route::post('/posev_add', [InfoController::class, 'storePosev'])->name('posev.add')->middleware('auth');
 Route::get('/posev_add', [InfoController::class, 'showAddPosevForm'])->name('posev_add')->middleware('auth');
 
-Route::get('/test', [InfoController::class, 'showTestForm'])->name('test');
-Route::post('/test', [InfoController::class, 'showTest'])->name('test.show');
-
 Route::view('/login', 'login');
 Route::view('/register', 'register');
 
@@ -138,7 +135,7 @@ Route::resource('fio', \App\Http\Controllers\FioController::class);
 Route::resource('spraying', \App\Http\Controllers\SprayingController::class)->middleware('auth');
 Route::resource('post', \App\Http\Controllers\PostController::class);
 
-//Route::view('/printers','printers.index');
+
 Route::resource('brend', \App\Http\Controllers\BrendController::class);
 Route::resource('device_name', \App\Http\Controllers\DeviceNameController::class);
 Route::resource('device', \App\Http\Controllers\DeviceController::class);
