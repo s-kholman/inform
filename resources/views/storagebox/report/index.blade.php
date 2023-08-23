@@ -41,12 +41,21 @@
                 </div>
                 <div
                     class="border border-1 col-1">@if($value->fifty+$value->forty+$value->thirty+$value->standard+$value->waste+$value->land == 100 )
-                        Разбраковка @else Изъяли @endif </div>
+                        <a href="/gues/{{$value->id}}">Разбраковка</a> @else <a href="/take/{{$value->id}}">Изъяли</a> @endif </div>
                 <div
                     class="border border-1 col-1">@if($value->fifty+$value->forty+$value->thirty+$value->standard+$value->waste+$value->land == 100 ) @else
                         {{$value->fifty+$value->forty+$value->thirty+$value->standard+$value->waste+$value->land}} @endif </div>
             </div>
         @empty
+            <div class="row">
+            <div class="col-6 p-2">
+                <form action="{{ route('storagebox.destroy', ['storagebox' => $storagebox])}}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <input type="submit" class="btn btn-danger" value="Удалить">
+                </form>
+            </div>
+            </div>
         @endforelse
         <div class="row">
             <div class="col-9 p-2 text-end">

@@ -6,12 +6,17 @@ use App\Http\Requests\GuesRequest;
 use App\Http\Requests\GuesStoreRequest;
 use App\Models\Gues;
 use App\Models\StorageBox;
+use App\Models\Take;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class GuesController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Gues::class, 'gue');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -69,9 +74,9 @@ class GuesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Gues $gues)
+    public function show(Gues $gue)
     {
-        //
+        return view('storagebox.gues.destroy', ['gue' => $gue]);
     }
 
     /**
@@ -85,7 +90,7 @@ class GuesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Gues $gues)
+    public function update(Request $request, Gues $gue)
     {
         //
     }
@@ -93,8 +98,12 @@ class GuesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Gues $gues)
+    public function destroy(Gues $gue)
     {
-        //
+        $gue->delete();
+        $take = Take::where('storage_box_id', $gue->storage_box_id)->get();
+        $gue_all = Gues::where('storage_box_id', $gue->storage_box_id)->get();
+        $all = collect($take)->merge(collect($gue_all))->sortBy('created_at')->sortBy('date');
+        return view('storagebox.report.index', ['all' => $all]);
     }
 }

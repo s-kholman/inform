@@ -61,13 +61,13 @@ class StorageBoxController extends Controller
         $take = Take::where('storage_box_id', $storagebox->id)->get();
         $gues = Gues::where('storage_box_id', $storagebox->id)->get();
         $all = collect($take)->merge(collect($gues))->sortBy('created_at')->sortBy('date');
-        return view('storagebox.report.index', ['all' => $all]);
+        return view('storagebox.report.index', ['all' => $all, 'storagebox' => $storagebox]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(StorageBox $storageBox)
+    public function edit(StorageBox $storagebox)
     {
         //
     }
@@ -75,7 +75,7 @@ class StorageBoxController extends Controller
     /**
      * Update the specified resource in storagebox.
      */
-    public function update(Request $request, StorageBox $storageBox)
+    public function update(Request $request, StorageBox $storagebox)
     {
         //
     }
@@ -83,8 +83,9 @@ class StorageBoxController extends Controller
     /**
      * Remove the specified resource from storagebox.
      */
-    public function destroy(StorageBox $storageBox)
+    public function destroy(StorageBox $storagebox)
     {
-        //
+        $storagebox->delete();
+        return redirect()->route('storagebox.index');
     }
 }

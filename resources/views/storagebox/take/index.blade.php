@@ -3,7 +3,7 @@
 
 @section('info')
     <div class="container">
-        <form method="post" action="{{route('take.store')}}">
+        <form onkeypress="return event.keyCode != 13;" method="post" action="{{route('take.store')}}">
             @csrf
             <div class="row">
                 <div class="col">
@@ -16,7 +16,7 @@
                 <label class="float-end" for="fifty">50+</label>
             </div>
             <div class="col-xxl-2 p-2">
-                <input type="number" step="0.001" value="{{old('fifty')}}" class="display form-control @error('fifty') is-invalid @enderror" id="fifty" name="fifty">
+                <input autofocus type="number" step="0.001" value="{{old('fifty')}}" class="display form-control @error('fifty') is-invalid @enderror" id="fifty" name="fifty">
                 @error('fifty')
                 <span class="invalid-feedback">
                     <strong>{{$message}}</strong>
@@ -148,3 +148,15 @@
 
 
 @endsection('info')
+@section('script')
+<script>
+    $(document).ready(function() {
+        $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>
+@endsection('script')

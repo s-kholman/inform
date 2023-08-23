@@ -22,14 +22,13 @@
             @endif
             <div class="row border-top border-end border-start border-3 @if ($loop->index % 2 == 0)border-info @endif">
                 <div class="text-wrap col-2"><b><a href="{{route('storagebox.show', ['storagebox' => $value])}}">{{$value->storageName->name}}</a></b></div>
-                <div class="col-3"><a
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-3 col-xxl-3"><a
                         href="{{route('gues.index', ['id' => $value])}}">{{$value->nomenklature->name}} {{$value->reproduktion->name}}</a>
                 </div>
-                <div class="col-1">@if($value->type == 1) Товарный @elseif($value->type == 2)
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-1 col-xxl-1">@if($value->type == 1) Товарный @elseif($value->type == 2)
                         Семенной @else  @endif</div>
-                <div class="col-1"><a
-                        href="{{route('take.index', ['id' => $value])}}">{{$value->volume}}</a></div>
-                <div class="text-wrap col-5">{{$value->field}}</div>
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-1 col-xxl-1 "><a href="{{route('take.index', ['id' => $value])}}">{{$value->volume}}</a></div>
+                <div class="text-wrap col-xl-4 col-xxl-5 d-none d-xl-block">{{$value->field}}</div>
             </div>
             <div
                 class="row text-center border-end border-bottom  border-start border-2 @if ($loop->index % 2 == 0)border-info @endif">
