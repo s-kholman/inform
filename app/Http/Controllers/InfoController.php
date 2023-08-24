@@ -30,59 +30,6 @@ use UniFi_API\Client;
 
 class InfoController extends Controller
 {
-    //Валидация, сообщения об ошибках
-    private const ERROR_MESSAGES = [
-        'required' => 'Заполните это поле',
-        'max' => 'Значение не должно быть длинне :max символов'
-    ];
-
-    private const SVYAZ_VALIDATOR = [
-        'fio' => 'required',
-        'filial' => 'required',
-        'vidposeva' => 'required',
-        'agregat' => 'required'
-    ];
-
-
-    public function index()
-    {
-        if (Auth::check()) {
-            return view('index', ['user_reg' => Auth::user()->Registration]);
-        }
-        return view('index');
-    }
-
-    public function showAddSvyazForm()
-    {
-        //данные для исключения ФИО из выбора на странице связок уже активных
-        $use_fio = svyaz::select('fio_id')->where('active', true)->get();
-
-        $content = ['vidposevas' => Vidposeva::latest()->get(),
-            'fios' => fio::whereNotIn('id', $use_fio)->get(),
-            'filials' => filial::latest()->get(),
-            'agregats' => agregat::latest()->get(),
-            'svyazs' => svyaz::orderby('active', 'DESC')->orderby('id')->get()];
-
-        return view('svyaz_add', $content);
-    }
-
-    public function storeSvyaz(Request $request)
-    {
-        //Валидация данных
-        $validated = $request->validate(self::SVYAZ_VALIDATOR,
-            self::ERROR_MESSAGES);
-        svyaz::create(
-            [
-                'fio_id' => $validated['fio'],
-                'filial_id' => $validated['filial'],
-                'vidposeva_id' => $validated['vidposeva'],
-                'agregat_id' => $validated['agregat'],
-                'date' => now(),
-                'active' => true
-            ]);
-        return redirect()->route('svyaz_add');
-    }
-
 
     public function showAddPosevForm()
     {
@@ -187,28 +134,6 @@ class InfoController extends Controller
         }
         return redirect()->route('otchet', ['key' => $vidposeva]);
     }
-
-    public function disableSvyaz(svyaz $svyaz)
-    {
-        // return view('test', ['request' => $svyaz]);
-        svyaz::where('id', $svyaz->id)->update(['active' => false]);
-        return redirect()->route('svyaz_add');
-    }
-
-    public function deleteSvyaz(svyaz $svyaz)
-    {
-        // return view('test', ['request' => $svyaz]);
-        svyaz::where('id', $svyaz->id)->delete();
-        return redirect()->route('svyaz_add');
-    }
-
-
-    public function showTestForm()
-    {
-
-        return view('test', ['request' => Auth::user()->FilialName->name]);
-    }
-
 
     public function otchet(Request $request)
     {

@@ -128,7 +128,7 @@
                             </li>
 
                             <li>
-                                <a href="/svyaz_add" class="nav-link px-0"> <span class="d-none d-sm-inline">Создание связок</span></a>
+                                <a href="/svyaz" class="nav-link px-0"> <span class="d-none d-sm-inline">Создание связок</span></a>
                             </li>
 
 
