@@ -22,31 +22,32 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', [InfoController::class, 'index'])->name('/');
+Route::view('/', 'index')->name('/');
+
+/**
+ * Посевная + торф (последнее переписать как новый отчет)
+ */
+Route::resource('svyaz', \App\Http\Controllers\SvyazController::class)->middleware('can:destroy, App\Models\svyaz');
 Route::get('/otchet/{key}', [InfoController::class, 'otchet'])->name('otchet');
-
-Route::post('/svyaz_add', [InfoController::class, 'storeSvyaz'])->name('svyaz.add')->middleware('auth');
-Route::get('/svyaz_add', [InfoController::class, 'showAddSvyazForm'])->name('svyaz_add')->middleware('can:destroy, App\Models\svyaz');
-Route::get('/svyaz_disable{svyaz}', [InfoController::class, 'disableSvyaz'])->name('svyaz.disable')->middleware('can:destroy, App\Models\svyaz');
-Route::get('/svyaz_delete{svyaz}', [InfoController::class, 'deleteSvyaz'])->name('svyaz.delete')->middleware('can:destroy, App\Models\svyaz');
-
 Route::post('/posev_add', [InfoController::class, 'storePosev'])->name('posev.add')->middleware('auth');
 Route::get('/posev_add', [InfoController::class, 'showAddPosevForm'])->name('posev_add')->middleware('auth');
 
 Route::view('/login', 'login');
 Route::view('/register', 'register');
 
+/**
+ * Отчет по расходу на сотовую связь
+ */
 Route::get('/limit_add',[LimitsController::class, 'showLimitForm'])->name('limit_add')->middleware('can:destroy, App\Models\svyaz');;
 Route::post('/limit_add', [LimitsController::class, 'storeLimit'])->name('limit.save')->middleware('can:destroy, App\Models\svyaz');
 Route::post('/parser_add', [LimitsController::class, 'parserLimit'])->name('parser.save')->middleware('can:destroy, App\Models\svyaz');;
 Route::delete('/limit_delete/{limitID}', [LimitsController::class, 'limitdestroy'])->name('limit.destroy')->middleware('can:destroy, App\Models\svyaz');
-
 Route::get('/limit_view/{phoneDetail?}',[LimitsController::class, 'showLimit'])
     ->name('limit_view')
     ->middleware('can:limitView, App\Models\svyaz')
     ->where('phoneDetail','[0-9]+');
-
 Route::get('/edit_limit/{limitID}', [LimitsController::class, 'limitEdit'])->name('limit.edit')->middleware('can:destroy, App\Models\svyaz');;
+
 
 Route::get('/profile', [RegistrationController::class, 'index'])->name('profile.index')->middleware('auth');
 Route::post('/profile', [RegistrationController::class, 'store'])->name('profile.store')->middleware('auth');
@@ -86,12 +87,11 @@ Route::post('/voucher_get', [SmsController::class, 'voucherGet'])->name('voucher
 
 
 Route::resource('pole', PoleController::class);
-
 Route::resource('pole.sevooborot', \App\Http\Controllers\SevooborotController::class)->middleware('auth');
 
 
 Route::get('/poliv_add', [PolivController::class, 'polivAddShow'])->name('poliv_add')->middleware('auth');;
-Route::get('/poliv_show/{filial_id?}/{pole_id?}', [PolivController::class, 'polivShow'])->name('poliv.view');
+Route::get('/poliv_show/{filial_id?}/{pole_id?}', [PolivController::class, 'polivShow'])->name('poliv.view')->middleware('auth');;
 Route::post('/poliv_add', [PolivController::class, 'polivAdd'])->name('poliv.add')->middleware('auth');
 Route::get('/poliv_edit/{polivId}', [PolivController::class, 'polivEdit'])->name('poliv_edit')->middleware('can:viewAny, App\Models\Poliv');;
 Route::delete('/poliv_delete/{poliv}', [PolivController::class, 'polivdestroy'])->name('poliv.destroy')->middleware('can:delete,poliv');
@@ -119,7 +119,7 @@ Route::resource('kultura', \App\Http\Controllers\KulturaController::class);
  * Ресурсы производственного отдела
  */
 Route::resource('storagename', \App\Http\Controllers\Storage\StorageNameController::class);
-Route::resource('storagebox', \App\Http\Controllers\Storage\StorageBoxController::class);
+Route::resource('storagebox', \App\Http\Controllers\Storage\StorageBoxController::class)->middleware('auth');;
 Route::resource('gues', \App\Http\Controllers\GuesController::class);
 Route::resource('take', \App\Http\Controllers\TakeController::class);
 

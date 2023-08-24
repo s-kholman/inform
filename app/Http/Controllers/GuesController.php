@@ -101,9 +101,6 @@ class GuesController extends Controller
     public function destroy(Gues $gue)
     {
         $gue->delete();
-        $take = Take::where('storage_box_id', $gue->storage_box_id)->get();
-        $gue_all = Gues::where('storage_box_id', $gue->storage_box_id)->get();
-        $all = collect($take)->merge(collect($gue_all))->sortBy('created_at')->sortBy('date');
-        return view('storagebox.report.index', ['all' => $all]);
+        return redirect()->route('storagebox.show', ['storagebox' => $gue->storage_box_id]);
     }
 }

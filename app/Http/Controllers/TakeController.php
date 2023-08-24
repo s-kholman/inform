@@ -105,9 +105,6 @@ class TakeController extends Controller
     public function destroy(Take $take)
     {
         $take->delete();
-        $take_all = Take::where('storage_box_id', $take->storage_box_id)->get();
-        $gues = Gues::where('storage_box_id', $take->storage_box_id)->get();
-        $all = collect($take_all)->merge(collect($gues))->sortBy('created_at')->sortBy('date');
-        return view('storagebox.report.index', ['all' => $all]);
+        return redirect()->route('storagebox.show', ['storagebox' => $take->storage_box_id]);
     }
 }
