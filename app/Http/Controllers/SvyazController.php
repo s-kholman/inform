@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\sowing\svyaz\SvyazCreateAction;
 use App\Actions\sowing\svyaz\SvyazStoreAction;
 use App\Http\Requests\SvyazRequest;
-use App\Models\Fio;
 use App\Models\Svyaz;
 use Illuminate\Http\Request;
 
@@ -21,11 +21,9 @@ class SvyazController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(SvyazCreateAction $svyazCreateAction)
     {
-        $use_fio = svyaz::select('fio_id')->where('active', true)->get();
-        $fio = fio::whereNotIn('id', $use_fio)->get();
-        return view('sowing.svyaz.create', ['fios' => $fio]);
+        return view('sowing.svyaz.create', ['fios' => $svyazCreateAction()]);
     }
 
     /**
