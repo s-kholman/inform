@@ -50,7 +50,6 @@ class GuesPolicy
         if (($createdMinutes <= 60 && $user->Registration->activation ?? false) || ($user->email == 'sergey@krimm.ru')) {
             return true;
         } else {
-
             return false;
         }
     }

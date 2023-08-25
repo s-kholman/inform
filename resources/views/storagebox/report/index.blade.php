@@ -7,7 +7,7 @@
             <div class="border border-1 col-1">Дата</div>
             <div class="border border-1 col-1">50+</div>
             <div class="border border-1 col-1">45-50</div>
-            <div class="border border-1 col-1">35-40</div>
+            <div class="border border-1 col-1">35-45</div>
             <div class="border border-1 col-1">Не стандарт</div>
             <div class="border border-1 col-1">Отходы</div>
             <div class="border border-1 col-1">Земля</div>
