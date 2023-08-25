@@ -5,7 +5,6 @@ use \App\Http\Controllers\InfoController;
 use \App\Http\Controllers\LimitsController;
 use \App\Http\Controllers\RegistrationController;
 use \App\Http\Controllers\ActivationController;
-use \App\Http\Controllers\BoxController;
 use \App\Http\Controllers\SmsController;
 use \App\Http\Controllers\PolivController;
 use \App\Http\Controllers\PoleController;
