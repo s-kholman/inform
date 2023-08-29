@@ -48,7 +48,7 @@ class TakePolicy
     public function delete(User $user, Take $take): bool
     {
         $createdMinutes = Carbon::now()->diffInMinutes($take->created_at);
-        if (($createdMinutes <= 60 && $user->Registration->activation ?? false) || ($user->email == 'sergey1@krimm.ru')) {
+        if (($createdMinutes <= 60 && $user->Registration->activation ?? false) || ($user->email == 'sergey@krimm.ru')) {
             return true;
         } else {
             return false;

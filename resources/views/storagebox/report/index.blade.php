@@ -1,8 +1,14 @@
 @extends('layouts.base')
-@section('title', 'Главная')
+@section('title', 'Отчет итоги хранения по боксу: '. $storagebox->storageName['name'])
 
 @section('info')
     <div class="container text-center">
+        <div class="row">
+            <div class="col-9">
+                <h5>{{$storagebox->storageName['name']}}</h5>
+                <hr>
+            </div>
+        </div>
         <div class="row">
             <div class="border border-1 col-1">Дата</div>
             <div class="border border-1 col-1">50+</div>
@@ -16,8 +22,16 @@
         </div>
 
         @forelse($all as $value)
+            @if ($loop->first)
+                @if (session('message'))
+                    <div class="row ">
+                        <div class="alert alert-success col-9">
+                            {{session('message')}}
+                        </div>
+                    </div>
+                @endif
+            @endif
             <div class="row ">
-
                 <div class="border border-1 col-1">
                     {{\Carbon\Carbon::parse($value->date)->format('d-m-Y')}}
                 </div>

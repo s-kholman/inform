@@ -1,5 +1,40 @@
 <?php
 
+use App\Http\Controllers\AgregatController;
+use App\Http\Controllers\BrendController;
+use App\Http\Controllers\ColorController;
+use App\Http\Controllers\CounterpartyController;
+use App\Http\Controllers\CurrentStatusController;
+use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\DeviceNameController;
+use App\Http\Controllers\FilialController;
+use App\Http\Controllers\FioController;
+use App\Http\Controllers\GuesController;
+use App\Http\Controllers\HeightController;
+use App\Http\Controllers\KulturaController;
+use App\Http\Controllers\MidOidController;
+use App\Http\Controllers\NomenklatureController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\PrinterController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ServiceNameController;
+use App\Http\Controllers\SevooborotController;
+use App\Http\Controllers\SizeController;
+use App\Http\Controllers\SokarController;
+use App\Http\Controllers\SokarFIOController;
+use App\Http\Controllers\SokarNomenklatController;
+use App\Http\Controllers\SokarSkladController;
+use App\Http\Controllers\SokarSpisanieController;
+use App\Http\Controllers\SprayingController;
+use App\Http\Controllers\SprayingReportController;
+use App\Http\Controllers\StatusController;
+use App\Http\Controllers\Storage\StorageBoxController;
+use App\Http\Controllers\Storage\StorageNameController;
+use App\Http\Controllers\SutkiController;
+use App\Http\Controllers\SzrController;
+use App\Http\Controllers\TakeController;
+use App\Http\Controllers\VidposevaController;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\InfoController;
 use \App\Http\Controllers\LimitsController;
@@ -51,8 +86,6 @@ Route::get('/edit_limit/{limitID}', [LimitsController::class, 'limitEdit'])->nam
 Route::get('/profile', [RegistrationController::class, 'index'])->name('profile.index')->middleware('auth');
 Route::post('/profile', [RegistrationController::class, 'store'])->name('profile.store')->middleware('auth');
 
-Route::get('/unifi', [RegistrationController::class, 'unifi'])->name('unifi_show');
-
 Route::get('/activation', [ActivationController::class, 'activation'])->name('activation.show')->middleware('can:destroy, App\Models\svyaz');
 Route::get('/user/{id}', [ActivationController::class, 'userView'])->name('user.view')->middleware('can:destroy, App\Models\svyaz');
 Route::delete( '/user/edit/{id}', [ActivationController::class, 'userEdit'])->name('user.edit')->middleware('can:destroy, App\Models\svyaz');
@@ -78,15 +111,15 @@ Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->middleware('guest')->name('password.request');
 
-Route::post('/sms_get', [SmsController::class, 'smsGet'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->middleware('throttle:smsIn');
+Route::post('/sms_get', [SmsController::class, 'smsGet'])->withoutMiddleware([VerifyCsrfToken::class]);
+Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('throttle:smsIn');
 
 Route::get('/voucher_get', [SmsController::class, 'voucherGetShow'])->name('voucher');
 Route::post('/voucher_get', [SmsController::class, 'voucherGet'])->name('voucher.get');
 
 
 Route::resource('pole', PoleController::class);
-Route::resource('pole.sevooborot', \App\Http\Controllers\SevooborotController::class)->middleware('auth');
+Route::resource('pole.sevooborot', SevooborotController::class)->middleware('auth');
 
 
 Route::get('/poliv_add', [PolivController::class, 'polivAddShow'])->name('poliv_add')->middleware('auth');;
@@ -96,66 +129,63 @@ Route::get('/poliv_edit/{polivId}', [PolivController::class, 'polivEdit'])->name
 Route::delete('/poliv_delete/{poliv}', [PolivController::class, 'polivdestroy'])->name('poliv.destroy')->middleware('can:delete,poliv');
 
 
-Route::get('/sokar', [\App\Http\Controllers\SokarController::class, 'index'])->name('index.get');
+Route::get('/sokar', [SokarController::class, 'index'])->name('index.get');
+Route::resource('size', SizeController::class);
+Route::resource('color', ColorController::class);
+Route::resource('counterparty', CounterpartyController::class);
+Route::resource('height', HeightController::class);
+Route::resource('sokarsklad', SokarSkladController::class);
+Route::resource('sokarnomenklat', SokarNomenklatController::class);
+Route::resource('sokarfio', SokarFIOController::class);
+Route::resource('spisanie', SokarSpisanieController::class);
+Route::post('/spisanieDate', [SokarSpisanieController::class, 'spisanieDate'])->name('spisanie.spisanieDate');
 
-
-Route::resource('size', \App\Http\Controllers\SizeController::class);
-Route::resource('color', \App\Http\Controllers\ColorController::class);
-Route::resource('counterparty', \App\Http\Controllers\CounterpartyController::class);
-Route::resource('height', \App\Http\Controllers\HeightController::class);
-Route::resource('sokarsklad', \App\Http\Controllers\SokarSkladController::class);
-Route::resource('sokarnomenklat', \App\Http\Controllers\SokarNomenklatController::class);
-Route::resource('sokarfio', \App\Http\Controllers\SokarFIOController::class);
-Route::resource('spisanie', \App\Http\Controllers\SokarSpisanieController::class);
-Route::post('/spisanieDate', [\App\Http\Controllers\SokarSpisanieController::class, 'spisanieDate'])->name('spisanie.spisanieDate');
-
-Route::get('/spraying/report/{id?}', [\App\Http\Controllers\SprayingReportController::class, 'index'])->name('spraying.report.index');
-Route::post('/spraying/report/{id}', [\App\Http\Controllers\SprayingReportController::class, 'report'])->name('spraying.report.show');
-Route::resource('nomenklature', \App\Http\Controllers\NomenklatureController::class);
-Route::resource('kultura', \App\Http\Controllers\KulturaController::class);
+Route::get('/spraying/report/{id?}', [SprayingReportController::class, 'index'])->name('spraying.report.index');
+Route::post('/spraying/report/{id}', [SprayingReportController::class, 'report'])->name('spraying.report.show');
+Route::resource('nomenklature', NomenklatureController::class);
+Route::resource('kultura', KulturaController::class);
 
 /**
  * Ресурсы производственного отдела
  */
-Route::resource('storagename', \App\Http\Controllers\Storage\StorageNameController::class);
-Route::resource('storagebox', \App\Http\Controllers\Storage\StorageBoxController::class)->middleware('auth');;
-Route::resource('gues', \App\Http\Controllers\GuesController::class);
-Route::resource('take', \App\Http\Controllers\TakeController::class);
+Route::resource('storagename', StorageNameController::class);
+Route::resource('storagebox', StorageBoxController::class)->middleware('auth');;
+Route::resource('gues', GuesController::class);
+Route::resource('take', TakeController::class);
 
 
-//Route::resource('szrclass', \App\Http\Controllers\SzrClassesController::class);
-Route::resource('filial', \App\Http\Controllers\FilialController::class);
-Route::resource('szr', \App\Http\Controllers\SzrController::class);
-Route::resource('sutki', \App\Http\Controllers\SutkiController::class);
-Route::resource('agregat', \App\Http\Controllers\AgregatController::class);
-Route::resource('vidposeva', \App\Http\Controllers\VidposevaController::class);
-Route::resource('fio', \App\Http\Controllers\FioController::class);
+Route::resource('filial', FilialController::class);
+Route::resource('szr', SzrController::class);
+Route::resource('sutki', SutkiController::class);
+Route::resource('agregat', AgregatController::class);
+Route::resource('vidposeva', VidposevaController::class);
+Route::resource('fio', FioController::class);
 
-Route::resource('spraying', \App\Http\Controllers\SprayingController::class)->middleware('auth');
-Route::resource('post', \App\Http\Controllers\PostController::class);
-
-
-Route::resource('brend', \App\Http\Controllers\BrendController::class);
-Route::resource('device_name', \App\Http\Controllers\DeviceNameController::class);
-Route::resource('device', \App\Http\Controllers\DeviceController::class);
-Route::resource('service_name', \App\Http\Controllers\ServiceNameController::class);
-Route::resource('service', \App\Http\Controllers\ServiceController::class);
-Route::get('/device/{currentStatus}', [\App\Http\Controllers\ServiceController::class, 'device']);
-Route::get('/cartridge/{device}', [\App\Http\Controllers\ServiceController::class, 'cartridge']);
-Route::resource('status', \App\Http\Controllers\StatusController::class);
-Route::resource('mibOid', \App\Http\Controllers\MidOidController::class);
+Route::resource('spraying', SprayingController::class)->middleware('auth');
+Route::resource('post', PostController::class);
 
 
+Route::resource('brend', BrendController::class);
+Route::resource('device_name', DeviceNameController::class);
+Route::resource('device', DeviceController::class);
+Route::resource('service_name', ServiceNameController::class);
+Route::resource('service', ServiceController::class);
+Route::get('/device/{currentStatus}', [ServiceController::class, 'device']);
+Route::get('/cartridge/{device}', [ServiceController::class, 'cartridge']);
+Route::resource('status', StatusController::class);
+Route::resource('mibOid', MidOidController::class);
 
-Route::get('/printer/{id}/current/show', [\App\Http\Controllers\CurrentStatusController::class, 'show'])->name('printer.current.show');
-Route::get('/current/{currentStatus}/edit', [\App\Http\Controllers\CurrentStatusController::class, 'edit'])->name('printer.current.edit');
-Route::post('/current/store',[\App\Http\Controllers\CurrentStatusController::class, 'store'])->name('printer.current.store');
-Route::get('/printers', [\App\Http\Controllers\PrinterController::class, 'index'])->name('Printer.index');
-Route::get('/printer/{id}/show/{currentStatus}', [\App\Http\Controllers\PrinterController::class, 'show'])->name('printer.show');
-Route::post('/printer', [\App\Http\Controllers\PrinterController::class, 'index'])->name('printer.toDayGet');
 
-Route::get('/daily', [\App\Http\Controllers\PrinterController::class, 'daily']);
-Route::get('/job', [\App\Http\Controllers\PrinterController::class, 'job']);
+
+Route::get('/printer/{id}/current/show', [CurrentStatusController::class, 'show'])->name('printer.current.show');
+Route::get('/current/{currentStatus}/edit', [CurrentStatusController::class, 'edit'])->name('printer.current.edit');
+Route::post('/current/store',[CurrentStatusController::class, 'store'])->name('printer.current.store');
+Route::get('/printers', [PrinterController::class, 'index'])->name('Printer.index');
+Route::get('/printer/{id}/show/{currentStatus}', [PrinterController::class, 'show'])->name('printer.show');
+Route::post('/printer', [PrinterController::class, 'index'])->name('printer.toDayGet');
+
+Route::get('/daily', [PrinterController::class, 'daily']);
+Route::get('/job', [PrinterController::class, 'job']);
 
 
 Route::view('/reference', 'printer.reference');
