@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Storage\StorageBoxController;
 use App\Http\Requests\GuesRequest;
 use App\Http\Requests\GuesStoreRequest;
 use App\Models\Gues;
 use App\Models\StorageBox;
-use App\Models\Take;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -67,8 +67,7 @@ class GuesController extends Controller
             'user_id' => Auth::user()->id,
             'comment' => $valid['comment']
         ]);
-
-       return redirect()->route('storagebox.index');
+        return redirect()->action([StorageBoxController::class, 'show'], ['storagebox' => $valid['storage_box_id']])->with('message', 'Данные добавленны');
     }
 
     /**

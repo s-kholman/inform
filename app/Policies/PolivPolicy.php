@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Poliv;
 use App\Models\Registration;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\Response;
 
 class PolivPolicy
@@ -46,7 +47,8 @@ class PolivPolicy
      */
     public function delete(User $user, Poliv $poliv): bool
     {
-        if ($user->Registration->filial_id == $poliv->filial_id){
+        $createdMinutes = Carbon::now()->diffInMinutes($poliv->created_at);
+        if (($createdMinutes <= 60 && $user->Registration->filial_id == $poliv->filial_id) || ($user->email == 'sergey@krimm.ru')){
             return true;
         }
         return false;
