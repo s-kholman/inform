@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Actions\StorageBox\StorageBoxTakeSumAction;
+use App\Http\Controllers\Storage\StorageBoxController;
 use App\Http\Requests\TakeRequest;
 use App\Http\Requests\TakeStoreRequest;
-use App\Models\Gues;
 use App\Models\StorageBox;
 use App\Models\Take;
 use Illuminate\Http\Request;
@@ -70,9 +70,7 @@ class TakeController extends Controller
             'user_id' => Auth::user()->id,
             'comment' => $valid['comment']
         ]);
-       return redirect()->route('storagebox.index');
-
-
+       return redirect()->action([StorageBoxController::class, 'show'], ['storagebox' => $valid['storage_box_id']])->with('message', 'Данные добавленны');
     }
 
     /**

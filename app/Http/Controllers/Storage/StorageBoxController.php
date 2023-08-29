@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Storage;
 use App\Actions\StorageBox\StorageBoxCreateAction;
 use App\Actions\StorageBox\StorageBoxGuesIndexAction;
 use App\Actions\StorageBox\StorageBoxIndexAction;
+use App\Actions\StorageBox\StorageBoxReportIndex;
 use App\Actions\StorageBox\StorageBoxStoreAction;
 use App\Actions\StorageBox\StorageBoxTakeIndexAction;
 use App\Http\Controllers\Controller;
@@ -56,12 +57,9 @@ class StorageBoxController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(StorageBox $storagebox)
+    public function show(StorageBox $storagebox, StorageBoxReportIndex $storageBoxReportIndex)
     {
-        $take = Take::where('storage_box_id', $storagebox->id)->get();
-        $gues = Gues::where('storage_box_id', $storagebox->id)->get();
-        $all = collect($take)->merge(collect($gues))->sortBy('created_at')->sortBy('date');
-        return view('storagebox.report.index', ['all' => $all, 'storagebox' => $storagebox]);
+        return view('storagebox.report.index', $storageBoxReportIndex($storagebox));
     }
 
     /**

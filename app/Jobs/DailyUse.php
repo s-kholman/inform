@@ -14,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 class DailyUse implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    public $maxExceptions = 30;
     /**
      * Create a new job instance.
      */

@@ -4,10 +4,15 @@ namespace App\Policies;
 
 use App\Models\Spraying;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\Response;
 
 class SprayingPolicy
 {
+    public function myView (User $user): bool
+    {
+        return $user->email == 'sergey@krimm.ru';
+    }
     /**
      * Determine whether the user can view any models.
      */
@@ -45,8 +50,8 @@ class SprayingPolicy
      */
     public function delete(User $user, Spraying $spraying): bool
     {
-
-        if ($user->Registration->filial_id == $spraying->pole->filial_id){
+        $createdMinutes = Carbon::now()->diffInMinutes($spraying->created_at);
+        if (($createdMinutes <= 60 && $user->Registration->filial_id == $spraying->pole->filial_id) || ($user->email == 'sergey@krimm.ru')){
             return true;
         }
         return false;
