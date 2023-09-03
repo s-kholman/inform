@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('sokar_nomenklat_id')->constrained()->onDelete('cascade');
             $table->foreignId('size_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('color_id')->nullable()->constrained()->onDelete('cascade');
-            $table->integer('size_height');
+            $table->foreignId('height_id')->nullable()->constrained()->onDelete('cascade');
             $table->float('count');
             $table->date('date');
             $table->foreignId('counterpartie_id')->constrained()->onDelete('cascade');
