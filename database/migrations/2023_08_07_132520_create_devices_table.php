@@ -16,8 +16,8 @@ return new class extends Migration
             $table->macAddress('mac');
             $table->string('sn', 255)->nullable()->default(null);
             $table->date('date');
+            $table->foreignId('brend_id')->constrained();
             $table->foreignId('device_names_id')->constrained();
-            $table->softDeletes();
             $table->timestamps();
         });
     }
