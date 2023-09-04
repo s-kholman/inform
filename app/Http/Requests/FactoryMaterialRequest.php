@@ -27,6 +27,7 @@ class FactoryMaterialRequest extends FormRequest
             'filial_name' => 'required|numeric',
             'fio' => 'nullable|max:255',
             'nomenklature' => 'required|numeric',
+            'image' => 'mimes:jpg,bmp,png,jpeg'
         ];
     }
     public function messages()
@@ -36,7 +37,8 @@ class FactoryMaterialRequest extends FormRequest
             'numeric' => 'только числовое значение',
             'filial_name.numeric' => 'Выберите из списка',
             'nomenklature.numeric' => 'Выберите из списка',
-            'max' => 'Сократите сообщение до :max символов'
+            'max' => 'Сократите сообщение до :max символов',
+            'mimes' => 'Тип файла не соответствует изображению'
         ];
     }
 }

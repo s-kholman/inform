@@ -68,6 +68,10 @@
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Опрыскивание</span></a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link align-middle px-0" href="/factory/material" class="nav-link px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Завод - сырье</span></a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/storagebox" class="nav-link px-0">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">По боксам</span></a>
                     </li>

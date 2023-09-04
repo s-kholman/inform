@@ -23,15 +23,15 @@
                 @if ($material->gues->volume ?? false)
                 <div class="row">
                     <div class="col-6 border">Вес: {{$material->gues->volume}} кг.</div>
-                    <div class="col-6 border">Чистый вес: {{$material->gues->volume /100*(100-($material->gues->mechanical+$material->gues->land+$material->gues->rot+$material->gues->haulm))}} кг.,
+                    <div class="col-6 border">Чистый вес: {{round($material->gues->volume /100*(100-($material->gues->mechanical+$material->gues->land+$material->gues->rot+$material->gues->haulm)))}} кг.,
                         {{100 - ($material->gues->mechanical+$material->gues->land+$material->gues->rot+$material->gues->haulm)}}%</div>
                 </div>
                 <div class="row">
-                    <div class="col-2 border @if($material->gues->mechanical >= 10) bg-danger @else bg-success @endif">Мех повреждения</div>
-                    <div class="col-2 border @if($material->gues->land >= 15) bg-danger @else bg-success @endif">Камни земля</div>
-                    <div class="col-2 border @if($material->gues->rot >= 5) bg-danger @else bg-success @endif">Гниль</div>
-                    <div class="col-2 border @if($material->gues->haulm >= 1) bg-danger @else bg-success @endif">Ботва</div>
-                    <div class="col-2 border fs-6 @if($material->gues->foreign_object) bg-danger @else bg-success @endif">Посторонние предметы</div>
+                    <div class="col-2 border @if($material->gues->mechanical >= $specifically['mechanical']) bg-danger @else bg-success @endif">Мех повреждения</div>
+                    <div class="col-2 border @if($material->gues->land >= $specifically['land']) bg-danger @else bg-success @endif">Камни земля</div>
+                    <div class="col-2 border @if($material->gues->rot >= $specifically['rot']) bg-danger @else bg-success @endif">Гниль</div>
+                    <div class="col-2 border @if($material->gues->haulm >= $specifically['haulm']) bg-danger @else bg-success @endif">Ботва</div>
+                    <div class="col-2 border fs-6 @if($material->gues->foreign_object) bg-danger @else bg-success @endif">Инородные предметы</div>
                     <div class="col-2 border @if($material->gues->another_variety) bg-danger @else bg-success @endif">Пересортица</div>
                 </div>
                 @endif

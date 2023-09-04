@@ -15,7 +15,9 @@
                            class="form-control @error('volume') is-invalid @enderror"
                            value="{{$factory[0]->gues->volume ?? ''}}{{old('volume')}}"
                            id="volume"
-                           name="volume">
+                           name="volume"
+                           type="number"
+                           >
                     @error('volume')
                     <span class="invalid-feedback">
                         <strong>{{$message}}</strong>
@@ -37,7 +39,9 @@
                            class="form-control @error('mechanical') is-invalid @enderror"
                            value="{{$factory[0]->gues->mechanical ?? ''}}{{old('mechanical')}}"
                            id="mechanical"
-                           name="mechanical">
+                           name="mechanical"
+                           type="number"
+                           step="0.01">
                     @error('mechanical')
                     <span class="invalid-feedback">
                         <strong>{{$message}}</strong>
@@ -53,7 +57,9 @@
                            class="form-control @error('land') is-invalid @enderror"
                            value="{{$factory[0]->gues->land ?? ''}}{{old('land')}}"
                            id="land"
-                           name="land">
+                           name="land"
+                           type="number"
+                           step="0.01">
                     @error('land')
                     <span class="invalid-feedback">
                         <strong>{{$message}}</strong>
@@ -69,7 +75,9 @@
                            class="form-control @error('haulm') is-invalid @enderror"
                            value="{{$factory[0]->gues->haulm ?? ''}}{{old('haulm')}}"
                            id="haulm"
-                           name="haulm">
+                           name="haulm"
+                           type="number"
+                           step="0.01">
                     @error('haulm')
                     <span class="invalid-feedback">
                         <strong>{{$message}}</strong>
@@ -85,7 +93,9 @@
                            class="form-control @error('rot') is-invalid @enderror"
                            value="{{$factory[0]->gues->rot ?? ''}}{{old('rot')}}"
                            id="rot"
-                           name="rot">
+                           name="rot"
+                           type="number"
+                           step="0.01">
                     @error('rot')
                     <span class="invalid-feedback">
                         <strong>{{$message}}</strong>
@@ -118,7 +128,9 @@
                            class="form-control @error('less_thirty') is-invalid @enderror"
                            value="{{$factory[0]->gues->less_thirty ?? ''}}{{old('less_thirty')}}"
                            id="less_thirty"
-                           name="less_thirty">
+                           name="less_thirty"
+                           type="number"
+                           step="0.01">
                     @error('less_thirty')
                     <span class="invalid-feedback">
                         <strong>{{$message}}</strong>
@@ -134,7 +146,9 @@
                            class="form-control @error('thirty') is-invalid @enderror"
                            value="{{$factory[0]->gues->thirty ?? ''}}{{old('thirty')}}"
                            id="thirty"
-                           name="thirty">
+                           name="thirty"
+                           type="number"
+                           step="0.01">
                     @error('thirty')
                     <span class="invalid-feedback">
                         <strong>{{$message}}</strong>
@@ -150,7 +164,9 @@
                            class="form-control @error('forty') is-invalid @enderror"
                            value="{{$factory[0]->gues->forty ?? ''}}{{old('forty')}}"
                            id="forty"
-                           name="forty">
+                           name="forty"
+                           type="number"
+                           step="0.01">
                     @error('forty')
                     <span class="invalid-feedback">
                         <strong>{{$message}}</strong>
@@ -166,7 +182,9 @@
                            class="form-control @error('fifty') is-invalid @enderror"
                            value="{{$factory[0]->gues->fifty ?? ''}}{{old('fifty')}}"
                            id="fifty"
-                           name="fifty">
+                           name="fifty"
+                           type="number"
+                           step="0.01">
                     @error('fifty')
                     <span class="invalid-feedback">
                         <strong>{{$message}}</strong>
@@ -182,7 +200,9 @@
                            class="form-control @error('sixty') is-invalid @enderror"
                            value="{{$factory[0]->gues->sixty ?? ''}}{{old('sixty')}}"
                            id="sixty"
-                           name="sixty">
+                           name="sixty"
+                           type="number"
+                           step="0.01">
                     @error('sixty')
                     <span class="invalid-feedback">
                         <strong>{{$message}}</strong>

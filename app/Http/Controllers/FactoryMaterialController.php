@@ -13,12 +13,19 @@ use Illuminate\Support\Facades\Storage;
 
 class FactoryMaterialController extends Controller
 {
+    const SPECIFICALLY = [
+        'mechanical' => 10,
+        'land' => 15,
+        'rot' => 5,
+        'haulm' => 1
+    ];
     /**
      * Display a listing of the resource.
      */
     public function index(FactoryMaterialIndexAction $factoryMaterialIndexAction)
     {
-        return view('factory.material.index', ['materials' => $factoryMaterialIndexAction()]);
+
+        return view('factory.material.index', ['materials' => $factoryMaterialIndexAction(), 'specifically' => self::SPECIFICALLY]);
     }
 
     /**
@@ -58,7 +65,7 @@ class FactoryMaterialController extends Controller
     public function show(FactoryMaterial $material)
     {
         $gues = $material->with('gues')->where('id', $material->id)->get();
-        return view('factory.material.show', ['gues' => $gues]);
+        return view('factory.material.show', ['material' => $gues, 'specifically' => self::SPECIFICALLY]);
     }
 
     /**
