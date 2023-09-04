@@ -9,7 +9,7 @@ class FactoryMaterial extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date','filial_id','fio','volume','nomenklature_id','photo_path','user_id'];
+    protected $fillable = ['date','filial_id','fio','nomenklature_id','photo_path','user_id'];
 
     public function filial ()
     {
@@ -19,5 +19,10 @@ class FactoryMaterial extends Model
     public function nomenklature ()
     {
         return $this->belongsTo(Nomenklature::class);
+    }
+
+    public function gues ()
+    {
+       return $this->hasOne(FactoryGues::class, 'factory_material_id', 'id');
     }
 }

@@ -2,14 +2,12 @@
 @section('title', 'Поступление сырья на завод')
 
 @section('info')
-    <form method="post" action="{{route('material.store')}}">
+    <form  enctype="multipart/form-data" method="post" action="{{route('material.store')}}">
         @csrf
         <div class="container gx-4">
             <div class="row">
-                <div class="col-xxl-1 p-2">
                     <label class="float-end" for="date">Дата</label>
-                </div>
-                <div class="col-xxl-2 p-2">
+                <div class="col-4 p-2">
                     <input type="date"
                            class="display form-control @error('date') is-invalid @enderror"
                            id="date"
@@ -83,20 +81,23 @@
             </div>
 
             <div class="row">
-
                 <div class="col-4 p-2">
-                    <label for="volume">Объем</label>
-                    <input placeholder="Объем"
-                           class="form-control @error('volume') is-invalid @enderror"
-                           value="{{old('volume')}}"
-                           name="volume"
-                           id="volume">
-                    @error('volume')
+                    <label for="image">Выберите изображение</label>
+                    <input class="form-control form-select @error('image') is-invalid @enderror"
+                           type="file"
+                           name="image"
+                           placeholder="Выбрать изображение"
+                           id="image">
+                    @error('image')
                     <span class="invalid-feedback">
-                        <strong>{{$message}}</strong>
-                    </span>
+                    <strong>{{ $message }}</strong>
+                </span>
                     @enderror
                 </div>
+            </div>
+
+            <div class="row">
+
             </div>
             <div class="row">
                 <div class="col-2 p-2">

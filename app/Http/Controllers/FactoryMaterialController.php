@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\factory\material\CreateAction;
 use App\Actions\factory\material\FactoryMaterialCreateAction;
 use App\Actions\factory\material\FactoryMaterialIndexAction;
 use App\Http\Requests\FactoryMaterialRequest;
 use App\Models\FactoryMaterial;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class FactoryMaterialController extends Controller
 {
@@ -33,13 +34,19 @@ class FactoryMaterialController extends Controller
      */
     public function store(FactoryMaterialRequest $request)
     {
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('public/images/factory');
+        } else {
+            $path = null;
+        }
+
         FactoryMaterial::create([
             'date' => $request['date'],
             'filial_id' => $request['filial_name'],
             'fio' => $request['fio'],
-            'volume' => $request['volume'],
             'nomenklature_id' => $request['nomenklature'],
-            'photo_path' => null,
+            'photo_path' => $path,
             'user_id' => Auth::user()->id
         ]);
         return redirect()->route('material.index');
@@ -48,9 +55,10 @@ class FactoryMaterialController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(FactoryMaterial $factoryMaterial)
+    public function show(FactoryMaterial $material)
     {
-
+        $gues = $material->with('gues')->where('id', $material->id)->get();
+        return view('factory.material.show', ['gues' => $gues]);
     }
 
     /**
@@ -72,8 +80,17 @@ class FactoryMaterialController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(FactoryMaterial $factoryMaterial)
+    public function destroy(FactoryMaterial $material)
     {
-        //
+        try {
+            $material->delete();
+            if ($material->photo_path <> null) {
+                Storage::delete($material->photo_path);
+            }
+        } catch (QueryException $e) {
+            return redirect()->route('material.index');
+        }
+        return redirect()->route('material.index');
+
     }
 }

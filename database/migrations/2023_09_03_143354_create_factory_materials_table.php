@@ -16,9 +16,8 @@ return new class extends Migration
             $table->date('date');
             $table->foreignId('filial_id');
             $table->string('fio', 255)->nullable();
-            $table->float('volume');
             $table->foreignId('nomenklature_id');
-            $table->json('photo_path')->nullable();
+            $table->string('photo_path', 255)->nullable();
             $table->foreignId('user_id');
             $table->timestamps();
         });

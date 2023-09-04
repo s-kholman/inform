@@ -26,7 +26,6 @@ class FactoryMaterialRequest extends FormRequest
             'date' => 'required|date',
             'filial_name' => 'required|numeric',
             'fio' => 'nullable|max:255',
-            'volume' => 'required|numeric',
             'nomenklature' => 'required|numeric',
         ];
     }
