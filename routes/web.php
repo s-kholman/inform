@@ -7,6 +7,8 @@ use App\Http\Controllers\CounterpartyController;
 use App\Http\Controllers\CurrentStatusController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\DeviceNameController;
+use App\Http\Controllers\FactoryGuesController;
+use App\Http\Controllers\FactoryMaterialController;
 use App\Http\Controllers\FilialController;
 use App\Http\Controllers\FioController;
 use App\Http\Controllers\GuesController;
@@ -174,6 +176,8 @@ Route::get('/device/{currentStatus}', [ServiceController::class, 'device']);
 Route::get('/cartridge/{device}', [ServiceController::class, 'cartridge']);
 Route::resource('status', StatusController::class);
 Route::resource('mibOid', MidOidController::class);
+Route::resource('/factory/material', FactoryMaterialController::class);
+Route::resource('factory.gues', FactoryGuesController::class);
 
 
 
