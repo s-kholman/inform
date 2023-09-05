@@ -8,7 +8,7 @@ class FactoryMaterialIndexAction
 {
     public function __invoke()
     {
-        $materials = FactoryMaterial::with('gues')->orderBy('date', 'desc')->get();
+        $materials = FactoryMaterial::with('gues')->orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
         return $materials;
     }
 
