@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Validator;
 
 class FactoryGuesController extends Controller
 {
+    const SPECIFICALLY = [
+        'mechanical' => 10,
+        'land' => 15,
+        'rot' => 5,
+        'haulm' => 1
+    ];
     /**
      * Display a listing of the resource.
      */
@@ -25,7 +31,7 @@ class FactoryGuesController extends Controller
     {
 
         $gues = FactoryMaterial::with('gues')->where('id', $material)->get();
-        return view('factory.gues.create', ['factory' => $gues]);
+        return view('factory.gues.create', ['factory' => $gues, 'specifically' => self::SPECIFICALLY]);
     }
 
     /**
