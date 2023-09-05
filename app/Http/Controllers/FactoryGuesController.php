@@ -46,6 +46,7 @@ class FactoryGuesController extends Controller
                 'full' => 'nullable'
             ]
         );
+
         $full->after(function ($validator) use ($request, $valid) {
             if ((
                 $valid['mechanical']+
@@ -57,7 +58,7 @@ class FactoryGuesController extends Controller
                 $valid['forty']+
                 $valid['thirty']+
                 $valid['less_thirty']
-                ) !== 100 ) {
+                ) != 100 ) {
                 $validator->errors()->add('full', 'Сумма по полям должна равняться 100');
             }
         });
