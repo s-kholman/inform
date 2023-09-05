@@ -4,10 +4,14 @@
 @section('info')
 
     <div class="container gx-4">
+        @auth
+            @if(\Illuminate\Support\Facades\Auth::user()->email <> 'rga@krimm.ru')
         <div class="row">
             <div class="col-4 p-3"><a class="btn btn-outline-success" href="{{route('material.create')}}">Внести
                     поступление сырья</a></div>
         </div>
+            @endif
+        @endauth
         @forelse($materials as $material)
 
         <div class="row">
@@ -41,7 +45,13 @@
                     @else
                         <div class="col-6 border text-center"><a href="">Нет данных о разбраковке</a></div>
                     @endif
-                    <div class="col-6 border text-center"><a href="{{route('factory.gues.create', ['factory' =>$material->id])}}">Разбраковка</a></div>
+                    @auth
+                        @if(\Illuminate\Support\Facades\Auth::user()->email <> 'rga@krimm.ru')
+                            <div class="col-6 border text-center"><a href="{{route('factory.gues.create', ['factory' =>$material->id])}}">Разбраковка</a></div>
+                        @else
+                            <div class="col-6 border text-center"></div>
+                        @endif
+                    @endauth
                 </div>
             </div>
         </div>

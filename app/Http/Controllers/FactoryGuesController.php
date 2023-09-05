@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FactoryGuesRequest;
 use App\Models\FactoryGues;
 use App\Models\FactoryMaterial;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FactoryGuesController extends Controller
 {
@@ -29,8 +31,32 @@ class FactoryGuesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(FactoryGuesRequest $request)
     {
+
+        $valid = $request->validated();
+        $full = Validator::make(
+            $request->all(), [
+                'full' => 'nullable'
+            ]
+        );
+        $full->after(function ($validator) use ($request, $valid) {
+            if ((
+                $valid['mechanical']+
+                $valid['land']+
+                $valid['rot']+
+                $valid['haulm']+
+                $valid['sixty']+
+                $valid['fifty']+
+                $valid['forty']+
+                $valid['thirty']+
+                $valid['less_thirty']
+                ) !== 100 ) {
+                $validator->errors()->add('full', 'Сумма по полям должна равняться 100');
+            }
+        });
+        $full->validate();
+
         FactoryGues::UpdateOrCreate([
             'factory_material_id' => $request->factory_material_id,
             ],
