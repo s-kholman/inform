@@ -44,7 +44,6 @@ class PrinterController extends Controller
         unique(['device_id'])->
         sortBy('filial.name')->
         whereNotIn('status.active', false);
-
         /**
          * Цикл по колеекции
          * Проверяем с помощь ping доступность устройств в сети
@@ -53,6 +52,7 @@ class PrinterController extends Controller
          * Помещаем выполнение в try если устройство не сможет дать ответ
          * Собираем выходной массив с данными опроса устройств
          */
+        $out = [];
         foreach ($device as $item) {
             exec("ping -n 1 -w 100 " . $item->ip . " 2>NUL > NUL && (echo 0) || (echo 1)", $output, $status);
             if (!$output[0]) {
@@ -61,13 +61,26 @@ class PrinterController extends Controller
                 $snmp->newClient($item->ip, '2', 'public');
                 foreach ($model->miboid->pluck('name')->toArray() as $oid) {
                     try {
-                        $out [$item->device_id] [$oid] = $snmp->getValue($oid);
+                        $get_snmp = $snmp->getValue($oid);
+                        if ($get_snmp == '')
+                        {
+                            echo $get_snmp ;
+                            unset($out[$item->device_id]);
+                            break;
+                        } else {
+                            $out [$item->device_id] [$oid] = $snmp->getValue($oid);
+                        }
 
                     } catch (ConnectionException) {
-
+                        if (array_key_exists($item->device_id, $out)){
+                            unset($out[$item->device_id]);
+                            break;
+                        }
                     }
 
                 }
+            } else {
+                echo $item->ip.'<br>';
             }
 
         }
