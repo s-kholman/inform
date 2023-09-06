@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Ndum\Laravel\Snmp;
 
 class DailyUse implements ShouldQueue
 {
@@ -52,22 +53,31 @@ class DailyUse implements ShouldQueue
          * Помещаем выполнение в try если устройство не сможет дать ответ
          * Собираем выходной массив с данными опроса устройств
          */
+        $out = [];
         foreach ($device as $item) {
             exec("ping -n 1 -w 100 " . $item->ip . " 2>NUL > NUL && (echo 0) || (echo 1)", $output, $status);
             if (!$output[0]) {
                 $model = $item->devicename;
-                $snmp = new \Ndum\Laravel\Snmp();
+                $snmp = new Snmp();
                 $snmp->newClient($item->ip, '2', 'public');
                 foreach ($model->miboid->pluck('name')->toArray() as $oid)
                 {
-                    try
-                    {
-                        $out [$item->device_id] [$oid] = $snmp->getValue($oid);
+                    try {
+                        $get_snmp = $snmp->getValue($oid);
+                        if ($get_snmp == '')
+                        {
+                            echo $get_snmp ;
+                            unset($out[$item->device_id]);
+                            break;
+                        } else {
+                            $out [$item->device_id] [$oid] = $snmp->getValue($oid);
+                        }
 
-                    }
-                    catch (ConnectionException)
-                    {
-
+                    } catch (ConnectionException) {
+                        if (array_key_exists($item->device_id, $out)){
+                            unset($out[$item->device_id]);
+                            break;
+                        }
                     }
 
                 }

@@ -34,7 +34,6 @@ class CurrentStatusController extends Controller
     public function store(CurrentRequest $request)
     {
         $validated = $request->validated();
-       //dd($validated);
         CurrentStatus::create([
             'device_id' => $validated['device_id'],
             'hostname' => $validated['hostname'],
@@ -42,7 +41,7 @@ class CurrentStatusController extends Controller
             'filial_id' => $validated['filial'],
             'status_id' => $validated['status'],
             'date' => $validated['date'],
-            'device_names_id' => 4
+            'device_names_id' => $validated['device_names_id'],
         ]);
         return redirect()->route('Printer.index', ['date' => Carbon::now()]);
     }
