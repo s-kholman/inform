@@ -172,7 +172,7 @@ Route::resource('device_name', DeviceNameController::class);
 Route::resource('device', DeviceController::class);
 Route::resource('service_name', ServiceNameController::class);
 Route::resource('service', ServiceController::class);
-Route::get('/device/{currentStatus}', [ServiceController::class, 'device']);
+Route::get('/device/{currentStatus}/service', [ServiceController::class, 'device']);
 Route::get('/cartridge/{device}', [ServiceController::class, 'cartridge']);
 Route::resource('status', StatusController::class);
 Route::resource('mibOid', MidOidController::class);
