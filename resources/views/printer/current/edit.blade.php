@@ -22,6 +22,7 @@
                 <div class="col-12 border border-2 form-control">Филиал</div>
                 <div class="col-12 border border-2 form-control">Состояние</div>
                 <div class="col-12 border border-2 form-control">Дата</div>
+                <div class="col-12 border border-2 form-control">Комментарий</div>
             </div>
             <div class="col-2">
                 <div class="col-12 border border-2 form-control">{{$currentStatus->hostname}}</div>
@@ -30,6 +31,7 @@
                 <div class="col-12 border border-2 form-control">{{$currentStatus->filial->name}}</div>
                 <div class="col-12 border border-2 form-control">{{$currentStatus->status->name}}</div>
                 <div class="col-12 border border-2 form-control">{{\Carbon\Carbon::parse($currentStatus->date)->format('d-m-Y')}}</div>
+                <div class="col-12 border border-2 form-control">{{$currentStatus->comment ?? "\xC2\xA0" }}</div>
             </div>
             <div class="col-4">
 
@@ -41,6 +43,7 @@
                 <div class="col-12 border border-2 form-control">Филиал</div>
                 <div class="col-12 border border-2 form-control">Состояние</div>
                 <div class="col-12 border border-2 form-control">Дата</div>
+                <div class="col-12 border border-2 form-control">Комментарий</div>
             </div>
             <div class="col-2">
                 <div class="col-12">
@@ -63,7 +66,8 @@
                             <span class="invalid-feedback">
                                 <strong>{{ $message }}</strong>
                             </span>
-                        @enderror</div>
+                        @enderror
+                </div>
                 <div class="col-12">
                     <select name="filial" id="txtFilial" class="form-select @error('filial') is-invalid @enderror">
                         <option value="">Выберите значение</option>
@@ -100,6 +104,14 @@
                 </div>
                 <div class="col-12">
                     <input type="date" name="date" value="{{\Carbon\Carbon::today()->format('Y-m-d')}}" class="form-control">
+                </div>
+                <div class="col-12">
+                    <input type="text" name="comment" value="{{$currentStatus->comment}}" class="form-control  @error('comment') is-invalid @enderror">
+                    @error('comment')
+                    <span class="invalid-feedback">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                    @enderror
                 </div>
             </div>
             <input hidden name="device_id" value="{{$currentStatus->device_id}}">
