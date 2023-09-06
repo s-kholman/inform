@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col border border-2">{{$value['filial']}}</div>
                 <div class="col border border-2">{{$value['Name']}}</div>
-                <div class="col border border-2">{{$value['date']}}</div>
+                <div class="col border border-2">{{\Carbon\Carbon::parse($value['date'])->translatedFormat('d-m-Y')}}</div>
                 <div class="col border border-2">{{$value['count']}}</div>
             </div>
         @empty
