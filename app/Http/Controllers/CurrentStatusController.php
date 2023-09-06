@@ -42,6 +42,7 @@ class CurrentStatusController extends Controller
             'status_id' => $validated['status'],
             'date' => $validated['date'],
             'device_names_id' => $validated['device_names_id'],
+            'comment' => $validated['comment'],
         ]);
         return redirect()->route('Printer.index', ['date' => Carbon::now()]);
     }
@@ -77,9 +78,9 @@ class CurrentStatusController extends Controller
         } else {
             $service = [];
         }
-        $merded = collect($status)->merge(collect($service))->sortBy('date');
+        $merded = collect($status)->merge(collect($service))->sortByDesc('date');
 
-        return view('Printer.current.show', ['service' => $merded]);
+        return view('printer.current.show', ['service' => $merded]);
     }
 
     /**

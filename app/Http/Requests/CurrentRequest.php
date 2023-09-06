@@ -28,7 +28,8 @@ class CurrentRequest extends FormRequest
             'status' => 'required|numeric',
             'date' => 'required|date',
             'device_names_id' => 'required|numeric',
-            'device_id' => 'required|numeric'
+            'device_id' => 'required|numeric',
+            'comment' => 'nullable|max:255'
         ];
     }
 
