@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\DailyUse;
+use App\Jobs\DailyUseOne;
+use App\Models\CurrentStatus;
 use App\Models\PhoneLimit;
 use App\Models\Registration;
 use App\Models\Sms;
@@ -39,10 +41,12 @@ class SmsController extends Controller
 
     public function smsGet (Request $request){
         /**
+         * Используем временно вместо планировщика заданий
          * RateLimiter - ограничение запросов
+         * dailyOne() - создаем очередь для опроса каждого устройства
          */
         RateLimiter::attempt('DailyUse',  1, function (){
-            dispatch(new DailyUse());
+            self::dailyOne(); //dispatch(new DailyUse());
             return null;
         },  60*60);
 
@@ -175,5 +179,19 @@ class SmsController extends Controller
             'comment' => $validate['comment']
         ]);
         return redirect()->route('voucher');
+    }
+
+    public function dailyOne()
+    {
+        $status = CurrentStatus::with('status')->get();
+        $device = $status->
+        sortByDesc('date')->
+        unique(['device_id'])->
+        sortBy('filial.name')->
+        whereNotIn('status.active', false);
+        foreach ($device as $value){
+            dispatch(new DailyUseOne($value));
+        }
+
     }
 }
