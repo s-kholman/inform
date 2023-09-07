@@ -14,7 +14,7 @@
         @endauth
         @forelse($materials as $material)
 
-        <div class="row">
+        <div class="row border  @if($loop->odd) border-info @else border-dark @endif">
             <div class="col-1 border align-middle">
                 {{\Illuminate\Support\Carbon::parse($material->date)->translatedFormat('d-m-Y')}}
             </div>
