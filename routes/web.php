@@ -189,6 +189,7 @@ Route::get('/printer/{id}/show/{currentStatus}', [PrinterController::class, 'sho
 Route::post('/printer', [PrinterController::class, 'index'])->name('printer.toDayGet');
 
 Route::get('/daily', [PrinterController::class, 'daily']);
+Route::get('/dailyone', [PrinterController::class, 'dailyone']);
 Route::get('/job', [PrinterController::class, 'job']);
 
 
