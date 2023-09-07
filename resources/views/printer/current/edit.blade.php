@@ -15,7 +15,7 @@
                 <div class="col-4"></div>
                 <div class="col-4">Введите новые данные</div>
             </div>
-            <div class="col-2">
+            <div class="col-sm-3 col-xxl-2">
                 <div class="col-12 border border-2 form-control">Хост</div>
                 <div class="col-12 border border-2 form-control">IP</div>
                 <div class="col-12 border border-2 form-control">MAC</div>
@@ -24,7 +24,7 @@
                 <div class="col-12 border border-2 form-control">Дата</div>
                 <div class="col-12 border border-2 form-control">Комментарий</div>
             </div>
-            <div class="col-2">
+            <div class="col-sm-3 col-xxl-2">
                 <div class="col-12 border border-2 form-control">{{$currentStatus->hostname}}</div>
                 <div class="col-12 border border-2 form-control">{{$currentStatus->ip}}</div>
                 <div class="col-12 border border-2 form-control">{{$currentStatus->device->mac}}</div>
@@ -33,10 +33,10 @@
                 <div class="col-12 border border-2 form-control">{{\Carbon\Carbon::parse($currentStatus->date)->format('d-m-Y')}}</div>
                 <div class="col-12 border border-2 form-control">{{$currentStatus->comment ?? "\xC2\xA0" }}</div>
             </div>
-            <div class="col-4">
+            <div class="col-xxl-4 d-none d-lg-block">
 
             </div>
-            <div class="col-2">
+            <div class="col-sm-3 col-xxl-2">
                 <div class="col-12 border border-2 form-control">Хост</div>
                 <div class="col-12 border border-2 form-control">IP</div>
                 <div class="col-12 border border-2 form-control">MAC</div>
@@ -45,7 +45,7 @@
                 <div class="col-12 border border-2 form-control">Дата</div>
                 <div class="col-12 border border-2 form-control">Комментарий</div>
             </div>
-            <div class="col-2">
+            <div class="col-sm-3 col-xxl-2">
                 <div class="col-12">
                     <input type="text" name="hostname" value="{{$currentStatus->hostname}}" class="form-control @error('hostname') is-invalid @enderror">
                         @error('hostname')
@@ -116,16 +116,26 @@
             </div>
             <input hidden name="device_id" value="{{$currentStatus->device_id}}">
             <input hidden name="device_names_id" value="{{$currentStatus->device_names_id}}">
-            <div class="row">
+            <div class="row p-4">
                 <div class="col-5">
                 </div>
-                <div class="col-2">
+                <div class="col-sm-3 col-xxl-2">
                     <input class="form-control btn btn-success" type="submit" name="save" value="Сохранить">
                 </div>
             </div>
         </div>
     </form>
-        <div class="row-cols-4 p-5"><a class="btn btn-info" href="{{ url()->previous() }}">К списку отчетов</a></div>
+        <div class="row p-sm-5 p-xxl-1">
+            <div class="col-sm-3 col-xxl-4">
+
+            </div>
+            <div class="col-sm-6 col-xxl-4">
+                <div class="row">
+                    <a class="btn btn-info text-center" href="{{ url()->previous() }}">К списку отчетов</a>
+                </div>
+
+            </div>
+        </div>
     </div>
 
 @endsection('info')
