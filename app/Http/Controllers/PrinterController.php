@@ -28,7 +28,7 @@ class PrinterController extends Controller
 
     public function daily()
     {
-        dump(time());
+        dump(Carbon::now()->format('i:s:u'));
         /**
          * Получаем коллекцию, вместе со связью
          */
@@ -50,6 +50,8 @@ class PrinterController extends Controller
          * Создаем объект для SNMP и задаем начальные параметры
          * Во втором цикле получаем MIB_OID
          * Помещаем выполнение в try если устройство не сможет дать ответ
+         * Проверяем на путоту полученный ответ по SNMP, если данные не полученныв полном объеме удаляем ключ
+         * break отдаем управление внешнему циклу
          * Собираем выходной массив с данными опроса устройств
          */
         $out = [];
@@ -62,27 +64,23 @@ class PrinterController extends Controller
                 foreach ($model->miboid->pluck('name')->toArray() as $oid) {
                     try {
                         $get_snmp = $snmp->getValue($oid);
-                        if ($get_snmp == '')
-                        {
-                            echo $get_snmp ;
-                            unset($out[$item->device_id]);
+                        if ($get_snmp == '') {
+                            if (array_key_exists($item->device_id, $out)) {
+                                unset($out[$item->device_id]);
+                            }
                             break;
                         } else {
                             $out [$item->device_id] [$oid] = $snmp->getValue($oid);
                         }
 
                     } catch (ConnectionException) {
-                        if (array_key_exists($item->device_id, $out)){
+                        if (array_key_exists($item->device_id, $out)) {
                             unset($out[$item->device_id]);
                             break;
                         }
                     }
-
                 }
-            } else {
-                echo $item->ip.'<br>';
             }
-
         }
         /**
          * Проверяем по бренду какие данные записывать
@@ -102,8 +100,9 @@ class PrinterController extends Controller
                     'count' => $this->count($value, $device)
                 ]);
         }
-        dump(time());
-        return 'Выполнение скрипта оконченно';
+
+        dump(Carbon::now()->format('i:s:u'));
+        return 'Выполнение скрипта оконченно,';
 
     }
 

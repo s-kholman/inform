@@ -51,6 +51,8 @@ class DailyUse implements ShouldQueue
          * Создаем объект для SNMP и задаем начальные параметры
          * Во втором цикле получаем MIB_OID
          * Помещаем выполнение в try если устройство не сможет дать ответ
+         * Проверяем на путоту полученный ответ по SNMP, если данные не полученныв полном объеме удаляем ключ
+         * break отдаем управление внешнему циклу
          * Собираем выходной массив с данными опроса устройств
          */
         $out = [];
@@ -64,10 +66,10 @@ class DailyUse implements ShouldQueue
                 {
                     try {
                         $get_snmp = $snmp->getValue($oid);
-                        if ($get_snmp == '')
-                        {
-                            echo $get_snmp ;
-                            unset($out[$item->device_id]);
+                        if ($get_snmp == '') {
+                            if (array_key_exists($item->device_id, $out)) {
+                                unset($out[$item->device_id]);
+                            }
                             break;
                         } else {
                             $out [$item->device_id] [$oid] = $snmp->getValue($oid);
