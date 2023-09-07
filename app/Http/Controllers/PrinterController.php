@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Printer\IndexAction;
+use App\Jobs\DailyUseOne;
 use App\Models\CurrentStatus;
 use App\Models\DailyUse;
 use Carbon\Carbon;
@@ -24,6 +25,20 @@ class PrinterController extends Controller
         $return = $indexAction($date);
 
         return view('printer.index', ['device' => $return['device'], 'result' => $return['result'], 'summa' => $return['summa'], 'date' => $date]);
+    }
+
+    public function dailyOne()
+    {
+        $status = CurrentStatus::with('status')->get();
+        $device = $status->
+        sortByDesc('date')->
+        unique(['device_id'])->
+        sortBy('filial.name')->
+        whereNotIn('status.active', false);
+        foreach ($device as $value){
+            dispatch(new DailyUseOne($value));
+        }
+
     }
 
     public function daily()
