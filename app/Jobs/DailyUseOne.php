@@ -2,11 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Models\CurrentStatus;
 use Carbon\Carbon;
 use FreeDSx\Snmp\Exception\ConnectionException;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -41,48 +39,37 @@ class DailyUseOne implements ShouldQueue
                     try {
                         $get_snmp = $snmp->getValue($oid);
                         if ($get_snmp == '') {
-                            if (array_key_exists($this->device->device_id, $out)) {
-                                unset($out[$this->device->device_id]);
-                            }
+                            unset($out);
                             break;
                         } else {
-                            $out [$this->device->device_id] [$oid] = $snmp->getValue($oid);
+                            $out [$oid] = $get_snmp;
                         }
 
                     } catch (ConnectionException) {
-                        if (array_key_exists($this->device->device_id, $out)){
-                            unset($out[$this->device->device_id]);
-                            break;
-                        }
+                        unset($out);
+                        break;
                     }
+
+                }
+                if (!empty($out))
+                {
+                    $this->store($this->device->device_id, $out);
+                    unset($out);
                 }
             }
-
-        /**
-         * Проверяем по бренду какие данные записывать
-         * Проверяем наличие данных вообще
-         * В случае kyocera высчитываем остаток тонера function kyocera
-         * Страницы получаем с function count
-         */
-
-        foreach ($out as $device => $value)
-        {
-            \App\Models\DailyUse::updateOrCreate(
-                [
-                    'device_id' => $device,
-                    'date' =>Carbon::now()
-                ],
-                [
-                    'toner' => $this->kyocera($value),
-                    'count' => $this->count($value, $device)
-                ]);
-        }
     }
 
-    private function kyocera ($data)
+    /**
+     * Проверяем по бренду какие данные записывать
+     * Проверяем наличие данных вообще
+     * В случае kyocera высчитываем остаток тонера function kyocera
+     * Страницы получаем с function count
+     */
+
+    private function kyocera ($value)
     {
-        if (array_key_exists ('1.3.6.1.2.1.43.11.1.1.8.1.1', $data) && array_key_exists('1.3.6.1.2.1.43.11.1.1.9.1.1', $data)){
-            $toner = $data['1.3.6.1.2.1.43.11.1.1.9.1.1']/($data['1.3.6.1.2.1.43.11.1.1.8.1.1']/100);
+        if (array_key_exists ('1.3.6.1.2.1.43.11.1.1.8.1.1', $value) && array_key_exists('1.3.6.1.2.1.43.11.1.1.9.1.1', $value)){
+            $toner = $value['1.3.6.1.2.1.43.11.1.1.9.1.1']/($value['1.3.6.1.2.1.43.11.1.1.8.1.1']/100);
         } else {
             $toner = 100;
         }
@@ -99,5 +86,18 @@ class DailyUseOne implements ShouldQueue
         } else {
             return DailyUse::where('device_id',$device)->latest('date')->take(1)->value('count');
         }
+    }
+
+    private function store(int $device,array $value): void
+    {
+        \App\Models\DailyUse::updateOrCreate(
+            [
+                'device_id' => $device,
+                'date' => Carbon::now()
+            ],
+            [
+                'toner' => $this->kyocera($value),
+                'count' => $this->count($value, $device)
+            ]);
     }
 }
