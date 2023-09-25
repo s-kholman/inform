@@ -39,22 +39,17 @@ class DailyUseOne implements ShouldQueue
                 {
                     try {
                         $get_snmp = $snmp->getValue($oid);
-                        if ($get_snmp == '') {
-                            unset($out);
-                            break;
-                        } else {
-                            $out [$oid] = $get_snmp;
-                        }
-
+                        $out [$oid] = $get_snmp;
                     } catch (ConnectionException $e) {
                         unset($out);
                         $this->fail($this->device->ip . 'ConnectionException ' . $e);
                         break;
 
                     } catch (SnmpRequestException $e) {
+                        unset($out);
                         $this->fail($this->device->ip . 'SnmpRequestException ' . $e);
+                        break;
                     }
-
                 }
                 if (!empty($out))
                 {
@@ -62,7 +57,11 @@ class DailyUseOne implements ShouldQueue
                     unset($out);
                 }
             }
-            $this->fail("no ping $this->device->ip");
+            else
+            {
+                $this->fail("no ping $this->device->ip");
+            }
+
     }
 
     /**
@@ -106,4 +105,5 @@ class DailyUseOne implements ShouldQueue
                 'count' => $this->count($value, $device)
             ]);
     }
+
 }
