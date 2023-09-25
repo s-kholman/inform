@@ -8,8 +8,9 @@ use App\Models\CurrentStatus;
 use App\Models\DailyUse;
 use Carbon\Carbon;
 use FreeDSx\Snmp\Exception\ConnectionException;
+use FreeDSx\Snmp\Exception\SnmpRequestException;
 use Illuminate\Http\Request;
-use Nelisys\Snmp;
+use Ndum\Laravel\Snmp;
 
 class PrinterController extends Controller
 {
@@ -74,7 +75,7 @@ class PrinterController extends Controller
             exec("ping -n 1 -w 100 " . $item->ip . " 2>NUL > NUL && (echo 0) || (echo 1)", $output, $status);
             if (!$output[0]) {
                 $model = $item->devicename;
-                $snmp = new \Ndum\Laravel\Snmp();
+                $snmp = new Snmp();
                 $snmp->newClient($item->ip, '2', 'public');
                 foreach ($model->miboid->pluck('name')->toArray() as $oid) {
                     try {
@@ -89,6 +90,8 @@ class PrinterController extends Controller
                     } catch (ConnectionException) {
                             unset($out);
                             break;
+                    } catch (SnmpRequestException $e) {
+                        dump($e);
                     }
                 }
             }
