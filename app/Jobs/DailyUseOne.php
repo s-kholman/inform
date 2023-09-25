@@ -61,8 +61,11 @@ class DailyUseOne implements ShouldQueue
                     $this->store($this->device->device_id, $out);
                     unset($out);
                 }
+            } else
+            {
+                $this->fail("no ping $this->device->ip");
             }
-            $this->fail("no ping $this->device->ip");
+
     }
 
     /**
