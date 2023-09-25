@@ -57,11 +57,6 @@ class DailyUseOne implements ShouldQueue
                     unset($out);
                 }
             }
-            else
-            {
-                $this->fail("no ping $this->device->ip");
-            }
-
     }
 
     /**
