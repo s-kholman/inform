@@ -31,32 +31,28 @@ class DailyUseOne implements ShouldQueue
     {
         $out = [];
             exec("ping -n 1 -w 100 " . $this->device->ip . " 2>NUL > NUL && (echo 0) || (echo 1)", $output, $status);
-            if (!$output[0]) {
-                $model = $this->device->devicename;
-                $snmp = new Snmp();
-                $snmp->newClient($this->device->ip, '2', 'public');
-                foreach ($model->miboid->pluck('name')->toArray() as $oid)
-                {
-                    try {
-                        $get_snmp = $snmp->getValue($oid);
-                        $out [$oid] = $get_snmp;
-                    } catch (ConnectionException $e) {
-                        unset($out);
-                        $this->fail($this->device->ip . 'ConnectionException ' . $e);
-                        break;
-
-                    } catch (SnmpRequestException $e) {
-                        unset($out);
-                        $this->fail($this->device->ip . 'SnmpRequestException ' . $e);
-                        break;
-                    }
+        if (!$output[0]) {
+            $model = $this->device->devicename;
+            $snmp = new Snmp();
+            $snmp->setTimeoutReadValue(2);
+            $snmp->newClient($this->device->ip, '2', 'public');
+            foreach ($model->miboid->pluck('name')->toArray() as $oid)
+            {
+                try {
+                    $get_snmp = $snmp->getValue($oid);
+                    $out [$oid] = $get_snmp;
                 }
-                if (!empty($out))
-                {
-                    $this->store($this->device->device_id, $out);
+                catch (SnmpRequestException | ConnectionException $e) {
                     unset($out);
+                    $this->fail($this->device->ip . ' Exception ' . $e->getMessage());
+                    break;
                 }
             }
+            if (!empty($out)){
+                $this->store($this->device->device_id, $out);
+                unset($out);
+            }
+        }
     }
 
     /**
