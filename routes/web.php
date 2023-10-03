@@ -183,6 +183,7 @@ Route::resource('factory.gues', FactoryGuesController::class);
 
 Route::get('/printer/{id}/current/show', [CurrentStatusController::class, 'show'])->name('printer.current.show');
 Route::get('/current/{currentStatus}/edit', [CurrentStatusController::class, 'edit'])->name('printer.current.edit');
+Route::get('/current/{device}/create', [CurrentStatusController::class, 'create'])->name('printer.current.create');
 Route::post('/current/store',[CurrentStatusController::class, 'store'])->name('printer.current.store');
 Route::get('/printers', [PrinterController::class, 'index'])->name('Printer.index');
 Route::get('/printer/{id}/show/{currentStatus}', [PrinterController::class, 'show'])->name('printer.show');

@@ -23,9 +23,9 @@ class CurrentStatusController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Device $device)
     {
-        //
+        return view('printer.current.create', ['device' => $device]);
     }
 
     /**

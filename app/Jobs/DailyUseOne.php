@@ -34,7 +34,6 @@ class DailyUseOne implements ShouldQueue
         if (!$output[0]) {
             $model = $this->device->devicename;
             $snmp = new Snmp();
-            $snmp->setTimeoutReadValue(2);
             $snmp->newClient($this->device->ip, '2', 'public');
             foreach ($model->miboid->pluck('name')->toArray() as $oid)
             {
@@ -42,7 +41,7 @@ class DailyUseOne implements ShouldQueue
                     $get_snmp = $snmp->getValue($oid);
                     $out [$oid] = $get_snmp;
                 }
-                catch (SnmpRequestException | ConnectionException $e) {
+                catch (ConnectionException | SnmpRequestException $e) {
                     unset($out);
                     $this->fail($this->device->ip . ' Exception ' . $e->getMessage());
                     break;
