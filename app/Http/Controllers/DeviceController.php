@@ -16,7 +16,7 @@ class DeviceController extends Controller
      */
     public function index(DeviceIndexAction $deviceIndexAction)
     {
-        return view('printer.device.index');
+        return view('printer.device.index', ['current' => $deviceIndexAction()]);
     }
 
     /**

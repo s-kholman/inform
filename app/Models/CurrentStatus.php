@@ -23,7 +23,7 @@ class CurrentStatus extends Model
 
     public function device() : belongsTo
     {
-        return $this->belongsTo(Device::class, 'device_names_id', 'id');
+        return $this->belongsTo(Device::class, 'device_id', 'id');
     }
 
     public function devicename() : belongsTo

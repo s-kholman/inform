@@ -27,7 +27,7 @@
             <div class="col-sm-3 col-xxl-2">
                 <div class="col-12 border border-2 form-control">{{$currentStatus->hostname}}</div>
                 <div class="col-12 border border-2 form-control">{{$currentStatus->ip}}</div>
-                <div class="col-12 border border-2 form-control">{{$currentStatus->device->mac}}</div>
+                <div class="col-12 border border-2 form-control">{{$currentStatus->device->mac ?? "00:00:00:00:00:00"}}</div>
                 <div class="col-12 border border-2 form-control">{{$currentStatus->filial->name}}</div>
                 <div class="col-12 border border-2 form-control">{{$currentStatus->status->name}}</div>
                 <div class="col-12 border border-2 form-control">{{\Carbon\Carbon::parse($currentStatus->date)->format('d-m-Y')}}</div>
@@ -61,7 +61,7 @@
                             </span>
                         @enderror</div>
                 <div class="col-12">
-                    <input readonly type="text" name="mac" value="{{$currentStatus->device->mac}}" class="form-control  @error('mac') is-invalid @enderror">
+                    <input readonly type="text" name="mac" value="{{$currentStatus->device->mac ?? "00:00:00:00:00:00"}}" class="form-control  @error('mac') is-invalid @enderror">
                         @error('mac')
                             <span class="invalid-feedback">
                                 <strong>{{ $message }}</strong>
