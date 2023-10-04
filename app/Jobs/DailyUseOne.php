@@ -66,7 +66,7 @@ class DailyUseOne implements ShouldQueue
         if (array_key_exists ('1.3.6.1.2.1.43.11.1.1.8.1.1', $value) && array_key_exists('1.3.6.1.2.1.43.11.1.1.9.1.1', $value)){
             $toner = $value['1.3.6.1.2.1.43.11.1.1.9.1.1']/($value['1.3.6.1.2.1.43.11.1.1.8.1.1']/100);
         } else {
-            $toner = 100;
+            $toner = 0;
         }
         return $toner;
     }
