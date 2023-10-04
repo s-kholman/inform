@@ -61,7 +61,7 @@
                             </span>
                         @enderror</div>
                 <div class="col-12">
-                    <input readonly type="text" name="mac" value="{{$currentStatus->device->mac ?? "00:00:00:00:00:00"}}" class="form-control  @error('mac') is-invalid @enderror">
+                    <input readonly type="text" name="mac" value="{{str_replace(':','-',$currentStatus->device->mac) ?? "00:00:00:00:00:00"}}" class="form-control  @error('mac') is-invalid @enderror">
                         @error('mac')
                             <span class="invalid-feedback">
                                 <strong>{{ $message }}</strong>
