@@ -36,7 +36,7 @@
             </div>
             <div class="col-lg-3 col-xl-2 col-xxl-2 border border-2 d-none d-lg-block">{{$value->ip}}</div>
             <div class="col-xl-2 col-xxl-2 border border-2 d-none d-xl-block">{{$value->status->name}}</div>
-            <div class="col-xs-1 col-sm-2 col-md-2 col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$result[$id]['toner']}}</div>
+            <div style="background-color: {{$result[$id]['color']}}" class="col-xs-1 col-sm-2 col-md-2 col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$result[$id]['toner']}}</div>
             <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-1 col-xxl-1 border border-2">{{$result[$id]['count']}}</div>
             <div class="col-xs-1 col-sm-2 col-md-2 col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$result[$id]['toDayCount']}}</div>
         </div>
