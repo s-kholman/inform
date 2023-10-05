@@ -186,6 +186,7 @@ class SmsController extends Controller
         $status = CurrentStatus::with('status')->get();
         $device = $status->
         sortByDesc('date')->
+        sortByDesc('id')->
         unique(['device_id'])->
         sortBy('filial.name')->
         whereNotIn('status.active', false);
