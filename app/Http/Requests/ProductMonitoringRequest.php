@@ -26,7 +26,10 @@ class ProductMonitoringRequest extends FormRequest
         return [
             'storage' => 'required|numeric',
             'date' => ['required',
-            Rule::unique('product_monitorings', 'date')->where('storage_name_id', $this->input('storage'))],
+            Rule::unique('product_monitorings', 'date')
+                ->where('storage_name_id', $this->input('storage'))
+                ->where('storage_phase_id', $this->input('phase'))
+            ],
             'tempBurt' => 'nullable|numeric',
             'tempAboveBurt' => 'nullable|numeric',
             'tempMorning' => 'nullable|numeric',
