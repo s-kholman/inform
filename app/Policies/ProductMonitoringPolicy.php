@@ -39,7 +39,7 @@ class ProductMonitoringPolicy
     public function update(User $user, ProductMonitoring $monitoring): bool
     {
         $createdMinutes = Carbon::now()->diffInMinutes($monitoring->created_at);
-        if (($user->Registration->activation ?? false && $createdMinutes <= 60*26 && $user->Registration->filial_id == $monitoring->storageName->filial_id) || ($user->email == 'sergey@krimm.ru')){
+        if ((($user->Registration->activation ?? false) && $createdMinutes <= 60*26 && $user->Registration->filial_id == $monitoring->storageName->filial_id) || ($user->email == 'sergey@krimm.ru')){
             return true;
         }
         return false;
