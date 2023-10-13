@@ -53,7 +53,7 @@ class CurrentStatusController extends Controller
     public function show($id)
     {
         $service_get = Service::select('device_id', 'service_names_id', 'filial_id', 'date')->where('device_id', $id)->orderby('date')->get();
-        $status_get = CurrentStatus::select('device_id', 'status_id', 'filial_id', 'date')->where('device_id', $id)->orderby('date')->get();
+        $status_get = CurrentStatus::select('device_id', 'status_id', 'filial_id', 'date')->where('device_id', $id)->orderby('date')->orderby('created_at', 'DESC')->get();
         if ($status_get->isNotEmpty()) {
             foreach ($status_get as $value) {
                 $status [] = [

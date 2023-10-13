@@ -18,6 +18,7 @@ use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrinterController;
+use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceNameController;
 use App\Http\Controllers\SevooborotController;
@@ -32,6 +33,8 @@ use App\Http\Controllers\SprayingReportController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\Storage\StorageBoxController;
 use App\Http\Controllers\Storage\StorageNameController;
+use App\Http\Controllers\StorageModeController;
+use App\Http\Controllers\StoragePhaseController;
 use App\Http\Controllers\SutkiController;
 use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
@@ -151,7 +154,7 @@ Route::resource('kultura', KulturaController::class);
  * Ресурсы производственного отдела
  */
 Route::resource('storagename', StorageNameController::class);
-Route::resource('storagebox', StorageBoxController::class)->middleware('auth');;
+Route::resource('storagebox', StorageBoxController::class)->middleware('auth');
 Route::resource('gues', GuesController::class);
 Route::resource('take', TakeController::class);
 
@@ -179,7 +182,13 @@ Route::resource('mibOid', MidOidController::class);
 Route::resource('/factory/material', FactoryMaterialController::class);
 Route::resource('factory.gues', FactoryGuesController::class);
 
-
+/**
+ * Отчет по температурному мониторингу продукции в буртах
+ */
+Route::resource('phase', StoragePhaseController::class)->middleware('auth');
+Route::resource('monitoring', ProductMonitoringController::class)->middleware('auth');
+Route::get('monitoring/show/filial/{id}', [ProductMonitoringController::class, 'showFilial'])->name('monitoring.show.filial')->middleware('auth');
+Route::get('monitoring/filial/all/{id}', [ProductMonitoringController::class, 'showFilialMonitoring'])->name('monitoring.show.filial.all')->middleware('auth');
 
 Route::get('/printer/{id}/current/show', [CurrentStatusController::class, 'show'])->name('printer.current.show');
 Route::get('/current/{currentStatus}/edit', [CurrentStatusController::class, 'edit'])->name('printer.current.edit');
