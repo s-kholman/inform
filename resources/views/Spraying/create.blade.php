@@ -95,7 +95,7 @@
                 </span>
                 @enderror
 
-                <label for="txtcomment">Коментарий</label>
+                <label for="txtcomment">Комментарий</label>
                 <input name="comment" id="txtComment" class="form-control @error('comment') is-invalid @enderror">
                 @error('comment')
                 <span class="invalid-feedback">
