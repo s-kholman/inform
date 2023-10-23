@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductMonitoringRequest;
+use App\Http\Requests\ProductMonitoringUpdateRequest;
 use App\Models\ProductMonitoring;
 use App\Models\StorageMode;
 use Illuminate\Http\Request;
@@ -78,7 +79,7 @@ class ProductMonitoringController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProductMonitoring $monitoring)
+    public function update(ProductMonitoringUpdateRequest $request, ProductMonitoring $monitoring)
     {
 
         ProductMonitoring::where('id', $monitoring->id)->
