@@ -89,7 +89,7 @@
                 </span>
                 @enderror
 
-                <label for="time">Режим вентиляции</label>
+                <label for="time">Период вентиляции</label>
                 <div id="time" class="row">
                     <div class="col">
                         <input name="timeUp" type="time" class="form-control @error('time') is-invalid @enderror">
