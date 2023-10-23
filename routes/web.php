@@ -19,6 +19,7 @@ use App\Http\Controllers\NomenklatureController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductMonitoringController;
+use App\Http\Controllers\ProductMonitoringReportController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceNameController;
 use App\Http\Controllers\SevooborotController;
@@ -181,6 +182,11 @@ Route::resource('status', StatusController::class);
 Route::resource('mibOid', MidOidController::class);
 Route::resource('/factory/material', FactoryMaterialController::class);
 Route::resource('factory.gues', FactoryGuesController::class);
+/**
+ * Отчеты по мониторигу температуры хранения продукции в боксах
+ */
+Route::get('monitoring/reports', [ProductMonitoringReportController::class, 'index'])->middleware('auth');
+Route::post('monitoring/reports/today', [ProductMonitoringReportController::class, 'today'])->name('monitoring.report.today')->middleware('auth');
 
 /**
  * Отчет по температурному мониторингу продукции в буртах

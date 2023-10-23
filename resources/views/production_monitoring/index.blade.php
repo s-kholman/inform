@@ -40,8 +40,13 @@
                         <a class="btn btn-info" href="/phase/">Внести фазы хранения</a>
                     </div>
                 @endcan
-
             </div>
+
+        <div class="row text-center">
+                <div class="col-12 ">
+                    <a class="btn btn-success" href="/monitoring/reports/">Отчеты</a>
+                </div>
+        </div>
 
     </div>
 
