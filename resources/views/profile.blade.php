@@ -114,7 +114,7 @@
                             <select for="filial_name" class="form-select @error('filial_name') is-invalid @enderror"
                                     name="filial_name">
                                 <option value="0">-=Выберите подразделение=-</option>
-                                @foreach(\App\Models\filial::all() as $value)
+                                @foreach(\App\Models\filial::orderby('name')->get() as $value)
                                     @if($user_reg == true AND $user_reg->filial_id == $value->id)
                                         <option selected value="{{$value->id}}">{{$value->name}}</option>
                                     @else

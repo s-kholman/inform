@@ -115,7 +115,7 @@ class ProductMonitoringController extends Controller
     public function showFilial($id)
     {
         $var = ProductMonitoring::with('storageName')->get();
-        $monitoring = $var->where('storageName.filial_id', $id)->unique('storage_name_id');
+        $monitoring = $var->where('storageName.filial_id', $id)->unique('storage_name_id')->sortBy('storageName.name');
         return view('production_monitoring.show_filial', ['monitoring' => $monitoring]);
     }
 
