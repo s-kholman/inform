@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Отчеты о температуре хранения продукции в боксах')
+@section('title', 'Отчеты о опрыскивание')
 
 @section('info')
 
