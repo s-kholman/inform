@@ -58,7 +58,10 @@ class StorageNameController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate(self::ADD_VALIDATOR, self::ERROR_MESSAGES);
-        if (StorageName::where('name', 'ILIKE', '%'.$validated['name'].'%')->count() < 1)
+        if (StorageName::query()
+                ->where('name', 'ILIKE', '%'.$validated['name'].'%')
+                ->where('filial_id', $validated['select'])
+                ->count() < 1)
         {
             StorageName::Create([
                 'name' => $validated['name'],
