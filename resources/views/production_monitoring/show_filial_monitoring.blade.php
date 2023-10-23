@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Состояние принтеров')
+@section('title', 'Мониторинг температуры в боксах')
 
 @section('info')
     <div class="container">
@@ -9,15 +9,15 @@
             </div>
         </div>
         <div class="row text-center">
-            <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Дата</div>
-            <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">t &degС <br> Бурта в трубах</div>
-            <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">t &degС <br> над буртом</div>
-            <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">t &degС <br> клубня утром</div>
-            <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">t &degС <br> клубня вечером</div>
-            <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Влажность</div>
-            <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Фазы</div>
-            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">Режим</div>
-            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 border border-2">Коментарий</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Дата</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">t &degС <br> Бурта в трубах</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">t &degС <br> над буртом</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">t &degС <br> клубня утром</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">t &degС <br> клубня вечером</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Влажность</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Фазы</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">Режим</div>
+            <div class="text-break col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 border border-2">Коментарий</div>
         </div>
         @foreach($monitoring as $id => $value)
             <div class="row text-center">
@@ -29,8 +29,8 @@
                 <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->tuberTemperatureMorning}}&degС</div>
                 <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->tuberTemperatureEvening}}&degС</div>
                 <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->humidity}}</div>
-                <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->phase->name}}</div>
-                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 ">
+                <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->phase->name}}</div>
+                <div class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 ">
                     @forelse(\App\Models\StorageMode::where('product_monitoring_id', $value->id)->orderby('timeUp')->get() as $mode)
                         <div class="row">
                             <div class="col-12 border border-1">
@@ -45,7 +45,7 @@
                         </div>
                     @endforelse
                 </div>
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 border border-2">{{$value->comment}}</div>
+                <div class="text-break col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 border border-2">{{$value->comment}}</div>
             </div>
         @endforeach
         <div class="row p-5">

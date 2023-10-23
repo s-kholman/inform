@@ -34,8 +34,8 @@ class ProductMonitoringRequest extends FormRequest
             'tempAboveBurt' => 'nullable|numeric|max:20|min:-5',
             'tempMorning' => 'nullable|numeric|max:20|min:-5',
             'tempEvening' => 'nullable|numeric|max:20|min:-5',
-            'humidity' => 'nullable|numeric|max:20|min:-5',
-            'phase' => 'required|numeric|max:20|min:-5',
+            'humidity' => 'nullable|numeric|max:100',
+            'phase' => 'required|numeric',
             'timeUp' => 'nullable|date_format:H:i',
             'timeDown' => 'nullable|date_format:H:i',
             'comment' => 'nullable|max:255',
@@ -49,7 +49,8 @@ class ProductMonitoringRequest extends FormRequest
             'numeric' => 'только числовое значение',
             'max' => 'температура на может быть выше :max градусов',
             'min' => 'температура на может быть ниже :min градусов',
-            'comment.max' => 'Максимально 255 символов',
+            'humidity.max' => 'влажность не может превышать :max%',
+            'comment.max' => 'Максимально :max символов',
             'required' => 'Поле обязательно для заполнения'
         ];
     }
