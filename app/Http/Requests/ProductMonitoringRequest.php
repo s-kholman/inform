@@ -30,12 +30,12 @@ class ProductMonitoringRequest extends FormRequest
                 ->where('storage_name_id', $this->input('storage'))
                 ->where('storage_phase_id', $this->input('phase'))
             ],
-            'tempBurt' => 'nullable|numeric',
-            'tempAboveBurt' => 'nullable|numeric',
-            'tempMorning' => 'nullable|numeric',
-            'tempEvening' => 'nullable|numeric',
-            'humidity' => 'nullable|numeric',
-            'phase' => 'required|numeric',
+            'tempBurt' => 'nullable|numeric|max:20|min:-5',
+            'tempAboveBurt' => 'nullable|numeric|max:20|min:-5',
+            'tempMorning' => 'nullable|numeric|max:20|min:-5',
+            'tempEvening' => 'nullable|numeric|max:20|min:-5',
+            'humidity' => 'nullable|numeric|max:20|min:-5',
+            'phase' => 'required|numeric|max:20|min:-5',
             'timeUp' => 'nullable|date_format:H:i',
             'timeDown' => 'nullable|date_format:H:i',
             'comment' => 'nullable|max:255',
@@ -47,7 +47,9 @@ class ProductMonitoringRequest extends FormRequest
         return [
             'date.unique' => 'На данное число запись не уникальна',
             'numeric' => 'только числовое значение',
-            'max' => 'Максимально 255 символов',
+            'max' => 'температура на может быть выше :max градусов',
+            'min' => 'температура на может быть ниже :min градусов',
+            'comment.max' => 'Максимально 255 символов',
             'required' => 'Поле обязательно для заполнения'
         ];
     }
