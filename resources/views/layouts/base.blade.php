@@ -168,7 +168,7 @@
                                 <a href="/szr" class="nav-link px-0"> <span class="d-none d-sm-inline">СЗР</span></a>
                             </li>
                             <li>
-                                <a href="/box_filling" class="nav-link px-0"> <span class="d-none d-sm-inline">Продукция по боксам</span></a>
+                                <a href="/storagebox" class="nav-link px-0"> <span class="d-none d-sm-inline">Продукция по боксам</span></a>
                             </li>
                             <li>
                                 <a href="/pole" class="nav-link px-0"> <span class="d-none d-sm-inline">Поля</span></a>
