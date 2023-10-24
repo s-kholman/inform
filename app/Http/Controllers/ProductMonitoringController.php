@@ -122,7 +122,7 @@ class ProductMonitoringController extends Controller
 
     public function showFilialMonitoring ($id)
     {
-        $var = ProductMonitoring::where('storage_name_id',$id)->get();
+        $var = ProductMonitoring::query()->where('storage_name_id',$id)->orderBy('date')->get();
         return view('production_monitoring.show_filial_monitoring', ['monitoring' => $var]);
     }
 }
