@@ -185,6 +185,8 @@ Route::resource('factory.gues', FactoryGuesController::class);
 /**
  * Отчеты по мониторигу температуры хранения продукции в боксах
  */
+Route::get('monitoring/mode/show/{mode}', [StorageModeController::class, 'show'])->middleware('auth');
+Route::delete('monitoring/mode/destroy/{mode}', [StorageModeController::class, 'destroy'])->name('monitoring.mode.destroy')->middleware('auth');
 Route::get('monitoring/reports', [ProductMonitoringReportController::class, 'index'])->middleware('auth');
 Route::post('monitoring/reports/today', [ProductMonitoringReportController::class, 'today'])->name('monitoring.report.today')->middleware('auth');
 
