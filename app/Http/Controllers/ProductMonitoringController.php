@@ -6,7 +6,6 @@ use App\Http\Requests\ProductMonitoringRequest;
 use App\Http\Requests\ProductMonitoringUpdateRequest;
 use App\Models\ProductMonitoring;
 use App\Models\StorageMode;
-use Illuminate\Http\Request;
 
 class ProductMonitoringController extends Controller
 {

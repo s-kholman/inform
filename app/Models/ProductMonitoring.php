@@ -21,4 +21,9 @@ class ProductMonitoring extends Model
         return $this->hasOne(StoragePhase::class, 'id', 'storage_phase_id');
     }
 
+
+    public function mode()
+    {
+        return $this->hasMany(StorageMode::class);
+    }
 }

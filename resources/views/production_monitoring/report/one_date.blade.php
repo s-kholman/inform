@@ -17,7 +17,7 @@
                         <table class="table table-bordered">
                             @endif
                             <tr>
-                                <td colspan="8"><b>{{\App\Models\filial::where('id', $filial_id)->value('name')}} на
+                                <td colspan="9"><b>{{\App\Models\filial::where('id', $filial_id)->value('name')}} на
                                         {{\Illuminate\Support\Carbon::parse($date)->format('d-m-Y')}}</b>
                                 </td>
                             </tr>
@@ -29,6 +29,7 @@
                                 <td>t °С клубня вечером</td>
                                 <td>Влажность</td>
                                 <td>Фаза хранения</td>
+                                <td>Режим</td>
                                 <td>Комментарий</td>
                             </tr>
 
@@ -41,6 +42,13 @@
                                     <td>{{$value->tuberTemperatureEvening}}</td>
                                     <td>{{$value->humidity}}</td>
                                     <td>{{$value->phase->name}}</td>
+                                    <td>
+                                        @forelse($value->Mode as $mode)
+                                            {{\Carbon\Carbon::parse($mode->timeUp)->format('H:i')}} - {{\Carbon\Carbon::parse($mode->timeDown)->format('H:i')}}; <br>
+                                        @empty
+                                            н/д
+                                        @endforelse
+                                    </td>
                                     <td>{{$value->comment}}</td>
                                 </tr>
                             @endforeach

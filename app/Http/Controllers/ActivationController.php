@@ -10,8 +10,7 @@ use Illuminate\Http\Request;
 class ActivationController extends Controller
 {
     public function activation(){
-        $users = User::all();
-
+        $users = User::query()->orderByDesc('created_at')->get();
         return view('user_view', ['users' => $users]);
     }
 
