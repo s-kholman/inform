@@ -9,7 +9,7 @@
                     <div class="row justify-content-center text-center">
                         @csrf
                         <div class="col-1"></div>
-                    <div class="col-2">
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
                     <label for="dateSelect">Выберите дату</label>
                     <input class="form-control"
                            type="date"
@@ -21,12 +21,12 @@
 
                     </div>
                     <div class=" justify-content-center row p-4">
-                        <div class="col-1"></div>
-                        <div class="col-2">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2"></div>
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
                             <input class="btn btn-primary" type="submit" value="Сформировать">
                         </div>
 
-                        <div class="col-1">
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
                             <a class="btn btn-info" href="/monitoring/">Назад</a>
                         </div>
                     </div>
