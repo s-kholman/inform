@@ -3,28 +3,36 @@
 
 @section('info')
 
-    <div class="container px-5">
-        <div class="row row-cols-2 gy-5">
+    <div class="container">
 
-
-            <div class="col-6">
                 <form action="{{route('monitoring.report.today')}}" method="POST">
-                    @csrf
+                    <div class="row justify-content-center text-center">
+                        @csrf
+                        <div class="col-1"></div>
+                    <div class="col-2">
                     <label for="dateSelect">Выберите дату</label>
                     <input class="form-control"
                            type="date"
                            name="date"
                            value="{{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}"
                            id="dateSelect">
-                    <input class="btn btn-primary" type="submit" value="Показать">
+                    </div>
+
+
+                    </div>
+                    <div class=" justify-content-center row p-4">
+                        <div class="col-1"></div>
+                        <div class="col-2">
+                            <input class="btn btn-primary" type="submit" value="Сформировать">
+                        </div>
+
+                        <div class="col-1">
+                            <a class="btn btn-info" href="/monitoring/">Назад</a>
+                        </div>
+                    </div>
                 </form>
-            </div>
-            <div class="col-12">
-                <a class="btn btn-info" href="/monitoring/">Назад</a>
-            </div>
-            <div class="col-12">
-            </div>
-        </div>
+
+
     </div>
 
 
