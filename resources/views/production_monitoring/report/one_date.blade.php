@@ -42,7 +42,7 @@
                                     <td>{{$value->tuberTemperatureEvening}}</td>
                                     <td>{{$value->humidity}}</td>
                                     <td>{{$value->phase->name}}</td>
-                                    <td>
+                                    <td class="text-nowrap">
                                         @forelse($value->Mode as $mode)
                                             {{\Carbon\Carbon::parse($mode->timeUp)->format('H:i')}} - {{\Carbon\Carbon::parse($mode->timeDown)->format('H:i')}}; <br>
                                         @empty
@@ -57,7 +57,7 @@
                         </table>
                     @endif
                 @empty
-                    <p>Нет данных на {{\Illuminate\Support\Carbon::parse($date)->format('d-m-Y')}}</p>
+                    <p>Нет данных на: <b>{{\Illuminate\Support\Carbon::parse($date)->format('d-m-Y')}}</b></p>
                 @endforelse
             </div>
         </div>
