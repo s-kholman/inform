@@ -31,17 +31,17 @@ class StorageNameController extends Controller
         'label' => 'Введите наименование склада / места хранения',
         'parent' => 'К какому филиалу относится',
         'route' => 'storagename',
-        'parrent_name' => 'filial'
+        'parent_name' => 'filial'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = StorageName::orderby('filial_id', 'DESC')->orderby('name')->get();
-        $parrent_value = filial::orderby('name')->get();
+        $value = StorageName::query()->with('filial')->orderby('filial_id', 'DESC')->orderby('name')->get();
+        $parent_value = filial::orderby('name')->get();
 
-        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parrent_value'=>$parrent_value]);
+        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parent_value'=>$parent_value]);
     }
 
     /**
@@ -85,9 +85,9 @@ class StorageNameController extends Controller
     public function edit(StorageName $storagename)
     {
 
-        $parrent_value = filial::orderby('name')->get();
+        $parent_value = filial::orderby('name')->get();
         $get_name_id = $storagename->getFillable();
-        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$storagename, 'parent_value'=>$parrent_value, 'name_id' => $get_name_id['1']]);
+        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$storagename, 'parent_value'=>$parent_value, 'name_id' => $get_name_id['1']]);
     }
 
     /**

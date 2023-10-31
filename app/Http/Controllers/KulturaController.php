@@ -29,17 +29,17 @@ class KulturaController extends Controller
         'label' => 'Введите название культуры',
         'parent' => 'Вид посева',
         'route' => 'kultura',
-        'parrent_name' => 'Vidposeva'
+        'parent_name' => 'vidposeva'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = Kultura::orderby('vidposeva_id', 'DESC')->orderby('name')->get();
-        $parrent_value = Vidposeva::orderby('name')->get();
+        $value = Kultura::query()->with('Vidposeva')->orderby('vidposeva_id', 'DESC')->orderby('name')->get();
+        $parent_value = Vidposeva::orderby('name')->get();
 
-        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parrent_value'=>$parrent_value]);
+        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parent_value'=>$parent_value]);
     }
 
     /**
@@ -79,9 +79,9 @@ class KulturaController extends Controller
      */
     public function edit(Kultura $kultura)
     {
-        $parrent_value = Vidposeva::orderby('name')->get();
+        $parent_value = Vidposeva::orderby('name')->get();
         $get_name_id = $kultura->getFillable();
-        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$kultura, 'parent_value'=>$parrent_value, 'name_id' => $get_name_id['1']]);
+        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$kultura, 'parent_value'=>$parent_value, 'name_id' => $get_name_id['1']]);
 
     }
 

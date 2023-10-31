@@ -30,17 +30,17 @@ class DeviceNameController extends Controller
         'label' => 'Введите название модели',
         'parent' => 'Выберите бренд',
         'route' => 'device_name',
-        'parrent_name' => 'brend'
+        'parent_name' => 'brend'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = DeviceName::orderby('brend_id', 'DESC')->orderby('name')->get();
-        $parrent_value = Brend::orderby('name')->get();
+        $value = DeviceName::query()->with('brend')->orderby('brend_id', 'DESC')->orderby('name')->get();
+        $parent_value = Brend::orderby('name')->get();
 
-        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parrent_value'=>$parrent_value]);
+        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parent_value'=>$parent_value]);
     }
 
     /**
@@ -80,9 +80,9 @@ class DeviceNameController extends Controller
      */
     public function edit(DeviceName $deviceName)
     {
-        $parrent_value = Brend::orderby('name')->get();
+        $parent_value = Brend::orderby('name')->get();
         $get_name_id = $deviceName->getFillable();
-        return view('Printer.edit', ['const' => self::TITLE, 'value'=>$deviceName, 'parent_value'=>$parrent_value, 'name_id' => $get_name_id['1']]);
+        return view('Printer.edit', ['const' => self::TITLE, 'value'=>$deviceName, 'parent_value'=>$parent_value, 'name_id' => $get_name_id['1']]);
     }
 
     /**

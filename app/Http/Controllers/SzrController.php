@@ -37,17 +37,17 @@ class SzrController extends Controller
       'label' => 'Введите название СЗР',
       'parent' => 'Класификация СЗР',
       'route' => 'szr',
-      'parrent_name' => 'szrClasses'
+      'parent_name' => 'szr_classes'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = Szr::orderby('szr_classes_id', 'DESC')->orderby('name')->get();
-        $parrent_value = SzrClasses::orderby('name')->get();
+        $value = Szr::query()->with('SzrClasses')->orderby('szr_classes_id', 'DESC')->orderby('name')->get();
+        $parent_value = SzrClasses::orderby('name')->get();
 
-        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parrent_value'=>$parrent_value]);
+        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parent_value'=>$parent_value]);
     }
 
     /**
@@ -87,9 +87,9 @@ class SzrController extends Controller
      */
     public function edit(Szr $szr)
     {
-        $parrent_value = SzrClasses::orderby('name')->get();
+        $parent_value = SzrClasses::orderby('name')->get();
         $get_name_id = $szr->getFillable();
-        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$szr, 'parent_value'=>$parrent_value, 'name_id' => $get_name_id['1']]);
+        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$szr, 'parent_value'=>$parent_value, 'name_id' => $get_name_id['1']]);
     }
 
     /**
