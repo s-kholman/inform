@@ -35,17 +35,17 @@ class NomenklatureController extends Controller
         'label' => 'Введите название номенклатуы',
         'parent' => 'Культура',
         'route' => 'nomenklature',
-        'parrent_name' => 'Kultura'
+        'parent_name' => 'kultura'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = Nomenklature::orderby('kultura_id', 'DESC')->orderby('name')->get();
-        $parrent_value = Kultura::orderby('name')->get();
+        $value = Nomenklature::query()->with('Kultura')->orderby('kultura_id', 'DESC')->orderby('name')->get();
+        $parent_value = Kultura::orderby('name')->get();
 
-        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parrent_value'=>$parrent_value]);
+        return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parent_value'=>$parent_value]);
 
     }
 
@@ -85,9 +85,9 @@ class NomenklatureController extends Controller
      */
     public function edit(Nomenklature $nomenklature)
     {
-        $parrent_value = Kultura::orderby('name')->get();
+        $parent_value = Kultura::orderby('name')->get();
         $get_name_id = $nomenklature->getFillable();
-        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$nomenklature, 'parent_value'=>$parrent_value, 'name_id' => $get_name_id['1']]);
+        return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$nomenklature, 'parent_value'=>$parent_value, 'name_id' => $get_name_id['1']]);
     }
 
     /**

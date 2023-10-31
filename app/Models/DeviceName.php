@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class DeviceName extends Model
@@ -15,9 +16,9 @@ class DeviceName extends Model
     ];
 
     //Создаю как стандарт в зависимые справочники для получения доступа в blade шаблоне
-    public function ParrentName()
+    public function Brend() : BelongsTo
     {
-        return $this->hasOne(Brend::class,'id','brend_id');
+        return $this->belongsTo(Brend::class);
     }
 
     public function miboid () : BelongsToMany

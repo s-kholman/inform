@@ -15,12 +15,6 @@ class Nomenklature extends Model
         return $this->belongsTo(Kultura::class);
     }
 
-    //Создаю как стандарт в зависимые справочники для получения доступа в blade шаблоне
-    public function ParrentName()
-    {
-        return $this->hasOne(Kultura::class,'id','kultura_id');
-    }
-
     public function Sevooborot(){
         return $this->hasMany(Sevooborot::class);
     }

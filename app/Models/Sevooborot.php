@@ -11,9 +11,6 @@ class Sevooborot extends Model
 
     protected $fillable = ['kultura_id','nomenklature_id','reproduktion_id','pole_id','square','year'];
 
-   /* public function Nomenklature(){
-        return $this->belongsTo(Nomenklature::class);
-        }*/
     public function Kultura(){
         return $this->hasOne(Kultura::class,'id','kultura_id');
     }

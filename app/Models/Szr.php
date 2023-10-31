@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Szr extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'szr_classes_id'];
 
-    //Создаю как стандарт в зависимые справочники для получения доступа в blade шаблоне
-    public function ParrentName()
+    public function SzrClasses() : BelongsTo
     {
-        return $this->hasOne(SzrClasses::class,'id','szr_classes_id');
+        return $this->belongsTo(SzrClasses::class);
     }
 
 
