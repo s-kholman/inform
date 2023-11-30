@@ -18,6 +18,7 @@ use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrinterController;
+use App\Http\Controllers\ProductMonitoringChartController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\ProductMonitoringReportController;
 use App\Http\Controllers\ServiceController;
