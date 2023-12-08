@@ -103,7 +103,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link align-middle px-0" href="/otchet/4" class="nav-link px-0">
+                        <a class="nav-link align-middle px-0" href="/peat" class="nav-link px-0">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Торф</span></a>
                     </li>
                     <li class="nav-item">
