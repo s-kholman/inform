@@ -6,7 +6,6 @@ use App\Actions\harvest\HarvestAction;
 use App\Actions\peat\PeatShowAction;
 use App\Http\Requests\PeatRequest;
 use App\Models\Peat;
-use App\Models\posev;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -58,59 +57,10 @@ class PeatController extends Controller
         );
         return redirect()->route('peat.index');
     }
-
-    public function update(HarvestAction $harvestAction)
-    {
-        $all = posev::query()->where('vidposeva_id', 4)->get();
-        foreach ($all as $value) {
-            Peat::query()->create(
-                [
-                    'date' => $value->posevDate,
-                    'pole_id' => $this->pole($value->fio_id),
-                    'peat_extraction_id' => $this->extraction($value->agregat_id),
-                    'filial_id' => $value->filial_id,
-                    'harvest_year_id' => $harvestAction->HarvestYear($value->posevDate),
-                    'volume' => $value->posevGa,
-                ]);
-        }
-    }
-
     public function destroy(Peat $peat)
     {
         $this->authorize('delete', $peat);
         $peat->delete();
         return redirect()->route('peat.show', ['peat' => $peat->harvest_year_id]);
     }
-
-
-    private function extraction($id)
-    {
-        switch ($id) {
-            case 9:
-                return 1;
-            case 10:
-                return 3;
-            case 11:
-                return 4;
-        }
-    }
-
-    private function pole($id)
-    {
-        switch ($id) {
-            case 38:
-                return 95;
-            case 39:
-                return 96;
-            case 40:
-                return 97;
-            case 41:
-                return 98;
-            case 42:
-                return 46;
-            case 43:
-                return 13;
-        }
-    }
-
 }
