@@ -192,11 +192,7 @@ Route::resource('factory.gues', FactoryGuesController::class);
  */
 Route::resource('year', HarvestYearController::class)->middleware('auth');
 Route::resource('extraction', PeatExtractionController::class)->middleware('auth');
-//Route::get('peat/info', [PeatController::class, 'update']);
 Route::resource('peat', PeatController::class)->middleware('auth');
-//Route::get('peat/{id?}', [PeatController::class, 'index']);
-Route::get('update', [PeatController::class, 'update']);
-
 /**
  * Отчеты по мониторигу температуры хранения продукции в боксах
  */
