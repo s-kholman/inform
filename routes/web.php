@@ -12,10 +12,13 @@ use App\Http\Controllers\FactoryMaterialController;
 use App\Http\Controllers\FilialController;
 use App\Http\Controllers\FioController;
 use App\Http\Controllers\GuesController;
+use App\Http\Controllers\HarvestYearController;
 use App\Http\Controllers\HeightController;
 use App\Http\Controllers\KulturaController;
 use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
+use App\Http\Controllers\PeatController;
+use App\Http\Controllers\PeatExtractionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductMonitoringChartController;
@@ -183,6 +186,17 @@ Route::resource('status', StatusController::class);
 Route::resource('mibOid', MidOidController::class);
 Route::resource('/factory/material', FactoryMaterialController::class);
 Route::resource('factory.gues', FactoryGuesController::class);
+
+/**
+ * Торф
+ */
+Route::resource('year', HarvestYearController::class)->middleware('auth');
+Route::resource('extraction', PeatExtractionController::class)->middleware('auth');
+//Route::get('peat/info', [PeatController::class, 'update']);
+Route::resource('peat', PeatController::class)->middleware('auth');
+//Route::get('peat/{id?}', [PeatController::class, 'index']);
+Route::get('update', [PeatController::class, 'update']);
+
 /**
  * Отчеты по мониторигу температуры хранения продукции в боксах
  */
