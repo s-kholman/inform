@@ -19,12 +19,21 @@
                 <label for="txtFilial">Выберите филиал</label>
                 <select name="filial" id="selectFilial" class="form-select @error('filial') is-invalid @enderror">
                     <option value="">Выберите филиал</option>
-
+                    @if (\Illuminate\Support\Facades\Auth::user()->email == 'sergey@krimm.ru')
+                        @forelse(\App\Models\filial::all() as $filial)
+                            <option selected value="{{ $filial->id }}"> {{ $filial->name }} </option>
+                        @empty
+                            <option value=""> Филиал(ы) не найдены </option>
+                        @endforelse
+                    @else
                         @forelse(\App\Models\filial::where('id', \App\Models\Registration::where('user_id', Auth::user()->id)->first()->filial_id)->get() as $filial)
                             <option selected value="{{ $filial->id }}"> {{ $filial->name }} </option>
                         @empty
                             <option value=""> Филиал(ы) не найдены </option>
                         @endforelse
+                    @endif
+
+
                 </select>
                 @error('filial')
                 <span class="invalid-feedback">
