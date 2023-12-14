@@ -20,6 +20,7 @@ use App\Models\svyaz;
 use App\Models\User;
 use App\Models\Vidposeva;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -31,7 +32,7 @@ use UniFi_API\Client;
 class InfoController extends Controller
 {
 
-    public function showAddPosevForm()
+    public function create()
     {
         /**
          * Пересмотреть запросы на коллекции или получать результат за счет запроса
@@ -42,6 +43,7 @@ class InfoController extends Controller
         foreach (Kultura::all() as $toFormat) {
             $kultura [$toFormat->vidposeva_id] [$toFormat->id] = $toFormat->name;
         }
+
         //Подготавливаем данные для динамических форм - список ФИО
         foreach (svyaz::where('active', true)->get() as $value) {
             $all_info [$value->filial_id] [$value->vidposeva_id] [$value->fio_id] = $value->fio->name;

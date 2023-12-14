@@ -7,7 +7,7 @@ use Illuminate\Support\Carbon;
 
 class HarvestAction
 {
-    public function HarvestYear($date) : int
+    public function HarvestYear($date)
     {
         if (Carbon::parse($date)->month > 9) {
             return HarvestYear::query()->firstOrCreate(

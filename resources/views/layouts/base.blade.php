@@ -87,10 +87,10 @@
                         <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
 
                             <li class="w-100">
-                                <a href="/otchet/1" class="nav-link px-0"> <span class="d-none d-sm-inline">Зерновые</span></a>
+                                <a href="/sowing?type=1" class="nav-link px-0"> <span class="d-none d-sm-inline">Зерновые</span></a>
                             </li>
                             <li class="w-100">
-                                <a href="/otchet/2" class="nav-link px-0"> <span class="d-none d-sm-inline">Картофель</span></a>
+                                <a href="/sowing?type=2" class="nav-link px-0"> <span class="d-none d-sm-inline">Картофель</span></a>
                             </li>
                             <li class="w-100">
                                 <a href="/otchet/3" class="nav-link px-0"> <span class="d-none d-sm-inline">Овощи</span></a>
@@ -144,7 +144,7 @@
 
 
                             <li>
-                                <a href="/posev_add" class="nav-link px-0"> <span class="d-none d-sm-inline">Внесите информациб о работах</span></a>
+                                <a href="/sowing/create" class="nav-link px-0"> <span class="d-none d-sm-inline">Внесите информациб о работах</span></a>
                             </li>
 
                                 <li>

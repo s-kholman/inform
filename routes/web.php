@@ -33,6 +33,7 @@ use App\Http\Controllers\SokarFIOController;
 use App\Http\Controllers\SokarNomenklatController;
 use App\Http\Controllers\SokarSkladController;
 use App\Http\Controllers\SokarSpisanieController;
+use App\Http\Controllers\SowingController;
 use App\Http\Controllers\SprayingController;
 use App\Http\Controllers\SprayingReportController;
 use App\Http\Controllers\StatusController;
@@ -41,6 +42,7 @@ use App\Http\Controllers\Storage\StorageNameController;
 use App\Http\Controllers\StorageModeController;
 use App\Http\Controllers\StoragePhaseController;
 use App\Http\Controllers\SutkiController;
+use App\Http\Controllers\SvyazController;
 use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
 use App\Http\Controllers\VidposevaController;
@@ -71,10 +73,16 @@ Route::view('/', 'index')->name('/');
 /**
  * Посевная + торф (последнее переписать как новый отчет)
  */
-Route::resource('svyaz', \App\Http\Controllers\SvyazController::class)->middleware('can:destroy, App\Models\svyaz');
+Route::resource('svyaz', SvyazController::class)->middleware('can:destroy, App\Models\svyaz');
 Route::get('/otchet/{key}', [InfoController::class, 'otchet'])->name('otchet');
 Route::post('/posev_add', [InfoController::class, 'storePosev'])->name('posev.add')->middleware('auth');
-Route::get('/posev_add', [InfoController::class, 'showAddPosevForm'])->name('posev_add')->middleware('auth');
+//Route::get('/posev_add', [SowingController::class, 'create'])->name('posev_add')->middleware('auth');
+
+/**
+ * Посевная
+ */
+Route::resource('sowing', SowingController::class);
+
 
 Route::view('/login', 'login');
 Route::view('/register', 'register');
@@ -170,6 +178,8 @@ Route::resource('sutki', SutkiController::class);
 Route::resource('agregat', AgregatController::class);
 Route::resource('vidposeva', VidposevaController::class);
 Route::resource('fio', FioController::class);
+
+Route::get('convert', [SowingController::class, 'posevToSowing']);
 
 Route::resource('spraying', SprayingController::class)->middleware('auth');
 Route::resource('post', PostController::class);

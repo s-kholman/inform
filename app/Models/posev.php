@@ -32,5 +32,4 @@ class posev extends Model
         return $this->belongsTo(Sutki::class);
     }
 
-
 }
