@@ -8,17 +8,6 @@ use Carbon\Carbon;
 
 class PeatPolicy
 {
-    public function before(User $user)
-    {
-        return $user->email == 'sergey@krimm.ru' ? true : false;
-    }
-    /**
-     * Create a new policy instance.
-     */
-    public function __construct()
-    {
-        //
-    }
 
     public function view(User $user)
     {
