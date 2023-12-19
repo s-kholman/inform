@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('sowing_last_name_id')->constrained();
             $table->foreignId('filial_id')->constrained();
             $table->foreignId('sowing_type_id')->constrained();
-            $table->foreignId('machine_id')->constrained();
+            $table->foreignId('machine_id')->nullable()->constrained();
+            $table->foreignId('cultivation_id')->nullable()->constrained();
             $table->foreignId('harvest_year_id')->constrained();
-            $table->boolean('active');
             $table->timestamps();
         });
     }

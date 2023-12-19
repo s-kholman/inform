@@ -1,7 +1,6 @@
 @extends('layouts.base')
 @section('title', 'Справочник')
 <style>
-
     .rotate {
         writing-mode: vertical-rl;
         transform: rotate(-180deg);
@@ -17,11 +16,18 @@
                 <a class="btn btn-info" href="/sowing/create">Внести данные</a>
             </div>
         </div>
-        <div class="row">
-
+        <div class="row p-5">
             @forelse($harvest_all as $harvest)
-                <div class="col">
-                    <a href="/sowing?type={{$sowing_type_id}}&harvest={{$harvest[0]->harvest_year_id}}">{{$harvest[0]->harvest_name}}</a>
+                @if($loop->first)
+                    <div class="row">
+                        <div class="text-center col-12">
+                            Доступны отчеты за следующие периоды:
+                        </div>
+                    </div>
+                @endif
+
+                <div class="col-2">
+                    <a href="/sowing?type={{$sowing_type->id}}&harvest={{$harvest[0]->harvest_year_id}}">{{$harvest[0]->harvest_name}} год</a>
                 </div>
             @empty
             @endforelse
@@ -30,14 +36,16 @@
             <div class="row p-2">
                 <div class="col-12">
 
-                    <table class="table table-bordered text-center caption-top table-striped">
-
+                    <table class="table table-bordered text-center caption-top">
+                        <caption class="border text-center">
+                            <b><p>Информация за {{$harvest_all[$harvest_year_id] [0]->harvest_name}} год, культура - {{$sowing_type->name}} </p></b>
+                        </caption>
                         <thead>
                         <tr>
                             <th rowspan="3" ><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Дата&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></th>
                             @foreach(current($result) as $filial_id => $key)
                                 <th colspan="{{\App\Models\Sowing::query()
-                                                                ->where('sowing_type_id', $sowing_type_id)
+                                                                ->where('sowing_type_id', $sowing_type->id)
                                                                 ->where('filial_id', $filial_id)
                                                                 ->where('harvest_year_id', $harvest_year_id)
                                                                 ->get()
@@ -50,8 +58,11 @@
                         <tr>
                             @foreach(current($result) as $filial_id => $machine)
                                 @foreach($machine as $machine_id => $sowing_last_name)
-
-                                    <th colspan="{{count($sowing_last_name)}}">{{\App\Models\Machine::query()->where('id', $machine_id)->value('name')}}</th>
+                                    @if ($no_machine)
+                                        <th colspan="{{count($sowing_last_name)}}">{{\App\Models\Cultivation::query()->where('id', $machine_id)->value('name')}}</th>
+                                    @else
+                                        <th colspan="{{count($sowing_last_name)}}">{{\App\Models\Machine::query()->where('id', $machine_id)->value('name')}}</th>
+                                    @endif
                                 @endforeach
                             @endforeach
                         </tr>
@@ -72,26 +83,26 @@
                         @foreach($result as $date => $filial)
                             <tr>
                                 <td name="data" class="text-center">{{\Carbon\Carbon::parse($date)->format('d-m-Y')}}</td>
-                                @foreach($filial as $filial_id => $agregat)
-                                    @foreach($agregat as $agregat_id => $fio)
-                                        @foreach($fio as $fio_id => $value)
+                                @foreach($filial as $filial_id => $machine)
+                                    @foreach($machine as $machine_id => $sowing_last_name)
+                                        @foreach($sowing_last_name as $sowing_last_name_id => $value)
                                             @if (array_key_exists('default', $value))
                                                 <td></td>
                                             @else
-                                                @foreach($value as $kultura_id => $model)
-
+                                                @foreach($value as $cultivation_id => $model)
                                                     @if (count($value) > 1)
                                                         @if ($loop->first)
                                                             <td>
                                                             <table> <tbody><tr>
                                                         @endif
-                                                        <td class="text-center">{{ $model->volume }}</td>
+                                                        <td style="background: {{$model->color}}" class="text-center">{{ $model->volume }}</td>
 
                                                         @if ($loop->last)
                                                            </tr></tbody></table></td>
                                                         @endif
                                                     @else
-                                                        <td>{{$model->volume}}</td>
+
+                                                        <td style="background: {{$model->color}}" >{{$model->volume}}</td>
                                                     @endif
 
                                                 @endforeach
@@ -106,25 +117,32 @@
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td>Итого на поле</td>
-                            @foreach($filial as $filial_id => $peat_extraction)
-                                @foreach($peat_extraction as $peat_extraction_id => $pole)
-                                    @foreach($pole as $pole_id => $value)
+                            <td>Итого:</td>
+                            @foreach($filial as $filial_id => $machine)
+                                @foreach($machine as $machine_id => $sowing_last_name)
+                                    @foreach($sowing_last_name as $sowing_last_name_id => $value)
                                         <td>
-                                            {{\App\Models\Peat::query()
-                                                                ->where('filial_id', $filial_id)
-                                                                ->where('peat_extraction_id', $peat_extraction_id)
-                                                                ->where('pole_id', $pole_id)
-                                                                ->where('harvest_year_id', $harvest_year_id)
-                                                                ->sum('volume')}}
+                                            @if($no_machine)
+                                                {{\App\Models\Sowing::query()
+                                                                    ->where('filial_id', $filial_id)
+                                                                    ->where('cultivation_id', $machine_id)
+                                                                    ->where('sowing_last_name_id', $sowing_last_name_id)
+                                                                    ->where('harvest_year_id', $harvest_year_id)
+                                                                    ->sum('volume')}}
+                                            @else
+                                                {{\App\Models\Sowing::query()
+                                                                    ->where('filial_id', $filial_id)
+                                                                    ->where('machine_id', $machine_id)
+                                                                    ->where('sowing_last_name_id', $sowing_last_name_id)
+                                                                    ->where('harvest_year_id', $harvest_year_id)
+                                                                    ->sum('volume')}}
+                                            @endif
                                         </td>
                                     @endforeach
                                 @endforeach
                             @endforeach
                             <td>
-                                {{\App\Models\Peat::query()
-                                                    ->where('harvest_year_id', $harvest_year_id)
-                                                    ->sum('volume')}}
+
                             </td>
                         </tr>
                         @endif
@@ -134,9 +152,6 @@
                 </div>
 
             </div>
-
-
-
         @else
             <div class="row p-4">
                 <div class="col">
@@ -144,8 +159,6 @@
                 </div>
             </div>
         @endif
-
-
     </div>
 
 @endsection('info')

@@ -32,7 +32,7 @@ class SowingOutfitSeeder extends Seeder
                     'sowing_type_id' => $value->vidposeva_id,
                     'machine_id' => self::toMachine($value->agregat_id),
                     'harvest_year_id' => self::HarvestYear($value->date) ,
-                    'active' =>$value->active,
+                    'cultivation_id' =>self::toCultivation($value->agregat_id),
                 ]);
         }
 
@@ -64,6 +64,20 @@ class SowingOutfitSeeder extends Seeder
 
 }
 
+    private function toCultivation($id)
+    {
+        switch ($id) {
+            case 12:
+                return 8;
+            case 13:
+                return 7;
+            case 15:
+                return 9;
+            default:
+                return null;
+        }
+    }
+
     private function toMachine($id)
     {
         switch ($id){
@@ -85,6 +99,9 @@ class SowingOutfitSeeder extends Seeder
                 return 8;
             case 8:
                 return 9;
+            default:
+                return null;
+//Культура
 
 
         }

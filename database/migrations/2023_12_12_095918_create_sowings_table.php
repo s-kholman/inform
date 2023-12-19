@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('filial_id')->constrained();
             $table->foreignId('shift_id')->constrained();
             $table->foreignId('sowing_type_id')->constrained();
-            $table->foreignId('machine_id')->constrained();
+            $table->foreignId('machine_id')->nullable()->constrained();
             $table->foreignId('harvest_year_id')->constrained();
             $table->date('date');
             $table->float('volume');

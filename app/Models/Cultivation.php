@@ -8,5 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Cultivation extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'sowing_type_id'];
+    protected $fillable = ['name', 'sowing_type_id', 'color'];
+
+    public function sowingType ()
+    {
+        return $this->belongsTo(SowingType::class);
+    }
 }

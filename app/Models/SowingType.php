@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class SowingType extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'no_machine'];
 }

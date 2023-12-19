@@ -4,6 +4,7 @@ use App\Http\Controllers\AgregatController;
 use App\Http\Controllers\BrendController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CounterpartyController;
+use App\Http\Controllers\CultivationController;
 use App\Http\Controllers\CurrentStatusController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\DeviceNameController;
@@ -34,6 +35,7 @@ use App\Http\Controllers\SokarNomenklatController;
 use App\Http\Controllers\SokarSkladController;
 use App\Http\Controllers\SokarSpisanieController;
 use App\Http\Controllers\SowingController;
+use App\Http\Controllers\SowingOutfitController;
 use App\Http\Controllers\SprayingController;
 use App\Http\Controllers\SprayingReportController;
 use App\Http\Controllers\StatusController;
@@ -161,7 +163,7 @@ Route::post('/spisanieDate', [SokarSpisanieController::class, 'spisanieDate'])->
 Route::get('/spraying/report/{id?}', [SprayingReportController::class, 'index'])->name('spraying.report.index');
 Route::post('/spraying/report/{id}', [SprayingReportController::class, 'report'])->name('spraying.report.show');
 Route::resource('nomenklature', NomenklatureController::class);
-Route::resource('kultura', KulturaController::class);
+
 
 /**
  * Ресурсы производственного отдела
@@ -172,14 +174,15 @@ Route::resource('gues', GuesController::class);
 Route::resource('take', TakeController::class);
 
 
+//Route::resource('kultura', KulturaController::class);
+Route::resource('outfit', SowingOutfitController::class);
+Route::resource('cultivation', CultivationController::class);
 Route::resource('filial', FilialController::class);
 Route::resource('szr', SzrController::class);
 Route::resource('sutki', SutkiController::class);
 Route::resource('agregat', AgregatController::class);
 Route::resource('vidposeva', VidposevaController::class);
 Route::resource('fio', FioController::class);
-
-Route::get('convert', [SowingController::class, 'posevToSowing']);
 
 Route::resource('spraying', SprayingController::class)->middleware('auth');
 Route::resource('post', PostController::class);

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->foreignId('sowing_type_id')->constrained();
+            $table->string('color',7);
             $table->timestamps();
         });
     }

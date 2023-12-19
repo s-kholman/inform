@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SowingOutfit extends Model
 {
@@ -16,12 +17,32 @@ class SowingOutfit extends Model
             'sowing_type_id',
             'machine_id',
             'harvest_year_id',
-            'active'
+            'cultivation_id'
         ];
 
-    public function SowingLastName()
+    public function SowingLastName(): BelongsTo
     {
         return $this->belongsTo(SowingLastName::class);
+    }
+
+    public function filial(): BelongsTo
+    {
+        return $this->belongsTo(filial::class);
+    }
+
+    public function SowingType(): BelongsTo
+    {
+        return $this->belongsTo(SowingType::class);
+    }
+
+    public function Machine(): BelongsTo
+    {
+        return $this->belongsTo(Machine::class);
+    }
+
+    public function Cultivation(): BelongsTo
+    {
+        return $this->belongsTo(Cultivation::class);
     }
 
 }

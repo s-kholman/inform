@@ -37,6 +37,7 @@ class SowingTypeSeeder extends Seeder
             $id = SowingType::query()->create(
                 [
                     'name' => $Sowing,
+                    'no_machine' => $Sowing <> 'Овощи' ? false: true
                 ]
             );
             foreach ($Cultivation as $name){
@@ -45,6 +46,7 @@ class SowingTypeSeeder extends Seeder
                         [
                             'name' => $name,
                             'sowing_type_id' => $id->id,
+                            'color' => '#' . dechex(rand(256,16777215)),
                         ]
                     );
             }

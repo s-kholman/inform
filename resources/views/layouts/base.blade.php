@@ -93,7 +93,7 @@
                                 <a href="/sowing?type=2" class="nav-link px-0"> <span class="d-none d-sm-inline">Картофель</span></a>
                             </li>
                             <li class="w-100">
-                                <a href="/otchet/3" class="nav-link px-0"> <span class="d-none d-sm-inline">Овощи</span></a>
+                                <a href="/sowing?type=3" class="nav-link px-0"> <span class="d-none d-sm-inline">Овощи</span></a>
                             </li>
                             @can('closeDateUpdate', 'App\Models\svyaz')
                                 <li class="w-100">
@@ -135,7 +135,7 @@
                                 <a href="/vidposeva" class="nav-link px-0"> <span class="d-none d-sm-inline">Вид посева</span></a>
                             </li>
                             <li>
-                                <a href="/kultura" class="nav-link px-0"> <span class="d-none d-sm-inline">Культура</span></a>
+                                <a href="/cultivation" class="nav-link px-0"> <span class="d-none d-sm-inline">Культура</span></a>
                             </li>
 
                             <li>
