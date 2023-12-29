@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class HarvestYear extends Model
 {
     use HasFactory;
+
     protected $fillable = ['name'];
+
+  /*  public function outfitHarvest()
+    {
+        return $this->hasOneThrough(HarvestYear::class, SowingOutfit::class);
+    }*/
 }

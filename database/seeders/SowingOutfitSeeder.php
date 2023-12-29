@@ -18,8 +18,8 @@ class SowingOutfitSeeder extends Seeder
     public function run(): void
     {
         $svyaz = svyaz::query()
-            ->where('vidposeva_id', 1)
-            ->orWhere('vidposeva_id', 2)
+            //->where('vidposeva_id', 1)
+            //->orWhere('vidposeva_id', 2)
             ->get();
 
         foreach ($svyaz as $value){

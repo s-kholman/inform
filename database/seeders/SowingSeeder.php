@@ -6,6 +6,7 @@ use App\Actions\harvest\HarvestAction;
 use App\Models\posev;
 use App\Models\Sowing;
 use App\Models\SowingLastName;
+use App\Models\SowingOutfit;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -32,6 +33,13 @@ class SowingSeeder extends Seeder
                     'sowing_type_id' => $value->vidposeva_id,
                     'machine_id' => self::toMachine($value->agregat_id),
                     'harvest_year_id' => $harvestAction->HarvestYear($value->posevDate),
+                    'sowing_outfit_id' => self::sowingOutfit
+                    (
+                        self::SowingLastName($value->fio->name)->id,
+                        $value->filial_id,
+                        $value->vidposeva_id,
+                        $harvestAction->HarvestYear($value->posevDate)
+                    ),
                     'date' => $value->posevDate,
                 ],
                 [
@@ -96,6 +104,18 @@ class SowingSeeder extends Seeder
 
 
         }
+    }
+
+    private function sowingOutfit($sowing_last_name_id, $filial_id, $sowing_type_id, $harvest_year_id)
+    {
+        $id = SowingOutfit::query()
+            ->where('sowing_last_name_id', $sowing_last_name_id)
+            ->where('filial_id', $filial_id)
+            ->where('sowing_type_id', $sowing_type_id)
+            ->where('harvest_year_id', $harvest_year_id)
+            ->first();
+
+        return $id->id;
     }
 
 }

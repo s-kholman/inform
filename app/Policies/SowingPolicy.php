@@ -14,4 +14,9 @@ class SowingPolicy
     {
         return isset($user->registration->activation) ? true : false;
     }
+
+    public function viewAdmin(User $user)
+    {
+        return $user->email == 'sergey@krimm.ru' ? true : false;
+    }
 }

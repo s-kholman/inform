@@ -16,6 +16,7 @@ use App\Http\Controllers\GuesController;
 use App\Http\Controllers\HarvestYearController;
 use App\Http\Controllers\HeightController;
 use App\Http\Controllers\KulturaController;
+use App\Http\Controllers\MachineController;
 use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
 use App\Http\Controllers\PeatController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\ProductMonitoringReportController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceNameController;
 use App\Http\Controllers\SevooborotController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\SokarController;
 use App\Http\Controllers\SokarFIOController;
@@ -35,7 +37,9 @@ use App\Http\Controllers\SokarNomenklatController;
 use App\Http\Controllers\SokarSkladController;
 use App\Http\Controllers\SokarSpisanieController;
 use App\Http\Controllers\SowingController;
+use App\Http\Controllers\SowingLastNameController;
 use App\Http\Controllers\SowingOutfitController;
+use App\Http\Controllers\SowingTypeController;
 use App\Http\Controllers\SprayingController;
 use App\Http\Controllers\SprayingReportController;
 use App\Http\Controllers\StatusController;
@@ -83,7 +87,19 @@ Route::post('/posev_add', [InfoController::class, 'storePosev'])->name('posev.ad
 /**
  * Посевная
  */
+Route::resource('/sowing/type', SowingTypeController::class);
 Route::resource('sowing', SowingController::class);
+Route::resource('shift', ShiftController::class);
+Route::resource('sowingLastName', SowingLastNameController::class);
+Route::resource('machine', MachineController::class);
+//Route::resource('outfit', SowingOutfitController::class);
+Route::get('/sowing/outfit/index{id?}', [SowingOutfitController::class, 'index'])->name('outfit.index');
+Route::get('/sowing/outfit/create', [SowingOutfitController::class, 'create'])->name('outfit.create');
+Route::post('/sowing/outfit/store', [SowingOutfitController::class, 'store'])->name('outfit.store');
+
+
+
+
 
 
 Route::view('/login', 'login');
@@ -175,14 +191,14 @@ Route::resource('take', TakeController::class);
 
 
 //Route::resource('kultura', KulturaController::class);
-Route::resource('outfit', SowingOutfitController::class);
+//Route::resource('outfit', SowingOutfitController::class);
 Route::resource('cultivation', CultivationController::class);
 Route::resource('filial', FilialController::class);
 Route::resource('szr', SzrController::class);
-Route::resource('sutki', SutkiController::class);
+//Route::resource('sutki', SutkiController::class);
 Route::resource('agregat', AgregatController::class);
 Route::resource('vidposeva', VidposevaController::class);
-Route::resource('fio', FioController::class);
+//Route::resource('fio', FioController::class);
 
 Route::resource('spraying', SprayingController::class)->middleware('auth');
 Route::resource('post', PostController::class);

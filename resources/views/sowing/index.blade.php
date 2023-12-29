@@ -15,7 +15,31 @@
             <div class="col-4 text-center">
                 <a class="btn btn-info" href="/sowing/create">Внести данные</a>
             </div>
+            @can('viewAdmin', 'App\Models\Sowing')
+            <div class="col-2">
+                <div class="row p-1">
+                    <a class="btn btn-info" href="/machine">Агрегаты</a>
+                </div>
+                <div class="row p-1">
+                    <a class="btn btn-info" href="/sowing/type">Тип посева</a>
+                </div>
+                <div class="row p-1">
+                    <a class="btn btn-info" href="/cultivation">Культура</a>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="row p-1">
+                    <a class="btn btn-info" href="/sowingLastName">ФИО</a>
+                </div>
+                <div class="row p-1">
+                    <a class="btn btn-info" href="/sowing/outfit/index">Связки на посев</a>
+                </div>
+                <div class="row p-1">
+                    <a class="btn btn-info" href="/shift">Смена</a>
+                </div>
+            </div>
         </div>
+        @endcan
         <div class="row p-5">
             @forelse($harvest_all as $harvest)
                 @if($loop->first)
@@ -27,7 +51,7 @@
                 @endif
 
                 <div class="col-2">
-                    <a href="/sowing?type={{$sowing_type->id}}&harvest={{$harvest[0]->harvest_year_id}}">{{$harvest[0]->harvest_name}} год</a>
+                   <a href="/sowing?type={{$sowing_type->id}}&harvest={{$harvest->id}}">{{$harvest->name}} год</a>
                 </div>
             @empty
             @endforelse
@@ -38,7 +62,9 @@
 
                     <table class="table table-bordered text-center caption-top">
                         <caption class="border text-center">
-                            <b><p>Информация за {{$harvest_all[$harvest_year_id] [0]->harvest_name}} год, культура - {{$sowing_type->name}} </p></b>
+                            @dump($harvest_year_id)
+                            @dump($harvest_all)
+                           {{--<b><p>Информация за {{$harvest_all[$harvest_year_id] [0]->harvest_name}} год, культура - {{$sowing_type->name}} </p></b>--}}
                         </caption>
                         <thead>
                         <tr>

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('sowing_type_id')->constrained();
             $table->foreignId('machine_id')->nullable()->constrained();
             $table->foreignId('harvest_year_id')->constrained();
+            $table->foreignId('sowing_outfit_id')->constrained()->cascadeOnDelete();
             $table->date('date');
             $table->float('volume');
             $table->timestamps();

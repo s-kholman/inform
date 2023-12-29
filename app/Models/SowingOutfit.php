@@ -20,6 +20,11 @@ class SowingOutfit extends Model
             'cultivation_id'
         ];
 
+    public function HarvestYear(): BelongsTo
+    {
+        return $this->belongsTo(HarvestYear::class);
+    }
+
     public function SowingLastName(): BelongsTo
     {
         return $this->belongsTo(SowingLastName::class);

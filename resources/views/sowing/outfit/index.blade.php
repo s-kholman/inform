@@ -3,15 +3,23 @@
 
 @section('info')
     <div class="container">
-        <div class="row">
+        <div class="row p-3">
             <div class="col-4 p-2">
                 <a class="btn btn-primary " href="/">На главную</a>
             </div>
             <div class="col-4 p-2">
-                <a class="btn btn-primary " href="/outfit/create">Добавить</a>
+                <a class="btn btn-primary " href="/sowing/outfit/create">Добавить</a>
             </div>
         </div>
-        <div class="row">
+        <div class="row p-3">
+            @forelse($harvest_year as $value)
+                <div class="col">
+                    <a href="/sowing/outfit/index?id={{$value->HarvestYear->id}}">{{$value->HarvestYear->name}}</a>
+                </div>
+            @empty
+            @endforelse
+        </div>
+        <div class="row p-3">
             <div class="col-2">Филиал</div>
             <div class="col-2">Агрегат/Культура</div>
             <div class="col-2">ФИО</div>
@@ -20,7 +28,7 @@
             <div class="col-2">Статус</div>
         </div>
         @forelse(\App\Models\SowingOutfit::query()
-                            ->where('harvest_year_id', $harvest_year_id)
+                            ->where('harvest_year_id', $year_id ?: $harvest_year->last()->harvest_year_id)
                             ->orderBy('filial_id')
                             ->orderBy('sowing_type_id')
                             ->get() as $outfit)

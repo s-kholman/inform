@@ -17,9 +17,10 @@ class DatabaseSeeder extends Seeder
             [
                 SowingTypeSeeder::class,
                 SowingLastNameSeeder::class,
+                MachineSeeder::class,
                 ShiftSeeder::class,
-                SowingSeeder::class,
                 SowingOutfitSeeder::class,
+                SowingSeeder::class,
             ]
         );
 

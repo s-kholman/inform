@@ -122,30 +122,6 @@
                             <li class="w-100">
                                 <a href="/filial" class="nav-link px-0"> <span class="d-none d-sm-inline">Филиалы</span></a>
                             </li>
-                            <li>
-                                <a href="/agregat" class="nav-link px-0"> <span class="d-none d-sm-inline">Агрегат</span></a>
-                            </li>
-                            <li>
-                                <a href="/fio" class="nav-link px-0"> <span class="d-none d-sm-inline">ФИО</span></a>
-                            </li>
-                            <li>
-                                <a href="/sutki" class="nav-link px-0"> <span class="d-none d-sm-inline">Сутки</span></a>
-                            </li>
-                            <li>
-                                <a href="/vidposeva" class="nav-link px-0"> <span class="d-none d-sm-inline">Вид посева</span></a>
-                            </li>
-                            <li>
-                                <a href="/cultivation" class="nav-link px-0"> <span class="d-none d-sm-inline">Культура</span></a>
-                            </li>
-
-                            <li>
-                                <a href="/svyaz" class="nav-link px-0"> <span class="d-none d-sm-inline">Создание связок</span></a>
-                            </li>
-
-
-                            <li>
-                                <a href="/sowing/create" class="nav-link px-0"> <span class="d-none d-sm-inline">Внесите информациб о работах</span></a>
-                            </li>
 
                                 <li>
                                     <a href="/limit_add" class="nav-link px-0"> <span class="d-none d-sm-inline">Корп связь</span></a>

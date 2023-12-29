@@ -82,7 +82,8 @@ class SowingController extends Controller
                 $validated = $validation->validated();
                 $outfit = SowingOutfit::query()
                     ->where('sowing_last_name_id', $validated[0])
-                   // ->where('active', true)
+                    ->where('filial_id', $filial)
+                    ->where('harvest_year_id', $harvestAction->HarvestYear($validated[1]))
                     ->first();
 
                 Sowing::query()
@@ -94,6 +95,7 @@ class SowingController extends Controller
                             'sowing_type_id' => $sowing_type,
                             'machine_id' => $outfit->machine_id,
                             'cultivation_id' => $validated[2],
+                            'sowing_outfit_id' => $outfit->id,
                             'harvest_year_id' => $harvestAction->HarvestYear($validated[1])
                         ],
                         [
@@ -119,13 +121,38 @@ class SowingController extends Controller
             ->get()
             ->unique('harvest_year_id')
             ->groupBy('harvest_year_id');
+
+        $temp = Sowing::query()
+
+            ->with(['sowingOutfit.HarvestYear:id,name'])
+
+            ->get()
+            ->unique('sowingOutfit.HarvestYear')
+            ->groupBy('sowingOutfit.HarvestYear');
+
+        foreach ($temp as $HarvestYear => $key)
+        {
+                $year [] = json_decode($HarvestYear);
+        }
+        $harvest_all = $year;
+       // dd(collect($year)->first()->id);
+
+       // dd($harvest_all);
+
         if ($request->harvest == null and empty($harvest_all)) {
             $harvest = $harvestAction->HarvestYear(Carbon::now());
         } elseif ($request->harvest <> null) {
             $harvest = $request->harvest;
         } else {
-            $harvest = $harvest_all->first()[0]->harvest_year_id;
+            //$harvest = $harvest_all->first()[0]->harvest_year_id;
+            $harvest = $harvest_all->first()->id;
         }
+
+
+
+
+
+        //dd($harvest_all->toArray());
 
         /*$sowing = Sowing::query()
             ->select('sowings.*', 'filials.name as filial_name', 'cultivations.color as color')
@@ -144,18 +171,18 @@ class SowingController extends Controller
             ->select('sowings.*', 'filials.name as filial_name', 'cultivations.color as color')
             ->where('sowings.sowing_type_id', $request->type)
             ->where('harvest_year_id', $harvest)
-            ->where('machine_id', $no_machine ? '=': '<>',null)
+            ->where('machine_id', $no_machine ? '=' : '<>', null)
             ->join('filials', 'filials.id', '=', 'sowings.filial_id')
             ->leftJoin('machines', 'machines.id', '=', 'sowings.machine_id')
             ->join('cultivations', 'cultivations.id', '=', 'sowings.cultivation_id')
             ->orderBy('filials.name')
-            ->orderBy($no_machine ? 'machines.id': 'cultivations.name')
+            ->orderBy($no_machine ? 'machines.id' : 'cultivations.name')
             ->get();
 
 //$sowing = $sowing_no_machine;
         //dump($sowing_no_machine);
-      //  dd($sowing);
-        if ($no_machine){
+        //  dd($sowing);
+        if ($no_machine) {
             $group = ['filial_id', 'cultivation_id', 'sowing_last_name_id'];
         } else {
             $group = ['filial_id', 'machine_id', 'sowing_last_name_id'];
