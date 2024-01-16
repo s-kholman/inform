@@ -96,6 +96,7 @@ Route::resource('machine', MachineController::class);
 Route::get('/sowing/outfit/index{id?}', [SowingOutfitController::class, 'index'])->name('outfit.index');
 Route::get('/sowing/outfit/create', [SowingOutfitController::class, 'create'])->name('outfit.create');
 Route::post('/sowing/outfit/store', [SowingOutfitController::class, 'store'])->name('outfit.store');
+Route::delete('/sowing/outfit/destroy/{outfit}', [SowingOutfitController::class, 'destroy'])->name('outfit.destroy');
 
 
 

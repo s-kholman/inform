@@ -11,6 +11,7 @@ use App\Models\Sowing;
 use App\Models\SowingLastName;
 use App\Models\SowingOutfit;
 use App\Models\SowingType;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -113,59 +114,21 @@ class SowingController extends Controller
 
         $no_machine = SowingType::query()->where('id', $request->type)->value('no_machine');
 
-        $harvest_all = Sowing::query()
-            ->select('harvest_year_id', 'harvest_years.name as harvest_name')
-            ->where('sowings.sowing_type_id', $request->type)
-            ->join('harvest_years', 'harvest_years.id', '=', 'sowings.harvest_year_id')
-            ->orderByDesc('harvest_years.name')
-            ->get()
-            ->unique('harvest_year_id')
-            ->groupBy('harvest_year_id');
+        $harvest_all = HarvestYear::query()
+            ->whereHas('outfitHarvest', function (Builder $query) use ($request) {
+               $query->where('sowing_outfits.sowing_type_id', $request->type);
+            })
+            ->orderByDesc('name')
+            ->get();
 
-        $temp = Sowing::query()
-
-            ->with(['sowingOutfit.HarvestYear:id,name'])
-
-            ->get()
-            ->unique('sowingOutfit.HarvestYear')
-            ->groupBy('sowingOutfit.HarvestYear');
-
-        foreach ($temp as $HarvestYear => $key)
-        {
-                $year [] = json_decode($HarvestYear);
-        }
-        $harvest_all = $year;
-       // dd(collect($year)->first()->id);
-
-       // dd($harvest_all);
 
         if ($request->harvest == null and empty($harvest_all)) {
             $harvest = $harvestAction->HarvestYear(Carbon::now());
         } elseif ($request->harvest <> null) {
             $harvest = $request->harvest;
         } else {
-            //$harvest = $harvest_all->first()[0]->harvest_year_id;
             $harvest = $harvest_all->first()->id;
         }
-
-
-
-
-
-        //dd($harvest_all->toArray());
-
-        /*$sowing = Sowing::query()
-            ->select('sowings.*', 'filials.name as filial_name', 'cultivations.color as color')
-            ->where('sowings.sowing_type_id', $request->type)
-            ->where('harvest_year_id', $harvest)
-            ->where('machine_id', '<>', null)
-            ->join('filials', 'filials.id', '=', 'sowings.filial_id')
-            ->join('machines', 'machines.id', '=', 'sowings.machine_id')
-            ->join('cultivations', 'cultivations.id', '=', 'sowings.cultivation_id')
-            ->orderBy('filials.name')
-            ->orderBy('machines.name')
-            ->get();*/
-
 
         $sowing = Sowing::query()
             ->select('sowings.*', 'filials.name as filial_name', 'cultivations.color as color')
@@ -179,9 +142,7 @@ class SowingController extends Controller
             ->orderBy($no_machine ? 'machines.id' : 'cultivations.name')
             ->get();
 
-//$sowing = $sowing_no_machine;
-        //dump($sowing_no_machine);
-        //  dd($sowing);
+
         if ($no_machine) {
             $group = ['filial_id', 'cultivation_id', 'sowing_last_name_id'];
         } else {
@@ -191,6 +152,8 @@ class SowingController extends Controller
 //Группировка по датам, взяли первую дату
         foreach ($sowing->groupBy('date') as $date => $value) {
             $summa = 0;
+           // dump($sowing_outfit->groupBy('Sowings.date'));
+           // dd($sowing->groupBy('date'));
             //Применяем матрицу таблицы на каждый день вне зависимости от наличия данных
             //Филиал
             foreach ($sowing->groupBy($group) as $filial_id => $machine) {
@@ -217,12 +180,32 @@ class SowingController extends Controller
             }
             $summa_arr [$date] ['summa'] = $summa;
         }
+
+        $summa_arr [] ['summa'] = 0;
         $sowing_type = SowingType::query()->find($request->type);
+      //  dd($sowing_type);
         if (!empty($result)) {
             ksort($result);
-            return view('sowing.index', ['result' => $result, 'summa_arr' => $summa_arr, 'harvest_year_id' => $harvest, 'harvest_all' => $harvest_all, 'sowing_type' => $sowing_type, 'no_machine' => $no_machine]);
+            return view('sowing.index',
+                [
+                    'result' => $result,
+                    'summa_arr' => $summa_arr,
+                    'harvest_year_id' => $harvest,
+                    'harvest_all' => $harvest_all,
+                    'sowing_type_model' => $sowing_type,
+                    'no_machine' => $no_machine,
+
+                ]);
         } else
-            return view('sowing.index', ['result' => $result = 0, 'summa_arr' => $summa_arr = 0, 'harvest_year_id' => [], 'harvest_all' => $harvest_all, 'sowing_type_id' => $request->type]);
+            return view('sowing.index',
+            [
+                'result' => $result = 0,
+                'summa_arr' => $summa_arr = 0,
+                'harvest_year_id' => $harvest,
+                'harvest_all' => $harvest_all,
+                'sowing_type_model' => $sowing_type,
+
+            ]);
     }
 
 }

@@ -11,35 +11,40 @@
 
 
     <div class="container">
-        <div class="row p-5">
-            <div class="col-4 text-center">
-                <a class="btn btn-info" href="/sowing/create">Внести данные</a>
+
+
+<div class="row p-1">
+    <div class="col-2">
+        <a class="btn btn-success" href="/sowing?type=1">Зерновые</a>
+    </div>
+    <div class="col-2">
+        <a class="btn btn-success" href="/sowing?type=2">Картофель</a>
+    </div>
+    <div class="col-2">
+        <a class="btn btn-success" href="/sowing?type=3">Овощи</a>
+    </div>
+    <div class="col-4">
+        @can('viewAdmin', 'App\Models\Sowing')
+            <div class="col-2 p-1  dropdown">
+                <button type="button" class="btn btn-info dropdown-toggle " data-bs-toggle="dropdown">
+                    Действия
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/machine">Агрегаты</a></li>
+                    <li><a class="dropdown-item" href="/sowing/type">Тип посева</a></li>
+                    <li><a class="dropdown-item" href="/cultivation">Культура</a></li>
+                    <li><a class="dropdown-item" href="/sowingLastName">ФИО</a></li>
+                    <li><a class="dropdown-item" href="/sowing/outfit/index">Связки на посев</a></li>
+                    <li><a class="dropdown-item" href="/shift">Смена</a></li>
+                </ul>
             </div>
-            @can('viewAdmin', 'App\Models\Sowing')
-            <div class="col-2">
-                <div class="row p-1">
-                    <a class="btn btn-info" href="/machine">Агрегаты</a>
-                </div>
-                <div class="row p-1">
-                    <a class="btn btn-info" href="/sowing/type">Тип посева</a>
-                </div>
-                <div class="row p-1">
-                    <a class="btn btn-info" href="/cultivation">Культура</a>
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="row p-1">
-                    <a class="btn btn-info" href="/sowingLastName">ФИО</a>
-                </div>
-                <div class="row p-1">
-                    <a class="btn btn-info" href="/sowing/outfit/index">Связки на посев</a>
-                </div>
-                <div class="row p-1">
-                    <a class="btn btn-info" href="/shift">Смена</a>
-                </div>
-            </div>
-        </div>
-        @endcan
+
+    @endcan
+    </div>
+    <div class="col-2">
+        <a class="btn btn-info" href="/sowing/create">Внести данные</a>
+    </div>
+</div>
         <div class="row p-5">
             @forelse($harvest_all as $harvest)
                 @if($loop->first)
@@ -51,7 +56,8 @@
                 @endif
 
                 <div class="col-2">
-                   <a href="/sowing?type={{$sowing_type->id}}&harvest={{$harvest->id}}">{{$harvest->name}} год</a>
+
+                    <a href="/sowing?type={{$sowing_type_model->id}}&harvest={{$harvest->id}}">{{$harvest->name}} год</a>
                 </div>
             @empty
             @endforelse
@@ -62,16 +68,14 @@
 
                     <table class="table table-bordered text-center caption-top">
                         <caption class="border text-center">
-                            @dump($harvest_year_id)
-                            @dump($harvest_all)
-                           {{--<b><p>Информация за {{$harvest_all[$harvest_year_id] [0]->harvest_name}} год, культура - {{$sowing_type->name}} </p></b>--}}
+                            <b><p>Информация за {{$harvest_all->find($harvest_year_id)->name}} год, культура - {{$sowing_type_model->name}} </p></b>
                         </caption>
                         <thead>
                         <tr>
                             <th rowspan="3" ><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Дата&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></th>
                             @foreach(current($result) as $filial_id => $key)
                                 <th colspan="{{\App\Models\Sowing::query()
-                                                                ->where('sowing_type_id', $sowing_type->id)
+                                                                ->where('sowing_type_id', $sowing_type_model->id)
                                                                 ->where('filial_id', $filial_id)
                                                                 ->where('harvest_year_id', $harvest_year_id)
                                                                 ->get()
@@ -119,12 +123,12 @@
                                                     @if (count($value) > 1)
                                                         @if ($loop->first)
                                                             <td>
-                                                            <table> <tbody><tr>
-                                                        @endif
-                                                        <td style="background: {{$model->color}}" class="text-center">{{ $model->volume }}</td>
+                                                                <table> <tbody><tr>
+                                                                        @endif
+                                                                        <td style="background: {{$model->color}}" class="text-center">{{ $model->volume }}</td>
 
-                                                        @if ($loop->last)
-                                                           </tr></tbody></table></td>
+                                                                        @if ($loop->last)
+                                                                    </tr></tbody></table></td>
                                                         @endif
                                                     @else
 
@@ -149,19 +153,19 @@
                                     @foreach($sowing_last_name as $sowing_last_name_id => $value)
                                         <td>
                                             @if($no_machine)
-                                                {{\App\Models\Sowing::query()
+                                                {{round(\App\Models\Sowing::query()
                                                                     ->where('filial_id', $filial_id)
                                                                     ->where('cultivation_id', $machine_id)
                                                                     ->where('sowing_last_name_id', $sowing_last_name_id)
                                                                     ->where('harvest_year_id', $harvest_year_id)
-                                                                    ->sum('volume')}}
+                                                                    ->sum('volume'), 3)}}
                                             @else
-                                                {{\App\Models\Sowing::query()
+                                                {{round(\App\Models\Sowing::query()
                                                                     ->where('filial_id', $filial_id)
                                                                     ->where('machine_id', $machine_id)
                                                                     ->where('sowing_last_name_id', $sowing_last_name_id)
                                                                     ->where('harvest_year_id', $harvest_year_id)
-                                                                    ->sum('volume')}}
+                                                                    ->sum('volume'), 3)}}
                                             @endif
                                         </td>
                                     @endforeach

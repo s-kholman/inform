@@ -64,4 +64,10 @@ class SowingOutfitController extends Controller
             );
         return redirect()->route('outfit.index');
     }
+
+    public function destroy(SowingOutfit $outfit)
+    {
+        $outfit->delete();
+        return redirect()->route('outfit.index');
+    }
 }

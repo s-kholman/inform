@@ -11,8 +11,8 @@ class HarvestYear extends Model
 
     protected $fillable = ['name'];
 
-  /*  public function outfitHarvest()
+    public function outfitHarvest()
     {
-        return $this->hasOneThrough(HarvestYear::class, SowingOutfit::class);
-    }*/
+        return $this->hasOneThrough(Sowing::class, SowingOutfit::class);
+    }
 }
