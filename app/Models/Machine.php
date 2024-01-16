@@ -5,14 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HarvestYear extends Model
+class Machine extends Model
 {
     use HasFactory;
-
     protected $fillable = ['name'];
-
-    public function outfitHarvest()
-    {
-        return $this->hasOneThrough(Sowing::class, SowingOutfit::class);
-    }
 }

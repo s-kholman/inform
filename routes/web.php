@@ -4,6 +4,7 @@ use App\Http\Controllers\AgregatController;
 use App\Http\Controllers\BrendController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CounterpartyController;
+use App\Http\Controllers\CultivationController;
 use App\Http\Controllers\CurrentStatusController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\DeviceNameController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\GuesController;
 use App\Http\Controllers\HarvestYearController;
 use App\Http\Controllers\HeightController;
 use App\Http\Controllers\KulturaController;
+use App\Http\Controllers\MachineController;
 use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
 use App\Http\Controllers\PeatController;
@@ -27,12 +29,17 @@ use App\Http\Controllers\ProductMonitoringReportController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceNameController;
 use App\Http\Controllers\SevooborotController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\SokarController;
 use App\Http\Controllers\SokarFIOController;
 use App\Http\Controllers\SokarNomenklatController;
 use App\Http\Controllers\SokarSkladController;
 use App\Http\Controllers\SokarSpisanieController;
+use App\Http\Controllers\SowingController;
+use App\Http\Controllers\SowingLastNameController;
+use App\Http\Controllers\SowingOutfitController;
+use App\Http\Controllers\SowingTypeController;
 use App\Http\Controllers\SprayingController;
 use App\Http\Controllers\SprayingReportController;
 use App\Http\Controllers\StatusController;
@@ -41,6 +48,7 @@ use App\Http\Controllers\Storage\StorageNameController;
 use App\Http\Controllers\StorageModeController;
 use App\Http\Controllers\StoragePhaseController;
 use App\Http\Controllers\SutkiController;
+use App\Http\Controllers\SvyazController;
 use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
 use App\Http\Controllers\VidposevaController;
@@ -71,10 +79,29 @@ Route::view('/', 'index')->name('/');
 /**
  * Посевная + торф (последнее переписать как новый отчет)
  */
-Route::resource('svyaz', \App\Http\Controllers\SvyazController::class)->middleware('can:destroy, App\Models\svyaz');
+Route::resource('svyaz', SvyazController::class)->middleware('can:destroy, App\Models\svyaz');
 Route::get('/otchet/{key}', [InfoController::class, 'otchet'])->name('otchet');
 Route::post('/posev_add', [InfoController::class, 'storePosev'])->name('posev.add')->middleware('auth');
-Route::get('/posev_add', [InfoController::class, 'showAddPosevForm'])->name('posev_add')->middleware('auth');
+//Route::get('/posev_add', [SowingController::class, 'create'])->name('posev_add')->middleware('auth');
+
+/**
+ * Посевная
+ */
+Route::resource('/sowing/type', SowingTypeController::class);
+Route::resource('sowing', SowingController::class);
+Route::resource('shift', ShiftController::class);
+Route::resource('sowingLastName', SowingLastNameController::class);
+Route::resource('machine', MachineController::class);
+//Route::resource('outfit', SowingOutfitController::class);
+Route::get('/sowing/outfit/index{id?}', [SowingOutfitController::class, 'index'])->name('outfit.index');
+Route::get('/sowing/outfit/create', [SowingOutfitController::class, 'create'])->name('outfit.create');
+Route::post('/sowing/outfit/store', [SowingOutfitController::class, 'store'])->name('outfit.store');
+Route::delete('/sowing/outfit/destroy/{outfit}', [SowingOutfitController::class, 'destroy'])->name('outfit.destroy');
+
+
+
+
+
 
 Route::view('/login', 'login');
 Route::view('/register', 'register');
@@ -153,7 +180,7 @@ Route::post('/spisanieDate', [SokarSpisanieController::class, 'spisanieDate'])->
 Route::get('/spraying/report/{id?}', [SprayingReportController::class, 'index'])->name('spraying.report.index');
 Route::post('/spraying/report/{id}', [SprayingReportController::class, 'report'])->name('spraying.report.show');
 Route::resource('nomenklature', NomenklatureController::class);
-Route::resource('kultura', KulturaController::class);
+
 
 /**
  * Ресурсы производственного отдела
@@ -164,12 +191,15 @@ Route::resource('gues', GuesController::class);
 Route::resource('take', TakeController::class);
 
 
+//Route::resource('kultura', KulturaController::class);
+//Route::resource('outfit', SowingOutfitController::class);
+Route::resource('cultivation', CultivationController::class);
 Route::resource('filial', FilialController::class);
 Route::resource('szr', SzrController::class);
-Route::resource('sutki', SutkiController::class);
+//Route::resource('sutki', SutkiController::class);
 Route::resource('agregat', AgregatController::class);
 Route::resource('vidposeva', VidposevaController::class);
-Route::resource('fio', FioController::class);
+//Route::resource('fio', FioController::class);
 
 Route::resource('spraying', SprayingController::class)->middleware('auth');
 Route::resource('post', PostController::class);
