@@ -22,7 +22,7 @@ class SevooborotController extends Controller
     ];
 
     private const STORE_VALIDATOR = [
-        'kultura' => 'numeric',
+        'cultivation' => 'numeric',
         'nomenklature' => 'numeric',
         'reproduktion' => 'nullable|numeric',
         'square' => 'numeric',
@@ -45,11 +45,11 @@ class SevooborotController extends Controller
 
         foreach (Nomenklature::orderby('name')->get() as $value){
             //$nomen_arr [$value->kultura_id] [$value->id] =  $value->name;
-            $nomen_arr [$value->kultura_id] [$value->name] =  $value->id;
+            $nomen_arr [$value->cultivation_id] [$value->name] =  $value->id;
         }
         asort($nomen_arr);
         foreach (Reproduktion::all() as $value){
-            $reprod_arr [$value->kultura_id] [$value->id] =  $value->name;
+            $reprod_arr [$value->cultivation_id] [$value->id] =  $value->name;
         }
 
         return view('sevooborot.create', [
@@ -73,7 +73,7 @@ class SevooborotController extends Controller
         }
 
         Sevooborot::create([
-            'kultura_id' => $request->kultura,
+            'cultivation_id' => $request->cultivation,
             'nomenklature_id' => $request->nomenklature,
             'reproduktion_id' => $reproduktion,
             'pole_id' => $pole->id,

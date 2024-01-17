@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sevooborots', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kultura_id')->constrained();
+            $table->foreignId('cultivation_id')->constrained();
             $table->foreignId('nomenklature_id')->nullable()->constrained();
             $table->foreignId('reproduktion_id')->nullable()->constrained();
             $table->foreignId('pole_id')->constrained();

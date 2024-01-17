@@ -11,7 +11,7 @@ class StorageBox extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['storage_name_id','field','kultura_id','nomenklature_id','reproduktion_id','type','volume'];
+    protected $fillable = ['storage_name_id','field','cultivation_id','nomenklature_id','reproduktion_id','type','volume'];
 
     public function storageName()
     {

@@ -11,11 +11,9 @@ use App\Http\Controllers\DeviceNameController;
 use App\Http\Controllers\FactoryGuesController;
 use App\Http\Controllers\FactoryMaterialController;
 use App\Http\Controllers\FilialController;
-use App\Http\Controllers\FioController;
 use App\Http\Controllers\GuesController;
 use App\Http\Controllers\HarvestYearController;
 use App\Http\Controllers\HeightController;
-use App\Http\Controllers\KulturaController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
@@ -47,14 +45,11 @@ use App\Http\Controllers\Storage\StorageBoxController;
 use App\Http\Controllers\Storage\StorageNameController;
 use App\Http\Controllers\StorageModeController;
 use App\Http\Controllers\StoragePhaseController;
-use App\Http\Controllers\SutkiController;
-use App\Http\Controllers\SvyazController;
 use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
 use App\Http\Controllers\VidposevaController;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers\InfoController;
 use \App\Http\Controllers\LimitsController;
 use \App\Http\Controllers\RegistrationController;
 use \App\Http\Controllers\ActivationController;
@@ -77,14 +72,6 @@ use Illuminate\Http\Request;
 Route::view('/', 'index')->name('/');
 
 /**
- * Посевная + торф (последнее переписать как новый отчет)
- */
-Route::resource('svyaz', SvyazController::class)->middleware('can:destroy, App\Models\svyaz');
-Route::get('/otchet/{key}', [InfoController::class, 'otchet'])->name('otchet');
-Route::post('/posev_add', [InfoController::class, 'storePosev'])->name('posev.add')->middleware('auth');
-//Route::get('/posev_add', [SowingController::class, 'create'])->name('posev_add')->middleware('auth');
-
-/**
  * Посевная
  */
 Route::resource('/sowing/type', SowingTypeController::class);
@@ -92,7 +79,6 @@ Route::resource('sowing', SowingController::class);
 Route::resource('shift', ShiftController::class);
 Route::resource('sowingLastName', SowingLastNameController::class);
 Route::resource('machine', MachineController::class);
-//Route::resource('outfit', SowingOutfitController::class);
 Route::get('/sowing/outfit/index{id?}', [SowingOutfitController::class, 'index'])->name('outfit.index');
 Route::get('/sowing/outfit/create', [SowingOutfitController::class, 'create'])->name('outfit.create');
 Route::post('/sowing/outfit/store', [SowingOutfitController::class, 'store'])->name('outfit.store');
@@ -191,15 +177,11 @@ Route::resource('gues', GuesController::class);
 Route::resource('take', TakeController::class);
 
 
-//Route::resource('kultura', KulturaController::class);
-//Route::resource('outfit', SowingOutfitController::class);
 Route::resource('cultivation', CultivationController::class);
 Route::resource('filial', FilialController::class);
 Route::resource('szr', SzrController::class);
-//Route::resource('sutki', SutkiController::class);
 Route::resource('agregat', AgregatController::class);
 Route::resource('vidposeva', VidposevaController::class);
-//Route::resource('fio', FioController::class);
 
 Route::resource('spraying', SprayingController::class)->middleware('auth');
 Route::resource('post', PostController::class);

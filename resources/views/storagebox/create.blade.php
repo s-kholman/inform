@@ -47,7 +47,7 @@
                             name="selectFirst"
                             id="selectFirst">
                         <option></option>
-                        @forelse($kultura as $value)
+                        @forelse($cultivation as $value)
                             <option {{old('selectFirst') == $value->id ? "selected" : ""}} value="{{$value->id}}" >{{$value->name}}</option>
                         @empty
                             <option>Заполните справочник</option>

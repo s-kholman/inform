@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('nomenklatures', function (Blueprint $table) {
-            $table->foreignId('kultura_id')->constrained();
+            $table->foreignId('cultivation_id')->constrained();
         });
     }
 
