@@ -9,10 +9,10 @@ class Sevooborot extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['kultura_id','nomenklature_id','reproduktion_id','pole_id','square','year'];
+    protected $fillable = ['cultivation_id','nomenklature_id','reproduktion_id','pole_id','square','year'];
 
-    public function Kultura(){
-        return $this->hasOne(Kultura::class,'id','kultura_id');
+    public function Cultivation(){
+        return $this->hasOne(Cultivation::class,'id','cultivation_id');
     }
 
     public function Reproduktion(){

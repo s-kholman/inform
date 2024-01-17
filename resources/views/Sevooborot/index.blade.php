@@ -17,7 +17,7 @@
 
                     <tr>
 
-                        <td>{{$value->Kultura->name}} "{{$value->Nomenklature->name}}" - {{$value->Reproduktion->name ?? null}}               </td>
+                        <td>{{$value->Cultivation->name}} "{{$value->Nomenklature->name}}" - {{$value->Reproduktion->name ?? null}}               </td>
                         <td>{{$value->square}}</td>
                         <td>
 

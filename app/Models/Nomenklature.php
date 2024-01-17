@@ -9,10 +9,10 @@ class Nomenklature extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'kultura_id'];
+    protected $fillable = ['name', 'cultivation_id'];
 
-    public function Kultura(){
-        return $this->belongsTo(Kultura::class);
+    public function Cultivation(){
+        return $this->belongsTo(Cultivation::class);
     }
 
     public function Sevooborot(){

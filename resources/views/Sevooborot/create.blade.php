@@ -6,13 +6,13 @@
         @csrf
         <div  class="border-3 row pb-3 mb-3" id="test">
             <div class="col-3">
-                <select name="kultura" id="selectFirst" class="form-select @error('kultura') is-invalid @enderror">
+                <select name="cultivation" id="selectFirst" class="form-select @error('cultivation') is-invalid @enderror">
                     <option value="">Выберите культуру</option>
-                    @foreach(\App\Models\Kultura::where('id', '1')->orwhere('id', '6')->get() as $value)
+                    @foreach(\App\Models\cultivation::where('id', '1')->orwhere('id', '6')->get() as $value)
                         <option value="{{ $value->id }}"> {{ $value->name }} </option>
                     @endforeach
                 </select>
-                @error('kultura')
+                @error('cultivation')
                 <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>

@@ -39,7 +39,7 @@ class StorageBoxController extends Controller
         $return = $storageBoxCreateAction();
         return view('storagebox.create', [
             'storage' => $return['storage'],
-            'kultura' => $return['kultura'],
+            'cultivation' => $return['cultivation'],
             'nomen_arr' => $return['nomen_arr'],
             'reprod_arr' => $return['reprod_arr']
         ]);

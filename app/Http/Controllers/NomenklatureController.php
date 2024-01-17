@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kultura;
+use App\Models\Cultivation;
 use App\Models\Nomenklature;
 use Illuminate\Http\Request;
 
@@ -35,15 +35,15 @@ class NomenklatureController extends Controller
         'label' => 'Введите название номенклатуы',
         'parent' => 'Культура',
         'route' => 'nomenklature',
-        'parent_name' => 'kultura'
+        'parent_name' => 'cultivation'
     ];
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $value = Nomenklature::query()->with('Kultura')->orderby('kultura_id', 'DESC')->orderby('name')->get();
-        $parent_value = Kultura::orderby('name')->get();
+        $value = Nomenklature::query()->with('Cultivation')->orderby('cultivation_id', 'DESC')->orderby('name')->get();
+        $parent_value = Cultivation::orderby('name')->get();
 
         return view('crud.two_index', ['const' => self::TITLE, 'value'=>$value, 'parent_value'=>$parent_value]);
 
@@ -66,7 +66,7 @@ class NomenklatureController extends Controller
 
         Nomenklature::create([
             'name' => $validated['name'],
-            'kultura_id' => $validated['select']
+            'cultivation_id' => $validated['select']
         ]);
 
         return redirect()->route(self::TITLE['route'].'.index');
@@ -85,7 +85,7 @@ class NomenklatureController extends Controller
      */
     public function edit(Nomenklature $nomenklature)
     {
-        $parent_value = Kultura::orderby('name')->get();
+        $parent_value = Cultivation::orderby('name')->get();
         $get_name_id = $nomenklature->getFillable();
         return view('crud.two_edit', ['const' => self::TITLE, 'value'=>$nomenklature, 'parent_value'=>$parent_value, 'name_id' => $get_name_id['1']]);
     }
@@ -98,7 +98,7 @@ class NomenklatureController extends Controller
         $validated = $request->validate(self::ADD_VALIDATOR_EDIT, self::ERROR_MESSAGES);
         $nomenklature->update([
             'name' => $validated['name'],
-            'vidposeva_id' => $validated['select']
+            'cultivation_id' => $validated['select']
         ]);
         return redirect()->route(self::TITLE['route'].'.index');
     }

@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sutkis', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 20);
-            $table->timestamps();
-        });
+        Schema::dropIfExists('posevs');
+        Schema::dropIfExists('svyazs');
+        Schema::dropIfExists('sutkis');
+        Schema::dropIfExists('kulturas');
+        Schema::dropIfExists('vidposevas');
+        Schema::dropIfExists('agregats');
+        Schema::dropIfExists('fios');
     }
 
     /**
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sutkis');
+        //
     }
 };
