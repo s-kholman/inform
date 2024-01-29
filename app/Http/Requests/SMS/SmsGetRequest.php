@@ -23,7 +23,7 @@ class SmsGetRequest extends FormRequest
     {
         return [
             'token' => 'in:'.env('SMS_TOKEN'),
-            'type' => 'in:sms_in',
+            //'type' => 'in:sms_in',
         ];
     }
 }
