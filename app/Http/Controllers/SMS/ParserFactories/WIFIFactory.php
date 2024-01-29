@@ -74,13 +74,13 @@ class WIFIFactory implements SmsParserInterface
 
         $voucher = $voucher->get($day, $phone);
 
-        if($voucher <> null){
+        if($voucher['key'] == true){
 
-            return $this->smsSend->send($this->sms->phone,  'Доступ на '. $this->dayName($day) . ' к сети KRiMM_INTERNET ' . $voucher,);
+            return $this->smsSend->send($this->sms->phone,  'Доступ на '. $this->dayName($day) . ' к сети KRiMM_INTERNET ' . $voucher['message'],);
 
         } else {
 
-            return $this->smsSend->send($this->sms->phone,  "Ошибка, код не получен");
+            return $this->smsSend->send($this->sms->phone,  $voucher['message']);
 
         }
 

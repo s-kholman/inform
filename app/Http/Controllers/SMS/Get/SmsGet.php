@@ -17,7 +17,7 @@ class SmsGet extends DailyUseController
         },  60*60);
 
         $smsSend = [];
-        $smsGet = Sms::query()->where('smsActive', true)->where('smsType', $request->type)->get();
+        $smsGet = Sms::query()->where('smsActive', true)->where('smsType', 1)->get();
             if ($smsGet->isNotEmpty()) {
                 foreach ($smsGet as $value){
                     $smsSend [$value->id] = ['phone' => $value->phone, 'text' => $value->smsText];
