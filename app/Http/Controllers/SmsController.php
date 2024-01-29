@@ -184,15 +184,17 @@ class SmsController extends Controller
     public function dailyOne()
     {
         $status = CurrentStatus::with('status')->get();
-        $device = $status->
-        sortByDesc('date')->
-        sortByDesc('id')->
-        unique(['device_id'])->
-        sortBy('filial.name')->
-        whereNotIn('status.active', false);
-        foreach ($device as $value){
-            dispatch(new DailyUseOne($value));
+        if($status->isNotEmpty())
+        {
+            $device = $status->
+            sortByDesc('date')->
+            sortByDesc('id')->
+            unique(['device_id'])->
+            sortBy('filial.name')->
+            whereNotIn('status.active', false);
+            foreach ($device as $value){
+                dispatch(new DailyUseOne($value));
+            }
         }
-
     }
 }
