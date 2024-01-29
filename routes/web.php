@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AgregatController;
 use App\Http\Controllers\BrendController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CounterpartyController;
@@ -21,7 +20,6 @@ use App\Http\Controllers\PeatController;
 use App\Http\Controllers\PeatExtractionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrinterController;
-use App\Http\Controllers\ProductMonitoringChartController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\ProductMonitoringReportController;
 use App\Http\Controllers\ServiceController;
@@ -29,6 +27,8 @@ use App\Http\Controllers\ServiceNameController;
 use App\Http\Controllers\SevooborotController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\SizeController;
+use App\Http\Controllers\SMS\Get\SmsGet;
+use App\Http\Controllers\SMS\SmsController;
 use App\Http\Controllers\SokarController;
 use App\Http\Controllers\SokarFIOController;
 use App\Http\Controllers\SokarNomenklatController;
@@ -47,13 +47,13 @@ use App\Http\Controllers\StorageModeController;
 use App\Http\Controllers\StoragePhaseController;
 use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
-use App\Http\Controllers\VidposevaController;
 use App\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\LimitsController;
 use \App\Http\Controllers\RegistrationController;
 use \App\Http\Controllers\ActivationController;
-use \App\Http\Controllers\SmsController;
+//use \App\Http\Controllers\SmsController;
 use \App\Http\Controllers\PolivController;
 use \App\Http\Controllers\PoleController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -134,11 +134,11 @@ Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->middleware('guest')->name('password.request');
 
-Route::post('/sms_get', [SmsController::class, 'smsGet'])->withoutMiddleware([VerifyCsrfToken::class]);
+Route::post('/sms_get', [SmsGet::class, 'smsGet'])->withoutMiddleware([VerifyCsrfToken::class]);
 Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('throttle:smsIn');
 
-Route::get('/voucher_get', [SmsController::class, 'voucherGetShow'])->name('voucher');
-Route::post('/voucher_get', [SmsController::class, 'voucherGet'])->name('voucher.get');
+//Route::get('/voucher_get', [SmsController::class, 'voucherGetShow'])->name('voucher');
+//Route::post('/voucher_get', [SmsController::class, 'voucherGet'])->name('voucher.get');
 
 
 Route::resource('pole', PoleController::class);
@@ -180,8 +180,7 @@ Route::resource('take', TakeController::class);
 Route::resource('cultivation', CultivationController::class);
 Route::resource('filial', FilialController::class);
 Route::resource('szr', SzrController::class);
-Route::resource('agregat', AgregatController::class);
-Route::resource('vidposeva', VidposevaController::class);
+
 
 Route::resource('spraying', SprayingController::class)->middleware('auth');
 Route::resource('post', PostController::class);
