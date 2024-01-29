@@ -16,8 +16,9 @@ class VoucherGet
         $this->phoneAuth = new PhoneAuth();
     }
 
-    public function get(int $day, $phone, $count = 1): string
+    public function get(int $day, $phone, $count = 1): array
     {
+
         if ($this->phoneAuth->phoneAuth($phone)){
 
             $unifi_connection = new Client(
@@ -28,18 +29,24 @@ class VoucherGet
                 env('UniFi_VERSION'),
                 env('UniFi_SSLVEREFY')
             );
+            try {
+                $unifi_connection->login();
 
-            $loginresults = $unifi_connection->login();
+                $voucher_result = $unifi_connection->create_voucher($day*60*24, $count,1, $phone);
 
-            $voucher_result = $unifi_connection->create_voucher($day*60*24, $count,1, $phone);
+                $vouchers = $unifi_connection->stat_voucher($voucher_result[0]->create_time);
 
-            $vouchers = $unifi_connection->stat_voucher($voucher_result[0]->create_time);
+                return ['message' => Str::substrReplace($vouchers[0]->code, '-', 5, 0), 'key' => true];
 
-            return Str::substrReplace($vouchers[0]->code, '-', 5, 0);
+            } catch (\Throwable $e){
+
+                return ['message' => 'Server не отвечает, попробуйте позже', 'key' => false];
+
+            }
 
         } else{
 
-            return "Номер телефона не подтвержден администратором";
+            return ['message' => 'Номер телефона не подтвержден администратором', 'key' => false];
 
         }
 

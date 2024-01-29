@@ -22,11 +22,17 @@ class SmsParser extends AbstractSmsParser
 
     public function smsParser()
     {
+
         $name_class = '\App\Http\Controllers\SMS\ParserFactories\\' .Str::before($this->sms->smsText, ' ') . 'Factory';
-        try {
+
+        if (class_exists($name_class)) {
+
             $class = new $name_class($this->sms);
+
             return $class->render();
-        } catch (\Throwable $e) {
+
+        } else{
+
            return $this->smsSend->send($this->sms->phone, 'Шаблон SMS не определен');
 
         }
