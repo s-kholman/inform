@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Voucher;
 
 
 use App\Http\Controllers\SMS\PhoneAuth\PhoneAuth;
+use App\Http\Controllers\SMS\Send\SmsSend;
 use Illuminate\Support\Str;
 use UniFi_API\Client;
 
@@ -11,9 +12,13 @@ class VoucherGet
 {
     private PhoneAuth $phoneAuth;
 
+    private SmsSend $smsSend;
+
     public function __construct()
     {
         $this->phoneAuth = new PhoneAuth();
+
+        $this->smsSend = new SmsSend();
     }
 
     public function get(int $day, $phone, $count = 1): array
@@ -29,6 +34,7 @@ class VoucherGet
                 env('UniFi_VERSION'),
                 env('UniFi_SSLVEREFY')
             );
+
             try {
                 $unifi_connection->login();
 
@@ -36,19 +42,63 @@ class VoucherGet
 
                 $vouchers = $unifi_connection->stat_voucher($voucher_result[0]->create_time);
 
-                return ['message' => Str::substrReplace($vouchers[0]->code, '-', 5, 0), 'key' => true];
+                foreach ($vouchers as $voucher){
+
+                    $result [$voucher->_id] = ['message' => Str::substrReplace($voucher->code, '-', 5, 0), 'result' => true, 'day' => $this->dayName($day)];
+
+                }
+
+                return $result;
 
             } catch (\Throwable $e){
 
-                return ['message' => 'Server не отвечает, попробуйте позже', 'key' => false];
+                $this->smsSend->send('+79026223673',  "Сервер UniFi не отвечает");
+
+                $result [0] = ['message' => 'Сервер не отвечает, попробуйте позже', 'result' => false];
+
+                return $result;
 
             }
 
         } else{
 
-            return ['message' => 'Номер телефона не подтвержден администратором', 'key' => false];
+            $this->smsSend->send('+79026223673',  "Запрос с неизвестного номера - $phone");
+
+            $result [0] = ['message' => 'Номер телефона не подтвержден администратором', 'result' => false];
+
+            return $result;
 
         }
 
+    }
+
+    private function dayName (int $i): string
+    {
+        $day = $i;
+
+        if ($i >= 11 and $i <=14){
+
+            return $day.' дней';
+
+        }else{
+
+            $i = $i % 100;
+
+            $i = $i % 10;
+
+            if ($i == 1) {
+
+                return $day.' день';
+
+            } elseif ($i >= 2 and $i <= 4) {
+
+                return $day.' дня';
+
+            } else {
+
+                return $day.' дней';
+
+            }
+        }
     }
 }

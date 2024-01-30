@@ -135,11 +135,11 @@ Route::get('/forgot-password', function () {
 })->middleware('guest')->name('password.request');
 
 Route::post('/sms_get', [SmsGet::class, 'smsGet'])->withoutMiddleware([VerifyCsrfToken::class]);
+
+/**
+ * throttle:smsIn в RouteServiceProvider
+ */
 Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('throttle:smsIn');
-
-//Route::get('/voucher_get', [SmsController::class, 'voucherGetShow'])->name('voucher');
-//Route::post('/voucher_get', [SmsController::class, 'voucherGet'])->name('voucher.get');
-
 
 Route::resource('pole', PoleController::class);
 Route::resource('pole.sevooborot', SevooborotController::class)->middleware('auth');

@@ -70,38 +70,21 @@ class WIFIFactory implements SmsParserInterface
 
     private function getVoucher($day, $phone)
     {
-        $voucher = new VoucherGet();
+        $vouchers = new VoucherGet();
 
-        $voucher = $voucher->get($day, $phone);
+        $vouchers = $vouchers->get($day, $phone);
 
-        if($voucher['key'] == true){
+        foreach ($vouchers as $voucher){
 
-            return $this->smsSend->send($this->sms->phone,  'Доступ на '. $this->dayName($day) . ' к сети KRiMM_INTERNET ' . $voucher['message'],);
+            if($voucher['result'] == true){
 
-        } else {
+                return $this->smsSend->send($this->sms->phone,  'Доступ на '. $voucher['day'] . ' к сети KRiMM_INTERNET ' . $voucher['message'],);
 
-            return $this->smsSend->send($this->sms->phone,  $voucher['message']);
-
-        }
-
-    }
-
-    private function dayName (int $i): string
-    {
-        $day = $i;
-        if ($i >= 11 and $i <=14){
-            return $day.' дней';
-        }else{
-            $i = $i % 100;
-            $i = $i % 10;
-            if ($i == 1) {
-                return $day.' день';
-            } elseif ($i >= 2 and $i <= 4) {
-                return $day.' дня';
             } else {
-                return $day.' дней';
+
+                return $this->smsSend->send($this->sms->phone,  $voucher['message']);
+
             }
         }
     }
-
 }
