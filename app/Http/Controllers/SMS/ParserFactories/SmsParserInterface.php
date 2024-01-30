@@ -25,6 +25,6 @@ interface SmsParserInterface
      *
      *
      */
-    public function render():Builder|Model;
+    public function render():Builder|Model|bool;
 
 }

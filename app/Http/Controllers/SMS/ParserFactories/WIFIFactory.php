@@ -53,7 +53,7 @@ class WIFIFactory implements SmsParserInterface
     }
 
 
-    public function render(): Builder|Model
+    public function render(): Builder|Model|bool
     {
         $phoneAuth = new PhoneAuth();
 
