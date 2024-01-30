@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 class SmsController extends Controller
 {
 
-    public function smsIn(SmsInRequest $request): Builder|Model
+    public function smsIn(SmsInRequest $request): Builder|Model|bool
     {
             $sms = Sms::query()
                 ->create(
