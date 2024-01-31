@@ -28,18 +28,20 @@ class Spraying extends Model
 
     public function Nomenklature(){
 
-
         return $this->through('Sevooborot')->has('Nomenklature');
+
     }
 
     public function Reproduktion(){
+
         return $this->through('Sevooborot')->has('Reproduktion');
+
     }
 
-    public function Kultura(){
+    public function Cultivation(){
 
+        return $this->through('Sevooborot')->has('Cultivation');
 
-        return $this->through('Sevooborot')->has('Kultura');
     }
 
 
