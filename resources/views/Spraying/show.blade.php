@@ -19,7 +19,7 @@
         @forelse($spraying as $value)
             <tr>
                 <td><a href="/spraying/{{$value->id}}/edit">{{\Carbon\Carbon::parse($value->date)->translatedFormat('d-m-Y')}}</a></td>
-                <td>{{$value->Kultura->name}} {{$value->Nomenklature->name}} {{$value->Reproduktion->name ?? null }} ({{$value->Sevooborot->square}} Га)</td>
+                <td>{{$value->Cultivation->name}} {{$value->Nomenklature->name}} {{$value->Reproduktion->name ?? null }} ({{$value->Sevooborot->square}} Га)</td>
                 <td>{{$value->szr->name}}</td>
                 <td>{{$value->doza}}</td>
                 <td>{{$value->volume}}</td>
