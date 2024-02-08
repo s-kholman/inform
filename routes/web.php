@@ -53,7 +53,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\LimitsController;
 use \App\Http\Controllers\RegistrationController;
 use \App\Http\Controllers\ActivationController;
-//use \App\Http\Controllers\SmsController;
+use \App\Http\Controllers\Commercial\CheckController;
 use \App\Http\Controllers\PolivController;
 use \App\Http\Controllers\PoleController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -85,7 +85,11 @@ Route::post('/sowing/outfit/store', [SowingOutfitController::class, 'store'])->n
 Route::delete('/sowing/outfit/destroy/{outfit}', [SowingOutfitController::class, 'destroy'])->name('outfit.destroy');
 
 
-
+/**
+ * Комерческий отдел
+ */
+Route::get('/commercial/index', [CheckController::class, 'index']);
+Route::post('/commercial/index', [CheckController::class, 'check'])->name('commercial.check');
 
 
 
