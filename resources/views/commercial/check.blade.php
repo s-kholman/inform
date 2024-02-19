@@ -26,9 +26,9 @@
                 @if(!empty($arrPartnerOne))
                     @foreach($arrPartnerOne as $key => $value)
                         @if($loop->first)
-                            <br>По данным первого контрагента:<br>
+                            <br />По данным первого контрагента:<br />
                         @endif
-                        № - {{$key}}, сумма: {{number_format($value, 2, '.', ' ')}} </br>
+                        № - {{$key}}, сумма: {{number_format($value, 2, ',', ' ')}} <br />
                     @endforeach
                 @endif
             </div>
@@ -36,9 +36,9 @@
                 @if(!empty($arrPartnerTwo))
                     @foreach($arrPartnerTwo as $key => $value)
                         @if($loop->first)
-                            <br>По данным второго контрагента:</br>
+                            <br />По данным второго контрагента:<br />
                         @endif
-                        № - {{$key}}, сумма: {{number_format($value, 2, '.', ' ')}} </br>
+                        № - {{$key}}, сумма: {{number_format($value, 2, ',', ' ')}} <br />
                     @endforeach
                 @endif
             </div>
