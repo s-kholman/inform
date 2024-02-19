@@ -22,7 +22,6 @@ class CheckController extends Controller
                 $inParser = $this->parser($item);
                 $arrParserPartnerTwo [$inParser[0]] = $inParser[1];
             }
-
         }
 
         foreach ($partnerOne as $value){

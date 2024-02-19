@@ -47,6 +47,7 @@ use App\Http\Controllers\StorageModeController;
 use App\Http\Controllers\StoragePhaseController;
 use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
+use App\Http\Controllers\Yandex\AliceController;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -91,7 +92,10 @@ Route::delete('/sowing/outfit/destroy/{outfit}', [SowingOutfitController::class,
 Route::get('/commercial/index', [CheckController::class, 'index']);
 Route::post('/commercial/index', [CheckController::class, 'check'])->name('commercial.check');
 
-
+/**
+ * Запрос температуры для Алисы от Yandex
+ */
+Route::get('/temperature', [AliceController::class, 'temperature'])->withoutMiddleware([VerifyCsrfToken::class]);
 
 Route::view('/login', 'login');
 Route::view('/register', 'register');
