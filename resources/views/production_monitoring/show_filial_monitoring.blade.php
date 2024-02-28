@@ -3,11 +3,25 @@
 
 @section('info')
     <div class="container">
-        <div class="row p-5">
+
+        <div class="row mb-3">
             <div class="col-5">
                 <h4>{{$monitoring[0]->storageName->name}}</h4>
             </div>
         </div>
+
+        <div class="row mb-3">
+            <div class="col-3 ">
+                <a class="btn btn-info" href="/monitoring/create">Внести данные</a>
+            </div>
+            <div class="col-4">
+
+            </div>
+            <div class="col-3">
+                <a class="btn btn-secondary" href="/monitoring/show/filial/{{$monitoring[0]->storageName->filial_id}}/">Назад</a>
+            </div>
+        </div>
+
         <div class="row text-center">
             <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Дата</div>
             <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">t &degС <br> Бурта в трубах</div>
@@ -59,14 +73,7 @@
                 <div class="text-break col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 border border-2">{{$value->comment}}</div>
             </div>
         @endforeach
-        <div class="row p-5">
-            <div class="col-3">
-                <a class="btn btn-info" href="/monitoring/show/filial/{{$monitoring[0]->storageName->filial_id}}/">Назад</a>
-            </div>
-            <div class="col-3 ">
-                <a class="btn btn-info" href="/monitoring/create">Внести данные</a>
-            </div>
-        </div>
+
     </div>
 @endsection('info')
 
