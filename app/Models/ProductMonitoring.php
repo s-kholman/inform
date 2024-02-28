@@ -9,7 +9,7 @@ class ProductMonitoring extends Model
 {
     use HasFactory;
     protected $fillable = ['storage_name_id', 'date', 'burtTemperature', 'burtAboveTemperature', 'tuberTemperatureMorning',
-        'tuberTemperatureEvening', 'humidity', 'storage_phase_id','comment'];
+        'tuberTemperatureEvening', 'humidity', 'storage_phase_id','comment', 'condensate'];
 
     public function storageName()
     {

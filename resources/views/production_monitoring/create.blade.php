@@ -110,7 +110,7 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-
+                <div class="mb-3">
                 <label for="time">Период вентиляции</label>
                 <div id="time" class="row">
                     <div class="col">
@@ -131,17 +131,26 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
+                </div>
 
-                <label for="comment">Коментарий</label>
-                <input name="comment"
-                       id="comment"
-                       value="{{old('comment')}}"
-                       class="form-control @error('comment') is-invalid @enderror">
-                @error('comment')
-                <span class="invalid-feedback">
+                <div class="form-switch form-check mb-3">
+                    <label class="form-label" for="condensate">Наличие конденсата в боксе</label>
+                    <input class="form-check-input" type="checkbox" id="condensate" name="condensate">
+                </div>
+
+                <div class="mb-3">
+                    <label for="comment">Коментарий</label>
+                    <input name="comment"
+                           id="comment"
+                           value="{{old('comment')}}"
+                           class="form-control @error('comment') is-invalid @enderror">
+                    @error('comment')
+                    <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>
-                @enderror
+                    @enderror
+                </div>
+
 
                 <input type="submit" class="btn btn-primary" value="Сохранить">
 
