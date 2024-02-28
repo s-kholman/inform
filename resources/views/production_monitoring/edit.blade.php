@@ -88,29 +88,41 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-
-                <label for="time">Период вентиляции</label>
-                <div id="time" class="row">
-                    <div class="col">
-                        <input name="timeUp" type="time" class="form-control @error('time') is-invalid @enderror">
+                <div class="mb-3">
+                    <label for="time">Период вентиляции</label>
+                    <div id="time" class="row">
+                        <div class="col">
+                            <input name="timeUp" type="time" class="form-control @error('time') is-invalid @enderror">
+                        </div>
+                        <div class="col">
+                            <input name="timeDown" type="time" class="form-control @error('time') is-invalid @enderror">
+                        </div>
                     </div>
-                    <div class="col">
-                        <input name="timeDown" type="time" class="form-control @error('time') is-invalid @enderror">
-                    </div>
+                    @error('time')
+                    <span class="invalid-feedback">
+                    <strong>{{ $message }}</strong>
+                </span>
+                    @enderror
                 </div>
-                @error('time')
-                <span class="invalid-feedback">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
 
-                <label for="comment">Коментарий</label>
-                <input name="comment" id="comment" class="form-control @error('comment') is-invalid @enderror">
-                @error('comment')
-                <span class="invalid-feedback">
+
+                <div class="form-switch form-check mb-3">
+                    <label class="form-label" for="condensate">Наличие конденсата в боксе</label>
+                    <input class="form-check-input" type="checkbox" id="condensate"
+                           @if($monitoring->condensate ?? false) checked onclick="return false;" @endif
+                           name="condensate">
+                </div>
+
+                <div class="mb-3">
+                    <label for="comment">Коментарий</label>
+                    <input name="comment" id="comment" class="form-control @error('comment') is-invalid @enderror">
+                    @error('comment')
+                    <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>
-                @enderror
+                    @enderror
+                </div>
+
 
                 <input type="submit" class="btn btn-primary" value="Сохранить">
 

@@ -31,6 +31,7 @@ class ProductMonitoringUpdateRequest extends FormRequest
             'humidity' => 'nullable|numeric|max:100',
             'timeUp' => 'nullable|date_format:H:i',
             'timeDown' => 'nullable|date_format:H:i',
+            'condensate' => 'sometimes|accepted',
             'comment' => 'nullable|max:255',
         ];
     }

@@ -38,6 +38,7 @@ class ProductMonitoringRequest extends FormRequest
             'phase' => 'required|numeric',
             'timeUp' => 'nullable|date_format:H:i',
             'timeDown' => 'nullable|date_format:H:i',
+            'condensate' => 'sometimes|accepted',
             'comment' => 'nullable|max:255',
 
         ];

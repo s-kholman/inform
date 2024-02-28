@@ -36,6 +36,7 @@ class ProductMonitoringController extends Controller
      */
     public function store(ProductMonitoringRequest $request)
     {
+
         $date = ProductMonitoring::create(
             [
                 'storage_name_id' => $request['storage'],
@@ -46,6 +47,7 @@ class ProductMonitoringController extends Controller
                 'tuberTemperatureEvening' => $request['tempEvening'],
                 'humidity' => $request['humidity'],
                 'storage_phase_id' => $request['phase'],
+                'condensate' => boolval($request['condensate']),
                 'comment' => $request['comment'],
             ]
         );
@@ -89,6 +91,7 @@ class ProductMonitoringController extends Controller
                 'tuberTemperatureEvening' => array_key_exists('tempEvening', $request->all()) ? $request['tempEvening'] : $monitoring->tuberTemperatureEvening,
                 'burtAboveTemperature' => array_key_exists('tempAboveBurt', $request->all()) ? $request['tempAboveBurt'] : $monitoring->burtAboveTemperature,
                 'humidity' => array_key_exists('humidity', $request->all()) ? $request['humidity'] : $monitoring->humidity,
+                'condensate' => boolval($request['condensate']),
                 'comment' => $monitoring->comment .' '. $request['comment']
             ]
 

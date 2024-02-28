@@ -17,6 +17,7 @@
             <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Влажность</div>
             <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Фазы</div>
             <div class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">Режим</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">Конденсат</div>
             <div class="text-break col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 border border-2">Коментарий</div>
         </div>
         @foreach($monitoring as $id => $value)
@@ -27,9 +28,13 @@
                 <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->burtTemperature}}&degС</div>
                 <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->burtAboveTemperature}}&degС</div>
                 <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->tuberTemperatureMorning}}&degС</div>
-                <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->tuberTemperatureEvening}}&degС</div>
+                <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2
+@if(($value->tuberTemperatureEvening < 3.5 || $value->tuberTemperatureEvening > 4.5) && $value->tuberTemperatureEvening <> null) bg-danger @endif">
+                    {{$value->tuberTemperatureEvening}}&degС
+                </div>
                 <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->humidity}}</div>
                 <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->phase->name}}</div>
+
                 <div class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 ">
                     @forelse(\App\Models\StorageMode::where('product_monitoring_id', $value->id)->orderby('timeUp')->get() as $mode)
                         <div class="row">
@@ -44,6 +49,12 @@
                             </div>
                         </div>
                     @endforelse
+                </div>
+                <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2 @if($value->condensate) bg-danger @endif">
+                    @if($value->condensate)
+                        +
+                    @endif
+
                 </div>
                 <div class="text-break col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 border border-2">{{$value->comment}}</div>
             </div>

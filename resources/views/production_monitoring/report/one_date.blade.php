@@ -30,6 +30,7 @@
                                 <td>Влажность</td>
                                 <td>Фаза хранения</td>
                                 <td>Режим</td>
+                                <td>Конденсат</td>
                                 <td>Комментарий</td>
                             </tr>
 
@@ -39,7 +40,7 @@
                                     <td>{{$value->burtTemperature}}</td>
                                     <td>{{$value->burtAboveTemperature}}</td>
                                     <td>{{$value->tuberTemperatureMorning}}</td>
-                                    <td>{{$value->tuberTemperatureEvening}}</td>
+                                    <td class="@if(($value->tuberTemperatureEvening < 3.5 || $value->tuberTemperatureEvening > 4.5) && $value->tuberTemperatureEvening <> null) bg-danger @endif" >{{$value->tuberTemperatureEvening}}</td>
                                     <td>{{$value->humidity}}</td>
                                     <td>{{$value->phase->name}}</td>
                                     <td class="text-nowrap">
@@ -49,6 +50,10 @@
                                             н/д
                                         @endforelse
                                     </td>
+                                    <td class="text-center @if($value->condensate) bg-danger @endif">
+                                        @if($value->condensate)
+                                            +
+                                        @endif</td>
                                     <td>{{$value->comment}}</td>
                                 </tr>
                             @endforeach
