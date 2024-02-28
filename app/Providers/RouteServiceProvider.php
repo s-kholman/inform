@@ -45,14 +45,14 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 /**
- * Лимит на одно смс сообщение в час
+ * Лимит на одно смс сообщение в пять минут
  * Без лимит администратору по № телефона
 */
         RateLimiter::for('smsIn', function (Request $request){
             if ($request->phone == '+79026223673'){
                 return Limit::none();
             } else {
-                return Limit::perHour(1)->by($request->phone)->response(function (){
+                return Limit::perMinutes(5,1)->by($request->phone)->response(function (){
                     return response(null, 200);
                 });
             }

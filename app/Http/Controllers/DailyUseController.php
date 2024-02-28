@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DailyUseOne;
+use App\Models\CurrentStatus;
 use App\Models\DailyUse;
 use Illuminate\Http\Request;
 
@@ -20,7 +22,19 @@ class DailyUseController extends Controller
      */
     public function create()
     {
-        //
+        $status = CurrentStatus::with('status')->get();
+        if($status->isNotEmpty())
+        {
+            $device = $status->
+            sortByDesc('date')->
+            sortByDesc('id')->
+            unique(['device_id'])->
+            sortBy('filial.name')->
+            whereNotIn('status.active', false);
+            foreach ($device as $value){
+                dispatch(new DailyUseOne($value));
+            }
+        }
     }
 
     /**
