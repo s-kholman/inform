@@ -19,7 +19,6 @@ class ProductMonitoringReportController extends Controller
             ->with('storageName')
             ->get();
         $collection = $arr_value->sortBy('storageName.name')->sortByDesc('storageName.filial_id')->groupBy('storageName.filial_id');
-       // dd($collection);
         return view('production_monitoring.report.one_date', ['arr_value' => $collection, 'date' => $request->date]);
     }
 
