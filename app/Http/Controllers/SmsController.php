@@ -45,10 +45,10 @@ class SmsController extends Controller
          * RateLimiter - ограничение запросов
          * dailyOne() - создаем очередь для опроса каждого устройства
          */
-        RateLimiter::attempt('DailyUse',  1, function (){
+       /** RateLimiter::attempt('DailyUse',  1, function (){
             self::dailyOne(); //dispatch(new DailyUse());
             return null;
-        },  60*60);
+        },  60*60);*/
 
         if ($request->token == env('SMS_TOKEN') AND $request->type == 'get_sms'){
             if (Sms::where('smsActive', true)->where('smsType', self::SMSGET)->count()) {
