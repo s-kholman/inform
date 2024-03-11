@@ -21,13 +21,42 @@
                             {{\App\Models\Registration::where('user_id',$value->id)->value('activation') ? 'Астивирован' : 'Расмотрение'}}
                     </td>
                     <td>
-                        <a href="/user/{{$value->id}}">Активация</a>
+                        @can('viewAdmin', 'App\Models\Sowing')
+                            <div class="col-2 p-1  dropdown">
+                                <button type="button" class="btn btn-info dropdown-toggle " data-bs-toggle="dropdown">
+                                    Действия
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <form action="{{ route('user.activation', ['registration' => $value->registration])}}" method="POST">
+                                        @csrf
+                                        <li><input type="submit" class="btn btn-success" value="Активировать"></li>
+                                    </form>
+
+                                    <form action="{{ route('user.edit', ['registration' => $value->registration])}}" method="POST">
+                                        @csrf
+                                        <li><input type="submit" class="btn btn-info" value="Редактировать"></li>
+                                    </form>
+
+                                    <form action="{{ route('user.activation.destroy', ['registration' => $value->registration])}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <li><input type="submit" class="btn btn-danger" value="Удалить"></li>
+                                    </form>
+
+                                </ul>
+                            </div>
+
+                        @endcan
                     </td>
                         @else
                             Расмотрение
                     </td>
                         <td>
-                            Недоступно
+                            <form action="{{ route('user.activation.forceDelete', ['user' => $value])}}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <li><input type="submit" class="btn btn-danger" value="Удалить без возвратно"></li>
+                            </form>
                         </td>
                         @endif
 
