@@ -22,33 +22,52 @@ class ActivationController extends Controller
         return view('user_edit', ['user' => $active]);
     }
 
-    public function userActivation(Request $request){
-        $activation = Registration::find($request->id);
-        $activation->activation = true;
-        $activation->infoFull = true;
+   // public function userActivation(Request $request){
+    public function userActivation(Registration $registration){
+
+        $registration->activation = true;
+        $registration->infoFull = true;
+        $registration->save();
+
         Sms::create([
             'smsText' => 'Администратор активировал Ваш профиль на сайте inform.krimm.ru',
-            'phone' => $activation->phone ,
+            'phone' => $registration->phone ,
             'smsType' => 1,
             'smsActive' => true]);
-        $activation->save();
 
         return redirect()->route('activation.show');
 
     }
 
-    public function userEdit(Request $request){
-        $edit = Registration::find($request->id);
-        $edit->infoFull = false;
-        $edit->activation = false;
+    public function userEdit(Registration $registration){
+
+        $registration->infoFull = false;
+        $registration->activation = false;
+        $registration->save();
 
         Sms::create([
             'smsText' => 'Профиль на сайте inform.krimm.ru не прошел проверку и отправлен на редактирование',
-            'phone' => $edit->phone ,
+            'phone' => $registration->phone ,
             'smsType' => 1,
             'smsActive' => true]);
-        $edit->save();
+
         return redirect()->route('activation.show');
 
+    }
+
+    public function destroy(Registration $registration)
+    {
+        $registration->delete();
+
+        User::query()->find($registration->user_id)->delete();
+
+        return redirect()->route('activation.show');
+    }
+
+    public function forceDelete(User $user)
+    {
+        $user->forceDelete();
+
+        return redirect()->route('activation.show');
     }
 }

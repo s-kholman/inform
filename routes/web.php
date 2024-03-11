@@ -119,8 +119,11 @@ Route::post('/profile', [RegistrationController::class, 'store'])->name('profile
 
 Route::get('/activation', [ActivationController::class, 'activation'])->name('activation.show')->middleware('can:destroy, App\Models\svyaz');
 Route::get('/user/{id}', [ActivationController::class, 'userView'])->name('user.view')->middleware('can:destroy, App\Models\svyaz');
-Route::delete( '/user/edit/{id}', [ActivationController::class, 'userEdit'])->name('user.edit')->middleware('can:destroy, App\Models\svyaz');
-Route::delete( '/user/activation/{id}', [ActivationController::class, 'userActivation'])->name('user.activation')->middleware('can:destroy, App\Models\svyaz');
+Route::post( '/user/edit/{registration}', [ActivationController::class, 'userEdit'])->name('user.edit')->middleware('can:destroy, App\Models\svyaz');
+Route::post( '/user/activation/{registration}', [ActivationController::class, 'userActivation'])->name('user.activation')->middleware('can:destroy, App\Models\svyaz');
+Route::delete('/user/activation/destroy/{registration}', [ActivationController::class, 'destroy'])->name('user.activation.destroy')->middleware('can:destroy, App\Models\svyaz');
+Route::delete('/user/activation/forceDelete/{user}', [ActivationController::class, 'forceDelete'])->name('user.activation.forceDelete')->middleware('can:destroy, App\Models\svyaz');
+
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -147,7 +150,7 @@ Route::post('/sms_get', [SmsGet::class, 'smsGet'])->withoutMiddleware([VerifyCsr
 /**
  * throttle:smsIn в RouteServiceProvider
  */
-Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('throttle:smsIn');
+Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([VerifyCsrfToken::class]);//->middleware('throttle:smsIn');
 
 Route::resource('pole', PoleController::class);
 Route::resource('pole.sevooborot', SevooborotController::class)->middleware('auth');
