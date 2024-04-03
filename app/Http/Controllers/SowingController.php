@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Actions\harvest\HarvestAction;
+use App\Http\Requests\SowingIndexRequest;
 use App\Http\Requests\SowingRequest;
 use App\Models\Cultivation;
 use App\Models\HarvestYear;
-use App\Models\posev;
 use App\Models\Sowing;
-use App\Models\SowingLastName;
 use App\Models\SowingOutfit;
 use App\Models\SowingType;
 use Illuminate\Database\Eloquent\Builder;
@@ -106,23 +105,24 @@ class SowingController extends Controller
                         ]);
             }
         }
-        return redirect()->route('sowing.index', ['type' => $sowing_type]);
+        return redirect()->route('sowing.index', ['id' => $sowing_type]);
     }
 
-    public function index(Request $request, HarvestAction $harvestAction)
+    public function index(SowingIndexRequest $request, HarvestAction $harvestAction)
     {
 
-        $no_machine = SowingType::query()->where('id', $request->type)->value('no_machine');
+        $no_machine = SowingType::query()->where('id', $request->id)->value('no_machine');
 
         $harvest_all = HarvestYear::query()
             ->whereHas('outfitHarvest', function (Builder $query) use ($request) {
-               $query->where('sowing_outfits.sowing_type_id', $request->type);
+               $query->where('sowing_outfits.sowing_type_id', $request->id);
             })
             ->orderByDesc('name')
             ->get();
 
 
-        if ($request->harvest == null and empty($harvest_all)) {
+       // if ($request->harvest == null && $harvest_all->isEmpty()) {
+        if ($request->harvest == null) {
             $harvest = $harvestAction->HarvestYear(Carbon::now());
         } elseif ($request->harvest <> null) {
             $harvest = $request->harvest;
@@ -131,8 +131,8 @@ class SowingController extends Controller
         }
 
         $sowing = Sowing::query()
-            ->select('sowings.*', 'filials.name as filial_name', 'cultivations.color as color')
-            ->where('sowings.sowing_type_id', $request->type)
+            ->select('sowings.*', 'filials.name as filial_name', 'cultivations.color as color', 'cultivations.name as cultivations_name')
+            ->where('sowings.sowing_type_id', $request->id)
             ->where('harvest_year_id', $harvest)
             ->where('machine_id', $no_machine ? '=' : '<>', null)
             ->join('filials', 'filials.id', '=', 'sowings.filial_id')
@@ -160,6 +160,7 @@ class SowingController extends Controller
                 //Агрегат
                 foreach ($machine as $machine_id => $sowing_last_name) {
                     //ФИО + модель
+                    //$temp [$filial_id] [$machine_id] =
                     foreach ($sowing_last_name as $sowing_last_name_id => $nulls) {
                         foreach ($value as $key) {
                             if ($key->date == $date and $key->filial_id == $filial_id and $key->machine_id ? $key->machine_id : $key->cultivation_id == $machine_id and $key->sowing_last_name_id == $sowing_last_name_id) {
@@ -182,10 +183,24 @@ class SowingController extends Controller
         }
 
         $summa_arr [] ['summa'] = 0;
-        $sowing_type = SowingType::query()->find($request->type);
+        $sowing_type = SowingType::query()->find($request->id);
       //  dd($sowing_type);
         if (!empty($result)) {
             ksort($result);
+
+            $cultivationToSum = ($sowing->groupBy(['filial_id', 'cultivation_id'])->map(function ($query){
+                foreach ($query as $value){
+                     $arr [$value[0]->filial_name] [$value[0]->cultivations_name] = ['volume' => $value->sum('volume'), 'color' => $value[0]->color];
+                }
+                return $arr;
+            }));
+
+///dd($cultivationToSum);
+            $cultivationToKRIMM = $sowing->groupBy(['cultivations_name'])->map(function ($builder){
+                    return ['volume' => $builder->sum('volume'), 'color' => $builder[0]->color];
+            });
+            //dd($cultivationToKRIMM);
+
             return view('sowing.index',
                 [
                     'result' => $result,
@@ -194,6 +209,8 @@ class SowingController extends Controller
                     'harvest_all' => $harvest_all,
                     'sowing_type_model' => $sowing_type,
                     'no_machine' => $no_machine,
+                    'cultivationToSum' => $cultivationToSum,
+                    'cultivationToKRIMM' => $cultivationToKRIMM,
 
                 ]);
         } else
@@ -204,6 +221,8 @@ class SowingController extends Controller
                 'harvest_year_id' => $harvest,
                 'harvest_all' => $harvest_all,
                 'sowing_type_model' => $sowing_type,
+                'cultivationToSum' => [],
+                'cultivationToKRIMM' => [],
 
             ]);
     }

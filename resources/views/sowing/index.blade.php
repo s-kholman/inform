@@ -15,13 +15,13 @@
 
 <div class="row p-1">
     <div class="col-2">
-        <a class="btn btn-success" href="/sowing?type=1">Зерновые</a>
+        <a class="btn btn-success" href="/sowing?id=1">Зерновые</a>
     </div>
     <div class="col-2">
-        <a class="btn btn-success" href="/sowing?type=2">Картофель</a>
+        <a class="btn btn-success" href="/sowing?id=2">Картофель</a>
     </div>
     <div class="col-2">
-        <a class="btn btn-success" href="/sowing?type=3">Овощи</a>
+        <a class="btn btn-success" href="/sowing?id=3">Овощи</a>
     </div>
     <div class="col-4">
         @can('viewAdmin', 'App\Models\Sowing')
@@ -57,7 +57,7 @@
 
                 <div class="col-2">
 
-                    <a href="/sowing?type={{$sowing_type_model->id}}&harvest={{$harvest->id}}">{{$harvest->name}} год</a>
+                    <a href="/sowing?id={{$sowing_type_model->id}}&harvest={{$harvest->id}}">{{$harvest->name}} год</a>
                 </div>
             @empty
             @endforelse
@@ -180,8 +180,76 @@
                         </tfoot>
                     </table>
                 </div>
-
             </div>
+
+            <div class="row">
+                @foreach($cultivationToSum as $value)
+
+
+                    @if($loop->first)
+
+                            <div class="col-2 m-2 ">
+                                <div class="col-12 text-center">
+                                    <b>По КРиММ</b>
+                                </div>
+                                    @foreach($cultivationToKRIMM as $name => $volume)
+                                        <div class="row">
+                                            <div class="col-8 border border-1">
+                                                {{$name}}
+                                            </div>
+                                            <div class="col-4 border border-1 text-center" style="background: {{$volume['color']}}">
+                                                {{$volume['volume']}}
+                                            </div>
+                                        </div>
+                                        @if($loop->last)
+                                        <div class="row">
+                                            <div class="col-8 border border-1">
+                                                Итого:
+                                            </div>
+                                            <div class="col-4 border border-1 text-center">
+                                                {{$cultivationToKRIMM->sum('volume')}}
+                                            </div>
+                                        </div>
+                                        @endif
+                                    @endforeach
+
+                            </div>
+
+
+
+
+                    @endif
+                    @foreach($value as $key => $item)
+                        <div class="col-2 m-2 ">
+                            <div class="col-12 text-center">
+                                <b>{{$key}}</b>
+                            </div>
+                                @foreach($item as $name => $volume)
+                                    <div class="row">
+                                    <div class="col-8 border border-1">
+                                       {{$name}}
+                                    </div>
+                                    <div class="col-4 border border-1 text-center" style="background: {{$volume['color']}}">
+                                        {{$volume['volume']}}
+                                    </div>
+                                    </div>
+                                @endforeach
+                            @if($loop->last)
+
+                                <div class="row">
+                                    <div class="col-8 border border-1">
+                                        Итого:
+                                    </div>
+                                    <div class="col-4 border border-1 text-center">
+                                        {{collect($item)->sum('volume')}}
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                @endforeach
+            </div>
+
         @else
             <div class="row p-4">
                 <div class="col">

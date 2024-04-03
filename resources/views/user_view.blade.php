@@ -18,7 +18,7 @@
                     </td>
                     <td>
                         @if(\App\Models\Registration::where('user_id',$value->id)->first())
-                            {{\App\Models\Registration::where('user_id',$value->id)->value('activation') ? 'Астивирован' : 'Расмотрение'}}
+                            {{\App\Models\Registration::where('user_id',$value->id)->value('activation') ? 'Активирован' : 'Расмотрение'}}
                     </td>
                     <td>
                         @can('viewAdmin', 'App\Models\Sowing')
@@ -29,18 +29,18 @@
                                 <ul class="dropdown-menu">
                                     <form action="{{ route('user.activation', ['registration' => $value->registration])}}" method="POST">
                                         @csrf
-                                        <li><input type="submit" class="btn btn-success" value="Активировать"></li>
+                                        <li><input type="submit" class="dropdown-item text-success" value="Активировать"></li>
                                     </form>
 
                                     <form action="{{ route('user.edit', ['registration' => $value->registration])}}" method="POST">
                                         @csrf
-                                        <li><input type="submit" class="btn btn-info" value="Редактировать"></li>
+                                        <li><input class="dropdown-item text-info" type="submit" value="Редактировать"></li>
                                     </form>
 
                                     <form action="{{ route('user.activation.destroy', ['registration' => $value->registration])}}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <li><input type="submit" class="btn btn-danger" value="Удалить"></li>
+                                        <li><input type="submit" class="dropdown-item text-danger" value="Удалить"></li>
                                     </form>
 
                                 </ul>
@@ -49,7 +49,7 @@
                         @endcan
                     </td>
                         @else
-                            Расмотрение
+                            Не заполнен профиль
                     </td>
                         <td>
                             <form action="{{ route('user.activation.forceDelete', ['user' => $value])}}" method="POST">
