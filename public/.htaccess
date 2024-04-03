@@ -5,6 +5,13 @@
 
     RewriteEngine On
 
+    # Added to Force HTTPS to skipe URL
+    RewriteCond %{HTTP_HOST} inform\.krimm\.ru [NC]
+    RewriteCond %{SERVER_PORT} 80
+    RewriteCond %{REQUEST_URI} " !^/sms_get$"
+    RewriteCond %{REQUEST_URI} " !^/sms_in$"
+    RewriteRule ^(.*)$ https://inform\.krimm\.ru/$1 [R,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
