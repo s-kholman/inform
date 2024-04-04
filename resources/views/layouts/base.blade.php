@@ -58,7 +58,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link align-middle px-0" href="/poliv_show" class="nav-link px-0">
+                        <a class="nav-link align-middle px-0" href="/watering/index" class="nav-link px-0">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Полив</span></a>
                     </li>
                     @can('viewAny', 'App\Models\DailyUse')

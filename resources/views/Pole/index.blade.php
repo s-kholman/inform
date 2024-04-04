@@ -24,7 +24,7 @@
                     @empty
                     @endforelse
 
-                @elsecan('viewAny', 'App\Models\poliv')
+                @elsecan('viewAny', 'App\Models\Watering')
                                 <table class="table table-bordered">
                         <th colspan="3" class="text-center">{{\Illuminate\Support\Facades\Auth::user()->filialname->name}}
                             <tr>

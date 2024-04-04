@@ -47,6 +47,7 @@ use App\Http\Controllers\StorageModeController;
 use App\Http\Controllers\StoragePhaseController;
 use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
+use App\Http\Controllers\WateringController;
 use App\Http\Controllers\Yandex\AliceController;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Auth;
@@ -155,13 +156,15 @@ Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([Veri
 Route::resource('pole', PoleController::class);
 Route::resource('pole.sevooborot', SevooborotController::class)->middleware('auth');
 
-
-Route::get('/poliv_add', [PolivController::class, 'polivAddShow'])->name('poliv_add')->middleware('auth');;
-Route::get('/poliv_show/{filial_id?}/{pole_id?}', [PolivController::class, 'polivShow'])->name('poliv.view')->middleware('auth');;
-Route::post('/poliv_add', [PolivController::class, 'polivAdd'])->name('poliv.add')->middleware('auth');
-Route::get('/poliv_edit/{polivId}', [PolivController::class, 'polivEdit'])->name('poliv_edit')->middleware('can:viewAny, App\Models\Poliv');;
-Route::delete('/poliv_delete/{poliv}', [PolivController::class, 'polivdestroy'])->name('poliv.destroy')->middleware('can:delete,poliv');
-
+/**
+ * Новые формы и маршруты для полива
+ */
+Route::post('watering/store',[WateringController::class, 'store'])->name('watering.store');
+Route::get('watering/index',[WateringController::class, 'index'])->middleware('auth');
+Route::get('watering/create',[WateringController::class, 'create'])->middleware('can:viewAny,App\Models\Watering');;
+Route::get('/watering/show/{filial_id}/{pole_id}',[WateringController::class, 'show'])->name('watering.show');
+Route::delete('/watering/destroy/{watering}', [WateringController::class, 'destroy'])->name('watering.destroy')->middleware('can:delete,watering');
+Route::get('/watering/edit/{watering}', [WateringController::class, 'edit'])->middleware('can:viewAny,App\Models\Watering');
 
 Route::get('/sokar', [SokarController::class, 'index'])->name('index.get');
 Route::resource('size', SizeController::class);

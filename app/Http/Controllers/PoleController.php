@@ -14,7 +14,7 @@ class PoleController extends Controller
     public function __construct()
     {
         $this->middleware('can:destroy, App\Models\svyaz')->only('destroy', 'update');
-        $this->middleware('can:viewAny, App\Models\poliv');
+        $this->middleware('can:viewAny, App\Models\watering');
     }
     private const ERROR_MESSAGES = [
         'required' => 'Заполните это поле',

@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Poliv;
+use App\Models\Watering;
 use App\Models\Registration;
 use App\Models\User;
 use App\Models\svyaz;
