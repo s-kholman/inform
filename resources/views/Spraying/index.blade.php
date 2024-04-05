@@ -5,24 +5,37 @@
 
 
     <div class="container gx-4">
-        @can('viewAny', 'App\Models\spraying')
+
             <div class="row">
+                @can('viewAny', 'App\Models\spraying')
                 <div class="col-4 p-3"><a class="btn btn-outline-success" href="{{route('spraying.create')}}">Внести
                         опрыскивание</a></div>
                 <div class="col-4 p-3"><a class="btn btn-outline-success" href="/spraying/report">Отчеты</a></div>
+                @endcan
+                    @can('myView', 'App\Models\spraying')
+                <div class="col-4 p-3">
+
+
+                <div class="dropdown">
+                    <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
+                        Справочники
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="/pole">Поля/севооборот</a></li>
+                        <li class="dropdown-item"><a href="/nomenklature">Номенклатура</a></li>
+                        <li class="dropdown-item"><a href="/szr">СЗР</a></li>
+                    </ul>
+                </div>
+
+                </div>
+                @endcan
             </div>
-        @endcan
+
         <div class="container gx-4">
             <div class="row">
-                @can('myView', 'App\Models\spraying')
-                    <div class="col-xl-2 border border-1">
-                        <p>Справочники</p>
-                        <div><a href="/pole">Поля/севооборот</a></div>
-                        <div><a href="/nomenklature">Номенклатура</a></div>
-                        <div><a href="/szr">СЗР</a></div>
-                    </div>
-                @endcan
-                <div class="col-xl-10">
+
+
+               <div class="col-xl-10">
                     <div class="row">
                         @foreach($arr as $filial => $name)
                             <div class="col"> {{$filial}}

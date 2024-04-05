@@ -13,7 +13,7 @@
                 @forelse($poles as $pole)
                     <option {{old('pole') == $pole->id ? "selected" : ""}} value="{{$pole->id}}">{{$pole->name}}</option>
                 @empty
-                    <option value="0"> Поля не найдены</option>
+                    <option value=""> Поля не найдены</option>
                 @endforelse
             </select>
             @error('pole')

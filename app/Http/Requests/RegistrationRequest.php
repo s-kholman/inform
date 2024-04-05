@@ -31,6 +31,8 @@ class RegistrationRequest extends FormRequest
         ];
     }
 
+
+//regex:/^[а-яА-Я\s]+[а-яА-Я]+[а-яА-Я]*$/u
     public function messages()
     {
         return [

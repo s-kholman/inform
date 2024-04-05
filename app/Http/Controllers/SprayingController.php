@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\harvest\HarvestAction;
 use App\Models\Pole;
 use App\Models\Sevooborot;
 use App\Models\Spraying;
 use App\Models\Szr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SprayingController extends Controller
 {
@@ -27,10 +29,7 @@ class SprayingController extends Controller
     ];
     public function __construct()
     {
-        //$this->middleware('can:delete, App\Models\Spraying')->only('destroy');
         $this->middleware('can:viewAny, App\Models\Spraying');
-
-       // $this->authorizeResource(Spraying::class, 'spraying');
 
     }
     private function  display_null($value){
@@ -55,28 +54,41 @@ class SprayingController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(HarvestAction $harvestAction)
     {
 
         $sevooborot_arr = [];
         $squaret_arr = [];
         $szr_arr = [];
 
-        foreach (Sevooborot::all() as $value){
-            $sevooborot_arr [$value->pole_id] [$value->id] =  $value->Nomenklature->name  . ' ' . $this->display_null($value->Reproduktion->name ?? null) . ' ('. $value->square .' Га)';
+        $poles = Sevooborot::query()
+            ->with('Pole')
+            ->where('harvest_year_id', $harvestAction->HarvestYear(now()))
+            ->get();
+
+        if($poles->isNotEmpty()){
+            $poles = $poles
+                ->where('Pole.filial_id', Auth::user()->Registration->filial_id)
+                ->groupBy('Pole.name');
+        }
+
+
+        foreach (Sevooborot::query()->where('harvest_year_id', $harvestAction->HarvestYear(now()))->get() as $value){
+            $sevooborot_arr [$value->pole_id] [$value->id] =
+                $value->Nomenklature->name  . ' ' .
+                $this->display_null($value->Reproduktion->name ?? null) . ' ('. $value->square .' Га)';
             $squaret_arr [$value->pole_id] [$value->id] =  $value->square;
         }
 
         foreach (Szr::all() as $value){
             $szr_arr [$value->szr_classes_id] [$value->id] = $value->name;
         }
-        /**
-         * Вынести из blade запрос полей перенести в класс и сделать сортировку по имени
-         */
+
         return view('spraying.create', [
             'sevooborot_arr' => json_encode($sevooborot_arr, JSON_UNESCAPED_UNICODE),
             'squaret_arr' => json_encode($squaret_arr, JSON_UNESCAPED_UNICODE),
-            'szr_arr' => json_encode($szr_arr, JSON_UNESCAPED_UNICODE)
+            'szr_arr' => json_encode($szr_arr, JSON_UNESCAPED_UNICODE),
+            'poles' => $poles,
         ]);
     }
 
@@ -109,9 +121,17 @@ class SprayingController extends Controller
      */
     public function show(Pole $spraying)
     {
+        $sprayings = Spraying::query()
+            ->where('pole_id', $spraying->id)
+            ->with('Sevooborot.HarvestYear')
+            ->orderby('date', 'desc')
+            ->get();
 
+        if($sprayings->isNotEmpty()){
+            $sprayings = $sprayings->groupBy('Sevooborot.HarvestYear.name');
+        }
 
-        return view('spraying.show', ['spraying' =>  Spraying::where('pole_id', $spraying->id)->orderby('date', 'desc')->get(), 'pole_name' => $spraying->name]);
+        return view('spraying.show', ['sprayings' =>  $sprayings]);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\harvest\HarvestAction;
+use App\Models\HarvestYear;
 use App\Models\Nomenklature;
 use App\Models\Pole;
 use App\Models\Reproduktion;
@@ -33,31 +35,70 @@ class SevooborotController extends Controller
      */
     public function index(Pole $pole)
     {
+        $sevooborots = Sevooborot::query()
+            ->with(['HarvestYear', 'Nomenklature', 'Reproduktion'])
+            ->where('pole_id', $pole->id)
+            ->get();
 
-        return view('sevooborot.index', ['pole' => $pole, 'flag' => '']);
+        if ($sevooborots->isNotEmpty()){
+            $sevooborots = $sevooborots->sortByDesc('HarvestYear.name')->groupBy(['HarvestYear.name']);
+        } else{
+            $sevooborots = [];
+        }
+
+        return view('sevooborot.index',
+            [
+                'pole' => $pole,
+                'flag' => '',
+                'sevooborots' => $sevooborots,
+            ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Pole $pole)
+    public function create(Pole $pole, HarvestAction $harvestAction)
     {
 
-        foreach (Nomenklature::orderby('name')->get() as $value){
-            //$nomen_arr [$value->kultura_id] [$value->id] =  $value->name;
-            $nomen_arr [$value->cultivation_id] [$value->name] =  $value->id;
-        }
-        asort($nomen_arr);
-        foreach (Reproduktion::all() as $value){
-            $reprod_arr [$value->cultivation_id] [$value->id] =  $value->name;
-        }
+        $nomen_arr = Nomenklature::query()
+            ->select('cultivation_id','name', 'id')
+            ->orderby('name')
+            ->get()
+            ->groupBy(['cultivation_id', 'name'])
+            ->map(function ($item) {
+                foreach ($item as $id){
+                    $return [$id[0]->name] =  $id[0]->id;
+                }
+                return $return;
+            });
 
-        return view('sevooborot.create', [
-            'pole' => $pole,
-            'nomen_arr' => json_encode($nomen_arr, JSON_UNESCAPED_UNICODE),
-            'reprod_arr' => json_encode($reprod_arr, JSON_UNESCAPED_UNICODE)]);
+        $reproduction = Reproduktion::query()
+            ->get()
+            ->groupBy('cultivation_id')
+            ->map(function ($item){
+                foreach ($item as $id){
+                    $return [$id->id] = $id->name;
+                }
+                return $return;
+            })
+        ;
 
-        //return view('sevooborot.сreate', ['pole' => $pole]);
+        $harvest_year = HarvestYear::query()
+            ->get()
+            ->sortBy('name')
+        ;
+
+        $harvest_year_selected_id = $harvestAction->HarvestYear(now());
+
+        return view('sevooborot.create',
+            [
+                'pole' => $pole,
+                'nomen_arr' => json_encode($nomen_arr, JSON_UNESCAPED_UNICODE),
+                'reprod_arr' => json_encode($reproduction, JSON_UNESCAPED_UNICODE),
+                'harvest_year' => $harvest_year,
+                'harvest_year_selected_id' => $harvest_year_selected_id,
+            ]);
+
     }
 
     /**
@@ -78,7 +119,7 @@ class SevooborotController extends Controller
             'reproduktion_id' => $reproduktion,
             'pole_id' => $pole->id,
             'square' => $request->square,
-            'year' => $request->year
+            'harvest_year_id' => $request->year
 
         ]);
 

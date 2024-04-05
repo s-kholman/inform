@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/bootstrap/css/Posev_1.css">
 
+
 </head>
 <body>
 
@@ -134,6 +135,9 @@
                             </li>
                             <li>
                                 <a href="/pole" class="nav-link px-0"> <span class="d-none d-sm-inline">Поля</span></a>
+                            </li>
+                            <li>
+                                <a href="/sowing/type" class="nav-link px-0"> <span class="d-none d-sm-inline">Тип посева</span></a>
                             </li>
 
 

@@ -50,10 +50,18 @@ class RegistrationController extends Controller
         /**
          * Создание записи для SMS оповещения выносим в слушателя
          */
+        $middle = !is_null($validated['middle_name']) ? Str::substr($validated['middle_name'], 0, 1) . '.' : '';
         try
         {
+
             Sms::create([
-                'smsText' => 'Заполненна информация по ' . $validated['last_name'] . ' ' .Str::substr($validated['first_name'], 0, 1),
+                'smsText' =>
+                    'Заполненна информация по '
+                    . $validated['last_name']
+                    . ' '
+                    .Str::substr($validated['first_name'], 0, 1)
+                    .'. '
+                    .$middle,
                 'phone' => '+79026223673',
                 'smsType' => 1,
                 'smsActive' => true

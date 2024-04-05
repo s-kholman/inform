@@ -7,6 +7,7 @@ use App\Models\Sms;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+
 class ActivationController extends Controller
 {
     public function activation(){
@@ -30,7 +31,7 @@ class ActivationController extends Controller
         $registration->save();
 
         Sms::create([
-            'smsText' => 'Администратор активировал Ваш профиль на сайте inform.krimm.ru',
+            'smsText' => 'Администратор активировал Ваш профиль на сайте '. env('APP_URL'),
             'phone' => $registration->phone ,
             'smsType' => 1,
             'smsActive' => true]);
@@ -46,7 +47,7 @@ class ActivationController extends Controller
         $registration->save();
 
         Sms::create([
-            'smsText' => 'Профиль на сайте inform.krimm.ru не прошел проверку и отправлен на редактирование',
+            'smsText' => 'Профиль на сайте '.env('APP_URL').' не прошел проверку, необходимо заполнить корректно',
             'phone' => $registration->phone ,
             'smsType' => 1,
             'smsActive' => true]);

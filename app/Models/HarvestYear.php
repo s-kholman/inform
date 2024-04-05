@@ -15,4 +15,5 @@ class HarvestYear extends Model
     {
         return $this->hasOneThrough(Sowing::class, SowingOutfit::class);
     }
+
 }

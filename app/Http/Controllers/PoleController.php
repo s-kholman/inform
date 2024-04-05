@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\filial;
 use App\Models\Nomenklature;
 use App\Models\Pole;
 use App\Models\Reproduktion;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PoleController extends Controller
@@ -46,7 +48,19 @@ class PoleController extends Controller
      */
     public function create()
     {
-        return view('pole.create');
+
+        $filials = filial::query()
+            ->where('id', Auth::user()->Registration->filial_id)
+            ->orderBy('name')
+            ->get();
+
+        if (Auth::user()->email == 'sergey@krimm.ru'){
+            $filials = filial::query()
+                ->orderBy('name')
+                ->get();
+        }
+
+        return view('pole.create', ['filials' => $filials]);
     }
 
     /**
