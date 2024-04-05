@@ -80,13 +80,18 @@
                 <div class="col-xl-1 col-sm-3">
                     <div class="form-floating mb-3">
                         <select name="year" id="year"
-                                class="form-select @error('cultivation') is-invalid @enderror">
+                                class="form-select @error('year') is-invalid @enderror">
                             <option value=""></option>
                             @forelse($harvest_year as $year)
                                 <option {{$harvest_year_selected_id == $year->id ? 'selected' : ''}} value="{{ $year->id }}"> {{ $year->name }} </option>
                             @empty
                             @endforelse
                         </select>
+                        @error('year')
+                        <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                         <label for="year">Год урожая</label>
                     </div>
                 </div>

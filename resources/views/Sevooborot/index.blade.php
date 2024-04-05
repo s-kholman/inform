@@ -48,7 +48,7 @@
                                             <tbody>
                                             @foreach($sevooborot as $value)
                                                 <tr>
-                                                    <td align="center">{{$value->Nomenklature->name}} - {{$value->Reproduktion->name}}</td>
+                                                    <td align="center">{{$value->Nomenklature->name}} - {{$value->Reproduktion->name ?? ''}}</td>
                                                     <td align="center">{{$value->square}}</a></td>
                                                     <td align="center">
                                                         <div class="dropdown">
