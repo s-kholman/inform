@@ -12,13 +12,8 @@
                 <select name="pole" id="selectFirst" class="form-select @error('pole') is-invalid @enderror">
                     <option value=""></option>
 
-                    @forelse(\App\Models\Sevooborot::Join('poles', 'poles.id', '=', 'sevooborots.pole_id')
-                                                    ->select('poles.id','poles.name')
-                                                    ->distinct('sevooborots.pole_id')
-                                                    ->where('poles.filial_id', \App\Models\Registration::where('user_id', Auth::user()->id)
-                                                    ->first()->filial_id)
-                                                    ->get() as $pole)
-                        <option value="{{ $pole->id }}"> {{ $pole->name }} </option>
+                    @forelse($poles as $name => $pole)
+                        <option value="{{ $pole[0]->pole_id }}"> {{ $name }} </option>
                     @empty
                         <option value=""> Поля не найдены</option>
                     @endforelse
@@ -28,6 +23,7 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
+
                 <label for="selectSecond">Выберите культуру</label>
                 <select name="kultura" id="selectSecond" class="form-select @error('kultura') is-invalid @enderror">
                     <option value="">Культура</option>

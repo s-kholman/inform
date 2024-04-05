@@ -2,54 +2,76 @@
 @section('title', 'Справочник')
 
 @section('info')
-    <div class="col-3">
+
             <form enctype="multipart/form-data" action="{{ route('pole.store') }}" method="POST">
                 @csrf
-                    <label for="txtpole">Введите название поля</label>
-                    <input name="pole" id="txtTitle" class="form-control @error('pole') is-invalid @enderror">
-                @error('pole')
-                <span class="invalid-feedback">
+                <div class="border-3 row pb-3">
+                    <div class="col-xl-3 col-sm-7">
+                        <div class="form-floating mb-3">
+                        <input name="pole" id="txtTitle" class="form-control @error('pole') is-invalid @enderror">
+                            <label for="selectFilial">Введите название поля</label>
+                        <span>
+                        @error('pole')
                     <strong>{{ $message }}</strong>
-                </span>
-                @enderror
+                    </span>
+                        @enderror
+                    </div>
+                </div>
+                </div>
 
-                <label for="txtcheckpoliv">Данное поле находится под поливом ---></label>
-                <input type="checkbox" name="checkPoliv" id="checkPoliv" class="form-check-input">
+                <div class="col-xl-5 col-sm-10 mb-3">
+                    <div class="form-check form-switch form-check-inline">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Данное поле находится под поливом?</label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="checkPoliv" name="checkPoliv">
 
-                <label for="txtFilial">Выберите филиал</label>
+                    </div>
+                </div>
+
+                <div class="border-3 row pb-3 mb-3">
+                    <div class="col-xl-3 col-sm-7">
+                        <div class="form-floating mb-3">
+
                 <select name="filial" id="selectFilial" class="form-select @error('filial') is-invalid @enderror">
                     <option value="">Выберите филиал</option>
-                    @if (\Illuminate\Support\Facades\Auth::user()->email == 'sergey@krimm.ru')
-                        @forelse(\App\Models\filial::all() as $filial)
-                            <option selected value="{{ $filial->id }}"> {{ $filial->name }} </option>
-                        @empty
-                            <option value=""> Филиал(ы) не найдены </option>
-                        @endforelse
-                    @else
-                        @forelse(\App\Models\filial::where('id', \App\Models\Registration::where('user_id', Auth::user()->id)->first()->filial_id)->get() as $filial)
-                            <option selected value="{{ $filial->id }}"> {{ $filial->name }} </option>
-                        @empty
-                            <option value=""> Филиал(ы) не найдены </option>
-                        @endforelse
-                    @endif
-
-
+                    @forelse($filials as $filial)
+                        <option value="{{ $filial->id }}"> {{ $filial->name }} </option>
+                    @empty
+                        <option value=""> Филиал(ы) не найдены </option>
+                    @endforelse
                 </select>
                 @error('filial')
                 <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
+                            <label for="selectFilial">Выберите филиал</label>
+                        </div>
+                    </div>
+                </div>
 
-                <label for="txtpole">Выберите изображение поля</label>
-                <input class="form-control form-select @error('image') is-invalid @enderror" type="file" name="image" placeholder="Выбрать изображение" id="image">
+                <div class="border-3 row pb-3 mb-3">
+                    <div class="col-xl-3 col-sm-7">
+                        <div class="form-floating mb-3">
+
+                <input id="image" class="form-control form-select @error('image') is-invalid @enderror" type="file" name="image" placeholder="Выбрать изображение" id="image">
                 @error('image')
                 <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-                <input type="submit" class="btn btn-primary" value="Сохранить">
-                <a class="btn btn-info" href="/pole">Назад</a>
+                            <label for="image">Выберите изображение поля</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-2 col-sm-4">
+                        <input type="submit" class="btn btn-primary" value="Сохранить">
+                    </div>
+                    <div class="col-xl-2 col-sm-4">
+                        <a class="btn btn-info" href="/pole">Назад</a>
+                    </div>
+                </div>
             </form>
-    </div>
+
 @endsection('info')
