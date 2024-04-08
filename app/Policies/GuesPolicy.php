@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Actions\registration\RegistrationCheckAction;
 use App\Models\Gues;
 use App\Models\User;
 use Carbon\Carbon;
@@ -9,12 +10,18 @@ use Illuminate\Auth\Access\Response;
 
 class GuesPolicy
 {
+    private  RegistrationCheckAction $registrationCheckAction;
+
+    public function __construct()
+    {
+        $this->registrationCheckAction = new RegistrationCheckAction;
+    }
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->Registration->activation ?? false;
+        return $this->registrationCheckAction->check($user);
     }
 
     /**
@@ -22,7 +29,7 @@ class GuesPolicy
      */
     public function view(User $user, Gues $gues): bool
     {
-        return $user->Registration->activation ?? false;
+        return $this->registrationCheckAction->check($user);
     }
 
     /**
@@ -30,7 +37,7 @@ class GuesPolicy
      */
     public function create(User $user): bool
     {
-        return $user->Registration->activation ?? false;
+        return $this->registrationCheckAction->check($user);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Actions\peat;
 
 use App\Actions\harvest\HarvestAction;
+use App\Actions\harvest\HarvestShow;
 use App\Models\Peat;
 use Illuminate\Support\Carbon;
 
@@ -30,6 +31,8 @@ class PeatShowAction extends HarvestAction
             ->unique('harvest_year_id')
             ->groupBy('harvest_year_id');
 
+        $harvestShow = new HarvestShow();
+        $harvest_show = $harvestShow->HarvestShow($harvest_all);
         //Группировка по датам, взяли первую дату
         foreach ($all->groupBy('date') as $date => $value) {
             $summa = 0;
@@ -57,8 +60,21 @@ class PeatShowAction extends HarvestAction
         }
         if (!empty($result)) {
             krsort($result);
-            return ['result' => $result, 'summa_arr' => $summa_arr, 'harvest_year_id' => $harvest, 'harvest_all' => $harvest_all];
+            return [
+                'result' => $result,
+                'summa_arr' => $summa_arr,
+                'harvest_year_id' => $harvest,
+                'harvest_all' => $harvest_all,
+                'harvest_show' => $harvest_show,
+            ];
         } else
-            return ['result' => $result = 0, 'summa_arr' => $summa_arr = 0, 'harvest_year_id' => $harvest, 'harvest_all' => $harvest_all];
+            return
+                [
+                    'result' => $result = 0,
+                    'summa_arr' => $summa_arr = 0,
+                    'harvest_year_id' => $harvest,
+                    'harvest_all' => $harvest_all,
+                    'harvest_show' => [],
+                ];
     }
 }

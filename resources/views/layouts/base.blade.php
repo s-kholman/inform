@@ -54,14 +54,31 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link align-middle px-0" href="/monitoring" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Мониторинг температуры</span></a>
+                        <a class="nav-link align-middle px-0" href="/sowing?id=1" class="nav-link px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Посевная</span></a>
                     </li>
+
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/watering/index" class="nav-link px-0">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Полив</span></a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link align-middle px-0" href="/spraying" class="nav-link px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Опрыскивание</span></a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link align-middle px-0" href="/monitoring" class="nav-link px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Мониторинг температуры</span></a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link align-middle px-0" href="/peat" class="nav-link px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Торф</span></a>
+                    </li>
+
                     @can('viewAny', 'App\Models\DailyUse')
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/printers" class="nav-link px-0">
@@ -69,38 +86,25 @@
                     </li>
                     @endcan
 
-                    <li class="nav-item">
-                        <a class="nav-link align-middle px-0" href="/spraying" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Опрыскивание</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link align-middle px-0" href="/factory/material" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Завод - сырье</span></a>
-                    </li>
-                    @can('closeDateUpdate', 'App\Models\svyaz')
+
+
+                    @can('showMenu', 'App\Models\administrator')
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/storagebox" class="nav-link px-0">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">По боксам</span></a>
                     </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link align-middle px-0" href="/factory/material" class="nav-link px-0">
+                                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Завод - сырье</span></a>
+                        </li>
                     @endcan
-
-                    <li class="nav-item">
-                        <a class="nav-link align-middle px-0" href="/sowing?id=1" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Посевная</span></a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link align-middle px-0" href="/peat" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Торф</span></a>
-                    </li>
+                    @can('viewMenu', 'App\Models\administrator')
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/limit_view" class="nav-link px-0">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Детализация сотовой связи</span></a>
                     </li>
 
-
-                    @can('destroy', 'App\Models\svyaz')
-                    @auth
                     <li>
                         <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                             <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Справочники</span> </a>
@@ -139,16 +143,10 @@
                             <li>
                                 <a href="/sowing/type" class="nav-link px-0"> <span class="d-none d-sm-inline">Тип посева</span></a>
                             </li>
-
-
                             @endcan
                         </ul>
                     </li>
-                    @endauth
-
                 </ul>
-
-s
             </div>
         </div>
         <div class="col py-3">

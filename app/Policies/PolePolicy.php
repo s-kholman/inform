@@ -3,13 +3,11 @@
 namespace App\Policies;
 
 use App\Actions\registration\RegistrationCheckAction;
-use App\Models\Take;
+use App\Models\Pole;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Auth;
 
-class TakePolicy
+class PolePolicy
 {
     private  RegistrationCheckAction $registrationCheckAction;
 
@@ -17,6 +15,7 @@ class TakePolicy
     {
         $this->registrationCheckAction = new RegistrationCheckAction;
     }
+
     /**
      * Determine whether the user can view any models.
      */
@@ -28,7 +27,7 @@ class TakePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Take $take): bool
+    public function view(User $user, Pole $pole): bool
     {
         return $this->registrationCheckAction->check($user);
     }
@@ -44,28 +43,23 @@ class TakePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Take $take): bool
+    public function update(User $user, Pole $pole): bool
     {
-        return false;
+        return $this->registrationCheckAction->check($user);
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Take $take): bool
+    public function delete(User $user, Pole $pole): bool
     {
-        $createdMinutes = Carbon::now()->diffInMinutes($take->created_at);
-        if (($createdMinutes <= 60 && $user->Registration->activation ?? false) || ($user->email == 'sergey@krimm.ru')) {
-            return true;
-        } else {
-            return false;
-        }
+        return 'sergey@krimm.ru' == $user->email;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Take $take): bool
+    public function restore(User $user, Pole $pole): bool
     {
         return false;
     }
@@ -73,8 +67,9 @@ class TakePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Take $take): bool
+    public function forceDelete(User $user, Pole $pole): bool
     {
         return false;
     }
+
 }

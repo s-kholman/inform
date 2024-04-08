@@ -2,16 +2,23 @@
 
 namespace App\Policies;
 
+use App\Actions\registration\RegistrationCheckAction;
 use App\Models\Peat;
 use App\Models\User;
 use Carbon\Carbon;
 
 class PeatPolicy
 {
+    private  RegistrationCheckAction $registrationCheckAction;
+
+    public function __construct()
+    {
+        $this->registrationCheckAction = new RegistrationCheckAction;
+    }
 
     public function view(User $user)
     {
-        return isset($user->registration->activation) ? true : false;
+        return $this->registrationCheckAction->check($user);
     }
 
     public function viewAdmin(User $user)
@@ -21,7 +28,7 @@ class PeatPolicy
 
     public function create(User $user)
     {
-        return isset($user->registration->activation) ? true : false;
+        return $this->registrationCheckAction->check($user);
     }
 
     public function delete(User $user, Peat $peat)

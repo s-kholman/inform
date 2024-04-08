@@ -7,7 +7,7 @@
             <form id="pole" enctype="multipart/form-data" action="{{ route('pole.update', ['pole' => $pole->id])}}" method="POST">
                 @csrf
                 @method('PUT')
-
+                <input hidden name="update" value="1">
                 <div class="border-3 row pb-3">
                     <div class="col-xl-3 col-sm-7">
                         <div class="form-floating mb-3">

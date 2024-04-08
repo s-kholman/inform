@@ -8,7 +8,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Watering extends Model
 {
-    protected $fillable = ['filial_id', 'pole_id', 'gidrant', 'sector', 'date', 'poliv', 'speed', 'KAC', 'comment','harvest_year_id'];
+    protected $fillable =
+        [
+            'filial_id',
+            'pole_id',
+            'gidrant',
+            'sector',
+            'date',
+            'poliv',
+            'speed',
+            'KAC',
+            'comment',
+            'harvest_year_id',
+        ];
 
     public function Pole(): BelongsTo
     {

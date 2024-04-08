@@ -53,7 +53,12 @@
                     <div class="col-xl-3 col-sm-7">
                         <div class="form-floating mb-3">
 
-                <input id="image" class="form-control form-select @error('image') is-invalid @enderror" type="file" name="image" placeholder="Выбрать изображение" id="image">
+                <input id="image"
+                       class="form-control form-select @error('image') is-invalid @enderror"
+                       type="file"
+                       name="image"
+                       maxlength="1024"
+                >
                 @error('image')
                 <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>

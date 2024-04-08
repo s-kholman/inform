@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\harvest\HarvestAction;
+use App\Actions\harvest\HarvestShow;
 use App\Http\Requests\WateringStoreRequest;
 use App\Models\Pole;
 use App\Models\Watering;
@@ -27,7 +28,7 @@ class WateringController extends Controller
         return view('watering.index', ['pole' => $pole]);
     }
 
-    public function show(Request $request){
+    public function show(Request $request, HarvestShow $harvestShow){
 
         $watering = Watering::query()
             ->with('HarvestYear')
@@ -39,16 +40,22 @@ class WateringController extends Controller
                 ->sortByDesc('date')
                 ->sortByDesc('HarvestYear.name')
                 ->groupBy('HarvestYear.name');
+            $harvest_show = $harvestShow->HarvestShow(Watering::query()
+                ->with('HarvestYear')
+                ->get()
+                ->groupBy('HarvestYear.id'));
             $pole = Pole::query()
                 ->with('Filial')
                 ->find($request->pole_id);
         } else{
             $watering = [];
+            $harvest_show = [];
             $pole = Pole::query()
                 ->with('Filial')
                 ->find($request->pole_id);
         }
-            return view('watering.show', ['waterings' => $watering, 'pole' => $pole]);
+
+            return view('watering.show', ['waterings' => $watering, 'pole' => $pole, 'harvest_show' => $harvest_show]);
     }
 
     public function create()
