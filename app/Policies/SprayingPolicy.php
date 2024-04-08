@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Actions\registration\RegistrationCheckAction;
 use App\Models\Spraying;
 use App\Models\User;
 use Carbon\Carbon;
@@ -9,6 +10,13 @@ use Illuminate\Auth\Access\Response;
 
 class SprayingPolicy
 {
+    private  RegistrationCheckAction $registrationCheckAction;
+
+    public function __construct()
+    {
+        $this->registrationCheckAction = new RegistrationCheckAction;
+    }
+
     public function myView (User $user): bool
     {
         return $user->email == 'sergey@krimm.ru';
@@ -18,7 +26,7 @@ class SprayingPolicy
      */
     public function viewAny(User $user): bool
     {
-        return isset($user->registration->activation) ? true : false;
+        return $this->registrationCheckAction->check($user);
     }
 
     /**

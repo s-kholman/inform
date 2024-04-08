@@ -2,17 +2,18 @@
 
 namespace App\Providers;
 
+use App\Models\Pole;
+use App\Models\Registration;
 use App\Models\User;
 use App\Observers\UserObserver;
+use App\Policies\PolePolicy;
+use App\Policies\RegistrationPolicy;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
-    protected $policies = [
-        'App\Models\svyaz' => 'App\Policies\SvyazPolicy',
-        'App\Model\Registration' => 'App\Policies\RegistrationPolicy'
-    ];
+
     /**
      * Register any application services.
      */

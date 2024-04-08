@@ -104,26 +104,26 @@ Route::view('/register', 'register');
 /**
  * Отчет по расходу на сотовую связь
  */
-Route::get('/limit_add',[LimitsController::class, 'showLimitForm'])->name('limit_add')->middleware('can:destroy, App\Models\svyaz');;
-Route::post('/limit_add', [LimitsController::class, 'storeLimit'])->name('limit.save')->middleware('can:destroy, App\Models\svyaz');
-Route::post('/parser_add', [LimitsController::class, 'parserLimit'])->name('parser.save')->middleware('can:destroy, App\Models\svyaz');;
-Route::delete('/limit_delete/{limitID}', [LimitsController::class, 'limitdestroy'])->name('limit.destroy')->middleware('can:destroy, App\Models\svyaz');
+Route::get('/limit_add',[LimitsController::class, 'showLimitForm'])->name('limit_add')->middleware('can:viewAny, App\Models\administrator');;
+Route::post('/limit_add', [LimitsController::class, 'storeLimit'])->name('limit.save')->middleware('can:viewAny, App\Models\administrator');
+Route::post('/parser_add', [LimitsController::class, 'parserLimit'])->name('parser.save')->middleware('can:viewAny, App\Models\administrator');;
+Route::delete('/limit_delete/{limitID}', [LimitsController::class, 'limitdestroy'])->name('limit.destroy')->middleware('can:destroy, App\Models\administrator');
 Route::get('/limit_view/{phoneDetail?}',[LimitsController::class, 'showLimit'])
     ->name('limit_view')
-    ->middleware('can:limitView, App\Models\svyaz')
+    ->middleware('can:viewAny, App\Models\administrator')
     ->where('phoneDetail','[0-9]+');
-Route::get('/edit_limit/{limitID}', [LimitsController::class, 'limitEdit'])->name('limit.edit')->middleware('can:destroy, App\Models\svyaz');;
+Route::get('/edit_limit/{limitID}', [LimitsController::class, 'limitEdit'])->name('limit.edit')->middleware('can:destroy, App\Models\administrator');;
 
 
 Route::get('/profile', [RegistrationController::class, 'index'])->name('profile.index')->middleware('auth');
 Route::post('/profile', [RegistrationController::class, 'store'])->name('profile.store')->middleware('auth');
 
-Route::get('/activation', [ActivationController::class, 'activation'])->name('activation.show')->middleware('can:destroy, App\Models\svyaz');
-Route::get('/user/{id}', [ActivationController::class, 'userView'])->name('user.view')->middleware('can:destroy, App\Models\svyaz');
-Route::post( '/user/edit/{registration}', [ActivationController::class, 'userEdit'])->name('user.edit')->middleware('can:destroy, App\Models\svyaz');
-Route::post( '/user/activation/{registration}', [ActivationController::class, 'userActivation'])->name('user.activation')->middleware('can:destroy, App\Models\svyaz');
-Route::delete('/user/activation/destroy/{registration}', [ActivationController::class, 'destroy'])->name('user.activation.destroy')->middleware('can:destroy, App\Models\svyaz');
-Route::delete('/user/activation/forceDelete/{user}', [ActivationController::class, 'forceDelete'])->name('user.activation.forceDelete')->middleware('can:destroy, App\Models\svyaz');
+Route::get('/activation', [ActivationController::class, 'activation'])->name('activation.show')->middleware('can:viewAny, App\Models\administrator');
+Route::get('/user/{id}', [ActivationController::class, 'userView'])->name('user.view')->middleware('can:viewAny, App\Models\administrator');
+Route::post( '/user/edit/{registration}', [ActivationController::class, 'userEdit'])->name('user.edit')->middleware('can:viewAny, App\Models\administrator');
+Route::post( '/user/activation/{registration}', [ActivationController::class, 'userActivation'])->name('user.activation')->middleware('can:viewAny, App\Models\administrator');
+Route::delete('/user/activation/destroy/{registration}', [ActivationController::class, 'destroy'])->name('user.activation.destroy')->middleware('can:destroy, App\Models\administrator');
+Route::delete('/user/activation/forceDelete/{user}', [ActivationController::class, 'forceDelete'])->name('user.activation.forceDelete')->middleware('can:destroy, App\Models\administrator');
 
 
 Route::get('/email/verify', function () {
@@ -153,7 +153,7 @@ Route::post('/sms_get', [SmsGet::class, 'smsGet'])->withoutMiddleware([VerifyCsr
  */
 Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([VerifyCsrfToken::class]);//->middleware('throttle:smsIn');
 
-Route::resource('pole', PoleController::class);
+Route::resource('pole', PoleController::class)->middleware('auth');
 Route::resource('pole.sevooborot', SevooborotController::class)->middleware('auth');
 
 /**
@@ -234,13 +234,13 @@ Route::resource('monitoring', ProductMonitoringController::class)->middleware('a
 Route::get('monitoring/show/filial/{id}', [ProductMonitoringController::class, 'showFilial'])->name('monitoring.show.filial')->middleware('auth');
 Route::get('monitoring/filial/all/{id}', [ProductMonitoringController::class, 'showFilialMonitoring'])->name('monitoring.show.filial.all')->middleware('auth');
 
-Route::get('/printer/{id}/current/show', [CurrentStatusController::class, 'show'])->name('printer.current.show');
-Route::get('/current/{currentStatus}/edit', [CurrentStatusController::class, 'edit'])->name('printer.current.edit');
-Route::get('/current/{device}/create', [CurrentStatusController::class, 'create'])->name('printer.current.create');
-Route::post('/current/store',[CurrentStatusController::class, 'store'])->name('printer.current.store');
-Route::get('/printers', [PrinterController::class, 'index'])->name('Printer.index');
-Route::get('/printer/{id}/show/{currentStatus}', [PrinterController::class, 'show'])->name('printer.show');
-Route::post('/printer', [PrinterController::class, 'index'])->name('printer.toDayGet');
+Route::get('/printer/{id}/current/show', [CurrentStatusController::class, 'show'])->name('printer.current.show')->middleware('can:viewAny, App\Models\administrator');
+Route::get('/current/{currentStatus}/edit', [CurrentStatusController::class, 'edit'])->name('printer.current.edit')->middleware('can:viewAny, App\Models\administrator');
+Route::get('/current/{device}/create', [CurrentStatusController::class, 'create'])->name('printer.current.create')->middleware('can:viewAny, App\Models\administrator');
+Route::post('/current/store',[CurrentStatusController::class, 'store'])->name('printer.current.store')->middleware('can:viewAny, App\Models\administrator');
+Route::get('/printers', [PrinterController::class, 'index'])->name('Printer.index')->middleware('can:viewAny, App\Models\administrator');
+Route::get('/printer/{id}/show/{currentStatus}', [PrinterController::class, 'show'])->name('printer.show')->middleware('can:viewAny, App\Models\administrator');
+Route::post('/printers', [PrinterController::class, 'index'])->name('printer.toDayGet')->middleware('can:viewAny, App\Models\administrator');
 
 Route::get('/daily', [PrinterController::class, 'daily']);
 Route::get('/dailyone', [PrinterController::class, 'dailyone']);

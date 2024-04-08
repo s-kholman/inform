@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\harvest\HarvestAction;
+use App\Actions\harvest\HarvestShow;
 use App\Models\Pole;
 use App\Models\Sevooborot;
 use App\Models\Spraying;
@@ -119,7 +120,7 @@ class SprayingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Pole $spraying)
+    public function show(Pole $spraying, HarvestShow $harvestShow)
     {
         $sprayings = Spraying::query()
             ->where('pole_id', $spraying->id)
@@ -128,10 +129,11 @@ class SprayingController extends Controller
             ->get();
 
         if($sprayings->isNotEmpty()){
+            $harvest_show = $harvestShow->HarvestShow($sprayings->groupBy('Sevooborot.HarvestYear.id'));
             $sprayings = $sprayings->groupBy('Sevooborot.HarvestYear.name');
         }
 
-        return view('spraying.show', ['sprayings' =>  $sprayings]);
+        return view('spraying.show', ['sprayings' =>  $sprayings, 'harvest_show' => $harvest_show]);
     }
 
     /**

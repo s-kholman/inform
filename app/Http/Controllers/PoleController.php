@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PoleRequest;
 use App\Models\filial;
 use App\Models\Nomenklature;
 use App\Models\Pole;
 use App\Models\Reproduktion;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,26 +15,8 @@ class PoleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:destroy, App\Models\svyaz')->only('destroy', 'update');
-        $this->middleware('can:viewAny, App\Models\watering');
+        $this->authorizeResource(Pole::class, 'pole');
     }
-    private const ERROR_MESSAGES = [
-        'required' => 'Заполните это поле',
-        'max' => 'Значение не должно быть длинне :max символов',
-        'integer' => 'Может быть только целым числом',
-        'image' => 'Файл может быть только изображением'
-    ];
-    private const POLE_VALIDATOR = [
-        'pole' => 'required|max:50',
-        'filial' => 'required',
-        'image' => 'image'
-
-    ];
-    private const POLE_EDIT_VALIDATOR = [
-        'pole' => 'required|max:50',
-        'image' => 'image'
-    ];
-
     /**
      * Display a listing of the resource.
      */
@@ -66,9 +48,8 @@ class PoleController extends Controller
     /**
      * Store a newly created resource in storagebox.
      */
-    public function store(Request $request)
+    public function store(PoleRequest $request)
     {
-        $validated = $request->validate(self::POLE_VALIDATOR, self::ERROR_MESSAGES);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/images/poliv');
@@ -77,8 +58,8 @@ class PoleController extends Controller
             $path = null;
         }
         Pole::create([
-            'name' => $validated['pole'],
-            'filial_id' => $validated['filial'],
+            'name' => $request['pole'],
+            'filial_id' => $request['filial'],
             'path' => $path,
             'poliv' => $request->boolean('checkPoliv')
         ]);
@@ -116,10 +97,8 @@ class PoleController extends Controller
     /**
      * Update the specified resource in storagebox.
      */
-    public function update(Request $request, Pole $pole)
+    public function update(PoleRequest $request, Pole $pole)
     {
-
-        $request->validate(self::POLE_EDIT_VALIDATOR, self::ERROR_MESSAGES);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/images/poliv');

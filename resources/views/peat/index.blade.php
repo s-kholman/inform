@@ -77,7 +77,11 @@
                                 @foreach($filial as $filial_id => $peat_extraction)
                                     @foreach($peat_extraction as $peat_extraction_id => $pole)
                                         @foreach($pole as $pole_id => $value)
-                                            <td><a href="/peat/{{$value->id ?? 0}}/edit">{{$value->volume ?? null}}</a></td>
+                                            @if(($value->harvest_year_id ?? false) && array_key_exists($value->harvest_year_id, $harvest_show) && $harvest_show[$value->harvest_year_id])
+                                                <td><a href="/peat/{{$value->id ?? 0}}/edit">{{$value->volume ?? null}}</a></td>
+                                            @else
+                                                <td>{{$value->volume ?? null}}</td>
+                                            @endif
                                         @endforeach
                                     @endforeach
                                 @endforeach

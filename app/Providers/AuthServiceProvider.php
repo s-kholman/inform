@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
+use App\Models\Pole;
+use App\Models\Registration;
 use App\Models\Sowing;
+use App\Policies\PolePolicy;
+use App\Policies\RegistrationPolicy;
 use App\Policies\SowingPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -15,8 +19,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
         Sowing::class => SowingPolicy::class,
+        Registration::class => RegistrationPolicy::class,
+        Pole::class => PolePolicy::class,
     ];
 
     /**

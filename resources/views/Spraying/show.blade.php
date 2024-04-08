@@ -39,7 +39,10 @@
                             <th>Дозировка</th>
                             <th>Объем</th>
                             <th>Комментарий</th>
-                            <th>Действия</th>
+
+                            @if($harvest_show[$spraying[0]->Sevooborot->HarvestYear->id])
+                                <th>Действия</th>
+                            @endif
                             </thead>
                             @else
                                 <div class="tab-pane fade "  id="nav-{{$name}}" role="tabpanel" aria-labelledby="nav-{{$name}}-tab">
@@ -52,17 +55,21 @@
                                         <th>Дозировка</th>
                                         <th>Объем</th>
                                         <th>Комментарий</th>
+                                        @if($harvest_show[$spraying[0]->Sevooborot->HarvestYear->id])
+                                            <th>Действия</th>
+                                        @endif
                                         </thead>
                                         @endif
                                         <tbody>
                                         @foreach($spraying as $value)
                                             <tr>
-                                                <td><a href="/spraying/{{$value->id}}/edit">{{\Carbon\Carbon::parse($value->date)->translatedFormat('d-m-Y')}}</a></td>
+                                                <td>{{\Carbon\Carbon::parse($value->date)->translatedFormat('d-m-Y')}}</td>
                                                 <td>{{$value->Cultivation->name}} {{$value->Nomenklature->name}} {{$value->Reproduktion->name ?? null }} ({{$value->Sevooborot->square}} Га)</td>
                                                 <td>{{$value->szr->name}}</td>
                                                 <td>{{$value->doza}}</td>
                                                 <td>{{$value->volume}}</td>
                                                 <td>{{$value->comments}}</td>
+                                                @if($harvest_show[$spraying[0]->Sevooborot->HarvestYear->id])
                                                 <td align="center">
                                                     <div class="dropdown">
                                                         <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
@@ -78,6 +85,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            @endif
                                             @if($loop->last)
                                         </tbody>
                                     </table>

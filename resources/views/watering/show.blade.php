@@ -53,7 +53,9 @@
                                  <th class="text-center">Скорость</th>
                                  <th class="text-center">КАС</th>
                                  <th class="text-center">Коментарий</th>
-                                 <th class="text-center">Действия</th>
+                                 @if($harvest_show[$watering[0]->HarvestYear->id])
+                                    <th class="text-center">Действия</th>
+                                 @endif
                                  </thead>
                      @else
                          <div class="tab-pane fade "  id="nav-{{$name}}" role="tabpanel" aria-labelledby="nav-{{$name}}-tab">
@@ -66,7 +68,9 @@
                                  <th class="text-center">Скорость</th>
                                  <th class="text-center">КАС</th>
                                  <th class="text-center">Коментарий</th>
-                                 <th class="text-center">Действия</th>
+                                 @if($harvest_show[$watering[0]->HarvestYear->id])
+                                    <th class="text-center">Действия</th>
+                                 @endif
                                  </thead>
                      @endif
                              <tbody>
@@ -79,6 +83,7 @@
                                      <td align="center">{{$value->speed}}</td>
                                      <td align="center">{{$value->KAC}}</td>
                                      <td align="center">{{$value->comment}}</td>
+                                     @if($harvest_show[$watering[0]->HarvestYear->id])
                                      <td align="center">
                                          <div class="dropdown">
                                              <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
@@ -93,7 +98,9 @@
                                              </ul>
                                          </div>
                                      </td>
+                                     @endif
                                  </tr>
+
                              @if($loop->last)
                                 </tbody>
                                 </table>

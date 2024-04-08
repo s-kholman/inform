@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Actions\registration\RegistrationCheckAction;
 use App\Models\User;
 use App\Models\Watering;
 use Carbon\Carbon;
@@ -9,16 +10,18 @@ use Illuminate\Auth\Access\Response;
 
 class WateringPolicy
 {
+    private  RegistrationCheckAction $registrationCheckAction;
+
+    public function __construct()
+    {
+        $this->registrationCheckAction = new RegistrationCheckAction;
+    }
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        if (isset($user->registration->activation) ? true : false){
-            return $user->registration->activation;
-        } else{
-            return false;
-        }
+        return $this->registrationCheckAction->check($user);
     }
 
     /**
