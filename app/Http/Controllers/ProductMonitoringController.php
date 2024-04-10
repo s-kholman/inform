@@ -112,7 +112,9 @@ class ProductMonitoringController extends Controller
     public function destroy(ProductMonitoring $monitoring)
     {
         $monitoring->delete();
-        return redirect()->route('monitoring.index');
+        //return redirect()->route('monitoring.index');
+        return response()->json(['status'=>true,"redirect_url"=>url('monitoring/filial/all/'. $monitoring->storage_name_id)]);
+
     }
 
     public function showFilial($id)
@@ -124,7 +126,17 @@ class ProductMonitoringController extends Controller
 
     public function showFilialMonitoring ($id)
     {
-        $var = ProductMonitoring::query()->where('storage_name_id',$id)->orderBy('date', 'desc')->get();
-        return view('production_monitoring.show_filial_monitoring', ['monitoring' => $var]);
+
+        $var = ProductMonitoring::query()
+            ->where('storage_name_id',$id)
+            ->orderBy('date', 'desc')
+            ->get();
+        if($var->isNotEmpty()){
+            return view('production_monitoring.show_filial_monitoring', ['monitoring' => $var]);
+        } else {
+            return redirect()->route('monitoring.index');
+        }
+
+
     }
 }

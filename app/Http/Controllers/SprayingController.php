@@ -43,10 +43,11 @@ class SprayingController extends Controller
     public function index()
     {
         $arr = [];
-
-
-        foreach (Spraying::with('pole.filial')->get() as $value){
-            $arr [$value['pole'] ['filial'] ['name']][$value['pole']['id']] = $value;
+        $sprayings = Spraying::query()->with('pole.filial')->get();
+        if ($sprayings->isNotEmpty()){
+            foreach ($sprayings->sortBy('pole.name')->sortBy('pole.filial.name') as $value){
+                $arr [$value['pole'] ['filial'] ['name']][$value['pole']['id']] = $value;
+            }
         }
 
         return view('spraying.index', ['arr' => $arr]);
@@ -114,7 +115,7 @@ class SprayingController extends Controller
 
         ]);
 
-        return redirect()->route('spraying.index');
+        return redirect()->route('spraying.show', ['spraying' => $validation['pole']]);
     }
 
     /**
@@ -165,7 +166,8 @@ class SprayingController extends Controller
 
             $spraying->delete();
         }
-        return redirect()->route('spraying.index', $spraying);
+        //return redirect()->route('spraying.index', $spraying);
+        return response()->json(['status'=>true,"redirect_url"=>url('spraying', ['spraying' => $spraying->pole_id])]);
     }
 
 }
