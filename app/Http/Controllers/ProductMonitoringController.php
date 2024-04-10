@@ -130,7 +130,7 @@ class ProductMonitoringController extends Controller
         $var = ProductMonitoring::query()
             ->where('storage_name_id',$id)
             ->orderBy('date', 'desc')
-            ->get();
+            ->paginate(25);
         if($var->isNotEmpty()){
             return view('production_monitoring.show_filial_monitoring', ['monitoring' => $var]);
         } else {
