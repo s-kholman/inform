@@ -3,12 +3,18 @@
 
 @section('info')
 
-
+    <div class="container gx-4">
     <div class="row">
-        <div class="col-2">
+        @can('viewAny', 'App\Models\spraying')
+            <div class="col-4 p-3">
+                <a class="btn btn-outline-success" href="{{route('spraying.create')}}">Внести
+                    опрыскивание</a>
+            </div>
+        @endcan
+
+        <div class="col-2 p-3">
             <a class="btn btn-info" href="/spraying">Назад</a>
         </div>
-
     </div>
 
     <div class="row m-4">
@@ -76,7 +82,7 @@
                                                             Действия
                                                         </button>
                                                         <ul class="dropdown-menu">
-                                                            <form action="{{ route('spraying.destroy', ['spraying' => $value->id])}}" method="POST">
+                                                            <form class="delete-message" data-route="{{ route('spraying.destroy', ['spraying' => $value->id])}}" method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <li><input type="submit" class="dropdown-item text-danger" value="Удалить"></li>
@@ -92,14 +98,12 @@
                                     @endif
                                     @endforeach
                                 </div>
-
                         @empty
                         @endforelse
                     </div>
         </div>
 
-
-
+    </div>
 
 
 
@@ -107,3 +111,6 @@
 
 
 @endsection('info')
+@section('script')
+    @include('scripts\destroy-modal')
+@endsection

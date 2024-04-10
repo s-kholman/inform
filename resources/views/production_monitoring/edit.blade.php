@@ -132,9 +132,7 @@
             <div class="col-6">
             </div>
             <div class="col-6">
-                <form action="{{ route('monitoring.destroy', ['monitoring' => $monitoring->id])}}" method="POST">
-                    @csrf
-                    @method('DELETE')
+                <form class="delete-message" data-route="{{ route('monitoring.destroy', ['monitoring' => $monitoring->id])}}" method="POST">
                     <input type="submit" class="btn btn-danger" value="Удалить">
                 </form>
             </div>
@@ -142,3 +140,6 @@
         </div>
     </div>
 @endsection('info')
+@section('script')
+    @include('scripts\destroy-modal')
+@endsection

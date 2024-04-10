@@ -92,7 +92,7 @@ class WateringController extends Controller
     public function destroy(Watering $watering)
     {
         $watering->delete();
-        return redirect()->route('watering.show', ['filial_id' => $watering->filial_id, 'pole_id' => $watering->pole_id]);
+        return response()->json(['status'=>true,"redirect_url"=>url('watering/show', ['filial_id' => $watering->filial_id, 'pole_id' => $watering->pole_id])]);
     }
 
     public function edit(Watering $watering)
