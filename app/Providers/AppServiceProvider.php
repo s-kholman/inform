@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Observers\UserObserver;
 use App\Policies\PolePolicy;
 use App\Policies\RegistrationPolicy;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 
@@ -29,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
     {
         URL::forceScheme('https');
         User::observe(UserObserver::class);
+        Paginator::useBootstrap();
     }
 }
