@@ -4,6 +4,10 @@
 2. В параметр "data-route" тега <form> передаем роутер на удаление
 3. В методе Destroy контроллера, возвращаем true или respons как пример ниже
 //return response()->json(['status'=>true,"redirect_url"=>url('watering/show', ['filial_id' => $watering->filial_id, 'pole_id' => $watering->pole_id])]);
+4. В blade подключаем скрипт
+@section('script')
+    @include('scripts\destroy-modal')
+@endsection
 --}}
 <script
     src="https://code.jquery.com/jquery-3.7.1.js"

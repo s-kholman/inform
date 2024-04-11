@@ -23,16 +23,17 @@ class RegistrationRequest extends FormRequest
     {
         return [
             'filial_name' => 'required|integer|gt:0',
-            'last_name' => 'required|min:3|max:50',
-            'first_name' => 'required|min:3|max:50',
-            'middle_name' => 'present',
+            'last_name' => 'required|min:3|max:50|regex:/^[а-яА-ЯёЁ]+$/u',
+            'first_name' => 'required|min:3|max:50|regex:/^[а-яА-ЯёЁ]+$/u',
+            'middle_name' => 'present|regex:/^[а-яА-ЯёЁ]+$/u',
             'phone' => 'regex:/^\+7\d{10}/|max:12|min:12',
             'post_name' => 'required|integer|gt:0'
         ];
+        //preg_match('/^[а-яА-ЯёЁ]+ [а-яА-ЯёЁ]+ ?[а-яА-ЯёЁ]+$/u');
     }
 
 
-//regex:/^[а-яА-Я\s]+[а-яА-Я]+[а-яА-Я]*$/u
+
     public function messages()
     {
         return [
@@ -40,7 +41,10 @@ class RegistrationRequest extends FormRequest
             'max' => 'Значение не должно быть длинне :max символов',
             'gt' => 'Выберите из списка',
             'min' => 'Должно содержать не менее :min символов',
-            'regex' => 'Должно соответствовать формату +7'
+            'phone.regex' => 'Должно соответствовать формату +7',
+            'last_name.regex' => 'Не соответствует написанию фамилии',
+            'first_name.regex' => 'Не соответствует написанию имени',
+            'middle_name.regex' => 'Не соответствует написанию отчества'
         ];
     }
 }
