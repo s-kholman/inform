@@ -8,6 +8,7 @@ use App\Models\Registration;
 use App\Models\Sms;
 use App\Models\User;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -21,10 +22,10 @@ class RegistrationController extends Controller
 
         if(User::with('Registration')->findOrFail(Auth::user()->id))
         {
-            return view('profile', ['user_reg' => Auth::user()->registration] );
+            return view('profile.index', ['user_reg' => Auth::user()->registration] );
         } else
         {
-            return view('profile', ['user_reg' => false]);
+            return view('profile.index', ['user_reg' => false]);
         }
 
 
@@ -73,6 +74,17 @@ class RegistrationController extends Controller
         }
 
         return redirect()->route('/');
+    }
+
+    public function show(Request $request)
+    {
+
+        $profile = Registration::query()
+            ->with(['filial', 'Post', 'User'])
+            ->where('id',$request->profile)
+            ->first();
+
+            return view('profile.show', ['profile' => $profile]);
     }
 
 }

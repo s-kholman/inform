@@ -10,65 +10,62 @@ use Illuminate\Http\Request;
 
 class ActivationController extends Controller
 {
-    public function activation(){
+    public function index()
+    {
         $users = User::query()->orderByDesc('created_at')->get();
-        return view('user_view', ['users' => $users]);
+        return view('profile.activation.index', ['users' => $users]);
     }
 
-    public function userView(Request $request){
 
-
-        $active = Registration::where('user_id',$request->id)->first();
-
-        return view('user_edit', ['user' => $active]);
-    }
-
-   // public function userActivation(Request $request){
-    public function userActivation(Registration $registration){
-
+    public function userActivation(Registration $registration)
+    {
         $registration->activation = true;
         $registration->infoFull = true;
         $registration->save();
 
-        Sms::create([
-            'smsText' => 'Администратор активировал Ваш профиль на сайте '. env('APP_URL'),
-            'phone' => $registration->phone ,
-            'smsType' => 1,
-            'smsActive' => true]);
+        Sms::query()
+            ->create([
+                'smsText' => 'Администратор активировал Ваш профиль на сайте '. env('APP_URL'),
+                'phone' => $registration->phone ,
+                'smsType' => 1,
+                'smsActive' => true,
+            ]);
 
-        return redirect()->route('activation.show');
-
+        return redirect()->route('activation.index');
     }
 
-    public function userEdit(Registration $registration){
-
+    public function userEdit(Registration $registration)
+    {
         $registration->infoFull = false;
         $registration->activation = false;
         $registration->save();
 
-        Sms::create([
-            'smsText' => 'Профиль на сайте '.env('APP_URL').' не прошел проверку, необходимо заполнить корректно',
-            'phone' => $registration->phone ,
-            'smsType' => 1,
-            'smsActive' => true]);
+        Sms::query()
+            ->create([
+                'smsText' => 'Профиль на сайте '.env('APP_URL').' не прошел проверку, необходимо заполнить корректно',
+                'phone' => $registration->phone ,
+                'smsType' => 1,
+                'smsActive' => true
+            ]);
 
-        return redirect()->route('activation.show');
-
+        return redirect()->route('activation.index');
     }
 
     public function destroy(Registration $registration)
     {
         $registration->delete();
 
-        User::query()->find($registration->user_id)->delete();
+        User::query()
+            ->find($registration->user_id)
+            ->delete();
+
         return response()->json(['status'=>true,"redirect_url"=>url('activation')]);
-        //return redirect()->route('activation.show');
     }
 
     public function forceDelete(User $user)
     {
         $user->forceDelete();
 
-        return redirect()->route('activation.show');
+        return redirect()->route('activation.index');
     }
 }
