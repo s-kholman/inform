@@ -6,7 +6,11 @@
         <table class="table table-bordered table-striped">
             <caption class="border rounded-3 p-3 caption-top"><p class="text-center"><b>Активация пользователей</b></p></caption>
             <thead>
-            <th class="text-center">п/п</th><th class="text-center">ФИО</th><th class="text-center">E-mail</th><th class="text-center">Статус активации</th><th class="text-center">Редактирование</th>
+            <th class="text-center">п/п</th>
+            <th class="text-center">ФИО</th>
+            <th class="text-center">E-mail</th>
+            <th class="text-center">Статус активации</th>
+            <th class="text-center">Редактирование</th>
             </thead>
             <tbody>
             @foreach($users as $value)
@@ -21,12 +25,19 @@
                             {{\App\Models\Registration::where('user_id',$value->id)->value('activation') ? 'Активирован' : 'Расмотрение'}}
                     </td>
                     <td>
-                        @can('viewAdmin', 'App\Models\Sowing')
+                        @can('viewAny', 'App\Models\administrator')
                             <div class="col-2 p-1  dropdown">
                                 <button type="button" class="btn btn-info dropdown-toggle " data-bs-toggle="dropdown">
                                     Действия
                                 </button>
                                 <ul class="dropdown-menu">
+
+                                    <form action="{{ route('profile.show', ['profile' => $value->registration])}}" method="POST">
+                                        @csrf
+                                        <li><input class="dropdown-item text-start" type="submit" value="Открыть профиль"></li>
+                                    </form>
+
+
                                     <form action="{{ route('user.activation', ['registration' => $value->registration])}}" method="POST">
                                         @csrf
                                         <li><input type="submit" class="dropdown-item text-success" value="Активировать"></li>
@@ -34,7 +45,7 @@
 
                                     <form action="{{ route('user.edit', ['registration' => $value->registration])}}" method="POST">
                                         @csrf
-                                        <li><input class="dropdown-item text-info" type="submit" value="Редактировать"></li>
+                                        <li><input class="dropdown-item text-info" type="submit" value="На корректировку"></li>
                                     </form>
 
                                     <form form class="delete-message" data-route="{{ route('user.activation.destroy', ['registration' => $value->registration])}}" method="POST">

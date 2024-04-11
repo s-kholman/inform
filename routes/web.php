@@ -117,9 +117,10 @@ Route::get('/edit_limit/{limitID}', [LimitsController::class, 'limitEdit'])->nam
 
 Route::get('/profile', [RegistrationController::class, 'index'])->name('profile.index')->middleware('auth');
 Route::post('/profile', [RegistrationController::class, 'store'])->name('profile.store')->middleware('auth');
+Route::post('/profile/show/{profile}', [RegistrationController::class, 'show'])->name('profile.show')->middleware('can:viewAny, App\Models\administrator');
 
-Route::get('/activation', [ActivationController::class, 'activation'])->name('activation.show')->middleware('can:viewAny, App\Models\administrator');
-Route::get('/user/{id}', [ActivationController::class, 'userView'])->name('user.view')->middleware('can:viewAny, App\Models\administrator');
+
+Route::get('/activation', [ActivationController::class, 'index'])->name('activation.index')->middleware('can:viewAny, App\Models\administrator');
 Route::post( '/user/edit/{registration}', [ActivationController::class, 'userEdit'])->name('user.edit')->middleware('can:viewAny, App\Models\administrator');
 Route::post( '/user/activation/{registration}', [ActivationController::class, 'userActivation'])->name('user.activation')->middleware('can:viewAny, App\Models\administrator');
 Route::delete('/user/activation/destroy/{registration}', [ActivationController::class, 'destroy'])->name('user.activation.destroy')->middleware('can:destroy, App\Models\administrator');
