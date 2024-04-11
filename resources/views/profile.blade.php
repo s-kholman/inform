@@ -54,7 +54,7 @@
 
                     <div class="col-md-6">
                         <input id="first_name" type="text"
-                               class="form-control @error('last_name') is-invalid @enderror" name="first_name"
+                               class="form-control @error('first_name') is-invalid @enderror" name="first_name"
                                @if(($user_reg && $user_reg->activation && $user_reg->infoFull) or ($user_reg && $user_reg->infoFull && !$user_reg->activation))
                                    readonly value="{{$user_reg->first_name}}"
                                @elseif($user_reg && !$user_reg->infoFull && !$user_reg->activation)
@@ -73,7 +73,7 @@
                     <label for="middle_name" class="col-md-4 col-form-label text-md-end">Отчество</label>
 
                     <div class="col-md-6">
-                        <input id="middle_name" type="text" class="form-control"
+                        <input id="middle_name" type="text" class="form-control @error('middle_name') is-invalid @enderror"
                                name="middle_name"
                                @if(($user_reg && $user_reg->activation && $user_reg->infoFull) or ($user_reg && $user_reg->infoFull && !$user_reg->activation))
                                readonly value="{{$user_reg->middle_name}}"
@@ -82,6 +82,9 @@
                         @else
                                value="{{ old('middle_name') }}"
                             @endif>
+                        @error('middle_name')
+                        <span class="invalid-feedback"><strong>{{$message}}</strong></span>
+                        @enderror
                     </div>
                 </div>
 

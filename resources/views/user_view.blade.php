@@ -37,7 +37,7 @@
                                         <li><input class="dropdown-item text-info" type="submit" value="Редактировать"></li>
                                     </form>
 
-                                    <form action="{{ route('user.activation.destroy', ['registration' => $value->registration])}}" method="POST">
+                                    <form form class="delete-message" data-route="{{ route('user.activation.destroy', ['registration' => $value->registration])}}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <li><input type="submit" class="dropdown-item text-danger" value="Удалить"></li>
@@ -67,3 +67,6 @@
         </table>
     </div>
 @endsection('info')
+@section('script')
+    @include('scripts\destroy-modal')
+@endsection

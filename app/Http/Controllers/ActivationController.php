@@ -61,8 +61,8 @@ class ActivationController extends Controller
         $registration->delete();
 
         User::query()->find($registration->user_id)->delete();
-
-        return redirect()->route('activation.show');
+        return response()->json(['status'=>true,"redirect_url"=>url('activation')]);
+        //return redirect()->route('activation.show');
     }
 
     public function forceDelete(User $user)
