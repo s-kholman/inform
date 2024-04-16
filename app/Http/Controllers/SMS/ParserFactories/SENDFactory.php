@@ -44,7 +44,8 @@ class SENDFactory implements SmsParserInterface
         }
 
         if (array_key_exists(2, $smsParse)){
-            $phone = $smsParse[2];
+            $phone = str_replace([' ', '-'], ['',''], $smsParse[2]);
+
         } else{
             return $this->smsSend->send($this->sms->phone,  "Не указан телефон");
         }
