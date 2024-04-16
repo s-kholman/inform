@@ -128,6 +128,6 @@ class SENDFactory implements SmsParserInterface
             $code = 'Коды';
         }
 
-        return $this->smsSend->send($phone,  '$code доступа на '. $voucher['day'] . ' к сети KRiMM_INTERNET ' . trim($result));
+        return $this->smsSend->send($phone,  "$code доступа на ". $voucher['day'] . ' к сети KRiMM_INTERNET ' . trim($result));
     }
 }
