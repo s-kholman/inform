@@ -63,7 +63,7 @@ class SENDFactory implements SmsParserInterface
 
         if($validate->passes()){
 
-            return $this->getVoucher($validate->validate()['voucherDay'], $validate->validate()['phone']);
+            return $this->getVoucher($validate->validate()['voucherDay'], $validate->validate()['phone'], $validate->validate()['count']);
 
         } else {
 
@@ -98,13 +98,12 @@ class SENDFactory implements SmsParserInterface
         }
     }
 
-    private function getVoucher($day, $phone)
+    private function getVoucher($day, $phone, $count)
     {
-        $smsParse = explode(' ', $this->sms->smsText, 4);
 
         $vouchers = new VoucherGet();
 
-        $vouchers = $vouchers->get($day, $phone, $smsParse[3]);
+        $vouchers = $vouchers->get($day, $phone, $count);
 
         foreach ($vouchers as $voucher){
 
