@@ -104,13 +104,15 @@ class SENDFactory implements SmsParserInterface
 
         $vouchers = new VoucherGet();
 
+        $result = '';
+
         $vouchers = $vouchers->get($day, $phone, $count);
 
         foreach ($vouchers as $voucher){
 
             if($voucher['result'] == true){
 
-                $this->smsSend->send($phone,  'Доступ на '. $voucher['day'] . ' к сети KRiMM_INTERNET ' . $voucher['message'],);
+                $result .= $voucher['message'] . ' ';
 
             } else {
 
@@ -118,6 +120,6 @@ class SENDFactory implements SmsParserInterface
 
             }
         }
-        return true;
+        return $this->smsSend->send($phone,  'Код(ы) доступа на '. $voucher['day'] . ' к сети KRiMM_INTERNET ' . trim($result));
     }
 }
