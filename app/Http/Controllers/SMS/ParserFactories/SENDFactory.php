@@ -30,7 +30,7 @@ class SENDFactory implements SmsParserInterface
 
         $smsParse = explode(' ', $this->sms->smsText, 4);
 
-        if (!empty($smsParse[3]) && array_key_exists($smsParse[3], $smsParse)){
+        if (!empty($smsParse[3])){
             $count = $smsParse[3];
         } else{
             $count = 1;
