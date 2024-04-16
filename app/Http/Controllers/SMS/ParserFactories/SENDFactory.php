@@ -36,23 +36,23 @@ class SENDFactory implements SmsParserInterface
             $count = 1;
         }
 
-        if (!empty($smsParse[1]) && array_key_exists($smsParse[1], $smsParse)){
+        if (!empty($smsParse[1])){
             $voucherDay = $smsParse[1];
         } else{
-            return $this->smsSend->send($this->sms->phone,  "SMS не прошло валидацию");
+            return $this->smsSend->send($this->sms->phone,  "Не указано колличество дней");
         }
 
-        if (!empty($smsParse[2]) && array_key_exists($smsParse[2], $smsParse)){
+        if (!empty($smsParse[2])){
             $phone = $smsParse[2];
         } else{
-            return $this->smsSend->send($this->sms->phone,  "SMS не прошло валидацию");
+            return $this->smsSend->send($this->sms->phone,  "Не указан телефон");
         }
 
         $validate = Validator::make(
             [
-                'voucherDay' => $voucherDay,
-                'count' => $count,
-                'phone' => $phone,
+                'voucherDay' => trim($voucherDay),
+                'count' => trim($count),
+                'phone' => trim($phone),
             ],
             [
                 'voucherDay' => 'integer|between:1,365',
