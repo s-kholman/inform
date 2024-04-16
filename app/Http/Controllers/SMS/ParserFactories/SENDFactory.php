@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use function Symfony\Component\Translation\t;
 
 class SENDFactory implements SmsParserInterface
 {
@@ -109,7 +110,7 @@ class SENDFactory implements SmsParserInterface
 
             if($voucher['result'] == true){
 
-                return $this->smsSend->send($phone,  'Доступ на '. $voucher['day'] . ' к сети KRiMM_INTERNET ' . $voucher['message'],);
+                $this->smsSend->send($phone,  'Доступ на '. $voucher['day'] . ' к сети KRiMM_INTERNET ' . $voucher['message'],);
 
             } else {
 
@@ -117,5 +118,6 @@ class SENDFactory implements SmsParserInterface
 
             }
         }
+        return true;
     }
 }
