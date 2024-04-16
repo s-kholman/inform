@@ -72,7 +72,7 @@ class WIFIFactory implements SmsParserInterface
     {
         $vouchers = new VoucherGet();
 
-        $vouchers = $vouchers->get($day, $phone);
+        $vouchers = $vouchers->get($day, $phone, 1, $phone);
 
         foreach ($vouchers as $voucher){
 

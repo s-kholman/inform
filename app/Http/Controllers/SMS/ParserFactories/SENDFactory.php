@@ -107,7 +107,7 @@ class SENDFactory implements SmsParserInterface
         $i = 0;
         $result = '';
 
-        $vouchers = $vouchers->get($day, $phone, $count);
+        $vouchers = $vouchers->get($day, $this->sms->phone, $count, $phone);
 
         foreach ($vouchers as $voucher){
 
