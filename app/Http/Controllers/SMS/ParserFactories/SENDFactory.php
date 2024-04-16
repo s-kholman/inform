@@ -30,19 +30,19 @@ class SENDFactory implements SmsParserInterface
 
         $smsParse = explode(' ', $this->sms->smsText, 4);
 
-        if (!empty($smsParse[3])){
+        if (array_key_exists(3, $smsParse)){
             $count = $smsParse[3];
         } else{
             $count = 1;
         }
 
-        if (!empty($smsParse[1])){
+        if (array_key_exists(1, $smsParse)){
             $voucherDay = $smsParse[1];
         } else{
             return $this->smsSend->send($this->sms->phone,  "Не указано колличество дней");
         }
 
-        if (!empty($smsParse[2])){
+        if (array_key_exists(2, $smsParse)){
             $phone = $smsParse[2];
         } else{
             return $this->smsSend->send($this->sms->phone,  "Не указан телефон");
