@@ -27,22 +27,47 @@ class SENDFactory implements SmsParserInterface
      */
     public function smsBody()
     {
+
+        $smsParse = explode(' ', $this->sms->smsText, 4);
+
+        if (key_exists($smsParse[3], $smsParse)){
+            $count = $smsParse[3];
+        } else{
+            $count = 1;
+        }
+
+        if (key_exists($smsParse[1], $smsParse)){
+            $voucherDay = $smsParse[1];
+        } else{
+            return $this->smsSend->send($this->sms->phone,  "SMS не прошло валидацию");
+        }
+
+        if (key_exists($smsParse[2], $smsParse)){
+            $phone = $smsParse[2];
+        } else{
+            return $this->smsSend->send($this->sms->phone,  "SMS не прошло валидацию");
+        }
+
         $validate = Validator::make(
             [
-                'voucherDay' => Str::of($this->sms->smsText)->replaceFirst(Str::before($this->sms->smsText, ' ').' ', '')->before(' ')->value()
+                'voucherDay' => $voucherDay,
+                'count' => $count,
+                'phone' => $phone,
             ],
             [
                 'voucherDay' => 'integer|between:1,365',
+                'count' => 'integer|between:1,10',
+                'phone' => 'regex:/^\+7\d{10}/|max:12|min:12',
             ]
         );
 
         if($validate->passes()){
 
-            return $this->getVoucher($validate->validate()['voucherDay'], $this->smsComment());
+            return $this->getVoucher($validate->validate()['voucherDay'], $validate->validate()['phone']);
 
         } else {
 
-            return $this->smsSend->send($this->sms->phone,  "Время доступа указанно не корректно, доступно от 1 до 365");
+            return $this->smsSend->send($this->sms->phone,  "SMS не прошло валидацию");
 
         }
     }
@@ -52,7 +77,6 @@ class SENDFactory implements SmsParserInterface
      */
     public function smsComment()
     {
-        return Str::of($this->sms->smsText)->replaceFirst(Str::before($this->sms->smsText, ' ').' ', '')->after(' ')->value();
     }
 
     /**
@@ -75,15 +99,17 @@ class SENDFactory implements SmsParserInterface
 
     private function getVoucher($day, $phone)
     {
+        $smsParse = explode(' ', $this->sms->smsText, 4);
+
         $vouchers = new VoucherGet();
 
-        $vouchers = $vouchers->get($day, $phone);
+        $vouchers = $vouchers->get($day, $phone, $smsParse[3]);
 
         foreach ($vouchers as $voucher){
 
             if($voucher['result'] == true){
 
-                return $this->smsSend->send($this->sms->phone,  'Доступ на '. $voucher['day'] . ' к сети KRiMM_INTERNET ' . $voucher['message'],);
+                return $this->smsSend->send($phone,  'Доступ на '. $voucher['day'] . ' к сети KRiMM_INTERNET ' . $voucher['message'],);
 
             } else {
 
