@@ -21,7 +21,7 @@ class VoucherGet
         $this->smsSend = new SmsSend();
     }
 
-    public function get(int $day, $phone, $count = 1): array
+    public function get(int $day, $phone, $count = 1, $note = ''): array
     {
 
         if ($this->phoneAuth->phoneAuth($phone)){
@@ -38,7 +38,7 @@ class VoucherGet
             try {
                 $unifi_connection->login();
 
-                $voucher_result = $unifi_connection->create_voucher($day*60*24, $count,1, $phone);
+                $voucher_result = $unifi_connection->create_voucher($day*60*24, $count,1, $note);
 
                 $vouchers = $unifi_connection->stat_voucher($voucher_result[0]->create_time);
 
