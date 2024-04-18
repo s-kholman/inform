@@ -2,11 +2,8 @@
 <html>
 <head>
     <title>@yield('title') </title>
-
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/bootstrap/css/Posev_1.css">
-
-
 </head>
 <body>
 
@@ -159,7 +156,5 @@
 @yield('script')
 <script src="/bootstrap/js/bootstrap.js"></script>
 <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-
 </body>
 </html>

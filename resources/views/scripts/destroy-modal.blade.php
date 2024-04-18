@@ -1,4 +1,8 @@
 {{--
+Библиотека взята https://github.com/lofcz/sweetalert2-neutral
+Оригинальная версия из страны 404, поёт свой гимн и выбрасывает банеры,
+было принято решение использовать статический js
+
 Использование:
 1. В используем в <form class="delete-message">
 2. В параметр "data-route" тега <form> передаем роутер на удаление
@@ -14,7 +18,7 @@
     integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous">
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/scripts/sweetalert2/js/sweetalert2.all.js"></script>
 <script type="text/javascript">
 
     $(".delete-message").on("submit", function (e) {
