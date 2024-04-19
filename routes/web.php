@@ -152,7 +152,7 @@ Route::post('/sms_get', [SmsGet::class, 'smsGet'])->withoutMiddleware([VerifyCsr
 /**
  * throttle:smsIn в RouteServiceProvider
  */
-Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([VerifyCsrfToken::class]);//->middleware('throttle:smsIn');
+Route::post('/sms_in', [SmsController::class, 'smsIn'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('throttle:smsIn');
 
 Route::resource('pole', PoleController::class)->middleware('auth');
 Route::resource('pole.sevooborot', SevooborotController::class)->middleware('auth');
