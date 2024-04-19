@@ -6,6 +6,7 @@ use App\Actions\harvest\HarvestAction;
 use App\Http\Requests\SowingIndexRequest;
 use App\Http\Requests\SowingRequest;
 use App\Models\Cultivation;
+use App\Models\filial;
 use App\Models\HarvestYear;
 use App\Models\Sowing;
 use App\Models\SowingOutfit;
@@ -44,10 +45,22 @@ class SowingController extends Controller
             $outfit [$value->filial_id] [$value->sowing_type_id] [$value->sowing_last_name_id] = $value->SowingLastName->name;
         }
 
-        $content = [
-            'cultivation' => json_encode($cultivation, JSON_UNESCAPED_UNICODE),
-            'outfit' => json_encode($outfit, JSON_UNESCAPED_UNICODE),
-            'filial_id' => Auth::user()->Registration];
+        if (Auth::user()->email === 'sergey@krimm.ru'){
+            $filials = filial::query()
+                ->orderBy('name')
+                ->get();
+        } else{
+            $filials = filial::query()
+                ->where('id', Auth::user()->Registration->filial_id)
+                ->get();
+        }
+
+        $content =
+            [
+                'cultivation' => json_encode($cultivation, JSON_UNESCAPED_UNICODE),
+                'outfit' => json_encode($outfit, JSON_UNESCAPED_UNICODE),
+                'filials' => $filials
+            ];
 
         return view('sowing.create', $content);
 

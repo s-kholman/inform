@@ -19,7 +19,7 @@
                     <label for="select_sowing_last_name">ФИО</label>
                     <select name="sowing_last_name" id="select_sowing_last_name" class="col-3 form-select @error('sowing_last_name') is-invalid @enderror">
                         <option value=""></option>
-                        @forelse(\App\Models\SowingLastName::all() as $sowing_last_name)
+                        @forelse(\App\Models\SowingLastName::query()->orderBy('name')->get() as $sowing_last_name)
                             <option value="{{ $sowing_last_name->id }}"> {{ $sowing_last_name->name }} </option>
                         @empty
                             <option value="">Нет ФИО</option>
@@ -38,7 +38,7 @@
                     <select name="filial" id="selectFilial"
                             class="col-3 form-select @error('filial') is-invalid @enderror">
                         <option value=""></option>
-                        @forelse(\App\Models\filial::all() as $filial)
+                        @forelse(\App\Models\filial::query()->orderBy('name')->get() as $filial)
                             <option value="{{ $filial->id }}"> {{ $filial->name }} </option>
                         @empty
                         @endforelse
@@ -91,7 +91,7 @@
                     <select disabled name="machine" id="select_machine"
                             class="col-3 form-select @error('machine') is-invalid @enderror">
                         <option value=""></option>
-                        @forelse(\App\Models\Machine::all() as $machine)
+                        @forelse(\App\Models\Machine::query()->orderBy('name')->get() as $machine)
                             <option value="{{ $machine->id }}"> {{ $machine->name }} </option>
                         @empty
                         @endforelse
