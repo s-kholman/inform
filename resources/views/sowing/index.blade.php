@@ -41,9 +41,11 @@
 
     @endcan
     </div>
+    @can('create', 'App\Models\Sowing')
     <div class="col-2">
         <a class="btn btn-info" href="/sowing/create">Внести данные</a>
     </div>
+    @endcan
 </div>
         <div class="row p-5">
             @forelse($harvest_all as $harvest)
@@ -54,9 +56,7 @@
                         </div>
                     </div>
                 @endif
-
                 <div class="col-2">
-
                     <a href="/sowing?id={{$sowing_type_model->id}}&harvest={{$harvest->id}}">{{$harvest->name}} год</a>
                 </div>
             @empty

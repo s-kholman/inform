@@ -68,6 +68,6 @@ class SowingOutfitController extends Controller
     public function destroy(SowingOutfit $outfit)
     {
         $outfit->delete();
-        return redirect()->route('outfit.index');
+        return response()->json(['status'=>true,"redirect_url"=>url('sowing/outfit/index')]);
     }
 }

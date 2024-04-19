@@ -29,36 +29,34 @@
         </div>
         @forelse(\App\Models\SowingOutfit::query()
                             ->where('harvest_year_id', $year_id ?: $harvest_year->last()->harvest_year_id)
-                            ->orderBy('filial_id')
-                            ->orderBy('sowing_type_id')
-                            ->get() as $outfit)
+                            ->with(['filial', 'SowingLastName'])
+                            ->get()
+                            ->sortBy('SowingLastName.name')
+                            ->sortBy('filial.name')
+                            as $outfit)
             <div class="row">
                 <div class="col-2">{{ $outfit->filial->name}}</div>
                 <div class="col-2">{{ $outfit->machine->name ?? $outfit->Cultivation->name }}</div>
                 <div class="col-2">{{ $outfit->SowingLastName->name }}</div>
                 <div class="col-2">{{ $outfit->SowingType->name}}</div>
                 <div class="col-2 p-1  dropdown">
-
                         <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-bs-toggle="dropdown">
                             Действия
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Изменить</a></li>
                             <li>
-                                <form action="{{route('outfit.destroy', ['outfit' => $outfit->id])}}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
+                                <form class="delete-message" data-route="{{route('outfit.destroy', ['outfit' => $outfit->id])}}" method="POST">
                                     <input class="dropdown-item" type="submit" value="Удалить">
                                 </form>
-
                             </li>
                         </ul>
                     </div>
-
-
             </div>
         @empty
         @endforelse
     </div>
 @endsection('info')
+@section('script')
+    @include('scripts\destroy-modal')
+@endsection
 
