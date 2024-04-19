@@ -33,7 +33,7 @@ class SmsParser extends AbstractSmsParser
 
         } else{
 
-           return $this->smsSend->send($this->sms->phone, 'Шаблон SMS не определен');
+            return true;
 
         }
     }
