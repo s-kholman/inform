@@ -247,6 +247,7 @@ Route::get('/daily', [PrinterController::class, 'daily']);
 Route::get('/dailyone', [PrinterController::class, 'dailyone']);
 Route::get('/job', [PrinterController::class, 'job']);
 
+Route::get('test', [\App\Http\Controllers\Cabinet\SSL\MikrotikController::class, 'index']);
 
 Route::view('/reference', 'printer.reference');
 
