@@ -2,24 +2,54 @@
 
 namespace App\Http\Controllers\Cabinet\SSL;
 
-use App\Components\RouterOS\Client;
-use App\Components\RouterOS\Util;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use RouterOS\Client;
+use RouterOS\Config;
+use RouterOS\Query;
 
 
 class MikrotikController extends Controller
 {
+
     public function index()
     {
-        try {
-            $util = new Util($client = new Client('192.168.0.1', 'KRiMM', 'esi30fek'));
-            //foreach ($util->setMenu('/log')->getAll() as $entry) {
-                //echo $entry('time') . ' ' . $entry('topics') . ' ' . $entry('message') . "\n";
-            //}
-            dump($util->setMenu('/log')->getAll());
-        } catch (Exception $e) {
-            echo 'Unable to connect to RouterOS.';
-        }
+        $client  = new Client(
+            [
+                'host' => '192.168.0.235',
+                'user' => 'KRiMM',
+                'pass' => 'esi30fek',
+                'port' => 8728
+            ]
+        );/*
+// Create "where" Query object for RouterOS
+        $query =
+            (new Query('/certificate/print'))
+                //->where('serial-number', '5B065DA5CBCA9CB7')
+                //->where('type', 'vlan')
+                ->operations('|');
+        $query =
+            (new Query('/certificate/find'))
+                ->where('name', 's_kholman_20213')
+                //->where('type', 'vlan')
+                ->operations('|');
+
+// Send query and read response from RouterOS
+
+        $response = $client->query($query)->read();
+        dump($response);
+        $find = collect($response)->where('name', 's_kholman_2021');
+        dd($find);*/
+
+        $API = new \RouterosAPI();
+
+
+
+
+
+       dd($API->connect('192.168.0.235', 'KRiMM', 'esi30fek'));
+
     }
+
+
 }

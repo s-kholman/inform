@@ -55,6 +55,10 @@
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Посевная</span></a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link align-middle px-0" href="/sowing_control_potato/index" class="nav-link px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Контроль нормы высадки картофеля</span></a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/watering/index" class="nav-link px-0">
@@ -139,6 +143,9 @@
                             </li>
                             <li>
                                 <a href="/sowing/type" class="nav-link px-0"> <span class="d-none d-sm-inline">Тип посева</span></a>
+                            </li>
+                            <li>
+                                <a href="/type_field_work" class="nav-link px-0"> <span class="d-none d-sm-inline">Тип посевных работ</span></a>
                             </li>
                             @endcan
                         </ul>
