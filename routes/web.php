@@ -35,6 +35,7 @@ use App\Http\Controllers\SokarNomenklatController;
 use App\Http\Controllers\SokarSkladController;
 use App\Http\Controllers\SokarSpisanieController;
 use App\Http\Controllers\SowingController;
+use App\Http\Controllers\SowingControlPotatoController;
 use App\Http\Controllers\SowingLastNameController;
 use App\Http\Controllers\SowingOutfitController;
 use App\Http\Controllers\SowingTypeController;
@@ -47,6 +48,7 @@ use App\Http\Controllers\StorageModeController;
 use App\Http\Controllers\StoragePhaseController;
 use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
+use App\Http\Controllers\TypeFieldWorkController;
 use App\Http\Controllers\WateringController;
 use App\Http\Controllers\Yandex\AliceController;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -250,6 +252,38 @@ Route::get('/job', [PrinterController::class, 'job']);
 Route::get('test', [\App\Http\Controllers\Cabinet\SSL\MikrotikController::class, 'index']);
 
 Route::view('/reference', 'printer.reference');
+
+Route::resource('type_field_work', TypeFieldWorkController::class)->middleware('can:viewAny, App\Models\administrator');
+
+Route::get('/sowing_control_potato/index', [SowingControlPotatoController::class, 'index'])
+    ->name('sowing_control_potato.index')
+    ->middleware('can:viewAny,App\Models\sowingControlPotato');
+
+Route::get('/sowing_control_potato/create', [SowingControlPotatoController::class, 'create'])
+    ->name('sowing_control_potato.create')
+    ->middleware('can:viewAny,App\Models\sowingControlPotato');
+
+Route::get('/sowing_control_potato/{sowing_control_potato}/edit', [SowingControlPotatoController::class, 'edit'])
+    ->name('sowing_control_potato.edit')
+    ->middleware('can:edit,sowing_control_potato');
+
+Route::get('/sowing_control_potato/{id}', [SowingControlPotatoController::class, 'showPole'])
+    ->name('sowing_control_potato.show_pole')
+    ->middleware('can:viewAny,App\Models\sowingControlPotato');
+
+Route::post('/sowing_control_potato/store', [SowingControlPotatoController::class, 'store'])
+    ->name('sowing_control_potato.store')
+    ->middleware('can:viewAny,App\Models\sowingControlPotato');
+
+Route::put('/sowing_control_potato/{sowing_control_potato}', [SowingControlPotatoController::class, 'update'])
+    ->name('sowing_control_potato.update')
+    ->middleware('can:update,sowing_control_potato');
+
+Route::delete('/sowing_control_potato/{sowing_control_potato}', [SowingControlPotatoController::class, 'delete'])
+    ->name('sowing_control_potato.destroy')
+    ->middleware('can:delete,sowing_control_potato');
+
+
 
 
 Auth::routes();

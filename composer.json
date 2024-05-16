@@ -9,6 +9,7 @@
         "art-of-wifi/unifi-api-client": "^1.1",
         "ben-menking/routeros-api": "^1.6",
         "doctrine/dbal": "^3.6",
+        "evilfreelancer/routeros-api-php": "^1.5",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\SowingControlPotato;
+use App\Policies\SowingControlPotatoPolicy;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Pole;
 use App\Models\Registration;
@@ -22,6 +24,8 @@ class AuthServiceProvider extends ServiceProvider
         Sowing::class => SowingPolicy::class,
         Registration::class => RegistrationPolicy::class,
         Pole::class => PolePolicy::class,
+        SowingControlPotato::class => SowingControlPotatoPolicy::class,
+
     ];
 
     /**

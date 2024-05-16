@@ -49,10 +49,9 @@
                         window.location = response.redirect_url;
                     },
 
-                   /* error: function (){
-
-                        window.location.reload();
-                    }*/
+                    error: function (){
+                        Swal.fire("Нет прав для удаления данной записи", "", "info");
+                    }
 
                 })
             }
