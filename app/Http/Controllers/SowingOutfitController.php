@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Actions\harvest\HarvestAction;
 use App\Http\Requests\SowingOutfitRequest;
 use App\Models\Cultivation;
+use App\Models\HarvestYear;
+use App\Models\SowingLastName;
 use App\Models\SowingOutfit;
 use App\Models\SowingType;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
 class SowingOutfitController extends Controller
@@ -26,8 +30,23 @@ class SowingOutfitController extends Controller
         return view('sowing.outfit.index', ['harvest_year' => $sowing_outfit_harvest, 'year_id' => $request->id]);
     }
 
-    public function create()
+    public function create(Request $request, HarvestAction $harvestAction)
     {
+        if ($request['all_full_last_name'] === 'on'){
+            $sowing_last_names = SowingLastName::query()
+                ->orderBy('name')
+                ->get();
+        } else{
+            $last_name = SowingOutfit::query()
+                ->select('sowing_last_name_id')
+                ->where('harvest_year_id', $harvestAction->HarvestYear(now()));
+
+            $sowing_last_names = SowingLastName::query()
+                ->whereNotIn('id',  $last_name)
+                ->orderBy('name')
+                ->get();
+        }
+
 
         $sowing_type = SowingType::query()
             ->select('id', 'no_machine')
@@ -45,6 +64,7 @@ class SowingOutfitController extends Controller
             [
                 'SowingType' => json_encode($sowing_type),
                 'Cultivation' => json_encode($cultivation),
+                'sowing_last_names' => $sowing_last_names,
             ]
         );
     }
