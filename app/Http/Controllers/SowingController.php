@@ -95,6 +95,7 @@ class SowingController extends Controller
                 $validated = $validation->validated();
                 $outfit = SowingOutfit::query()
                     ->where('sowing_last_name_id', $validated[0])
+                    ->where('sowing_type_id', $sowing_type)
                     ->where('filial_id', $filial)
                     ->where('harvest_year_id', $harvestAction->HarvestYear($validated[1]))
                     ->first();
