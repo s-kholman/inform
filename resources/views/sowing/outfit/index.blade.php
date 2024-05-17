@@ -7,9 +7,19 @@
             <div class="col-4 p-2">
                 <a class="btn btn-primary " href="/">На главную</a>
             </div>
-            <div class="col-4 p-2">
-                <a class="btn btn-primary " href="/sowing/outfit/create">Добавить</a>
+            <div class="col-8 p-2">
+            <form method="get" action="/sowing/outfit/create">
+                <div class="col-4">
+                   {{-- <a class="btn btn-primary " href="/sowing/outfit/create">Добавить</a>--}}
+                    <input class="btn btn-primary" type="submit" value="Добавить">
+                </div>
+                <div class="col-4 p-2 form-switch form-check mb-3">
+                    <label class="form-check-label" for="all_full_last_name">Все ФИО</label>
+                    <input class="form-check-input" type="checkbox" role="switch" id="all_full_last_name" name="all_full_last_name">
+                </div>
+            </form>
             </div>
+
         </div>
         <div class="row p-3">
             @forelse($harvest_year as $value)
