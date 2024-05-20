@@ -57,7 +57,7 @@ class SowingControlPotatoPolicy
     public function delete(User $user, SowingControlPotato $sowingControlPotato): bool
     {
         $createdMinutes = Carbon::now()->diffInMinutes($sowingControlPotato->created_at);
-        if (($createdMinutes <= 60*24*7 && $user->Registration->filial_id == $sowingControlPotato->filial_id) || ($user->email == 'sergey@krimm1.ru')){
+        if (($createdMinutes <= 60*24*7 && $user->Registration->filial_id == $sowingControlPotato->filial_id) || ($user->email == 'sergey@krimm.ru')){
             return true;
         }
         return false;

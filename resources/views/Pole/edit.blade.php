@@ -11,7 +11,14 @@
                 <div class="border-3 row pb-3">
                     <div class="col-xl-3 col-sm-7">
                         <div class="form-floating mb-3">
-                            <input value="{{$pole->name}}" name="pole" id="txtTitle" class="form-control @error('pole') is-invalid @enderror">
+                            <input value="{{$pole->name}}"
+                                   name="pole"
+                                   id="txtTitle"
+                                   class="form-control @error('pole') is-invalid @enderror"
+                                  @cannot('rename',$pole)
+                                    readonly
+                                    @endcannot
+                            >
                             <label for="selectFilial">Введите название поля или отредактируйте</label>
                             <span>
                         @error('pole')
