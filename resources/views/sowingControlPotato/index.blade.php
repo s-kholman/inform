@@ -7,13 +7,13 @@
     <div class="container gx-4">
 
         <div class="row">
-            @can('viewAny', 'App\Models\spraying')
+            @can('viewAny', 'App\Models\sowingcontrolpotato')
                 <div class="col-4 p-3"><a class="btn btn-outline-success" href="/sowing_control_potato/create">Внести
                         контроль</a></div>
                {{-- <div class="col-4 p-3"><a class="btn btn-outline-success" href="/spraying/report">Отчеты</a></div>--}}
             @endcan
-            {{--
-            @can('myView', 'App\Models\spraying')
+
+            @can('viewAny','App\Models\sowingcontrolpotato')
                 <div class="col-4 p-3">
 
 
@@ -23,14 +23,12 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li class="dropdown-item"><a href="/pole">Поля/севооборот</a></li>
-                            <li class="dropdown-item"><a href="/nomenklature">Номенклатура</a></li>
-                            <li class="dropdown-item"><a href="/szr">СЗР</a></li>
                         </ul>
                     </div>
 
                 </div>
             @endcan
-        </div>--}}
+        </div>
 
         <div class="container gx-4">
             <div class="row">
