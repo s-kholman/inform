@@ -15,7 +15,7 @@ class SevooborotController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:destroy, App\Models\svyaz')->only('destroy', 'update');
+        $this->middleware('can:delete,sevooborot')->only('destroy', 'update');
         $this->middleware('auth')->except('index');
     }
     private const ERROR_MESSAGES = [
