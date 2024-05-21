@@ -99,15 +99,21 @@ class SowingControlPotatoController extends Controller
         $post = json_decode(env('POST_ADD_POTATO', '{"DIRECTOR":0,"DEPUTY":0,"AGRONOMIST:0"}'),true);
         $post_user = Auth::user()->registration->post_id;
 
+        if ($post['DEPUTY'] === $post_user){
+            $filial_id = $sowingControlPotato->filial_id;
+        } else{
+            $filial_id = Auth::user()->FilialName->id;
+        }
+
         $poles = Pole::query()
-            ->where('filial_id', Auth::user()->FilialName->id)
+            ->where('filial_id', $filial_id)
             ->orderBy('name')
             ->get()
         ;
 
         $sowing_last_names = SowingOutfit::query()
             ->with('SowingLastName')
-            ->where('filial_id', Auth::user()->FilialName->id)
+            ->where('filial_id', $filial_id)
             ->where('harvest_year_id', $harvestAction->HarvestYear(now()))
             ->get()
             ->sortBy('SowingLastName.name')

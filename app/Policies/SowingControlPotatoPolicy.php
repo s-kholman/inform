@@ -43,9 +43,10 @@ class SowingControlPotatoPolicy
      */
     public function update(User $user, SowingControlPotato $sowingControlPotato): bool
     {
+        //return true;
         $createdMinutes = Carbon::now()->diffInMinutes($sowingControlPotato->created_at);
 
-        if (($createdMinutes <= 60*24*7 && $user->Registration->filial_id == $sowingControlPotato->filial_id) || ($user->email == 'sergey@krimm.ru')){
+        if (($createdMinutes <= 60*24*7 && ($user->Registration->filial_id == $sowingControlPotato->filial_id || $user->Registration->post_id == 2)) || ($user->email == 'sergey@krimm.ru')){
             return true;
         }
         return false;
@@ -81,7 +82,7 @@ class SowingControlPotatoPolicy
 
     public function edit(User $user, SowingControlPotato $sowingControlPotato): bool
     {
-        if (($user->Registration->filial_id == $sowingControlPotato->filial_id) || ($user->email == 'sergey@krimm.ru')){
+        if (($user->Registration->filial_id == $sowingControlPotato->filial_id || $user->Registration->post_id == 2) || ($user->email == 'sergey@krimm.ru')){
             return true;
         }
         return false;
