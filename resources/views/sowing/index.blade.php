@@ -2,21 +2,16 @@
 @section('title', 'Справочник')
 <style>
     .rotate {
-    {{--writing-mode: vertical-rl;
-
-
-        transform: rotate(-90deg);
-      transform: rotate(-90deg);
-        vertical-align: middle;
-        height: 155px;--}}
-
         writing-mode: vertical-rl;
         -moz-transform: scale(-1, -1);
         -webkit-transform: scale(-1, -1);
         -o-transform: scale(-1, -1);
         -ms-transform: scale(-1, -1);
         transform: scale(-1, -1);
-        text-orientation: mixed;
+        height: 155px;
+    }
+
+    .vertical-align{
         vertical-align: middle;
     }
 </style>
@@ -26,40 +21,40 @@
     <div class="container">
 
 
-<div class="row p-1">
-    <div class="col-2">
-        <a class="btn btn-success" href="/sowing?id=1">Зерновые</a>
-    </div>
-    <div class="col-2">
-        <a class="btn btn-success" href="/sowing?id=2">Картофель</a>
-    </div>
-    <div class="col-2">
-        <a class="btn btn-success" href="/sowing?id=3">Овощи</a>
-    </div>
-    <div class="col-4">
-        @can('viewAdmin', 'App\Models\Sowing')
-            <div class="col-2 p-1  dropdown">
-                <button type="button" class="btn btn-info dropdown-toggle " data-bs-toggle="dropdown">
-                    Действия
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="/machine">Агрегаты</a></li>
-                    <li><a class="dropdown-item" href="/sowing/type">Тип посева</a></li>
-                    <li><a class="dropdown-item" href="/cultivation">Культура</a></li>
-                    <li><a class="dropdown-item" href="/sowingLastName">ФИО</a></li>
-                    <li><a class="dropdown-item" href="/sowing/outfit/index">Связки на посев</a></li>
-                    <li><a class="dropdown-item" href="/shift">Смена</a></li>
-                </ul>
+        <div class="row p-1">
+            <div class="col-2">
+                <a class="btn btn-success" href="/sowing?id=1">Зерновые</a>
             </div>
+            <div class="col-2">
+                <a class="btn btn-success" href="/sowing?id=2">Картофель</a>
+            </div>
+            <div class="col-2">
+                <a class="btn btn-success" href="/sowing?id=3">Овощи</a>
+            </div>
+            <div class="col-4">
+                @can('viewAdmin', 'App\Models\Sowing')
+                    <div class="col-2 p-1  dropdown">
+                        <button type="button" class="btn btn-info dropdown-toggle " data-bs-toggle="dropdown">
+                            Действия
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/machine">Агрегаты</a></li>
+                            <li><a class="dropdown-item" href="/sowing/type">Тип посева</a></li>
+                            <li><a class="dropdown-item" href="/cultivation">Культура</a></li>
+                            <li><a class="dropdown-item" href="/sowingLastName">ФИО</a></li>
+                            <li><a class="dropdown-item" href="/sowing/outfit/index">Связки на посев</a></li>
+                            <li><a class="dropdown-item" href="/shift">Смена</a></li>
+                        </ul>
+                    </div>
 
-    @endcan
-    </div>
-    @can('create', 'App\Models\Sowing')
-    <div class="col-2">
-        <a class="btn btn-info" href="/sowing/create">Внести данные</a>
-    </div>
-    @endcan
-</div>
+                @endcan
+            </div>
+            @can('create', 'App\Models\Sowing')
+                <div class="col-2">
+                    <a class="btn btn-info" href="/sowing/create">Внести данные</a>
+                </div>
+            @endcan
+        </div>
         <div class="row p-5">
             @forelse($harvest_all as $harvest)
                 @if($loop->first)
@@ -96,7 +91,7 @@
                                                                 ->count()}}">
                                     {{\App\Models\filial::query()->where('id', $filial_id)->value('name')}}</th>
                             @endforeach
-                            <th rowspan="3" class="rotate">Итого за сутки</th>
+                            <th rowspan="3" class="vertical-align"><label class="rotate">Итого за сутки</label></th>
                         </tr>
                         <tr>
                             @foreach(current($result) as $filial_id => $machine)
@@ -114,7 +109,7 @@
                             @foreach(current($result) as $filial_id => $machine)
                                 @foreach($machine as $machine_id => $sowing_last_name)
                                     @foreach($sowing_last_name as $sowing_last_name_id => $value)
-                                        <th class="rotate">{{\App\Models\SowingLastName::query()->where('id', $sowing_last_name_id)->value('name')}}</th>
+                                        <th class="vertical-align"><label class="rotate">{{\App\Models\SowingLastName::query()->where('id', $sowing_last_name_id)->value('name')}}</label></th>
                                     @endforeach
                                 @endforeach
                             @endforeach
@@ -201,32 +196,32 @@
 
                     @if($loop->first)
 
-                            <div class="col-2 m-2 ">
-                                <div class="col-12 text-center">
-                                    <b>По КРиММ</b>
-                                </div>
-                                    @foreach($cultivationToKRIMM as $name => $volume)
-                                        <div class="row">
-                                            <div class="col-8 border border-1">
-                                                {{$name}}
-                                            </div>
-                                            <div class="col-4 border border-1 text-center" style="background: {{$volume['color']}}">
-                                                {{$volume['volume']}}
-                                            </div>
-                                        </div>
-                                        @if($loop->last)
-                                        <div class="row">
-                                            <div class="col-8 border border-1">
-                                                Итого:
-                                            </div>
-                                            <div class="col-4 border border-1 text-center">
-                                                {{$cultivationToKRIMM->sum('volume')}}
-                                            </div>
-                                        </div>
-                                        @endif
-                                    @endforeach
-
+                        <div class="col-2 m-2 ">
+                            <div class="col-12 text-center">
+                                <b>По КРиММ</b>
                             </div>
+                            @foreach($cultivationToKRIMM as $name => $volume)
+                                <div class="row">
+                                    <div class="col-8 border border-1">
+                                        {{$name}}
+                                    </div>
+                                    <div class="col-4 border border-1 text-center" style="background: {{$volume['color']}}">
+                                        {{$volume['volume']}}
+                                    </div>
+                                </div>
+                                @if($loop->last)
+                                    <div class="row">
+                                        <div class="col-8 border border-1">
+                                            Итого:
+                                        </div>
+                                        <div class="col-4 border border-1 text-center">
+                                            {{$cultivationToKRIMM->sum('volume')}}
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+
+                        </div>
 
 
 
@@ -237,16 +232,16 @@
                             <div class="col-12 text-center">
                                 <b>{{$key}}</b>
                             </div>
-                                @foreach($item as $name => $volume)
-                                    <div class="row">
+                            @foreach($item as $name => $volume)
+                                <div class="row">
                                     <div class="col-8 border border-1">
-                                       {{$name}}
+                                        {{$name}}
                                     </div>
                                     <div class="col-4 border border-1 text-center" style="background: {{$volume['color']}}">
                                         {{$volume['volume']}}
                                     </div>
-                                    </div>
-                                @endforeach
+                                </div>
+                            @endforeach
                             @if($loop->last)
 
                                 <div class="row">
