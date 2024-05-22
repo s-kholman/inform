@@ -81,7 +81,7 @@
                     @foreach($collections as $sowing_control_potato)
 
                 <tr>
-                    <td align="center">{{$sowing_control_potato->date}}</td>
+                    <td align="center">{{\Carbon\Carbon::parse($sowing_control_potato->date)->translatedFormat('d-m-Y')}}</td>
                     <td>{{$sowing_control_potato->SowingLastName->name}}</td>
                     <td align="center">{{$sowing_control_potato->TypeFieldWork->name}}</td>
                     <td align="center">{{$sowing_control_potato->point_control}}</td>
