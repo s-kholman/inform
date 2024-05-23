@@ -85,10 +85,13 @@ class SowingController extends Controller
             $validation = Validator::make($value, self::ADD_VALIDATOR);
 
             if ($validation->passes() and ($value[4] == 0)) {
+
                 $validated = $validation->validated();
+                //dd($validated);
                 Sowing::query()
                     ->where('date', $validated[1])
-                    ->where('sowing_type_id', $validated[2])
+                    //->where('sowing_type_id', $validated[2])
+                    ->where('sowing_type_id', $sowing_type)
                     ->where('sowing_last_name_id', $validated[0])
                     ->delete();
             } elseif ($validation->passes()) {
