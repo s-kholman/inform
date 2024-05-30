@@ -61,6 +61,11 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link align-middle px-0" href="/sowing_hoeing_potato" class="nav-link px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Окучивание</span></a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/watering/index" class="nav-link px-0">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Полив</span></a>
                     </li>
