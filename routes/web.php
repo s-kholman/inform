@@ -13,6 +13,7 @@ use App\Http\Controllers\FilialController;
 use App\Http\Controllers\GuesController;
 use App\Http\Controllers\HarvestYearController;
 use App\Http\Controllers\HeightController;
+use App\Http\Controllers\HoeingResultController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\SokarSkladController;
 use App\Http\Controllers\SokarSpisanieController;
 use App\Http\Controllers\SowingController;
 use App\Http\Controllers\SowingControlPotatoController;
+use App\Http\Controllers\SowingHoeingPotatoController;
 use App\Http\Controllers\SowingLastNameController;
 use App\Http\Controllers\SowingOutfitController;
 use App\Http\Controllers\SowingTypeController;
@@ -254,6 +256,10 @@ Route::get('test', [\App\Http\Controllers\Cabinet\SSL\MikrotikController::class,
 Route::view('/reference', 'printer.reference');
 
 Route::resource('type_field_work', TypeFieldWorkController::class)->middleware('can:viewAny, App\Models\administrator');
+
+Route::resource('sowing_hoeing_potato', SowingHoeingPotatoController::class);//->middleware('auth');
+Route::get('/sowing_hoeing_potato/show_to_pole/{id}', [SowingHoeingPotatoController::class, 'showToPole'])->name('sowing_hoeing_potato.show_to_pole')->middleware('auth');
+Route::resource('hoeing_result', HoeingResultController::class)->middleware('auth');
 
 Route::get('/sowing_control_potato/index', [SowingControlPotatoController::class, 'index'])
     ->name('sowing_control_potato.index')

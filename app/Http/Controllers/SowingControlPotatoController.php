@@ -49,6 +49,7 @@ class SowingControlPotatoController extends Controller
             ;
 
         $type_field_works = TypeFieldWork::query()
+            ->where('id', 1)
             ->get();
 
         return view('sowingControlPotato.create', [
