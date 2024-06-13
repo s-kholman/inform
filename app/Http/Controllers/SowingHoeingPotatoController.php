@@ -43,7 +43,7 @@ class SowingHoeingPotatoController extends Controller
                                 ->sum('volume')
                             ;
                     }
-                    $string_pole .=  '<th>' . $pole_name . '</th>';
+                    $string_pole .=  '<th  class="vertical-align"><label class="rotate">' . $pole_name . '</label></th>';
                 }
                 $colspan = $sowing_hoeing_potato->groupBy('Pole.name')->count();
                 $string_filial .= "<th colspan=$colspan>" . $filial_name . '</th>';
