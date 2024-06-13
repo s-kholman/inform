@@ -10,7 +10,6 @@ use App\Models\Pole;
 use App\Models\Shift;
 use App\Models\SowingHoeingPotato;
 use App\Models\SowingLastName;
-use App\Models\SowingOutfit;
 use App\Models\TypeFieldWork;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,13 +24,37 @@ class SowingHoeingPotatoController extends Controller
 
 
         $sowing_hoeing_potatoes = SowingHoeingPotato::query()
-            ->with(['Filial', 'Pole'])
+            ->with(['Filial', 'Pole', 'SowingLastName'])
             ->get()
-            ->groupBy('Filial.name')
         ;
 
+        $string_filial = '';
+        $string_pole = '';
+        $detail = [];
+        if ($sowing_hoeing_potatoes->isNotEmpty()){
+            foreach ($sowing_hoeing_potatoes->groupBy('Filial.name') as $filial_name => $sowing_hoeing_potato){
+                foreach ($sowing_hoeing_potato->groupBy('Pole.name') as $pole_name => $sowingLastNames){
+                    foreach ($sowing_hoeing_potatoes->groupBy('date') as $date => $item)
+                    {
+                            $detail [$date] [$sowingLastNames[0]->pole_id] = $sowing_hoeing_potatoes
+                                ->where('date', $date)
+                                ->where('filial_id' , $sowing_hoeing_potato[0]->filial_id)
+                                ->where('pole_id' , $sowingLastNames[0]->pole_id)
+                                ->sum('volume')
+                            ;
+                    }
+                    $string_pole .=  '<th>' . $pole_name . '</th>';
+                }
+                $colspan = $sowing_hoeing_potato->groupBy('Pole.name')->count();
+                $string_filial .= "<th colspan=$colspan>" . $filial_name . '</th>';
+            }
+        }
+
         return view('sowingHoeingPotato.index', [
-            'sowing_hoeing_potatoes' => $sowing_hoeing_potatoes
+            'sowing_hoeing_potatoes' => $sowing_hoeing_potatoes,
+            'string_filial' => $string_filial,
+            'string_pole' => $string_pole,
+            'detail' => collect($detail)->sort(),
         ]);
     }
 

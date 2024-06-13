@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Контроль нормы высадки картофеля')
+@section('title', 'Контроль окучивания картофеля')
 
 @section('info')
     <div class="col-6">
