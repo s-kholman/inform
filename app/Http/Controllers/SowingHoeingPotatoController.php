@@ -54,7 +54,7 @@ class SowingHoeingPotatoController extends Controller
             'sowing_hoeing_potatoes' => $sowing_hoeing_potatoes,
             'string_filial' => $string_filial,
             'string_pole' => $string_pole,
-            'detail' => collect($detail)->sort(),
+            'detail' => collect($detail)->sortKeysDesc(),
         ]);
     }
 
