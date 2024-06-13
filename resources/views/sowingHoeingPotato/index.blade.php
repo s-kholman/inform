@@ -61,7 +61,7 @@
         </div>
 
         <div class="row p-4">
-            <table class="table table-bordered text-center">
+            <table class="table table-bordered text-center table-striped">
                 <thead>
                 <tr>
                     <th rowspan="2">Дата</th>
