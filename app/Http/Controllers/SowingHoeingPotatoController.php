@@ -24,13 +24,15 @@ class SowingHoeingPotatoController extends Controller
 
 
         $sowing_hoeing_potatoes = SowingHoeingPotato::query()
-            ->with(['Filial', 'Pole', 'SowingLastName'])
+            ->with(['Filial', 'Pole'])
             ->get()
+            ->sortBy(['Filial.name', 'Pole.name'])
         ;
 
         $string_filial = '';
         $string_pole = '';
         $detail = [];
+
         if ($sowing_hoeing_potatoes->isNotEmpty()){
             foreach ($sowing_hoeing_potatoes->groupBy('Filial.name') as $filial_name => $sowing_hoeing_potato){
                 foreach ($sowing_hoeing_potato->groupBy('Pole.name') as $pole_name => $sowingLastNames){
@@ -137,7 +139,7 @@ class SowingHoeingPotatoController extends Controller
      */
     public function show(SowingHoeingPotato $sowingHoeingPotato, Request $request)
     {
-        dd($request->pole_id);
+        //dd($request->pole_id);
     }
 
     /**
@@ -238,7 +240,7 @@ class SowingHoeingPotatoController extends Controller
             ->with(['TypeFieldWork', 'SowingLastName', 'Pole', 'Filial','HarvestYear', 'Shift'])
             ->where('pole_id', $id)
             ->get()
-            ->sortByDesc(['HarvestYear.name', 'date', 'point_control'])
+            ->sortByDesc(['HarvestYear.name'])
         ;
         return view('sowingHoeingPotato.show', [
             'sowing_hoeing_potatoes' => $sowing_hoeing_potatoes

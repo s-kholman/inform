@@ -89,7 +89,7 @@
                                             @endif
                                             <tbody>
 
-                                            @foreach($collections as $sowing_hoeing_potato)
+                                            @foreach($collections->sortByDesc('date') as $sowing_hoeing_potato)
 
                                                 <tr>
                                                     <td align="center">{{\Carbon\Carbon::parse($sowing_hoeing_potato->date)->translatedFormat('d-m-Y')}}</td>

@@ -61,7 +61,10 @@
         </div>
 
         <div class="row p-4">
-            <table class="table table-bordered text-center table-striped">
+            <table class="table table-bordered text-center table-striped caption-top">
+                <caption class="border text-center">
+                    Сводная по окучиванию на {{\Carbon\Carbon::parse(now())->translatedFormat('d-m-Y H:i')}}
+                </caption>
                 <thead>
                 <tr>
                     <th rowspan="2">Дата</th>
