@@ -16,6 +16,11 @@ class WateringPolicy
     {
         $this->registrationCheckAction = new RegistrationCheckAction;
     }
+
+    public function myView (User $user): bool
+    {
+        return $user->email == 'sergey@krimm.ru';
+    }
     /**
      * Determine whether the user can view any models.
      */
