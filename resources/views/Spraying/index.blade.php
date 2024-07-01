@@ -12,7 +12,7 @@
                         опрыскивание</a></div>
                 <div class="col-4 p-3"><a class="btn btn-outline-success" href="/spraying/report">Отчеты</a></div>
                 @endcan
-                    @can('myView', 'App\Models\spraying')
+
                 <div class="col-4 p-3">
 
 
@@ -22,13 +22,15 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li class="dropdown-item"><a href="/pole">Поля/севооборот</a></li>
+                        @can('myView', 'App\Models\spraying')
                         <li class="dropdown-item"><a href="/nomenklature">Номенклатура</a></li>
                         <li class="dropdown-item"><a href="/szr">СЗР</a></li>
+                        @endcan
                     </ul>
                 </div>
 
                 </div>
-                @endcan
+
             </div>
 
         <div class="container gx-4">

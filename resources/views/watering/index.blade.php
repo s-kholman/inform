@@ -5,6 +5,31 @@
 @section('info')
     <div class="container">
         <div class="row">
+            @can('viewAny', 'App\Models\watering')
+                <div class="col-4 p-3"><a class="btn btn-outline-success" href="/watering/create">Внести полив</a></div>
+            @endcan
+
+            <div class="col-4 p-3">
+
+
+                <div class="dropdown">
+                    <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
+                        Справочники
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="/pole">Поля/севооборот</a></li>
+                        @can('myView', 'App\Models\watering')
+                            <li class="dropdown-item"><a href="/nomenklature">Номенклатура</a></li>
+                            <li class="dropdown-item"><a href="/szr">СЗР</a></li>
+                        @endcan
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
             @forelse($pole as $filial_name => $pole)
                 <div class="col">
                     <b>{{$filial_name}}</b>
@@ -14,11 +39,6 @@
                 </div>
             @empty
             @endforelse
-        </div>
-        <div class="m-5 row">
-            <div class="col">
-                <a class="btn btn-outline-success" href="/watering/create">Внести полив</a>
-            </div>
         </div>
     </div>
 @endsection('info')
