@@ -20,6 +20,7 @@ use App\Http\Controllers\NomenklatureController;
 use App\Http\Controllers\PeatController;
 use App\Http\Controllers\PeatExtractionController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PrikopkiController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\ProductMonitoringReportController;
@@ -289,8 +290,7 @@ Route::delete('/sowing_control_potato/{sowing_control_potato}', [SowingControlPo
     ->name('sowing_control_potato.destroy')
     ->middleware('can:delete,sowing_control_potato');
 
-
-
+Route::resource('prikopki', PrikopkiController::class)->middleware('auth');
 
 Auth::routes();
 
