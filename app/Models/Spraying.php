@@ -44,5 +44,14 @@ class Spraying extends Model
 
     }
 
+    public function Polefilial()
+    {
+        return $this->hasOne(Pole::class, 'id','pole_id');
+    }
+
+    public function filial()
+    {
+        return $this->through('Polefilial')->has('nameFilial');
+    }
 
 }
