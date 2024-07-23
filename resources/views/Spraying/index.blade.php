@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Текущие данные об опрыскивание ')
+@section('title', 'Данные об опрыскивание ')
 
 @section('info')
 
@@ -10,7 +10,16 @@
                 @can('viewAny', 'App\Models\spraying')
                 <div class="col-4 p-3"><a class="btn btn-outline-success" href="{{route('spraying.create')}}">Внести
                         опрыскивание</a></div>
-                <div class="col-4 p-3"><a class="btn btn-outline-success" href="/spraying/report">Отчеты</a></div>
+
+                    <div class="col-4 p-3 dropdown">
+                        <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
+                            Отчеты
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item"><a href="spraying/report">По дням</a></li>
+                            <li class="dropdown-item"><a href="/spraying/report/szr">По СЗР</a></li>
+                        </ul>
+                    </div>
                 @endcan
 
                 <div class="col-4 p-3">

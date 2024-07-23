@@ -183,8 +183,9 @@ Route::resource('sokarfio', SokarFIOController::class);
 Route::resource('spisanie', SokarSpisanieController::class);
 Route::post('/spisanieDate', [SokarSpisanieController::class, 'spisanieDate'])->name('spisanie.spisanieDate');
 
-Route::get('/spraying/report/{id?}', [SprayingReportController::class, 'index'])->name('spraying.report.index');
-Route::post('/spraying/report/{id}', [SprayingReportController::class, 'report'])->name('spraying.report.show');
+Route::get('/spraying/report', [SprayingReportController::class, 'index'])->name('spraying.report.index');
+Route::post('/spraying/report', [SprayingReportController::class, 'report'])->name('spraying.report.show');
+Route::get('/spraying/report/szr', [SprayingReportController::class, 'szr'])->name('spraying.report.index');
 Route::resource('nomenklature', NomenklatureController::class);
 
 

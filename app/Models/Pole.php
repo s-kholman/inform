@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Pole extends Model
 {
@@ -14,6 +15,11 @@ class Pole extends Model
     public function filial(): BelongsTo
     {
         return $this->belongsTo(filial::class);
+    }
+
+    public function nameFilial()
+    {
+        return $this->hasOne(filial::class,'id','filial_id');
     }
 
     public function Watering(): BelongsTo
