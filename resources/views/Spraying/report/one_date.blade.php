@@ -10,7 +10,7 @@
                 <a class="btn btn-info" href="/spraying/">Назад</a>
             </div>
             <div class="col-6">
-                <form action="{{route('spraying.report.show', ['id' => 1])}}" method="POST">
+                <form action="{{route('spraying.report.show')}}" method="POST">
                     @csrf
                     <label for="dateSelect">Выберите дату</label>
                     <input class="form-control" type="date" name="date"
