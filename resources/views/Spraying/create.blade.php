@@ -8,6 +8,8 @@
             <form action="{{ route('spraying.store') }}" method="POST">
                 @csrf
 
+                <input name="today" type="date" value="{{\Carbon\Carbon::now()}}" hidden>
+
                 <label for="selectFirst">Выберите поле</label>
                 <select name="pole" id="selectFirst" class="form-select @error('pole') is-invalid @enderror">
                     <option value=""></option>
@@ -35,7 +37,7 @@
                 @enderror
 
                 <label for="txtDate">Дата</label>
-                <input name="date" id="txtDate" type="date" value="{{date('Y-m-d')}}"
+                <input name="date" id="txtDate" type="date" value="{{old('date') ? old('date') : date('Y-m-d')}}"
                        class="form-control @error('date') is-invalid @enderror">
                 @error('date')
                 <span class="invalid-feedback">

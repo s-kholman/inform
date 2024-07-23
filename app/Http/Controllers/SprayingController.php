@@ -8,6 +8,7 @@ use App\Models\Pole;
 use App\Models\Sevooborot;
 use App\Models\Spraying;
 use App\Models\Szr;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,18 +16,19 @@ class SprayingController extends Controller
 {
     private const ERROR_MESSAGES = [
         'numeric' => 'Заполните это поле',
-        'max' => 'Значение не должно быть длинне :max символов'
+        'max' => 'Значение не должно быть длинне :max символов',
+        'before_or_equal' => 'Дата не может быть в будущем'
     ];
 
     private const STORE_VALIDATOR = [
         'pole' => 'numeric',
         'kultura' => 'numeric',
-        'date' => 'date',
+        'date' => 'date|before_or_equal:today',
         'szrClasses' => 'numeric',
         'szr' => 'numeric',
         'doza' => 'numeric',
         'volume' => 'numeric',
-        'comment' => 'nullable|max:500',
+        'comment' => 'nullable|max:255',
     ];
     public function __construct()
     {
