@@ -51,7 +51,9 @@ class SprayingReportController extends Controller
             ->with(['filial', 'Sevooborot', 'pole', 'szr'])
             ->get()
             ->where('Sevooborot.harvest_year_id', $harvestAction->HarvestYear(now()))
+            ->sortByDesc(['filial.name', 'szr.name'])
             ->groupBy(['filial.name', 'szr.name'])
+
         ;
 
 
