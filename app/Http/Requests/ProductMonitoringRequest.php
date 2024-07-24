@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CreateNoTomorrow;
+use App\Rules\CreateOneToHarvest;
+use App\Rules\CreateOneToHarvestProductMonitoring;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -26,10 +29,12 @@ class ProductMonitoringRequest extends FormRequest
         return [
             'storage' => 'required|numeric',
             'date' => ['required',
-            Rule::unique('product_monitorings', 'date')
+                Rule::unique('product_monitorings', 'date')
                 ->where('storage_name_id', $this->input('storage'))
-                ->where('storage_phase_id', $this->input('phase'))
-            ],
+                ->where('storage_phase_id', $this->input('phase')),
+                new CreateOneToHarvestProductMonitoring,
+                new CreateNoTomorrow
+                ],
             'tempBurt' => 'nullable|numeric|max:20|min:-5',
             'tempAboveBurt' => 'nullable|numeric|max:20|min:-5',
             'tempMorning' => 'nullable|numeric|max:20|min:-5',

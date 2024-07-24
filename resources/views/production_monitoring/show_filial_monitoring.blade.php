@@ -18,7 +18,7 @@
 
             </div>
             <div class="col-3">
-                <a class="btn btn-secondary" href="/monitoring/show/filial/{{$monitoring[0]->storageName->filial_id}}/">Назад</a>
+                <a class="btn btn-secondary" href="{{route('monitoring.show.filial', ['filial_id' => $monitoring[0]->storageName->filial_id, 'harvest_year_id' => $monitoring[0]->harvest_year_id])}}">Назад</a>
             </div>
         </div>
 

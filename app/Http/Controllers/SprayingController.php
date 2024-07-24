@@ -4,38 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Actions\harvest\HarvestAction;
 use App\Actions\harvest\HarvestShow;
+use App\Http\Requests\SprayingRequest;
 use App\Models\Pole;
 use App\Models\Sevooborot;
 use App\Models\Spraying;
 use App\Models\Szr;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SprayingController extends Controller
 {
-    private const ERROR_MESSAGES = [
-        'numeric' => 'Заполните это поле',
-        'max' => 'Значение не должно быть длинне :max символов',
-        'before_or_equal' => 'Дата не может быть в будущем'
-    ];
 
-    private const STORE_VALIDATOR = [
-        'pole' => 'numeric',
-        'kultura' => 'numeric',
-        'date' => 'date|before_or_equal:today',
-        'szrClasses' => 'numeric',
-        'szr' => 'numeric',
-        'doza' => 'numeric',
-        'volume' => 'numeric',
-        'comment' => 'nullable|max:255',
-    ];
     public function __construct()
     {
         $this->middleware('can:viewAny, App\Models\Spraying');
 
     }
-    private function  display_null($value){
+    private function  display_null($value)
+    {
 
         return $value ?: 'Н/Д';
     }
@@ -99,25 +85,23 @@ class SprayingController extends Controller
     /**
      * Store a newly created resource in storagebox.
      */
-    public function store(Request $request)
+    public function store(SprayingRequest $request)
     {
-        $validation = $request->validate(self::STORE_VALIDATOR, self::ERROR_MESSAGES);
-        Spraying::create([
-            'pole_id' => $validation['pole'],
-            'date' => $validation['date'],
-            'sevooborot_id' =>  $validation['kultura'],
-            'szr_id' => $validation['szr'],
-            'doza' => $validation['doza'],
-            'volume' => $validation['volume'],
 
-            'comments'=> $validation['comment'],
-            'user_id' => auth()->user()->id
+        Spraying::query()
+            ->create([
+                'pole_id' => $request['pole'],
+                'date' => $request['date'],
+                'sevooborot_id' =>  $request['kultura'],
+                'szr_id' => $request['szr'],
+                'doza' => $request['doza'],
+                'volume' => $request['volume'],
+                'comments'=> $request['comment'],
+                'user_id' => auth()->user()->id
+                ]);
 
+        return redirect()->route('spraying.show', ['spraying' => $request['pole']]);
 
-
-        ]);
-
-        return redirect()->route('spraying.show', ['spraying' => $validation['pole']]);
     }
 
     /**
@@ -168,7 +152,6 @@ class SprayingController extends Controller
 
             $spraying->delete();
         }
-        //return redirect()->route('spraying.index', $spraying);
         return response()->json(['status'=>true,"redirect_url"=>url('spraying', ['spraying' => $spraying->pole_id])]);
     }
 

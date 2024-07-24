@@ -21,7 +21,7 @@
                     </div>
                     <div class="col-1"></div>
                     <div class="col-2">
-                        <a class="btn btn-info" href="/monitoring/filial/all/{{$mode->StorageName->storage_name_id}}">Нет</a>
+                        <a class="btn btn-info" href="{{ url(route('monitoring.show.filial.all', ['storage_name_id' => $mode->StorageName->storage_name_id, 'harvest_year_id' => $harvest_year_id])) }}">Нет</a>
                     </div>
                 </div>
             </form>

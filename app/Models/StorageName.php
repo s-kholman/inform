@@ -15,4 +15,9 @@ class StorageName extends Model
     {
         return $this->belongsTo(filial::class);
     }
+
+    public function nameFilial()
+    {
+        return $this->hasOne(filial::class,'id','filial_id');
+    }
 }

@@ -9,7 +9,7 @@ class ProductMonitoring extends Model
 {
     use HasFactory;
     protected $fillable = ['storage_name_id', 'date', 'burtTemperature', 'burtAboveTemperature', 'tuberTemperatureMorning',
-        'tuberTemperatureEvening', 'humidity', 'storage_phase_id','comment', 'condensate'];
+        'tuberTemperatureEvening', 'humidity', 'storage_phase_id','comment', 'condensate', 'harvest_year_id'];
 
     public function storageName()
     {
@@ -26,4 +26,21 @@ class ProductMonitoring extends Model
     {
         return $this->hasMany(StorageMode::class);
     }
+
+    public function harvestYear()
+    {
+        return $this->belongsTo(HarvestYear::class);
+    }
+
+    public function Storagefilial()
+    {
+        return $this->hasOne(StorageName::class, 'id','storage_name_id');
+    }
+
+    public function filial()
+    {
+        return $this->through('Storagefilial')->has('nameFilial');
+    }
+
+
 }
