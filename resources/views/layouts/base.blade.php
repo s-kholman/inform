@@ -4,6 +4,9 @@
     <title>@yield('title') </title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/bootstrap/css/Posev_1.css">
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
 
@@ -52,48 +55,48 @@
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/sowing?id=1" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Посевная</span></a>
+                            <i class="fs-4 bi-speedometer"></i> <span class="ms-1 d-none d-sm-inline">Посевная</span></a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/sowing_control_potato/index" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Контроль нормы высадки картофеля</span></a>
+                            <i class="fs-4 bi-eye"></i> <span class="ms-1 d-none d-sm-inline">Контроль нормы высадки картофеля</span></a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/sowing_hoeing_potato" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Окучивание</span></a>
+                            <i class="fs-4 bi-alt"></i> <span class="ms-1 d-none d-sm-inline">Окучивание</span></a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/watering/index" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Полив</span></a>
+                            <i class="fs-4 bi-umbrella"></i> <span class="ms-1 d-none d-sm-inline">Полив</span></a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/spraying" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Опрыскивание</span></a>
+                            <i class="fs-4 bi-cloud-drizzle"></i> <span class="ms-1 d-none d-sm-inline">Опрыскивание</span></a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/prikopki" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Прикопки</span></a>
+                            <i class="fs-4 bi-diamond"></i> <span class="ms-1 d-none d-sm-inline">Прикопки</span></a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/monitoring" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Мониторинг температуры</span></a>
+                            <i class="fs-4 bi-thermometer"></i> <span class="ms-1 d-none d-sm-inline">Мониторинг температуры</span></a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/peat" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Торф</span></a>
+                            <i class="fs-4 bi-square-fill"></i> <span class="ms-1 d-none d-sm-inline">Торф</span></a>
                     </li>
 
                     @can('viewAny', 'App\Models\DailyUse')
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/printers" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Принтера</span></a>
+                            <i class="fs-4 bi-printer"></i> <span class="ms-1 d-none d-sm-inline">Принтера</span></a>
                     </li>
                     @endcan
 
@@ -113,12 +116,12 @@
                     @can('viewMenu', 'App\Models\administrator')
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/limit_view" class="nav-link px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Детализация сотовой связи</span></a>
+                            <i class="fs-4 bi-telephone"></i> <span class="ms-1 d-none d-sm-inline">Детализация сотовой связи</span></a>
                     </li>
 
                     <li>
                         <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Справочники</span> </a>
+                            <i class="fs-4 bi-book"></i> <span class="ms-1 d-none d-sm-inline">Справочники</span> </a>
                         <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
 
                             <li class="w-100">

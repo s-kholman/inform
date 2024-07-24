@@ -126,7 +126,7 @@
 
                 <input type="submit" class="btn btn-primary" value="Сохранить">
 
-                <a class="btn btn-info" href="/monitoring/filial/all/{{$monitoring->storage_name_id}}">Назад</a>
+                <a class="btn btn-info" href="{{url(route('monitoring.show.filial.all', ['storage_name_id' => $monitoring->storage_name_id, 'harvest_year_id' => $monitoring->harvest_year_id]))}}">Назад</a>
             </form>
             <div class="row">
             <div class="col-6">

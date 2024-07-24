@@ -237,9 +237,10 @@ Route::post('monitoring/reports/today', [ProductMonitoringReportController::clas
  * Отчет по температурному мониторингу продукции в буртах
  */
 Route::resource('phase', StoragePhaseController::class)->middleware('auth');
+Route::get('monitoring/index/{year?}', [ProductMonitoringController::class, 'index'])->middleware('auth');
 Route::resource('monitoring', ProductMonitoringController::class)->middleware('auth');
-Route::get('monitoring/show/filial/{id}', [ProductMonitoringController::class, 'showFilial'])->name('monitoring.show.filial')->middleware('auth');
-Route::get('monitoring/filial/all/{id}', [ProductMonitoringController::class, 'showFilialMonitoring'])->name('monitoring.show.filial.all')->middleware('auth');
+Route::get('monitoring/show/filial/{filial_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilial'])->name('monitoring.show.filial')->middleware('auth');
+Route::get('monitoring/filial/storage/{storage_name_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilialMonitoring'])->name('monitoring.show.filial.all')->middleware('auth');
 
 Route::get('/printer/{id}/current/show', [CurrentStatusController::class, 'show'])->name('printer.current.show')->middleware('can:viewAny, App\Models\administrator');
 Route::get('/current/{currentStatus}/edit', [CurrentStatusController::class, 'edit'])->name('printer.current.edit')->middleware('can:viewAny, App\Models\administrator');
