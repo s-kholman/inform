@@ -94,7 +94,7 @@ class ProductMonitoringController extends Controller
                 'product_monitoring_id' => $date->id,
             ]);
         }
-        return redirect()->route('monitoring.show.filial.all', ['storage_name_id' => $request['storage'], 'harvest_year_id' => $harvestAction->HarvestYear(now(), 8)]);
+        return redirect()->route('monitoring.show.filial.all', ['storage_name_id' => $request['storage'], 'harvest_year_id' => $harvestAction->HarvestYear(now(), 7)]);
     }
 
     /**
