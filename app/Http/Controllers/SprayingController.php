@@ -143,6 +143,7 @@ class SprayingController extends Controller
      * Remove the specified resource from storagebox.
      */
     public function destroy(Spraying $spraying)
+
     {
 
         if (auth()->user()->can('delete', $spraying))

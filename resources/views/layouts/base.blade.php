@@ -4,6 +4,8 @@
     <title>@yield('title') </title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/bootstrap/css/Posev_1.css">
+    <link rel="stylesheet" href="/scripts/datepicker/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -176,5 +178,6 @@
 @yield('script')
 <script src="/bootstrap/js/bootstrap.js"></script>
 <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
