@@ -84,7 +84,7 @@ class ProductMonitoringController extends Controller
                 'storage_phase_id' => $request['phase'],
                 'condensate' => boolval($request['condensate']),
                 'comment' => $request['comment'],
-                'harvest_year_id' => $harvestAction->HarvestYear(now(), 8),
+                'harvest_year_id' => $harvestAction->HarvestYear(now(), 7),
             ]
         );
         if ($request['timeUp'] <> null && $request['timeDown'] <> null) {
