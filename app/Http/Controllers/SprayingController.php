@@ -94,7 +94,7 @@ class SprayingController extends Controller
                 'date' => $request['date'],
                 'sevooborot_id' =>  $request['kultura'],
                 'szr_id' => $request['szr'],
-                'doza' => $request['doza'],
+                'doza' => $request['dosage'],
                 'volume' => $request['volume'],
                 'comments'=> $request['comment'],
                 'user_id' => auth()->user()->id

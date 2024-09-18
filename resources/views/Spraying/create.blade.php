@@ -28,7 +28,7 @@
 
                 <label for="selectSecond">Выберите культуру</label>
                 <select name="kultura" id="selectSecond" class="form-select @error('kultura') is-invalid @enderror">
-                    <option value="">Культура</option>
+                    <option value="0">Культура</option>
                 </select>
                 @error('kultura')
                 <span class="invalid-feedback">
@@ -67,7 +67,7 @@
                     <div class=" col-6">
                         <label for="selectSzr">Выберите СЗР</label>
                         <select name="szr" id="selectSzr" class="form-select @error('szr') is-invalid @enderror">
-                            <option value=""></option>
+
                         </select>
                         @error('szr')
                         <span class="invalid-feedback">
@@ -76,16 +76,16 @@
                         @enderror
                     </div>
                 </div>
-                <label for="doza">Дозировка</label>
-                <input type="number" step="0.001" disabled="true" name="doza" id="doza"
-                       class="form-control @error('txtdoza') is-invalid @enderror">
-                @error('txtdoza')
+                <label for="dosage">Дозировка</label>
+                <input type="number" step="0.001" disabled="true" name="dosage" id="dosage"
+                       class="form-control @error('txtdosage') is-invalid @enderror">
+                @error('txtdosage')
                 <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
 
-                <label for="volume">Обьем</label>
+                <label for="volume">Объем</label>
                 <input readonly name="volume" id="volume" class="form-control @error('volume') is-invalid @enderror">
                 @error('volume')
                 <span class="invalid-feedback">
@@ -110,10 +110,9 @@
 @endsection('info')
 @section('script')
     <script>
-
         /*
         * Функция сортировки многомерного массива
-        * Для отображения в зависимом select в алфовитном порядке
+        * Для отображения в зависимом select в алфавитном порядке
         */
         function compareSecondColumn(a, b) {
             if (a[1] === b[1]) {
@@ -124,97 +123,97 @@
         }
 
         //Вывести отдельно в файл
-        //Пресмотреть все названия элиментов
-        //Формировать сначало в переменную затем присваивать ее в HTML форму
+        //Пересмотреть все названия элементов
+        //Формировать сначала в переменную затем присваивать ее в HTML форму
 
-        var selectSzrObject = {!! $szr_arr  !!};
-        var selectSecondObject = {!! $sevooborot_arr  !!};
-        var squaretObject = {!! $squaret_arr  !!};
-        var selectFirstCheck = 0;
-        var squaretValue;
+        let selectSzrObject = {!! $szr_arr  !!};
+        let selectSecondObject = {!! $sevooborot_arr  !!};
+        let squareObject = {!! $squaret_arr  !!};
+        let selectFirstCheck = 0;
+        let squareValue;
 
         //Делаем не доступным для выбора зависимый select
+        let selectSzr = document.getElementById('selectSzr');
         selectSzr.disabled = true;
+        let selectSecond = document.getElementById('selectSecond');
         selectSecond.disabled = true;
-        //Выполняется при выборе в select пункта id должен быть selectFirst
 
-        szrClasses.onchange = function () {
-            selectSzr.innerHTML = "<option value='0'>Выберите СЗР</option>";
+        let szrClasses = document.getElementById('szrClasses');
+
+        function selectNomenclatureSZR (evt) {
             selectSzr.disabled = true;
-            if (this.value != 0) {
-                szrClasses = this.value;
-                //По текущему значению select забераем массив с данными
-                selectSZRValue = Object.entries(selectSzrObject[this.value]);
+            if (evt.value != 0) {
+                selectSzr.innerHTML = "<option value='0'>Выберите СЗР</option>";
 
-                selectSZRValue.sort(compareSecondColumn);
+                //По текущему значению select забираем массив с данными
+                try {
+                    let selectSZRValue = Object.entries(selectSzrObject[this.value]);
 
-                if (selectSZRValue.length > 0) {
+                    selectSZRValue.sort(compareSecondColumn);
+
                     selectSzr.disabled = false;
+
+                    for (let i = 0; i < selectSZRValue.length; i++) {
+                        //Формируем поля выбора по массиву данных
+                        selectSzr.innerHTML += '<option value="' + selectSZRValue[i][0] + '">' + selectSZRValue[i][1] + '</option>';
+                    }
+                } catch (e){
+                    selectSzr.disabled = true;
+                    selectSzr.innerHTML = "<option value='0'>СЗР не найдено</option>";
                 }
-
-                //Цикл по длинне массива с данными
-                for (var i = 0; i < selectSZRValue.length; i++) {
-                    //Формируем поля выбора по массиву данных
-                    selectSzr.innerHTML += '<option value="' + selectSZRValue[i][0] + '">' + selectSZRValue[i][1] + '</option>';
-                }
-
-
             } else {
                 selectSzr.disabled = true;
+                selectSzr.innerHTML = "<option value='0'></option>";
             }
-
         }
 
+        let selectFirst = document.getElementById('selectFirst');
+        let dosage = document.getElementById('dosage')
+        let volume = document.getElementById('volume')
 
-        selectFirst.onchange = function () {
-            //Делаем не доступным для выбора зависимый select
+        function selectReproductionName (){
             selectSecond.disabled = true;
-            doza.disabled = true;
+            dosage.disabled = true;
             volume.value = '';
-            doza.value = '';
-            //очищаем значение ведомого селекта
+            dosage.value = '';
             selectSecond.innerHTML = "<option value='0'>Выберите культуру</option>";
 
             if (this.value != 0) {
                 selectFirstCheck = this.value;
-                //По текущему значению select забераем массив с данными
-                selectSecondValue = Object.entries(selectSecondObject[this.value]);
-
-                //Цикл по длинне массива с данными
-                for (var i = 0; i < selectSecondValue.length; i++) {
-                    //Формируем поля выбора по массиву данных
+                //По текущему значению select забираем массив с данными
+                let selectSecondValue = Object.entries(selectSecondObject[this.value]);
+                //Цикл по размеру массива с данными
+                for (let i = 0; i < selectSecondValue.length; i++) {
                     selectSecond.innerHTML += '<option value="' + selectSecondValue[i][0] + '">' + selectSecondValue[i][1] + '</option>';
                 }
                 selectSecond.disabled = false;
             } else {
                 selectSecond.disabled = true;
             }
-
-
         }
 
-        selectSecond.onchange = function () {
+        function dosageEnable() {
             volume.value = '';
-            doza.value = '';
+            dosage.value = '';
             if (this.value != 0) {
-                doza.disabled = false;
-                squaretValue = squaretObject[selectFirstCheck] [this.value];
+                dosage.disabled = false;
+                squareValue = squareObject[selectFirstCheck] [this.value];
             } else {
-                doza.disabled = true;
-                volume.value = '';
-                doza.value = '';
+                dosage.disabled = true;
             }
         }
 
-        doza.oninput = function () {
-            if (doza.value.length > 0) {
-                volume.value = parseFloat((doza.value * squaretValue).toFixed(3));
+        function dosageSum() {
+            if (dosage.value.length > 0) {
+               volume.value = parseFloat((dosage.value * squareValue).toFixed(3));
             } else {
-                volume.value = '';
+               volume.value = '';
             }
-
         }
 
-
+        szrClasses.addEventListener('change', selectNomenclatureSZR);
+        selectSecond.addEventListener('change', dosageEnable);
+        selectFirst.addEventListener('change', selectReproductionName);
+        dosage.addEventListener('input', dosageSum);
     </script>
 @endsection('script')
