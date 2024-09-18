@@ -28,7 +28,7 @@ class SprayingRequest extends FormRequest
             'date' => ['date', new CreateNoTomorrow],
             'szrClasses' => 'numeric',
             'szr' => 'numeric',
-            'doza' => 'numeric',
+            'dosage' => 'numeric',
             'volume' => 'numeric',
             'comment' => 'nullable|max:255',
         ];
