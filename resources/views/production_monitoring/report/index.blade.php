@@ -77,7 +77,7 @@
                             @foreach($item as $value)
                                 <tr>
                                     <td>{{$value->storageName->name}}</td>
-                                    <td style="background-color: #f3f9ff">{{$value->phase->name ?? ''}}1</td>
+                                    <td style="background-color: #f3f9ff">{{$value->phase->name ?? ''}}</td>
                                     <td  style="background-color: #f3f9ff" class="text-nowrap">
                                         @forelse($value->Mode as $mode)
                                             {{\Carbon\Carbon::parse($mode->timeUp)->format('H:i')}} - {{\Carbon\Carbon::parse($mode->timeDown)->format('H:i')}}; <br>
