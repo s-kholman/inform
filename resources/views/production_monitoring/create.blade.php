@@ -195,14 +195,19 @@
     let post_arr = ['DIRECTOR', 'DEPUTY', 'TEMPERATURE'];
     let post_name = {!! $post_name !!};
     let access = {!! $access !!};
+    let url = {!! $url !!};
 
-   for (let i = 0; i <= post_arr.length-1; i++) {
+    for (let i = 0; i <= post_arr.length-1; i++) {
        if (post_name != post_arr[i]) {
            //document.querySelectorAll('.'+post_arr[i]).forEach(element => element.remove());
            document.querySelectorAll('.'+post_arr[i]).forEach(element => element.style.display = 'none');
            document.querySelectorAll('.'+post_arr[i]).forEach(element => element.disabled = true);
        }
    }
+    if(post_name == 'Default') {
+        document.getElementById('save').remove();
+    }
+
 
    if(access) {
        let label = document.getElementById('label-access-check')
@@ -242,7 +247,7 @@
 
    function getProductMonitoring(id, date) {
        if(id !=0 && date != '' && tuberTemperatureMorning !== null) {
-           fetch('https://develop.krimm.ru/api/v1/'+id+'/'+date).then(response => {
+           fetch(url+'/api/v1/'+id+'/'+date).then(response => {
                if(!response.ok) {
                    console.log('Error')
                }
