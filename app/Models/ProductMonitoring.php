@@ -47,6 +47,11 @@ class ProductMonitoring extends Model
         return $this->belongsTo(HarvestYear::class);
     }
 
+    public function productMonitoringControl()
+    {
+        return $this->hasMany(ProductMonitoringControl::class);
+    }
+
     public function Storagefilial()
     {
         return $this->hasOne(StorageName::class, 'id','storage_name_id');

@@ -23,7 +23,7 @@
                 @csrf
                 <label for="selectStorage">Выберите место хранения</label>
                 <select name="storage" id="selectStorage" class="form-select @error('storage') is-invalid @enderror">
-                    <option value="0"></option>
+                    <option value=""></option>
                     @forelse(\App\Models\StorageName::where('filial_id', \App\Models\Registration::where('user_id', Auth::user()->id)->value('filial_id'))->get() as $storage)
                         <option
                         {{old('storage') == $storage->id ? "selected" : ""}} value="{{$storage->id}}">{{$storage->name}}</option>

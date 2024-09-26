@@ -27,7 +27,7 @@ class ProductMonitoringRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'storage' => 'required|numeric',
+            'storage' => 'required|numeric|min:1',
             /*'date' => ['required',
                 Rule::unique('product_monitorings', 'date')
                 ->where('storage_name_id', $this->input('storage'))

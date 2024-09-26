@@ -56,7 +56,6 @@ class ProductMonitoringController extends Controller
             ->sortBy('Storagefilial.nameFilial.name')
             ->groupBy('Storagefilial.nameFilial.name');
 
-        // dd($filial);
 
 
         return view('production_monitoring.index', ['filial' => $filial, 'year' => $year]);
@@ -121,14 +120,24 @@ class ProductMonitoringController extends Controller
                 $store
         );
 
-        /*if ($this->getPost() == '"DIRECTOR"' && array_key_exists('control_manager',$store)) {
+        if ($this->getPost() == '"DIRECTOR"' && array_key_exists('control_manager',$store)) {
             ProductMonitoringControl::query()
                 ->create([
                     'product_monitoring_id' => $date->id,
                     'user_id' => Auth::user()->id,
-                    'level'
+                    'level' => 1,
+                    'text' => $store['control_manager']
                 ]);
-        }*/
+            //DIRECTOR = 1; DEPUTY = 2;
+        } elseif ($this->getPost() == '"DEPUTY"' && array_key_exists('control_director',$store)) {
+            ProductMonitoringControl::query()
+                ->create([
+                    'product_monitoring_id' => $date->id,
+                    'user_id' => Auth::user()->id,
+                    'level' => 2,
+                    'text' => $store['control_director']
+                ]);
+        }
 
         if ($request['timeUp'] <> null && $request['timeDown'] <> null) {
             StorageMode::create([
@@ -232,12 +241,14 @@ class ProductMonitoringController extends Controller
     public function showFilialMonitoring($storage_id, $harvest_year_id)
     {
         $var = ProductMonitoring::query()
-            ->with('phase.StoragePhaseTemperature')
+            ->with(['phase.StoragePhaseTemperature', 'productMonitoringControl.userName'])
             ->where('storage_name_id', $storage_id)
             ->where('harvest_year_id', $harvest_year_id)
             ->orderBy('date', 'desc')
             ->paginate(25)
         ;
+
+        //dd($var);
         if ($var->isNotEmpty()) {
             return view('production_monitoring.show_filial_monitoring', ['monitoring' => $var, 'post_name' => $this->getPost()]);
         } else {
