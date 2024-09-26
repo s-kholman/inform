@@ -87,8 +87,8 @@
                                     </td>
                                     <td style="background-color: #f3f9ff">{{$value->temperature_keeping}}</td>
                                     <td style="background-color: #f3f9ff">{{$value->humidity_keeping}}</td>
-                                    <td class="@if(($value->tuberTemperatureMorning < $value->phase->StoragePhaseTemperature->temperature_min
-                                                    || $value->tuberTemperatureMorning > $value->phase->StoragePhaseTemperature->temperature_max)
+                                    <td class="@if(($value->tuberTemperatureMorning < $value->phase->StoragePhaseTemperature->temperature_min ?? ''
+                                                    || $value->tuberTemperatureMorning > $value->phase->StoragePhaseTemperature->temperature_max ?? '')
                                                     && $value->tuberTemperatureMorning <> null) bg-danger @endif" >
                                         {{$value->tuberTemperatureMorning}}</td>
                                     <td>{{$value->humidity}}</td>
