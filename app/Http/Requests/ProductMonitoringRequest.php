@@ -28,23 +28,31 @@ class ProductMonitoringRequest extends FormRequest
     {
         return [
             'storage' => 'required|numeric',
-            'date' => ['required',
+            /*'date' => ['required',
                 Rule::unique('product_monitorings', 'date')
                 ->where('storage_name_id', $this->input('storage'))
                 ->where('storage_phase_id', $this->input('phase')),
                 new CreateOneToHarvestProductMonitoring,
                 new CreateNoTomorrow
-                ],
-            'tempBurt' => 'nullable|numeric|max:20|min:-5',
-            'tempAboveBurt' => 'nullable|numeric|max:20|min:-5',
-            'tempMorning' => 'nullable|numeric|max:20|min:-5',
-            'tempEvening' => 'nullable|numeric|max:20|min:-5',
+                ],*/
+            'date' => ['required','date',
+                new CreateOneToHarvestProductMonitoring,
+                //new CreateNoTomorrow
+            ],
+            //'tempBurt' => 'nullable|numeric|max:20|min:-5',
+            //'tempAboveBurt' => 'nullable|numeric|max:20|min:-5',
+            'tuberTemperatureMorning' => 'nullable|numeric|max:20|min:-5',
+            //'tempEvening' => 'nullable|numeric|max:20|min:-5',
             'humidity' => 'nullable|numeric|max:100',
-            'phase' => 'required|numeric',
+            'storage_phase_id' => 'filled|numeric',
             'timeUp' => 'nullable|date_format:H:i',
             'timeDown' => 'nullable|date_format:H:i',
             'condensate' => 'sometimes|accepted',
             'comment' => 'nullable|max:255',
+            'temperature_keeping' => 'nullable|numeric|max:20|min:-5',
+            'humidity_keeping' => 'nullable|numeric|max:100',
+            'control_manager' => 'nullable|max:255',
+            'control_director' => 'nullable|max:255',
 
         ];
     }
@@ -57,7 +65,8 @@ class ProductMonitoringRequest extends FormRequest
             'min' => 'температура на может быть ниже :min градусов',
             'humidity.max' => 'влажность не может превышать :max%',
             'comment.max' => 'Максимально :max символов',
-            'required' => 'Поле обязательно для заполнения'
+            'required' => 'Поле обязательно для заполнения',
+            'filled' => 'Поле обязательно для заполнения',
         ];
     }
 }

@@ -8,8 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class ProductMonitoring extends Model
 {
     use HasFactory;
-    protected $fillable = ['storage_name_id', 'date', 'burtTemperature', 'burtAboveTemperature', 'tuberTemperatureMorning',
-        'tuberTemperatureEvening', 'humidity', 'storage_phase_id','comment', 'condensate', 'harvest_year_id'];
+    protected $fillable = [
+        'storage_name_id',
+        'date',
+        'burtTemperature',
+        'burtAboveTemperature',
+        'tuberTemperatureMorning',
+        'tuberTemperatureEvening',
+        'humidity',
+        'storage_phase_id',
+        'comment',
+        'condensate',
+        'harvest_year_id',
+        'temperature_keeping',
+        'humidity_keeping',
+        'control_manager',
+        'control_director',
+    ];
 
     public function storageName()
     {

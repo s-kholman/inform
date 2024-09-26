@@ -157,6 +157,9 @@
                                 <a href="/pole" class="nav-link px-0"> <span class="d-none d-sm-inline">Поля</span></a>
                             </li>
                             <li>
+                                <a href="/storage/phase/temperatures/create" class="nav-link px-0"> <span class="d-none d-sm-inline">Температура по фазам хранения</span></a>
+                            </li>
+                            <li>
                                 <a href="/sowing/type" class="nav-link px-0"> <span class="d-none d-sm-inline">Тип посева</span></a>
                             </li>
                             <li>

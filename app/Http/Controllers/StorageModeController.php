@@ -16,12 +16,12 @@ class StorageModeController extends Controller
 
     public function show(StorageMode $mode, HarvestAction $harvestAction)
     {
-        return view('production_monitoring.mode.delete', ['mode' => $mode, 'harvest_year_id' => $harvestAction->HarvestYear($mode->created_at)]);
+        return view('production_monitoring.mode.delete', ['mode' => $mode, 'harvest_year_id' => $harvestAction->HarvestYear($mode->created_at, 7)]);
     }
 
     public function destroy(StorageMode $mode, HarvestAction $harvestAction)
     {
         $mode->delete();
-        return redirect()->route('monitoring.show.filial.all', ['storage_name_id' => $mode->StorageName->storage_name_id, 'harvest_year_id' => $harvestAction->HarvestYear($mode->created_at)]);
+        return redirect()->route('monitoring.show.filial.all', ['storage_name_id' => $mode->StorageName->storage_name_id, 'harvest_year_id' => $harvestAction->HarvestYear($mode->created_at,7)]);
     }
 }

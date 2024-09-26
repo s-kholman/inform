@@ -72,4 +72,14 @@ class ProductMonitoringPolicy
     {
         return true;
     }
+
+    public function viewButton(User $user): bool
+    {
+        $post = json_decode(env('POST_ADD_MONITORING', '{"DIRECTOR":0,"DEPUTY":0,"TEMPERATURE":0}'),true);
+            if ($post['DIRECTOR'] === $user->registration->post_id ||
+                $post['TEMPERATURE'] === $user->registration->post_id ||
+                $user->email == 'sergey@krimm.ru')
+                return true;
+            else return  false;
+    }
 }
