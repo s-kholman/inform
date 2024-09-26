@@ -8,7 +8,7 @@
             <form action="{{ route('spraying.store') }}" method="POST">
                 @csrf
 
-                <input name="today" type="date" value="{{\Carbon\Carbon::now()}}" hidden>
+                <input name="today" type="date" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" hidden>
 
                 <label for="selectFirst">Выберите поле</label>
                 <select name="pole" id="selectFirst" class="form-select @error('pole') is-invalid @enderror">
@@ -144,7 +144,6 @@
             selectSzr.disabled = true;
             if (evt.value != 0) {
                 selectSzr.innerHTML = "<option value='0'>Выберите СЗР</option>";
-
                 //По текущему значению select забираем массив с данными
                 try {
                     let selectSZRValue = Object.entries(selectSzrObject[this.value]);
@@ -155,7 +154,7 @@
 
                     for (let i = 0; i < selectSZRValue.length; i++) {
                         //Формируем поля выбора по массиву данных
-                        selectSzr.innerHTML += '<option value="' + selectSZRValue[i][0] + '">' + selectSZRValue[i][1] + '</option>';
+                        selectSzr.add(createElementOption(selectSZRValue[i][0], selectSZRValue[i][1]))
                     }
                 } catch (e){
                     selectSzr.disabled = true;
@@ -182,14 +181,22 @@
                 selectFirstCheck = this.value;
                 //По текущему значению select забираем массив с данными
                 let selectSecondValue = Object.entries(selectSecondObject[this.value]);
-                //Цикл по размеру массива с данными
+
                 for (let i = 0; i < selectSecondValue.length; i++) {
-                    selectSecond.innerHTML += '<option value="' + selectSecondValue[i][0] + '">' + selectSecondValue[i][1] + '</option>';
+                    selectSecond.add(createElementOption(selectSecondValue[i][0], selectSecondValue[i][1]));
                 }
+
                 selectSecond.disabled = false;
             } else {
                 selectSecond.disabled = true;
             }
+        }
+
+        function createElementOption(id, text) {
+            let option = document.createElement('option');
+            option.value = id;
+            option.textContent = text;
+            return option;
         }
 
         function dosageEnable() {

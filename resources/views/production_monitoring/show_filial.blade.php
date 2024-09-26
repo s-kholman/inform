@@ -8,10 +8,11 @@
                 <div class="col-2">
                     <a class="btn btn-info" href="/monitoring/">Назад</a>
                 </div>
-
+                @can('viewButton', 'App\Models\ProductMonitoring')
                 <div class="col-3 ">
                     <a class="btn btn-info" href="/monitoring/create">Внести данные</a>
                 </div>
+                @endcan
             </div>
 
         <div class="row">

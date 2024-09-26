@@ -24,15 +24,14 @@ class ProductMonitoringUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tempBurt' => 'nullable|numeric|max:20|min:-5',
-            'tempAboveBurt' => 'nullable|numeric|max:20|min:-5',
-            'tempMorning' => 'nullable|numeric|max:20|min:-5',
-            'tempEvening' => 'nullable|numeric|max:20|min:-5',
+            'tuberTemperatureMorning' => 'nullable|numeric|max:20|min:-5',
             'humidity' => 'nullable|numeric|max:100',
             'timeUp' => 'nullable|date_format:H:i',
             'timeDown' => 'nullable|date_format:H:i',
             'condensate' => 'sometimes|accepted',
             'comment' => 'nullable|max:255',
+            'temperature_keeping' => 'nullable|numeric|max:20|min:-5',
+            'humidity_keeping' => 'nullable|numeric|max:100',
         ];
     }
     public function messages()

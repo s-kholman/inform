@@ -43,13 +43,13 @@
                 </div>
             </div>
         @endforelse
-
+        @can('viewButton', 'App\Models\ProductMonitoring')
             <div class="row ">
                 <div class="col-12 text-center">
                     <a class="btn btn-info" href="/monitoring/create">Внести данные</a>
                 </div>
             </div>
-
+        @endcan
             <div class="row text-center p-4">
                 @can('viewAny', 'App\Models\DailyUse')
                     <div class="col-12 ">

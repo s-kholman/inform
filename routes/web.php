@@ -22,6 +22,7 @@ use App\Http\Controllers\PeatExtractionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrikopkiController;
 use App\Http\Controllers\PrinterController;
+use App\Http\Controllers\ProductMonitoringControlController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\ProductMonitoringReportController;
 use App\Http\Controllers\ServiceController;
@@ -49,6 +50,7 @@ use App\Http\Controllers\Storage\StorageBoxController;
 use App\Http\Controllers\Storage\StorageNameController;
 use App\Http\Controllers\StorageModeController;
 use App\Http\Controllers\StoragePhaseController;
+use App\Http\Controllers\StoragePhaseTemperatureController;
 use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
 use App\Http\Controllers\TypeFieldWorkController;
@@ -231,7 +233,7 @@ Route::resource('peat', PeatController::class)->middleware('auth');
 Route::get('monitoring/mode/show/{mode}', [StorageModeController::class, 'show'])->middleware('auth');
 Route::delete('monitoring/mode/destroy/{mode}', [StorageModeController::class, 'destroy'])->name('monitoring.mode.destroy')->middleware('auth');
 Route::get('monitoring/reports', [ProductMonitoringReportController::class, 'index'])->middleware('auth');
-Route::post('monitoring/reports/today', [ProductMonitoringReportController::class, 'today'])->name('monitoring.report.today')->middleware('auth');
+Route::post('monitoring/reports', [ProductMonitoringReportController::class, 'index'])->middleware('auth')->name('monitoring.report.day');
 
 /**
  * Отчет по температурному мониторингу продукции в буртах
@@ -241,6 +243,9 @@ Route::get('monitoring/index/{year?}', [ProductMonitoringController::class, 'ind
 Route::resource('monitoring', ProductMonitoringController::class)->middleware('auth');
 Route::get('monitoring/show/filial/{filial_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilial'])->name('monitoring.show.filial')->middleware('auth');
 Route::get('monitoring/filial/storage/{storage_name_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilialMonitoring'])->name('monitoring.show.filial.all')->middleware('auth');
+Route::get('monitoring/control/storage/{storage_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'controlStorage'])->name('monitoring.control.storage')->middleware('auth');
+Route::resource('storage/phase/temperatures',StoragePhaseTemperatureController::class);
+Route::post('product/monitoring/control', [ProductMonitoringControlController::class, 'store'])->name('product.monitoring.control.store');
 
 Route::get('/printer/{id}/current/show', [CurrentStatusController::class, 'show'])->name('printer.current.show')->middleware('can:viewAny, App\Models\administrator');
 Route::get('/current/{currentStatus}/edit', [CurrentStatusController::class, 'edit'])->name('printer.current.edit')->middleware('can:viewAny, App\Models\administrator');

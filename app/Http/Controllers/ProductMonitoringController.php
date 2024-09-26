@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Acronym\AcronymFullNameUser;
 use App\Actions\harvest\HarvestAction;
 use App\Http\Requests\ProductMonitoringRequest;
 use App\Http\Requests\ProductMonitoringUpdateRequest;
 use App\Models\ProductMonitoring;
+use App\Models\ProductMonitoringControl;
 use App\Models\StorageMode;
+use App\Models\StorageName;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductMonitoringController extends Controller
 {
@@ -63,38 +67,97 @@ class ProductMonitoringController extends Controller
      */
     public function create()
     {
-        return view('production_monitoring.create');
+       $post = json_decode(env('POST_ADD_MONITORING', '{"DIRECTOR":0,"DEPUTY":0,"TEMPERATURE:0"}'),true);
+
+        $post_name = '';
+        foreach ($post as $name => $key) {
+            if ($key === Auth::user()->registration->post_id) {
+                $post_name =  json_encode($name);
+            }
+        }
+
+        return view('production_monitoring.create', ['post_name' => $post_name]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductMonitoringRequest $request, HarvestAction $harvestAction)
+    public function store(ProductMonitoringRequest $request, HarvestAction $harvestAction, AcronymFullNameUser $acronymFullNameUser)
     {
+        $store = $request->validated();
+        //Тестовое. Заполнение реквизитов по прошлому периоду
+        $insertToManager = collect();
 
-        $date = ProductMonitoring::create(
+
+
+
+
+        if ($this->getPost() == '"TEMPERATURE"' && !array_key_exists('storage_phase_id',$store)) {
+            $insertToManager = ProductMonitoring::query()
+                ->where('storage_name_id', $store['storage'])
+                ->where('harvest_year_id', $harvestAction->HarvestYear(now(), 7))
+                ->where('storage_phase_id', '<>', null)
+                ->whereDate('date', '<=', $store['date'])
+                ->orderByDesc('date')
+                ->limit(1)
+                ->get();
+            if ($insertToManager->isNotEmpty()) {
+                $store['storage_phase_id'] = $insertToManager[0]->storage_phase_id;
+                $store['temperature_keeping'] = $insertToManager[0]->temperature_keeping;
+                $store['humidity_keeping'] = $insertToManager[0]->humidity_keeping;
+            }
+        }
+
+        unset($store['storage']);
+        unset($store['date']);
+        $store ['harvest_year_id'] = $harvestAction->HarvestYear(now(), 7);
+        $store ['condensate'] = boolval($request['condensate']);
+
+        $date = ProductMonitoring::query()->updateOrCreate(
             [
                 'storage_name_id' => $request['storage'],
                 'date' => $request['date'],
-                'burtTemperature' => $request['tempBurt'],
-                'burtAboveTemperature' => $request['tempAboveBurt'],
-                'tuberTemperatureMorning' => $request['tempMorning'],
-                'tuberTemperatureEvening' => $request['tempEvening'],
-                'humidity' => $request['humidity'],
-                'storage_phase_id' => $request['phase'],
-                'condensate' => boolval($request['condensate']),
-                'comment' => $request['comment'],
-                'harvest_year_id' => $harvestAction->HarvestYear(now(), 7),
-            ]
+            ],
+                $store
         );
+
+        /*if ($this->getPost() == '"DIRECTOR"' && array_key_exists('control_manager',$store)) {
+            ProductMonitoringControl::query()
+                ->create([
+                    'product_monitoring_id' => $date->id,
+                    'user_id' => Auth::user()->id,
+                    'level'
+                ]);
+        }*/
+
         if ($request['timeUp'] <> null && $request['timeDown'] <> null) {
             StorageMode::create([
                 'timeUp' => $request['timeUp'],
                 'timeDown' => $request['timeDown'],
                 'product_monitoring_id' => $date->id,
             ]);
+        } elseif ($insertToManager->isNotEmpty()) {
+            $StorageMode = StorageMode::query()
+                ->where('product_monitoring_id', $insertToManager[0]->id)
+                ->get()
+            ;
+            if ($StorageMode->isNotEmpty()){
+                foreach ($StorageMode as $value){
+                    StorageMode::query()->updateOrCreate([
+                        'timeUp' => $value->timeUp,
+                        'timeDown' => $value->timeDown,
+                        'product_monitoring_id' => $date->id
+                        ]);
+                }
+            }
         }
-        return redirect()->route('monitoring.show.filial.all', ['storage_name_id' => $request['storage'], 'harvest_year_id' => $harvestAction->HarvestYear(now(), 7)]);
+
+
+
+        return redirect()->route('monitoring.show.filial.all',
+            ['storage_name_id' => $request['storage'],
+             'harvest_year_id' => $harvestAction->HarvestYear(now(), 7)
+            ]);
     }
 
     /**
@@ -110,7 +173,8 @@ class ProductMonitoringController extends Controller
      */
     public function edit(ProductMonitoring $monitoring)
     {
-        return view('production_monitoring.edit', ['monitoring' => $monitoring]);
+        $post_name = $this->getPost();
+        return view('production_monitoring.edit', ['monitoring' => $monitoring, 'post_name' => $post_name]);
     }
 
     /**
@@ -118,20 +182,17 @@ class ProductMonitoringController extends Controller
      */
     public function update(ProductMonitoringUpdateRequest $request, ProductMonitoring $monitoring)
     {
+       // dd($request->validated());
 
-        ProductMonitoring::where('id', $monitoring->id)->
-        update(
-            [
-                'burtTemperature' => array_key_exists('tempBurt', $request->all()) ? $request['tempBurt'] : $monitoring->burtTemperature,
-                'tuberTemperatureMorning' => array_key_exists('tempMorning', $request->all()) ? $request['tempMorning'] : $monitoring->tuberTemperatureMorning,
-                'tuberTemperatureEvening' => array_key_exists('tempEvening', $request->all()) ? $request['tempEvening'] : $monitoring->tuberTemperatureEvening,
-                'burtAboveTemperature' => array_key_exists('tempAboveBurt', $request->all()) ? $request['tempAboveBurt'] : $monitoring->burtAboveTemperature,
-                'humidity' => array_key_exists('humidity', $request->all()) ? $request['humidity'] : $monitoring->humidity,
-                'condensate' => boolval($request['condensate']),
-                'comment' => $monitoring->comment . ' ' . $request['comment']
-            ]
+        $update = $request->validated();
+        unset($update['timeUp']);
+        unset($update['timeDown']);
 
+        ProductMonitoring::query()->
+                where('id', $monitoring->id)->
+                update($update
         );
+
         if ($request['timeUp'] <> null && $request['timeDown'] <> null) {
             StorageMode::create([
                 'timeUp' => $request['timeUp'],
@@ -170,18 +231,39 @@ class ProductMonitoringController extends Controller
 
     public function showFilialMonitoring($storage_id, $harvest_year_id)
     {
-
         $var = ProductMonitoring::query()
+            ->with('phase.StoragePhaseTemperature')
             ->where('storage_name_id', $storage_id)
             ->where('harvest_year_id', $harvest_year_id)
             ->orderBy('date', 'desc')
-            ->paginate(25);
+            ->paginate(25)
+        ;
         if ($var->isNotEmpty()) {
-            return view('production_monitoring.show_filial_monitoring', ['monitoring' => $var]);
+            return view('production_monitoring.show_filial_monitoring', ['monitoring' => $var, 'post_name' => $this->getPost()]);
         } else {
             return redirect()->route('monitoring.index');
         }
+    }
 
+    public function controlStorage(Request $request)
+    {
 
+        $post_name = $this->getPost();
+        $storage_model = StorageName::query()->findOrFail($request->storage_id);
+        //dd($storage_model);
+
+        return view('production_monitoring.control', ['post_name' => $post_name, 'storage_model' => $storage_model]);
+    }
+
+    public function getPost(){
+        $post = json_decode(env('POST_ADD_MONITORING', '{"DIRECTOR":0,"DEPUTY":0,"TEMPERATURE":0}'),true);
+
+        $post_name = '';
+        foreach ($post as $name => $key) {
+            if ($key === Auth::user()->registration->post_id) {
+                $post_name =  json_encode($name);
+            }
+        }
+        return $post_name;
     }
 }
