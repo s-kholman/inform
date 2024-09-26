@@ -97,8 +97,22 @@
                                             +
                                         @endif</td>
                                     <td>{{$value->comment}}</td>
-                                    <td style="color: #ffd300">{{$value->control_manager}}</td>
-                                    <td style="color: #d00101" >{{$value->control_director}}</td>
+                                    <td style="color: #ffd300">
+                                        @forelse($value->productMonitoringControl as $text)
+                                            @if($text->level == 1)
+                                                <label style="color: black">{{\App\Models\Registration::query()->where('user_id', $text->user_id)->value('last_name')}}:</label>   {{$text->text}}
+                                            @endif
+                                        @empty
+                                        @endforelse
+                                    </td>
+                                    <td style="color: #d00101" >
+                                        @forelse($value->productMonitoringControl as $text)
+                                            @if($text->level == 2)
+                                                <label style="color: black">{{\App\Models\Registration::query()->where('user_id', $text->user_id)->value('last_name')}}:</label>   {{$text->text}}
+                                            @endif
+                                        @empty
+                                        @endforelse
+                                    </td>
                                 </tr>
                             @endforeach
 

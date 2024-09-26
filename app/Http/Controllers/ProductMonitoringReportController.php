@@ -14,7 +14,7 @@ class ProductMonitoringReportController extends Controller
         if (array_key_exists('date', $request->post())){
             $arr_value = ProductMonitoring::query()
                 ->where('date', $request->date)
-                ->with('storageName')
+                ->with(['storageName', 'productMonitoringControl'])
                 ->get();
             $collection = $arr_value->sortBy('storageName.name')->sortByDesc('storageName.filial_id')->groupBy('storageName.filial_id');
             return view('production_monitoring.report.index', ['arr_value' => $collection, 'date' => $request->date, 'show' => 1]);
