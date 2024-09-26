@@ -78,14 +78,16 @@ class ProductMonitoringController extends Controller
            }
        }
 
-        $post_name = '';
+       $url = json_encode(env('APP_URL', 'https://inform.krimm.ru'));
+
+        $post_name = json_encode('Default');
         foreach ($post as $name => $key) {
             if ($key === Auth::user()->registration->post_id) {
                 $post_name =  json_encode($name);
             }
         }
 
-        return view('production_monitoring.create', ['post_name' => $post_name, 'access' => $access]);
+        return view('production_monitoring.create', ['post_name' => $post_name, 'access' => $access, 'url' => $url]);
     }
 
     /**
