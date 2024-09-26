@@ -68,6 +68,16 @@ class ProductMonitoringController extends Controller
     {
        $post = json_decode(env('POST_ADD_MONITORING', '{"DIRECTOR":0,"DEPUTY":0,"TEMPERATURE:0"}'),true);
 
+       $toTemperature = json_decode(env('MONITORING_TO_TEMPERATURE', '{"0":0}'),true);
+       $access = 0;
+
+       foreach ($toTemperature as $key) {
+           if ($key == Auth::user()->id){
+               $access = 1;
+               break;
+           }
+       }
+
         $post_name = '';
         foreach ($post as $name => $key) {
             if ($key === Auth::user()->registration->post_id) {
@@ -75,7 +85,7 @@ class ProductMonitoringController extends Controller
             }
         }
 
-        return view('production_monitoring.create', ['post_name' => $post_name]);
+        return view('production_monitoring.create', ['post_name' => $post_name, 'access' => $access]);
     }
 
     /**
@@ -86,10 +96,6 @@ class ProductMonitoringController extends Controller
         $store = $request->validated();
         //Тестовое. Заполнение реквизитов по прошлому периоду
         $insertToManager = collect();
-
-
-
-
 
         if ($this->getPost() == '"TEMPERATURE"' && !array_key_exists('storage_phase_id',$store)) {
             $insertToManager = ProductMonitoring::query()
@@ -241,14 +247,13 @@ class ProductMonitoringController extends Controller
     public function showFilialMonitoring($storage_id, $harvest_year_id)
     {
         $var = ProductMonitoring::query()
-            ->with(['phase.StoragePhaseTemperature', 'productMonitoringControl.userName'])
+            ->with(['phase.StoragePhaseTemperature', 'productMonitoringControl'])
             ->where('storage_name_id', $storage_id)
             ->where('harvest_year_id', $harvest_year_id)
             ->orderBy('date', 'desc')
             ->paginate(25)
         ;
 
-        //dd($var);
         if ($var->isNotEmpty()) {
             return view('production_monitoring.show_filial_monitoring', ['monitoring' => $var, 'post_name' => $this->getPost()]);
         } else {
