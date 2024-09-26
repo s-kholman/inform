@@ -11,4 +11,9 @@ class ProductMonitoringControl extends Model
 
     protected $fillable = ['product_monitoring_id', 'user_id', 'text', 'level'];
 
+    public function userName()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
