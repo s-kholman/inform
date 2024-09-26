@@ -1,6 +1,10 @@
 @extends('layouts.base')
 @section('title', 'Мониторинг температуры в боксах')
-
+<style>
+    .background-color-director{
+        background-color: #f3f9ff;
+    }
+</style>
 @section('info')
     <div class="container">
 
@@ -28,10 +32,10 @@
 
         <div class="row text-center">
             <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Дата</div>
-            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Фазы хранения</div>
-            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Режим работы вентиляции</div>
-            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Температура хранения</div>
-            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Влажность хранения</div>
+            <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Фазы хранения</div>
+            <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Режим работы вентиляции</div>
+            <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Температура хранения</div>
+            <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Влажность хранения</div>
             <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Температура клубня</div>
             <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Влажность в боксе</div>
             <div class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">Конденсат</div>
@@ -49,12 +53,12 @@
                         {{\Carbon\Carbon::parse($value->date)->format('d-m-Y')}}
                     @endif
                 </div>
-                <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->phase->name ?? ''}}</div>
+                <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->phase->name ?? ''}}</div>
                 @if($post_name == '"DIRECTOR"')
-                <div class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-1">
+                <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-1">
                     @forelse(\App\Models\StorageMode::where('product_monitoring_id', $value->id)->orderby('timeUp')->get() as $mode)
                         <div class="row">
-                            <div class="col-12 border border-1" style="margin: 1px; padding: 1px">
+                            <div class="background-color-director col-12 border border-1" style="margin: 1px; padding: 1px">
                                 <a href="/monitoring/mode/show/{{$mode->id}}">{{\Carbon\Carbon::parse($mode->timeUp)->format('H:i')}} {{\Carbon\Carbon::parse($mode->timeDown)->format('H:i')}}</a> <br>
                             </div>
                         </div>
@@ -64,7 +68,7 @@
                         </div>
                     @endforelse
                 @else
-                    <div class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-1">
+                    <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-1">
                         @forelse(\App\Models\StorageMode::where('product_monitoring_id', $value->id)->orderby('timeUp')->get() as $mode)
                             <div class="row">
                                 <div class="col-12 border border-1" style="margin: 1px; padding: 1px">
@@ -78,8 +82,8 @@
                         @endforelse
                 @endif
                 </div>
-                <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->temperature_keeping}} @if($value->temperature_keeping <> null)&degС @endif</div>
-                <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->humidity_keeping}}</div>
+                <div class="background-color-director col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->temperature_keeping}} @if($value->temperature_keeping <> null)&degС @endif</div>
+                <div class="background-color-director col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->humidity_keeping}}</div>
 
 
 
@@ -102,8 +106,22 @@
                     @endif
                 </div>
                 <div class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->comment}}</div>
-                <div style="color: #ffd300" class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->control_manager}}</div>
-                <div style="color: #d00101" class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->control_director}}</div>
+                            <div style="color: #ffd300" class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">
+                            @forelse($value->productMonitoringControl as $text)
+                                @if($text->level == 1)
+                                        <label style="color: black">{{\App\Models\Registration::query()->where('user_id', $text->user_id)->value('last_name')}}:</label>   {{$text->text}}
+                                @endif
+                            @empty
+                            @endforelse
+                            </div>
+                <div style="color: #d00101" class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">
+                    @forelse($value->productMonitoringControl as $text)
+                        @if($text->level == 2)
+                            <label style="color: black">{{\App\Models\Registration::query()->where('user_id', $text->user_id)->value('last_name')}}:</label>   {{$text->text}}
+                        @endif
+                    @empty
+                    @endforelse
+                </div>
 
 
 

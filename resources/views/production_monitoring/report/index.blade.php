@@ -14,6 +14,9 @@
     .vertical-align{
         vertical-align: middle;
     }
+    .background-color-director{
+        background-color: #f3f9ff;
+    }
 </style>
 @section('info')
 
@@ -74,17 +77,20 @@
                             @foreach($item as $value)
                                 <tr>
                                     <td>{{$value->storageName->name}}</td>
-                                    <td>{{$value->phase->name ?? ''}}</td>
-                                    <td class="text-nowrap">
+                                    <td style="background-color: #f3f9ff">{{$value->phase->name ?? ''}}1</td>
+                                    <td  style="background-color: #f3f9ff" class="text-nowrap">
                                         @forelse($value->Mode as $mode)
                                             {{\Carbon\Carbon::parse($mode->timeUp)->format('H:i')}} - {{\Carbon\Carbon::parse($mode->timeDown)->format('H:i')}}; <br>
                                         @empty
                                             н/д
                                         @endforelse
                                     </td>
-                                    <td>{{$value->temperature_keeping}}</td>
-                                    <td>{{$value->humidity_keeping}}</td>
-                                    <td class="@if(($value->tuberTemperatureMorning < 3.5 || $value->tuberTemperatureMorning > 4.5) && $value->tuberTemperatureMorning <> null) bg-danger @endif" >{{$value->tuberTemperatureMorning}}</td>
+                                    <td style="background-color: #f3f9ff">{{$value->temperature_keeping}}</td>
+                                    <td style="background-color: #f3f9ff">{{$value->humidity_keeping}}</td>
+                                    <td class="@if(($value->tuberTemperatureMorning < $value->phase->StoragePhaseTemperature->temperature_min
+                                                    || $value->tuberTemperatureMorning > $value->phase->StoragePhaseTemperature->temperature_max)
+                                                    && $value->tuberTemperatureMorning <> null) bg-danger @endif" >
+                                        {{$value->tuberTemperatureMorning}}</td>
                                     <td>{{$value->humidity}}</td>
                                     <td class="text-center @if($value->condensate) bg-danger @endif">
                                         @if($value->condensate)

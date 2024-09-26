@@ -53,6 +53,12 @@
                 </span>
                     @enderror
 
+                @if($access)
+                <div class="form-switch form-check mb-3">
+                    <label id="label-access-check" class="form-label" for="access">Переключить на температурщика</label>
+                    <input class="form-check-input" type="checkbox" id="access" name="access">
+                </div>
+                @endif
 
                 <fieldset style="border: 2px solid #4d1616; margin: 5px; padding: 10px" class="rounded-4 DIRECTOR">
                     <legend>Заполняет руководитель</legend>
@@ -188,11 +194,39 @@
 <script>
     let post_arr = ['DIRECTOR', 'DEPUTY', 'TEMPERATURE'];
     let post_name = {!! $post_name !!};
+    let access = {!! $access !!};
 
    for (let i = 0; i <= post_arr.length-1; i++) {
        if (post_name != post_arr[i]) {
-           document.querySelectorAll('.'+post_arr[i]).forEach(element => element.remove());
+           //document.querySelectorAll('.'+post_arr[i]).forEach(element => element.remove());
+           document.querySelectorAll('.'+post_arr[i]).forEach(element => element.style.display = 'none');
+           document.querySelectorAll('.'+post_arr[i]).forEach(element => element.disabled = true);
        }
+   }
+
+   if(access) {
+       let label = document.getElementById('label-access-check')
+       let check = document.getElementById('access');
+       let tempDom = document.getElementsByClassName('TEMPERATURE')
+       tempDom[0].disabled = true
+       let directorDom = document.getElementsByClassName('DIRECTOR')
+       check.addEventListener('click', () => {
+
+           if(check.checked){
+               tempDom[0].style.display = null
+               tempDom[0].disabled = false
+               label.textContent = 'Переключить на директора';
+               directorDom[0].style.display = 'none'
+               directorDom[0].disabled = true;
+           } else {
+               label.textContent = 'Переключить на температурщика';
+               tempDom[0].disabled = true
+               tempDom[0].style.display = 'none'
+               directorDom[0].style.display = null
+               directorDom[0].disabled = false
+           }
+       })
+
    }
 
    const selectStorageE = document.getElementById('selectStorage');
