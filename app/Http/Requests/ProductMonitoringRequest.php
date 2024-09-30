@@ -51,8 +51,8 @@ class ProductMonitoringRequest extends FormRequest
             'comment' => 'nullable|max:255',
             'temperature_keeping' => 'nullable|numeric|max:20|min:-5',
             'humidity_keeping' => 'nullable|numeric|max:100',
-            'control_manager' => 'nullable|max:255',
-            'control_director' => 'nullable|max:255',
+            'control_manager' => 'filled|max:255',
+            'control_director' => 'filled|max:255',
 
         ];
     }

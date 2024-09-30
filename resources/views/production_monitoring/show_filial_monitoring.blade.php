@@ -23,7 +23,7 @@
             <div class="col-4">
                 <a class="btn btn-secondary" href="{{route('monitoring.show.filial', ['filial_id' => $monitoring[0]->storageName->filial_id, 'harvest_year_id' => $monitoring[0]->harvest_year_id])}}">Назад</a>
             </div>
-            @if($post_name == '"DIRECTOR"' || $post_name == '"DEPUTY"')
+            @if($post_name == 'DIRECTOR' || $post_name == 'DEPUTY')
             <div class="col-4">
                 <a class="btn btn-outline-primary" href="{{route('monitoring.control.storage', ['storage_id' => $monitoring[0]->storage_name_id, 'harvest_year_id' => $monitoring[0]->harvest_year_id])}}">Контроль</a>
             </div>
@@ -32,10 +32,10 @@
 
         <div class="row text-center">
             <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Дата</div>
-            <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Фазы хранения</div>
-            <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Режим работы вентиляции</div>
-            <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Температура хранения</div>
-            <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Влажность хранения</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Фазы хранения</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Режим работы вентиляции</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Температура хранения</div>
+            <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Влажность хранения</div>
             <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Температура клубня</div>
             <div class="text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">Влажность в боксе</div>
             <div class="text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-2">Конденсат</div>
@@ -47,14 +47,14 @@
         @foreach($monitoring as $id => $value)
             <div class="row text-center">
                 <div class="col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">
-                    @if($post_name == '"DIRECTOR"' || $post_name == '"DEPUTY"')
+                    @if($post_name == 'DIRECTOR' || $post_name == 'DEPUTY')
                         <a href="/monitoring/{{$value->id}}/edit">{{\Carbon\Carbon::parse($value->date)->format('d-m-Y')}}</a>
                     @else
                         {{\Carbon\Carbon::parse($value->date)->format('d-m-Y')}}
                     @endif
                 </div>
                 <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1col-lg-1 col-xl-1 col-xxl-1 border border-2">{{$value->phase->name ?? ''}}</div>
-                @if($post_name == '"DIRECTOR"')
+                @if($post_name == 'DIRECTOR')
                 <div class="background-color-director text-break col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1 border border-1">
                     @forelse(\App\Models\StorageMode::where('product_monitoring_id', $value->id)->orderby('timeUp')->get() as $mode)
                         <div class="row">
