@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Acronym\AcronymFullNameUser;
 use App\Actions\harvest\HarvestAction;
 use App\Http\Requests\ProductMonitoringRequest;
 use App\Http\Requests\ProductMonitoringUpdateRequest;
@@ -66,9 +65,9 @@ class ProductMonitoringController extends Controller
      */
     public function create()
     {
-       $post = json_decode(env('POST_ADD_MONITORING', '{"DIRECTOR":0,"DEPUTY":0,"TEMPERATURE:0"}'),true);
 
        $toTemperature = json_decode(env('MONITORING_TO_TEMPERATURE', '{"0":0}'),true);
+
        $access = 0;
 
        foreach ($toTemperature as $key) {
@@ -80,26 +79,20 @@ class ProductMonitoringController extends Controller
 
        $url = json_encode(env('APP_URL', 'https://inform.krimm.ru'));
 
-        $post_name = json_encode('Default');
-        foreach ($post as $name => $key) {
-            if ($key === Auth::user()->registration->post_id) {
-                $post_name =  json_encode($name);
-            }
-        }
-
-        return view('production_monitoring.create', ['post_name' => $post_name, 'access' => $access, 'url' => $url]);
+        return view('production_monitoring.create', ['post_name' => $this->getPost(), 'access' => $access, 'url' => $url]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductMonitoringRequest $request, HarvestAction $harvestAction, AcronymFullNameUser $acronymFullNameUser)
+    public function store(ProductMonitoringRequest $request, HarvestAction $harvestAction)
     {
         $store = $request->validated();
         //Тестовое. Заполнение реквизитов по прошлому периоду
         $insertToManager = collect();
 
-        if ($this->getPost() == '"TEMPERATURE"' && !array_key_exists('storage_phase_id',$store)) {
+        //if ($this->getPost() <> 'DEPUTY' && !array_key_exists('storage_phase_id',$store)) {
+        if (!array_key_exists('storage_phase_id',$store)) {
             $insertToManager = ProductMonitoring::query()
                 ->where('storage_name_id', $store['storage'])
                 ->where('harvest_year_id', $harvestAction->HarvestYear(now(), 7))
@@ -128,7 +121,7 @@ class ProductMonitoringController extends Controller
                 $store
         );
 
-        if ($this->getPost() == '"DIRECTOR"' && array_key_exists('control_manager',$store)) {
+        if ($this->getPost() == 'DIRECTOR' && array_key_exists('control_manager',$store)) {
             ProductMonitoringControl::query()
                 ->create([
                     'product_monitoring_id' => $date->id,
@@ -137,7 +130,7 @@ class ProductMonitoringController extends Controller
                     'text' => $store['control_manager']
                 ]);
             //DIRECTOR = 1; DEPUTY = 2;
-        } elseif ($this->getPost() == '"DEPUTY"' && array_key_exists('control_director',$store)) {
+        } elseif ($this->getPost() == 'DEPUTY' && array_key_exists('control_director',$store)) {
             ProductMonitoringControl::query()
                 ->create([
                     'product_monitoring_id' => $date->id,
@@ -153,7 +146,8 @@ class ProductMonitoringController extends Controller
                 'timeDown' => $request['timeDown'],
                 'product_monitoring_id' => $date->id,
             ]);
-        } elseif ($insertToManager->isNotEmpty()) {
+        } else
+            if ($insertToManager->isNotEmpty()) {
             $StorageMode = StorageMode::query()
                 ->where('product_monitoring_id', $insertToManager[0]->id)
                 ->get()
@@ -191,6 +185,7 @@ class ProductMonitoringController extends Controller
     public function edit(ProductMonitoring $monitoring)
     {
         $post_name = $this->getPost();
+
         return view('production_monitoring.edit', ['monitoring' => $monitoring, 'post_name' => $post_name]);
     }
 
@@ -199,8 +194,6 @@ class ProductMonitoringController extends Controller
      */
     public function update(ProductMonitoringUpdateRequest $request, ProductMonitoring $monitoring)
     {
-       // dd($request->validated());
-
         $update = $request->validated();
         unset($update['timeUp']);
         unset($update['timeDown']);
@@ -268,18 +261,17 @@ class ProductMonitoringController extends Controller
 
         $post_name = $this->getPost();
         $storage_model = StorageName::query()->findOrFail($request->storage_id);
-        //dd($storage_model);
 
         return view('production_monitoring.control', ['post_name' => $post_name, 'storage_model' => $storage_model]);
     }
 
-    public function getPost(){
+    public function getPost(): string{
         $post = json_decode(env('POST_ADD_MONITORING', '{"DIRECTOR":0,"DEPUTY":0,"TEMPERATURE":0}'),true);
 
-        $post_name = '';
+        $post_name = 'Default';
         foreach ($post as $name => $key) {
             if ($key === Auth::user()->registration->post_id) {
-                $post_name =  json_encode($name);
+                $post_name =  $name;
             }
         }
         return $post_name;

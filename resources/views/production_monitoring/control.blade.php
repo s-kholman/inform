@@ -74,10 +74,8 @@
 <script>
     let post_name = {!! json_encode($post_name) !!};
     let post_arr = ['DIRECTOR', 'DEPUTY', 'TEMPERATURE'];
-
-   for (let i = 0; i <= post_arr.length-1; i++) {
-       console.log(post_name + '   ' +  post_arr[i])
-       if (post_name != '"'+post_arr[i]+'"') {
+    for (let i = 0; i <= post_arr.length-1; i++) {
+       if (post_name !=  post_arr[i]) {
            document.querySelectorAll('.'+post_arr[i]).forEach(element => element.remove());
        }
    }

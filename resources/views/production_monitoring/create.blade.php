@@ -42,7 +42,7 @@
                            id="txtDate"
                            type="date"
                            value="{{old('date') == '' ? date('Y-m-d') : old('date')}}"
-                           @if($post_name == '"TEMPERATURE"')
+                           @if($post_name == 'TEMPERATURE')
                            max="{{date('Y-m-d')}}"
                            min="{{date('Y-m-d', strtotime(now() . '-1 day'))}}"
                            @endif
@@ -56,7 +56,11 @@
                 @if($access)
                 <div class="form-switch form-check mb-3">
                     <label id="label-access-check" class="form-label" for="access">Переключить на температурщика</label>
-                    <input class="form-check-input" type="checkbox" id="access" name="access">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           id="access"
+                           name="access"
+                           @if(old('access'))checked @endif>
                 </div>
                 @endif
 
@@ -131,7 +135,7 @@
 
 
 
-                <fieldset style="border: 2px solid #82f568; margin: 5px; padding: 10px" class="rounded-4 TEMPERATURE">
+                <fieldset id="temperature" style="border: 2px solid #82f568; margin: 5px; padding: 10px" class="rounded-4 TEMPERATURE">
                     <legend>Заполняет температурщик</legend>
 
                 <label for="tuberTemperatureMorning">Температура клубня</label>
@@ -163,7 +167,7 @@
 
                 <div class="form-switch form-check mb-3">
                     <label class="form-label" for="condensate">Наличие конденсата в боксе</label>
-                    <input class="form-check-input" type="checkbox" id="condensate" name="condensate">
+                    <input class="form-check-input" type="checkbox" id="condensate" name="condensate" @if(old('condensate'))checked @endif>>
                 </div>
 
 
@@ -193,7 +197,7 @@
 @section('script')
 <script>
     let post_arr = ['DIRECTOR', 'DEPUTY', 'TEMPERATURE'];
-    let post_name = {!! $post_name !!};
+    let post_name = {!! json_encode($post_name) !!};
     let access = {!! $access !!};
     let url = {!! $url !!};
 
@@ -208,29 +212,37 @@
         document.getElementById('save').remove();
     }
 
+    const check = document.getElementById('access');
+    const label = document.getElementById('label-access-check')
+    const tempDom = document.getElementsByClassName('TEMPERATURE')
+    const directorDom = document.getElementsByClassName('DIRECTOR')
 
    if(access) {
-       let label = document.getElementById('label-access-check')
-       let check = document.getElementById('access');
-       let tempDom = document.getElementsByClassName('TEMPERATURE')
-       tempDom[0].disabled = true
-       let directorDom = document.getElementsByClassName('DIRECTOR')
-       check.addEventListener('click', () => {
+       //tempDom[0].disabled = true
+       checkedCheck()
 
-           if(check.checked){
-               tempDom[0].style.display = null
-               tempDom[0].disabled = false
-               label.textContent = 'Переключить на директора';
-               directorDom[0].style.display = 'none'
-               directorDom[0].disabled = true;
-           } else {
-               label.textContent = 'Переключить на температурщика';
-               tempDom[0].disabled = true
-               tempDom[0].style.display = 'none'
-               directorDom[0].style.display = null
-               directorDom[0].disabled = false
-           }
+       check.addEventListener('click', () => {
+           checkedCheck()
+           getProductMonitoring(selectStorageE.value, txtDate.value);
        })
+
+   }
+
+   function checkedCheck()
+   {
+       if(check.checked){
+           tempDom[0].style.display = null
+           tempDom[0].disabled = false
+           label.textContent = 'Переключить на директора';
+           directorDom[0].style.display = 'none'
+           directorDom[0].disabled = true;
+       } else {
+           label.textContent = 'Переключить на температурщика';
+           tempDom[0].disabled = true
+           tempDom[0].style.display = 'none'
+           directorDom[0].style.display = null
+           directorDom[0].disabled = false
+       }
 
    }
 
@@ -240,13 +252,16 @@
    const humidity = document.getElementById('humidity');
    const condensate = document.getElementById('condensate');
    const comment = document.getElementById('comment');
-
+   const temperature = document.getElementById('temperature');
    selectStorageE.addEventListener('change', () => {
        getProductMonitoring(selectStorageE.value, txtDate.value)
    })
 
    function getProductMonitoring(id, date) {
-       if(id !=0 && date != '' && tuberTemperatureMorning !== null) {
+
+
+       //if(id !=0 && date != '' && tuberTemperatureMorning !== null) {
+       if(id !=0 && date != '' && !temperature.disabled) {
            fetch(url+'/api/v1/'+id+'/'+date).then(response => {
                if(!response.ok) {
                    console.log('Error')
