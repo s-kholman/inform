@@ -61,7 +61,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th rowspan="2" style="vertical-align: middle">Дата</th>
+                                <th rowspan="2" style="vertical-align: middle">Бокс</th>
                                 <th colspan="4" style="background-color: #f3f9ff">Рекомендация хранения</th>
                                 <th colspan="4">Работа исполнителя</th>
                                 <th rowspan="2" class="vertical-align"><label class="rotate">Контроль директор</label></th>
