@@ -89,12 +89,12 @@
                                             н/д
                                         @endforelse
                                     </td>
-                                    <td style="background-color: #f3f9ff">{{$value->temperature_keeping}}</td>
+                                    <td style="background-color: #f3f9ff">{{$value->temperature_keeping}}@if($value->temperature_keeping <> '')&degС@endif</td>
                                     <td style="background-color: #f3f9ff">{{$value->humidity_keeping}}</td>
                                     <td class="@if((isset($value->phase->StoragePhaseTemperature->temperature_min) && $value->tuberTemperatureMorning < $value->phase->StoragePhaseTemperature->temperature_min ?? ''
                                                     || $value->tuberTemperatureMorning > $value->phase->StoragePhaseTemperature->temperature_max ?? '')
                                                     && $value->tuberTemperatureMorning <> null) bg-danger @endif" >
-                                        {{$value->tuberTemperatureMorning}}</td>
+                                        {{$value->tuberTemperatureMorning}}@if($value->tuberTemperatureMorning <> '')&degС@endif</td>
                                     <td>{{$value->humidity}}</td>
                                     <td class="text-center @if($value->condensate) bg-danger @endif">
                                         @if($value->condensate)
