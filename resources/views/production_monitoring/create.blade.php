@@ -167,7 +167,7 @@
 
                 <div class="form-switch form-check mb-3">
                     <label class="form-label" for="condensate">Наличие конденсата в боксе</label>
-                    <input class="form-check-input" type="checkbox" id="condensate" name="condensate" @if(old('condensate'))checked @endif>>
+                    <input class="form-check-input" type="checkbox" id="condensate" name="condensate" @if(old('condensate'))checked @endif>
                 </div>
 
 
