@@ -61,17 +61,21 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Бокс</th>
-                                <th class="vertical-align"><label class="rotate">Фаза хранения</label></th>
-                                <th class="vertical-align"><label class="rotate">Режим работы вентиляции</label></th>
-                                <th class="vertical-align"><label class="rotate">Температура хранения</label></th>
-                                <th class="vertical-align"><label class="rotate">Влажность хранения</label></th>
+                                <th rowspan="2" style="vertical-align: middle">Дата</th>
+                                <th colspan="4" style="background-color: #f3f9ff">Рекомендация хранения</th>
+                                <th colspan="4">Работа исполнителя</th>
+                                <th rowspan="2" class="vertical-align"><label class="rotate">Контроль директор</label></th>
+                                <th rowspan="2" class="vertical-align"><label class="rotate">Контроль зам. ген. дир</label></th>
+                            </tr>
+                            <tr>
+                                <th class="vertical-align" style="background-color: #f3f9ff"><label class="rotate">Фаза хранения</label></th>
+                                <th class="vertical-align" style="background-color: #f3f9ff"><label class="rotate">Режим работы вентиляции</label></th>
+                                <th class="vertical-align" style="background-color: #f3f9ff"><label class="rotate">Температура хранения</label></th>
+                                <th class="vertical-align" style="background-color: #f3f9ff"><label class="rotate">Влажность хранения</label></th>
                                 <th class="vertical-align"><label class="rotate">Температура клубня</label></td>
                                 <th class="vertical-align"><label class="rotate">Влажность в боксе</label></th>
                                 <th class="vertical-align"><label class="rotate">Конденсат</label></td>
                                 <th class="vertical-align"><label class="rotate">Комментарий</label></th>
-                                <th class="vertical-align"><label class="rotate">Контроль директор</label></th>
-                                <th class="vertical-align"><label class="rotate">Контроль зам. ген. дир</label></th>
                             </tr>
 
                             @foreach($item as $value)

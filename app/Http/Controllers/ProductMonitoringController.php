@@ -250,7 +250,7 @@ class ProductMonitoringController extends Controller
         ;
 
         if ($var->isNotEmpty()) {
-            return view('production_monitoring.show_filial_monitoring', ['monitoring' => $var, 'post_name' => $this->getPost()]);
+            return view('production_monitoring.showFilialMonitoringTable', ['monitoring' => $var, 'post_name' => $this->getPost()]);
         } else {
             return redirect()->route('monitoring.index');
         }
