@@ -28,7 +28,11 @@
 
             @if ($loop->first)
                 <div class="row text-center">
-                    <div class="col-4 p-6"></div><div class="text-center"><h5>Филиалы:</h5></div>
+                    <div class="col-4"></div>
+                    <div class="col-4 text-center"><h5>Филиалы:</h5></div>
+                    <div class="col-4">
+
+                    </div>
                 </div>
                 <div class="row text-center p-5">
             @endif
