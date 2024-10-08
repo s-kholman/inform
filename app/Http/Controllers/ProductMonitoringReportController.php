@@ -10,13 +10,12 @@ class ProductMonitoringReportController extends Controller
 {
     public function index (Request $request)
     {
-        //dump($request->post());
         if (array_key_exists('date', $request->post())){
             $arr_value = ProductMonitoring::query()
                 ->where('date', $request->date)
-                ->with(['storageName', 'productMonitoringControl'])
+                ->with(['storageName', 'productMonitoringControl', 'filial'])
                 ->get();
-            $collection = $arr_value->sortBy('storageName.name')->sortByDesc('storageName.filial_id')->groupBy('storageName.filial_id');
+            $collection = $arr_value->sortBy('storageName.name')->sortBy('filial.name')->groupBy('storageName.filial_id');
             return view('production_monitoring.report.index', ['arr_value' => $collection, 'date' => $request->date, 'show' => 1]);
         } else {
             return view('production_monitoring.report.index', ['date' => now(), 'show' => 0]);
@@ -25,7 +24,7 @@ class ProductMonitoringReportController extends Controller
 
     }
 
-    public function today(Request $request)
+/*    public function today(Request $request)
     {
         $arr_value = ProductMonitoring::query()
             ->where('date', $request->date)
@@ -33,6 +32,6 @@ class ProductMonitoringReportController extends Controller
             ->get();
         $collection = $arr_value->sortBy('storageName.name')->sortByDesc('storageName.filial_id')->groupBy('storageName.filial_id');
         return view('production_monitoring.report.one_date', ['arr_value' => $collection, 'date' => $request->date]);
-    }
+    }*/
 
 }
