@@ -21,14 +21,14 @@
 
 @section('info')
 
-    <div class="text-center">
+    <div class="container text-center" id="delete-to-print-class">
         <div class="row" id="no-print-phone-header">
         @forelse(\App\Models\PhoneDetail::select('id','DetailDate')->orderby('DetailDate', 'DESC')->Limit(6)->get() as $mount)
                 <div class="list-inline-item col-3 col-md"> <p class="text-center"><a href="/limit_view/{{$mount->id}}">{{Str::ucfirst(\Carbon\Carbon::parse($mount->DetailDate)->translatedFormat('F Y'))}}</a></p> </div>
         @empty
         @endforelse
         </div>
-        <table class="table table-bordered table-striped" id="print">
+        <table class="table table-bordered table-striped">
             <caption class="border rounded-3 p-3 caption-top">
                 <p class="text-center"><b>{{Str::ucfirst(\Carbon\Carbon::parse($DetailDate)->translatedFormat('F Y'))}}</b></p>
             </caption>
@@ -54,20 +54,23 @@
 @section('script')
 <script type="text/javascript">
 
-    const print = document.getElementById('print')
+    const table = document.getElementsByTagName('table')[0]
     const btnPrint = document.getElementById('btnPrint')
+    const divContainer = document.getElementById('delete-to-print-class')
 
     btnPrint.addEventListener('click', () =>{
         window.print();
     })
 
     window.addEventListener('beforeprint', () => {
-        print.classList.remove('table')
-        print.children[0].classList.remove('border')
+        divContainer.classList.remove('container')
+        table.classList.remove('table')
+        table.children[0].classList.remove('border')
     })
     window.addEventListener('afterprint', () => {
-        print.classList.add('table')
-        print.children[0].classList.add('border')
+        divContainer.classList.add('container')
+        table.classList.add('table')
+        table.children[0].classList.add('border')
     })
 
 </script>
