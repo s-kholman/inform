@@ -21,7 +21,7 @@
 
 @section('info')
 
-    <div class="container text-center" id="delete-to-print-class">
+    <div class="container" id="delete-to-print-class">
         <div class="row" id="no-print-phone-header">
         @forelse(\App\Models\PhoneDetail::select('id','DetailDate')->orderby('DetailDate', 'DESC')->Limit(6)->get() as $mount)
                 <div class="list-inline-item col-3 col-md"> <p class="text-center"><a href="/limit_view/{{$mount->id}}">{{Str::ucfirst(\Carbon\Carbon::parse($mount->DetailDate)->translatedFormat('F Y'))}}</a></p> </div>
@@ -48,8 +48,13 @@
             @endforeach
             </tbody>
         </table>
+        <div class="row">
+            <div>
+                <button class="btn btn-primary" id="btnPrint">Печать</button>
+            </div>
         </div>
-    <button class="btn btn-primary" id="btnPrint">Печать</button>
+        </div>
+
 @endsection('info')
 @section('script')
 <script type="text/javascript">
