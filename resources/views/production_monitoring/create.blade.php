@@ -253,33 +253,40 @@
    const condensate = document.getElementById('condensate');
    const comment = document.getElementById('comment');
    const temperature = document.getElementById('temperature');
+
    selectStorageE.addEventListener('change', () => {
        getProductMonitoring(selectStorageE.value, txtDate.value)
    })
 
-   function getProductMonitoring(id, date) {
-
-
+async function getProductMonitoring(id, date) {
        //if(id !=0 && date != '' && tuberTemperatureMorning !== null) {
-       if(id !=0 && date != '' && !temperature.disabled) {
-           fetch(url+'/api/v1/'+id+'/'+date).then(response => {
-               if(!response.ok) {
-                   console.log('Error')
-               }
-               response.json().then((data) => {
-                   if (data['data'].length !== 0){
-                       tuberTemperatureMorning.value = data['data']['tuberTemperatureMorning'];
-                       humidity.value = data['data']['humidity'];
-                       condensate.checked = data['data']['condensate'];
-                       comment.value = data['data']['comment'];
-                   } else {
-                       tuberTemperatureMorning.value = ''
-                       humidity.value = ''
-                       condensate.checked = false
-                       comment.value = ''
-                   }
-               });
-           })}
+    try {
+        if(id !=0 && date != '' && !temperature.disabled) {
+            const response =
+                await fetch(url+'/api/v1/productMonitoring/'+id+'/'+date, {
+                headers: {"Accept": "application/json",},
+                method: 'GET',
+            })
+
+            const data = await response.json()
+            //response.json().then((data) => {
+            if (data['data'].length !== 0){
+                tuberTemperatureMorning.value = data['data']['tuberTemperatureMorning'];
+                humidity.value = data['data']['humidity'];
+                condensate.checked = data['data']['condensate'];
+                comment.value = data['data']['comment'];
+            } else {
+                tuberTemperatureMorning.value = ''
+                humidity.value = ''
+                condensate.checked = false
+                comment.value = ''
+            }
+            //});
+        }
+    } catch (err){
+        //console.log(err)
+    }
+
        }
 
     txtDate.addEventListener('change', () => {
