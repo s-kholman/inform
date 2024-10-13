@@ -116,4 +116,8 @@ class SzrController extends Controller
         }
         return redirect()->route(self::TITLE['route'].'.index');
     }
+
+    public function getApi($id) {
+
+    }
 }
