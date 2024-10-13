@@ -8,7 +8,8 @@ use App\Http\Requests\SprayingRequest;
 use App\Models\Pole;
 use App\Models\Sevooborot;
 use App\Models\Spraying;
-use App\Models\Szr;
+use App\Models\SzrClasses;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,11 +21,7 @@ class SprayingController extends Controller
         $this->middleware('can:viewAny, App\Models\Spraying');
 
     }
-    private function  display_null($value)
-    {
 
-        return $value ?: 'Н/Д';
-    }
     /**
      * Display a listing of the resource.
      */
@@ -37,7 +34,6 @@ class SprayingController extends Controller
                 $arr [$value['pole'] ['filial'] ['name']][$value['pole']['id']] = $value;
             }
         }
-
         return view('spraying.index', ['arr' => $arr]);
     }
 
@@ -46,39 +42,19 @@ class SprayingController extends Controller
      */
     public function create(HarvestAction $harvestAction)
     {
-
-        $sevooborot_arr = [];
-        $squaret_arr = [];
-        $szr_arr = [];
-
         $poles = Sevooborot::query()
-            ->with('Pole')
             ->where('harvest_year_id', $harvestAction->HarvestYear(now()))
-            ->get();
+            ->join('poles', function (JoinClause $join){
+                $join->on('sevooborots.pole_id', '=', 'poles.id')
+                    ->where('filial_id', '=', Auth::user()->Registration->filial_id);})
+            ->get()
+            ->groupBy('name');
 
-        if($poles->isNotEmpty()){
-            $poles = $poles
-                ->where('Pole.filial_id', Auth::user()->Registration->filial_id)
-                ->groupBy('Pole.name');
-        }
-
-
-        foreach (Sevooborot::query()->where('harvest_year_id', $harvestAction->HarvestYear(now()))->get() as $value){
-            $sevooborot_arr [$value->pole_id] [$value->id] =
-                $value->Nomenklature->name  . ' ' .
-                $this->display_null($value->Reproduktion->name ?? null) . ' ('. $value->square .' Га)';
-            $squaret_arr [$value->pole_id] [$value->id] =  $value->square;
-        }
-
-        foreach (Szr::all() as $value){
-            $szr_arr [$value->szr_classes_id] [$value->id] = $value->name;
-        }
+        $szrClasses = SzrClasses::query()->orderby('name')->get();
 
         return view('spraying.create', [
-            'sevooborot_arr' => json_encode($sevooborot_arr, JSON_UNESCAPED_UNICODE),
-            'squaret_arr' => json_encode($squaret_arr, JSON_UNESCAPED_UNICODE),
-            'szr_arr' => json_encode($szr_arr, JSON_UNESCAPED_UNICODE),
             'poles' => $poles,
+            'szrClasses' => $szrClasses,
         ]);
     }
 

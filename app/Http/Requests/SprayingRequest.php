@@ -23,11 +23,11 @@ class SprayingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pole' => 'numeric',
+            'pole' => 'numeric|min:1',
             'kultura' => 'numeric',
             'date' => ['date', new CreateNoTomorrow],
-            'szrClasses' => 'numeric',
-            'szr' => 'numeric',
+            'szrClasses' => 'numeric|min:1',
+            'szr' => 'numeric|min:1',
             'dosage' => 'numeric',
             'volume' => 'numeric',
             'comment' => 'nullable|max:255',
@@ -37,8 +37,9 @@ class SprayingRequest extends FormRequest
     public function messages()
     {
         return [
+            'min' => 'Заполните это поле',
             'numeric' => 'Заполните это поле',
-            'max' => 'Значение не должно быть длинне :max символов',
+            'max' => 'Значение не должно быть длиннее :max символов',
             'before_or_equal' => 'Дата не может быть в будущем'
         ];
     }
