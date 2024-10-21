@@ -23,13 +23,11 @@
                     <strong>{{ $message }}</strong>
                 </span>
                     @enderror
-
-
+                @can('ProductMonitoring.director.create')
                 <fieldset style="border: 2px solid #ffcaca; margin: 5px; padding: 10px" class="rounded-4">
                     <legend>Контроль за исполнением</legend>
                     <fieldset style="border: 2px solid #ffe2e2; margin: 5px; padding: 10px" class="rounded-4 DIRECTOR">
                         <legend>Руководитель</legend>
-
                         <div class="mb-3">
                             <label for="control_manager">Комментарий</label>
                             <input name="control_manager"
@@ -42,8 +40,9 @@
                             </span>
                             @enderror
                         </div>
-
                     </fieldset >
+                    @endcan
+                    @can('ProductMonitoring.deploy.create')
                     <fieldset style="border: 2px solid #ffe2e2; margin: 5px; padding: 10px;" class="rounded-4 DEPUTY">
                         <legend>Заместитель генерального</legend>
                         <div class="mb-3">
@@ -60,24 +59,11 @@
                         </div>
                     </fieldset>
                 </fieldset>
-
-
-
+                @endcan
                 <input type="submit" class="btn btn-primary" value="Сохранить">
-
                 <a class="btn btn-info" href="/monitoring">Назад</a>
             </form>
         </div>
     </div>
 @endsection('info')
-@section('script')
-<script>
-    let post_name = {!! json_encode($post_name) !!};
-    let post_arr = ['DIRECTOR', 'DEPUTY', 'TEMPERATURE'];
-    for (let i = 0; i <= post_arr.length-1; i++) {
-       if (post_name !=  post_arr[i]) {
-           document.querySelectorAll('.'+post_arr[i]).forEach(element => element.remove());
-       }
-   }
-</script>
-@endsection('script')
+

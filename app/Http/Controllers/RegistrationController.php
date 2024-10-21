@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 
 class RegistrationController extends Controller
@@ -84,7 +85,12 @@ class RegistrationController extends Controller
             ->where('id',$request->profile)
             ->first();
 
-            return view('profile.show', ['profile' => $profile]);
+        $userRole = implode(',', $profile->user->getRolenames()->toArray());
+
+        $rolesUser = Role::whereNotIn('name', [$userRole])->get();;
+
+
+            return view('profile.show', ['profile' => $profile, 'rolesUser' => $rolesUser]);
     }
 
 }

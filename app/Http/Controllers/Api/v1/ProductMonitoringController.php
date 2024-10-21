@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class ProductMonitoringController extends Controller
 {
-    public function index(Request $request)
+    public function __invoke(Request $request): ProductMonitoringResource
     {
         return new ProductMonitoringResource(
             ProductMonitoring::query()

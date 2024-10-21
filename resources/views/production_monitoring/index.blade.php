@@ -150,28 +150,30 @@
                     </div>
                 @endforelse
 
-                    @can('viewButton', 'App\Models\ProductMonitoring')
-                        <div class="row p-5">
-                            <div class="col-12 text-center">
-                                <a class="btn btn-info" href="/monitoring/create">Внести данные</a>
-                            </div>
-                        </div>
-                    @endcan
-
-                    @can('viewAny', 'App\Models\DailyUse')
-                        <div class="row text-center p-4">
-                            <div class="col-12 ">
-                                <a class="btn btn-info" href="/phase/">Внести фазы хранения</a>
-                            </div>
-                        </div>
-                    @endcan
-
-
                     <div class="row text-center">
                         <div class="col-12 ">
                             <a class="btn btn-success" href="/monitoring/reports/">Отчеты</a>
                         </div>
                     </div>
+
+                    @canany(['ProductMonitoring.director.create', 'ProductMonitoring.completed.create'])
+                        <div class="row p-5">
+                            <div class="col-12 text-center">
+                                <a class="btn btn-info" href="/monitoring/create">Внести данные</a>
+                            </div>
+                        </div>
+                    @endcanany
+
+                    @role('super-user')
+                        <div class="row text-center p-4">
+                            <div class="col-12 ">
+                                <a class="btn btn-info" href="/phase/">Внести фазы хранения</a>
+                            </div>
+                        </div>
+                    @endrole
+
+
+
             </div>
             <div class="item2 col-8" style="text-align: right">
 

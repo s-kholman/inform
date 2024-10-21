@@ -25,6 +25,8 @@ use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductMonitoringControlController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\ProductMonitoringReportController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RoleUserController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceNameController;
 use App\Http\Controllers\SevooborotController;
@@ -124,7 +126,7 @@ Route::get('/edit_limit/{limitID}', [LimitsController::class, 'limitEdit'])->nam
 
 Route::get('/profile', [RegistrationController::class, 'index'])->name('profile.index')->middleware('auth');
 Route::post('/profile', [RegistrationController::class, 'store'])->name('profile.store')->middleware('auth');
-Route::post('/profile/show/{profile}', [RegistrationController::class, 'show'])->name('profile.show')->middleware('can:viewAny, App\Models\administrator');
+Route::get('/profile/show/{profile}', [RegistrationController::class, 'show'])->name('profile.show')->middleware('can:viewAny, App\Models\administrator');
 
 
 Route::get('/activation', [ActivationController::class, 'index'])->name('activation.index')->middleware('can:viewAny, App\Models\administrator');
@@ -238,14 +240,17 @@ Route::post('monitoring/reports', [ProductMonitoringReportController::class, 'in
 /**
  * Отчет по температурному мониторингу продукции в буртах
  */
-Route::resource('phase', StoragePhaseController::class)->middleware('auth');
-Route::get('monitoring/index/{year?}', [ProductMonitoringController::class, 'index'])->middleware('auth');
-Route::resource('monitoring', ProductMonitoringController::class)->middleware('auth');
-Route::get('monitoring/show/filial/{filial_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilial'])->name('monitoring.show.filial')->middleware('auth');
-Route::get('monitoring/filial/storage/{storage_name_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilialMonitoring'])->name('monitoring.show.filial.all')->middleware('auth');
-Route::get('monitoring/control/storage/{storage_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'controlStorage'])->name('monitoring.control.storage')->middleware('auth');
-Route::resource('storage/phase/temperatures',StoragePhaseTemperatureController::class);
-Route::post('product/monitoring/control', [ProductMonitoringControlController::class, 'store'])->name('product.monitoring.control.store');
+Route::group(['middleware' => ['can:ProductMonitoring.user.view']], function () {
+    Route::resource('phase', StoragePhaseController::class);
+    Route::get('monitoring/index/{year?}', [ProductMonitoringController::class, 'index']);
+    Route::resource('monitoring', ProductMonitoringController::class);
+    Route::get('monitoring/show/filial/{filial_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilial'])->name('monitoring.show.filial');
+    Route::get('monitoring/filial/storage/{storage_name_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilialMonitoring'])->name('monitoring.show.filial.all');
+    Route::get('monitoring/control/storage/{storage_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'controlStorage'])->name('monitoring.control.storage');
+    Route::resource('storage/phase/temperatures',StoragePhaseTemperatureController::class);
+    Route::post('product/monitoring/control', [ProductMonitoringControlController::class, 'store'])->name('product.monitoring.control.store');
+});
+
 
 Route::get('/printer/{id}/current/show', [CurrentStatusController::class, 'show'])->name('printer.current.show')->middleware('can:viewAny, App\Models\administrator');
 Route::get('/current/{currentStatus}/edit', [CurrentStatusController::class, 'edit'])->name('printer.current.edit')->middleware('can:viewAny, App\Models\administrator');
@@ -298,6 +303,14 @@ Route::delete('/sowing_control_potato/{sowing_control_potato}', [SowingControlPo
     ->middleware('can:delete,sowing_control_potato');
 
 Route::resource('prikopki', PrikopkiController::class)->middleware('auth');
+
+Route::resource('role', RoleController::class);
+
+Route::post('user/role/destroy/{registration}', [RoleUserController::class, 'userRoleDestroy'])->name('user.role.destroy');
+Route::post('user/role/add/{registration}', [RoleUserController::class, 'userRoleAdd'])->name('user.role.add');
+Route::get('role', [RoleController::class, 'index'])->name('role.index');
+Route::get('permissions/role', [RoleController::class, 'permissions'])->name('permissions.role.index');
+Route::post('permissions/role/add', [RoleController::class, 'permissionsAdd'])->name('permissions.role.add');
 
 Auth::routes();
 

@@ -84,12 +84,12 @@
                         <a class="nav-link align-middle px-0" href="/prikopki" class="nav-link px-0">
                             <i class="fs-4 bi-diamond"></i> <span class="ms-1 d-none d-sm-inline">Прикопки</span></a>
                     </li>
-
+                    @can('ProductMonitoring.user.view')
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/monitoring" class="nav-link px-0">
                             <i class="fs-4 bi-thermometer"></i> <span class="ms-1 d-none d-sm-inline">Мониторинг температуры</span></a>
                     </li>
-
+                    @endcan
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/peat" class="nav-link px-0">
                             <i class="fs-4 bi-square-fill"></i> <span class="ms-1 d-none d-sm-inline">Торф</span></a>
@@ -165,6 +165,13 @@
                             <li>
                                 <a href="/type_field_work" class="nav-link px-0"> <span class="d-none d-sm-inline">Тип посевных работ</span></a>
                             </li>
+                            <li>
+                                <a href="/role" class="nav-link px-0"> <span class="d-none d-sm-inline">Создать роли</span></a>
+                            </li>
+                            <li>
+                                <a href="/permissions/role" class="nav-link px-0"> <span class="d-none d-sm-inline">Права для ролей</span></a>
+                            </li>
+
                             @endcan
                         </ul>
                     </li>

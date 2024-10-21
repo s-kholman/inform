@@ -65,33 +65,17 @@ class ProductMonitoringController extends Controller
      */
     public function create()
     {
-
-       $toTemperature = json_decode(env('MONITORING_TO_TEMPERATURE', '{"0":0}'),true);
-
-       $access = 0;
-
-       foreach ($toTemperature as $key) {
-           if ($key == Auth::user()->id){
-               $access = 1;
-               break;
-           }
-       }
-
-       $url = json_encode(env('APP_URL', 'https://inform.krimm.ru'));
-
-        return view('production_monitoring.create', ['post_name' => $this->getPost(), 'access' => $access, 'url' => $url]);
+        return view('production_monitoring.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductMonitoringRequest $request, HarvestAction $harvestAction)
+    public function store(ProductMonitoringRequest $request, HarvestAction $harvestAction, ProductMonitoringControlController $controlController)
     {
         $store = $request->validated();
-        //Тестовое. Заполнение реквизитов по прошлому периоду
         $insertToManager = collect();
 
-        //if ($this->getPost() <> 'DEPUTY' && !array_key_exists('storage_phase_id',$store)) {
         if (!array_key_exists('storage_phase_id',$store)) {
             $insertToManager = ProductMonitoring::query()
                 ->where('storage_name_id', $store['storage'])
@@ -111,9 +95,17 @@ class ProductMonitoringController extends Controller
         unset($store['storage']);
         unset($store['date']);
         $store ['harvest_year_id'] = $harvestAction->HarvestYear(now(), 7);
-        $store ['condensate'] = boolval($request['condensate']);
 
-        $date = ProductMonitoring::query()->updateOrCreate(
+        /**
+         * При наличии поля "tuberTemperatureMorning"
+         * добавляем поле "condensate" в любом случае.
+         * При других условиях происходит затирание данных
+        **/
+        if (array_key_exists('tuberTemperatureMorning', $store)){
+            $store ['condensate'] = boolval($request['condensate']);
+        }
+
+        $modelCreateOrUpdate = ProductMonitoring::query()->updateOrCreate(
             [
                 'storage_name_id' => $request['storage'],
                 'date' => $request['date'],
@@ -121,31 +113,16 @@ class ProductMonitoringController extends Controller
                 $store
         );
 
-        if ($this->getPost() == 'DIRECTOR' && array_key_exists('control_manager',$store)) {
-            ProductMonitoringControl::query()
-                ->create([
-                    'product_monitoring_id' => $date->id,
-                    'user_id' => Auth::user()->id,
-                    'level' => 1,
-                    'text' => $store['control_manager']
-                ]);
-            //DIRECTOR = 1; DEPUTY = 2;
-        } elseif ($this->getPost() == 'DEPUTY' && array_key_exists('control_director',$store)) {
-            ProductMonitoringControl::query()
-                ->create([
-                    'product_monitoring_id' => $date->id,
-                    'user_id' => Auth::user()->id,
-                    'level' => 2,
-                    'text' => $store['control_director']
-                ]);
-        }
+        //Контроль директора и зам. генерального
+        $controlController($modelCreateOrUpdate, $store);
 
         if ($request['timeUp'] <> null && $request['timeDown'] <> null) {
-            StorageMode::create([
-                'timeUp' => $request['timeUp'],
-                'timeDown' => $request['timeDown'],
-                'product_monitoring_id' => $date->id,
-            ]);
+            StorageMode::query()
+                ->create([
+                    'timeUp' => $request['timeUp'],
+                    'timeDown' => $request['timeDown'],
+                    'product_monitoring_id' => $modelCreateOrUpdate->id,
+                ]);
         } else
             if ($insertToManager->isNotEmpty()) {
             $StorageMode = StorageMode::query()
@@ -157,7 +134,7 @@ class ProductMonitoringController extends Controller
                     StorageMode::query()->updateOrCreate([
                         'timeUp' => $value->timeUp,
                         'timeDown' => $value->timeDown,
-                        'product_monitoring_id' => $date->id
+                        'product_monitoring_id' => $modelCreateOrUpdate->id
                         ]);
                 }
             }
@@ -184,9 +161,8 @@ class ProductMonitoringController extends Controller
      */
     public function edit(ProductMonitoring $monitoring)
     {
-        $post_name = $this->getPost();
 
-        return view('production_monitoring.edit', ['monitoring' => $monitoring, 'post_name' => $post_name]);
+        return view('production_monitoring.edit', ['monitoring' => $monitoring]);
     }
 
     /**
@@ -250,7 +226,7 @@ class ProductMonitoringController extends Controller
         ;
 
         if ($var->isNotEmpty()) {
-            return view('production_monitoring.showFilialMonitoringTable', ['monitoring' => $var, 'post_name' => $this->getPost()]);
+            return view('production_monitoring.showFilialMonitoringTable', ['monitoring' => $var]);
         } else {
             return redirect()->route('monitoring.index');
         }
@@ -259,21 +235,9 @@ class ProductMonitoringController extends Controller
     public function controlStorage(Request $request)
     {
 
-        $post_name = $this->getPost();
         $storage_model = StorageName::query()->findOrFail($request->storage_id);
 
-        return view('production_monitoring.control', ['post_name' => $post_name, 'storage_model' => $storage_model]);
+        return view('production_monitoring.control', ['storage_model' => $storage_model]);
     }
 
-    public function getPost(): string{
-        $post = json_decode(env('POST_ADD_MONITORING', '{"DIRECTOR":0,"DEPUTY":0,"TEMPERATURE":0}'),true);
-
-        $post_name = 'Default';
-        foreach ($post as $name => $key) {
-            if ($key === Auth::user()->registration->post_id) {
-                $post_name =  $name;
-            }
-        }
-        return $post_name;
-    }
 }
