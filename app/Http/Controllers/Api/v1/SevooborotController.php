@@ -9,7 +9,8 @@ use App\Models\Sevooborot;
 
 class SevooborotController extends Controller
 {
-    public function get($id, HarvestAction $harvestAction) {
+    public function __invoke($id, HarvestAction $harvestAction)
+    {
         return SevooborotResource::collection(Sevooborot::query()
             ->with(['Nomenklature', 'Reproduktion'])
             ->where('pole_id', $id)

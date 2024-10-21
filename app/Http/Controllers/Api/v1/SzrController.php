@@ -8,7 +8,8 @@ use App\Models\Szr;
 
 class SzrController extends Controller
 {
-    public function get($id) {
+    public function __invoke($id)
+    {
         return SzrResource::collection(
             Szr::query()
                 ->where('szr_classes_id', $id)

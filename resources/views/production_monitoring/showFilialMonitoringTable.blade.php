@@ -28,19 +28,20 @@
         </div>
 
         <div class="row mb-3">
-            @can('viewButton', 'App\Models\ProductMonitoring')
-            <div class="col-4 ">
-                <a class="btn btn-info" href="/monitoring/create">Внести данные</a>
-            </div>
-            @endcan
+            @canany(['ProductMonitoring.director.create', 'ProductMonitoring.completed.create'])
+                <div class="col-4 ">
+                    <a class="btn btn-info" href="/monitoring/create">Внести данные</a>
+                </div>
+            @endcanany
             <div class="col-4">
                 <a class="btn btn-secondary" href="{{route('monitoring.show.filial', ['filial_id' => $monitoring[0]->storageName->filial_id, 'harvest_year_id' => $monitoring[0]->harvest_year_id])}}">Назад</a>
             </div>
-            @if($post_name == 'DIRECTOR' || $post_name == 'DEPUTY')
-            <div class="col-4">
-                <a class="btn btn-outline-primary" href="{{route('monitoring.control.storage', ['storage_id' => $monitoring[0]->storage_name_id, 'harvest_year_id' => $monitoring[0]->harvest_year_id])}}">Контроль</a>
-            </div>
-            @endif
+                @canany(['ProductMonitoring.director.create', 'ProductMonitoring.deploy.create'])
+                <div class="col-4">
+                    <a class="btn btn-outline-primary" href="{{route('monitoring.control.storage', ['storage_id' => $monitoring[0]->storage_name_id, 'harvest_year_id' => $monitoring[0]->harvest_year_id])}}">Контроль</a>
+                </div>
+                @endcanany
+
         </div>
 
         <table class="table table-bordered text-center">
@@ -65,15 +66,15 @@
             @foreach($monitoring as $id => $value)
                 <tr>
                     <td>
-                        @if($post_name == 'DIRECTOR' || $post_name == 'DEPUTY')
+{{--                        @canany(['ProductMonitoring.director.create', 'ProductMonitoring.deploy.create'])
                             <a href="/monitoring/{{$value->id}}/edit">{{\Carbon\Carbon::parse($value->date)->format('d-m-Y')}}</a>
-                        @else
+                        @else--}}
                             {{\Carbon\Carbon::parse($value->date)->format('d-m-Y')}}
-                        @endif
+{{--                        @endcanany--}}
                     </td>
                     <td style="background-color: #f3f9ff">{{$value->phase->name ?? ''}}</td>
                     <td  style="background-color: #f3f9ff" class="text-nowrap">
-                        @if($post_name == 'DIRECTOR')
+                        @can('ProductMonitoring.director.create')
                                 @forelse(\App\Models\StorageMode::where('product_monitoring_id', $value->id)->orderby('timeUp')->get() as $mode)
                                             <a href="/monitoring/mode/show/{{$mode->id}}">{{\Carbon\Carbon::parse($mode->timeUp)->format('H:i')}} {{\Carbon\Carbon::parse($mode->timeDown)->format('H:i')}}</a> <br>
                                 @empty
@@ -83,7 +84,7 @@
                                             {{\Carbon\Carbon::parse($mode->timeUp)->format('H:i')}} {{\Carbon\Carbon::parse($mode->timeDown)->format('H:i')}}<br>
                                 @empty
                             @endforelse
-                        @endif
+                        @endcan
                     </td>
                     <td style="background-color: #f3f9ff">{{$value->temperature_keeping}} @if($value->temperature_keeping <> '')&degС@endif</td>
                     <td style="background-color: #f3f9ff">{{$value->humidity_keeping}}</td>
@@ -115,11 +116,7 @@
                     </td>
                 </tr>
             @endforeach
-
         </table>
-
-
-
         <div class="row p-4">
             {{$monitoring->links()}}
         </div>

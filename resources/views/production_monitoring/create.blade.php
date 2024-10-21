@@ -42,18 +42,17 @@
                            id="txtDate"
                            type="date"
                            value="{{old('date') == '' ? date('Y-m-d') : old('date')}}"
-                           @if($post_name == 'TEMPERATURE')
-                           max="{{date('Y-m-d')}}"
-                           min="{{date('Y-m-d', strtotime(now() . '-1 day'))}}"
-                           @endif
+                            @can('ProductMonitoring.completed.create')
+                               max="{{date('Y-m-d')}}"
+                               min="{{date('Y-m-d', strtotime(now() . '-1 day'))}}"
+                            @endcan
                            class="form-control @error('date') is-invalid @enderror">
                     @error('date')
                     <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>
                     @enderror
-
-                @if($access)
+                @can('ProductMonitoring.combining.view')
                 <div class="form-switch form-check mb-3">
                     <label id="label-access-check" class="form-label" for="access">Переключить на температурщика</label>
                     <input class="form-check-input"
@@ -62,9 +61,10 @@
                            name="access"
                            @if(old('access'))checked @endif>
                 </div>
-                @endif
-
-                <fieldset style="border: 2px solid #4d1616; margin: 5px; padding: 10px" class="rounded-4 DIRECTOR">
+                @endcan
+                <fieldset style="border: 2px solid #4d1616; margin: 5px; padding: 10px;
+                                @if(auth()->user()->can('ProductMonitoring.director.create')) display: block;" @else display: none;" disabled @endif
+                          class="rounded-4 DIRECTOR">
                     <legend>Заполняет руководитель</legend>
                     <label for="storage_phase_id">Фаза хранения</label>
                     <select name="storage_phase_id" id="storage_phase_id" class="form-select @error('storage_phase_id') is-invalid @enderror">
@@ -135,7 +135,8 @@
 
 
 
-                <fieldset id="temperature" style="border: 2px solid #82f568; margin: 5px; padding: 10px" class="rounded-4 TEMPERATURE">
+                <fieldset class="rounded-4 TEMPERATURE" id="temperature" style="border: 2px solid #82f568; margin: 5px; padding: 10px;
+                @if(auth()->user()->can('ProductMonitoring.completed.create')) display: block;" @else display: none;" disabled @endif">
                     <legend>Заполняет температурщик</legend>
 
                 <label for="tuberTemperatureMorning">Температура клубня</label>
@@ -196,47 +197,34 @@
 @endsection('info')
 @section('script')
 <script>
-    let post_arr = ['DIRECTOR', 'DEPUTY', 'TEMPERATURE'];
-    let post_name = {!! json_encode($post_name) !!};
-    let access = {!! $access !!};
-    let url = {!! $url !!};
-
-    for (let i = 0; i <= post_arr.length-1; i++) {
-       if (post_name != post_arr[i]) {
-           //document.querySelectorAll('.'+post_arr[i]).forEach(element => element.remove());
-           document.querySelectorAll('.'+post_arr[i]).forEach(element => element.style.display = 'none');
-           document.querySelectorAll('.'+post_arr[i]).forEach(element => element.disabled = true);
-       }
-   }
-    if(post_name == 'Default') {
-        document.getElementById('save').remove();
-    }
-
+    const url = window.location.origin;
+    const date = new Date()
+    const dateMin = date.setDate(date.getDate() - 2)
     const check = document.getElementById('access');
     const label = document.getElementById('label-access-check')
     const tempDom = document.getElementsByClassName('TEMPERATURE')
     const directorDom = document.getElementsByClassName('DIRECTOR')
 
-   if(access) {
-       //tempDom[0].disabled = true
-       checkedCheck()
+    if(check !== null){
+        checkedCheck()
 
-       check.addEventListener('click', () => {
-           checkedCheck()
-           getProductMonitoring(selectStorageE.value, txtDate.value);
-       })
-
-   }
+        check.addEventListener('click', () => {
+            checkedCheck()
+            getProductMonitoring(selectStorageE.value, txtDate.value);
+        })
+    }
 
    function checkedCheck()
    {
        if(check.checked){
+           //txtDate.setAttribute('min',  (date.getDate() -1).toISOString().split('T')[0])
            tempDom[0].style.display = null
            tempDom[0].disabled = false
            label.textContent = 'Переключить на директора';
            directorDom[0].style.display = 'none'
            directorDom[0].disabled = true;
        } else {
+           //txtDate.removeAttribute('min')
            label.textContent = 'Переключить на температурщика';
            tempDom[0].disabled = true
            tempDom[0].style.display = 'none'
@@ -259,7 +247,6 @@
    })
 
 async function getProductMonitoring(id, date) {
-       //if(id !=0 && date != '' && tuberTemperatureMorning !== null) {
     try {
         if(id !=0 && date != '' && !temperature.disabled) {
             const response =
@@ -269,7 +256,6 @@ async function getProductMonitoring(id, date) {
             })
 
             const data = await response.json()
-            //response.json().then((data) => {
             if (data['data'].length !== 0){
                 tuberTemperatureMorning.value = data['data']['tuberTemperatureMorning'];
                 humidity.value = data['data']['humidity'];
@@ -281,10 +267,8 @@ async function getProductMonitoring(id, date) {
                 condensate.checked = false
                 comment.value = ''
             }
-            //});
         }
     } catch (err){
-        //console.log(err)
     }
 
        }

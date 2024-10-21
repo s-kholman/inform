@@ -32,11 +32,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
 
-                                    <form action="{{ route('profile.show', ['profile' => $value->registration])}}" method="POST">
-                                        @csrf
-                                        <li><input class="dropdown-item text-start" type="submit" value="Открыть профиль"></li>
-                                    </form>
-
+                                    <li><a href="/profile/show/{{$value->registration->id}}" class="dropdown-item text-start">Открыть профиль</a></li>
 
                                     <form action="{{ route('user.activation', ['registration' => $value->registration])}}" method="POST">
                                         @csrf
