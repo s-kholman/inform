@@ -11,8 +11,13 @@
         <div class="card-body">
             <h5 class="card-title">Текущие ключи:</h5>
             <div class="card-text" id="voucher-get-info"></div>
-            <div>
-                <button disabled id="voucher-get-btn" class="btn btn-primary mt-4" type="submit">Получить ключ</button>
+            <div class="row col-sm mt-2">
+                <div class="col-sm-8 ">
+                    <button disabled id="voucher-get-btn" class="btn btn-primary" type="submit">Получить ключ</button>
+                 </div>
+                <div class="col-sm-4 col-xl-3 text-center">
+                    <input class="form-control" type="number" id="day" placeholder="дней" min="1" max="365" step="1" value="365">
+                </div>
             </div>
         </div>
         <div class="card-footer text-muted">
@@ -37,6 +42,7 @@
 @section('script')
     <script>
         const intlDayToStr = new Intl.PluralRules('ru-RU')
+        const dayInput = document.getElementById('day')
         const voucherDivInfo = document.getElementById('voucher-get-info')
         const voucherGetBtn = document.getElementById('voucher-get-btn')
         const url = window.location.origin
@@ -93,17 +99,17 @@
                     voucherGetBtn.disabled = true;
                 }
         } catch (error)  {
-                // voucherChildInfo.innerHTML = 'Ошибка получение данных: ' + error
-                // voucherDivInfo.appendChild(voucherChildInfo)
                 voucherGetBtn.disabled = true;
             }
         }
 
         async function voucherCreate(){
-            if(phone !== null){
+            const day = Math.ceil(dayInput.value)
+            if(phone !== null && +day >= 1 && +day <= 365){
                 try{
                     let formData = new FormData
                     formData.append('phone', '+' + phone)
+                    formData.append('day', '+' + day)
 
                     await fetch(url + '/api/v1/voucher/create',
                         {

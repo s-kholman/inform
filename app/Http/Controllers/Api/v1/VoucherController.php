@@ -17,7 +17,7 @@ class VoucherController extends Controller
 
         $unifi_connection->login();
 
-        $unifi_connection->create_voucher(365*60*24, 1,1, $request->phone);
+        $unifi_connection->create_voucher($request->day*60*24, 1,1, $request->phone);
 
         Mail::to('sergey@krimm.ru', 'Администратор')->queue(new VoucherCreateMail($request->phone));
     }
