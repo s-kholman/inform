@@ -16,10 +16,11 @@
             </div>
         </div>
         <div class="card-footer text-muted">
-            <p>Получить ключ можно альтернативным способом:<p><br/>
-            Отправив SMS с текстом <br /><b>WiFi <i>365</i></b><br />
-            Где 365 можно заменить от 1 до 365 <br />дней доступа <br />
-            на номер +79956919830
+            <p>Получить ключ можно в обратном SMS:<p><br/>
+                Отправив SMS с текстом <br /><b>WiFi <i>365</i></b><br />
+                на номер +79956919830,
+                где число можно заменить от 1 до 365 <br />дней доступа <br />
+
         </div>
     </div>
     <div>
@@ -51,7 +52,7 @@
 
         setTimeout(voucherGetInfo,100)
 
-        const update = setInterval(voucherGetInfo, 5000)
+        const update = setInterval(voucherGetInfo, 15000)
 
         setTimeout(() => {
             clearInterval(update)
@@ -92,8 +93,8 @@
                     voucherGetBtn.disabled = true;
                 }
         } catch (error)  {
-                voucherChildInfo.innerHTML = 'Ошибка получение данных: ' + error
-                voucherDivInfo.appendChild(voucherChildInfo)
+                // voucherChildInfo.innerHTML = 'Ошибка получение данных: ' + error
+                // voucherDivInfo.appendChild(voucherChildInfo)
                 voucherGetBtn.disabled = true;
             }
         }
