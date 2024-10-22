@@ -80,7 +80,7 @@
                 </fieldset>
 
 
-                <fieldset style="border: 2px solid #82f568; margin: 5px; padding: 10px" class="rounded-4 TEMPERATURE">
+                <fieldset disabled style="border: 2px solid #82f568; margin: 5px; padding: 10px; display: none" class="rounded-4 TEMPERATURE">
                     <legend>Заполняет температурщик</legend>
                     <label for="tuberTemperatureMorning">Температура клубня</label>
                     <input type="number" step="0.01" name="tuberTemperatureMorning" id="tuberTemperatureMorning"
@@ -131,12 +131,11 @@
 @section('script')
     @include('scripts\destroy-modal')
     <script>
-        let post_name = {!! json_encode($post_name) !!};
-        let post_arr = ['DIRECTOR', 'DEPUTY', 'TEMPERATURE'];
+/*        let post_arr = ['DIRECTOR', 'DEPUTY', 'TEMPERATURE'];
         for (let i = 0; i <= post_arr.length-1; i++) {
             if (post_name != post_arr[i]) {
                 document.querySelectorAll('.'+post_arr[i]).forEach(element => element.remove());
             }
-        }
+        }*/
     </script>
 @endsection

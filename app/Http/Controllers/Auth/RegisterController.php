@@ -80,7 +80,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         /**
-         * Сделанна новая отправка СМС через мобильное приложение
+         * Сделана новая отправка СМС через мобильное приложение
          */
         try {
             Sms::create([

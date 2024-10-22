@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\BrendController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\Commercial\CheckController;
 use App\Http\Controllers\CounterpartyController;
 use App\Http\Controllers\CultivationController;
 use App\Http\Controllers\CurrentStatusController;
@@ -14,17 +16,21 @@ use App\Http\Controllers\GuesController;
 use App\Http\Controllers\HarvestYearController;
 use App\Http\Controllers\HeightController;
 use App\Http\Controllers\HoeingResultController;
+use App\Http\Controllers\LimitsController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
 use App\Http\Controllers\PeatController;
 use App\Http\Controllers\PeatExtractionController;
+use App\Http\Controllers\PoleController;
+use App\Http\Controllers\PolivController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrikopkiController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductMonitoringControlController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\ProductMonitoringReportController;
+use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RoleUserController;
 use App\Http\Controllers\ServiceController;
@@ -56,19 +62,15 @@ use App\Http\Controllers\StoragePhaseTemperatureController;
 use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
 use App\Http\Controllers\TypeFieldWorkController;
+use App\Http\Controllers\Voucher\VoucherController;
 use App\Http\Controllers\WateringController;
 use App\Http\Controllers\Yandex\AliceController;
 use App\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers\LimitsController;
-use \App\Http\Controllers\RegistrationController;
-use \App\Http\Controllers\ActivationController;
-use \App\Http\Controllers\Commercial\CheckController;
-use \App\Http\Controllers\PolivController;
-use \App\Http\Controllers\PoleController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -311,6 +313,10 @@ Route::post('user/role/add/{registration}', [RoleUserController::class, 'userRol
 Route::get('role', [RoleController::class, 'index'])->name('role.index');
 Route::get('permissions/role', [RoleController::class, 'permissions'])->name('permissions.role.index');
 Route::post('permissions/role/add', [RoleController::class, 'permissionsAdd'])->name('permissions.role.add');
+
+Route::group(['middleware' => ['can:Voucher.user.view']], function (){
+   Route::get('voucher', [VoucherController::class, 'index']);
+});
 
 Auth::routes();
 

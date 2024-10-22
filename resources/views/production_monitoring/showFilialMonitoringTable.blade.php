@@ -66,11 +66,11 @@
             @foreach($monitoring as $id => $value)
                 <tr>
                     <td>
-{{--                        @canany(['ProductMonitoring.director.create', 'ProductMonitoring.deploy.create'])
+                        @can(['ProductMonitoring.director.create'])
                             <a href="/monitoring/{{$value->id}}/edit">{{\Carbon\Carbon::parse($value->date)->format('d-m-Y')}}</a>
-                        @else--}}
+                        @else
                             {{\Carbon\Carbon::parse($value->date)->format('d-m-Y')}}
-{{--                        @endcanany--}}
+                        @endcan
                     </td>
                     <td style="background-color: #f3f9ff">{{$value->phase->name ?? ''}}</td>
                     <td  style="background-color: #f3f9ff" class="text-nowrap">
