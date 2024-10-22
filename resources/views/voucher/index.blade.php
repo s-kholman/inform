@@ -6,7 +6,7 @@
 
     <div class="card  col-sm-5 text-center">
         <div class="card-header">
-            Ваши данные
+            Доступ к WiFi-сети <b>KRiMM_INTERNET</b>
         </div>
         <div class="card-body">
             <h5 class="card-title">Текущие ключи:</h5>
