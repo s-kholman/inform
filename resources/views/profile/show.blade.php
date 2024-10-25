@@ -13,9 +13,9 @@
            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="roles-add-tab" data-bs-toggle="tab" data-bs-target="#roles-add-tab-pane" type="button" role="tab" aria-controls="roles-add-tab-pane" aria-selected="false">Добавить роль</button>
             </li>
-            {{-- <li class="nav-item" role="presentation">
-                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
-            </li>--}}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="vpn-add-tab" data-bs-toggle="tab" data-bs-target="#vpn-add-tab-pane" type="button" role="tab" aria-controls="vpn-add-tab-pane" aria-selected="false">VPN Доступ</button>
+            </li>
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="user-tab-pane" role="tabpanel" aria-labelledby="user-tab" tabindex="0">
@@ -112,8 +112,105 @@
                 </div>
                 </form>
             </div>
-            {{--<div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div>--}}
-        </div>
 
+            <div class="tab-pane fade" id="vpn-add-tab-pane" role="tabpanel" aria-labelledby="vpn-add-tab" tabindex="0">
+                <div>
+                    <form action="{{route('vpn.store')}}" method="post">
+                        @csrf
+                        <input hidden name="id" value="{{$profile->id}}">
+                        <div class="col-sm-6">
+                            <label for="ip" class="col-sm-6 col-form-label">IP пользователя</label>
+                            <input id="ip"
+                                   class="form-control"
+                                   type="text"
+                                   name="ip_domain"
+                                   placeholder="IP адрес"
+                                   value="{{$profile->vpnInfo->ip_domain ?? ''}}">
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="login_domain" class="col-sm-12 col-form-label">Доменное имя пользователя</label>
+                            <input class="form-control"
+                                   id="login_domain"
+                                   type="text"
+                                   name="login_domain"
+                                   placeholder="Доменное имя"
+                                   value="{{$profile->vpnInfo->login_domain ?? ''}}">
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-secondary" type="submit">Сохранить</button>
+                        </div>
+                    </form>
+
+                        <div class="card mt-4">
+                            <input hidden name="userID" value="{{$profile->user_id}}">
+                            <h5 class="card-header">Отправить пользователю данные VPN</h5>
+                            <div class="card-body">
+                                <h5 class="card-title">Текущие настройки</h5>
+                                <p class="card-text">
+                                    <label>IP - {{$profile->vpnInfo->ip_domain ?? 'отсутствует'}}</label><br/>
+                                    <label id="status"></label> <label id="timer"></label>
+                                </p>
+                                <button id="btnCreate" class="btn btn-danger" type="submit">Сгенерировать и отправить</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection('info')
+@section('script')
+    <script>
+        const id = {!! $profile->user_id !!};
+        const btnCreate = document.getElementById('btnCreate')
+        const statusLabel = document.getElementById('status')
+        const timerLabel = document.getElementById('timer')
+        const url = window.location.origin
+        btnCreate.addEventListener('click', () => {
+            sslGet()
+        })
+        async function sslGet() {
+            try {
+                btnCreate.disabled = true;
+                statusLabel.textContent = 'Запрос данных, ожидайте'
+                let formData = new FormData
+                formData.append('id', '+' + id)
+                const response = await fetch(url + '/api/v1/ssl/sign',
+                    {
+                        method: 'POST',
+                        headers:
+                            {
+                                "Accept": "application/json",
+                            },
+                        body: formData,
+                    })
+                const data = await response.json()
+
+                if (data['message'] == 'SSL sign') {
+                    statusLabel.textContent = 'Генерация и настройка пользователя. Ожидайте смены статуса'
+                    setTimeout(sslGet, 60000)
+                    timer();
+                } else {
+                    statusLabel.textContent = data['message']
+                    btnCreate.disabled = false;
+                }
+
+            } catch (error) {
+            }
+        }
+let time = 59;
+
+        function timer()
+        {
+            const timer = setInterval(() => {
+                timerLabel.textContent = ' ..' + time--
+            }, 1000)
+
+            setTimeout(() => {
+                timerLabel.textContent = ''
+                time = 60
+                clearInterval(timer)
+            }, (60000))
+        }
+
+    </script>
+@endsection('script')

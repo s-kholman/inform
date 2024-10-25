@@ -60,6 +60,12 @@
                                 <i class="fs-4 bi-wifi"></i> <span class="ms-1 d-none d-sm-inline">Доступ к WiFi</span></a>
                         </li>
                     @endcan
+                    @can('VpnInfo.user.view')
+                        <li class="nav-item">
+                            <a class="nav-link align-middle px-0" href="/vpn" class="nav-link px-0">
+                                <i class="fs-4 bi-house-lock-fill"></i> <span class="ms-1 d-none d-sm-inline">VPN из дома</span></a>
+                        </li>
+                    @endcan
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/sowing?id=1" class="nav-link px-0">
                             <i class="fs-4 bi-speedometer"></i> <span class="ms-1 d-none d-sm-inline">Посевная</span></a>

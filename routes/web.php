@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\BrendController;
+use App\Http\Controllers\Cabinet\SSL\MikrotikController;
+use App\Http\Controllers\cabinet\ssl\SslCreateController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\Commercial\CheckController;
 use App\Http\Controllers\CounterpartyController;
@@ -23,7 +25,6 @@ use App\Http\Controllers\NomenklatureController;
 use App\Http\Controllers\PeatController;
 use App\Http\Controllers\PeatExtractionController;
 use App\Http\Controllers\PoleController;
-use App\Http\Controllers\PolivController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrikopkiController;
 use App\Http\Controllers\PrinterController;
@@ -63,6 +64,7 @@ use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
 use App\Http\Controllers\TypeFieldWorkController;
 use App\Http\Controllers\Voucher\VoucherController;
+use App\Http\Controllers\VpnInfoController;
 use App\Http\Controllers\WateringController;
 use App\Http\Controllers\Yandex\AliceController;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -129,6 +131,7 @@ Route::get('/edit_limit/{limitID}', [LimitsController::class, 'limitEdit'])->nam
 Route::get('/profile', [RegistrationController::class, 'index'])->name('profile.index')->middleware('auth');
 Route::post('/profile', [RegistrationController::class, 'store'])->name('profile.store')->middleware('auth');
 Route::get('/profile/show/{profile}', [RegistrationController::class, 'show'])->name('profile.show')->middleware('can:viewAny, App\Models\administrator');
+Route::post('/registration/ip/store/{registration}', [RegistrationController::class, 'vpnAddInform'])->name('profile.ip.store');
 
 
 Route::get('/activation', [ActivationController::class, 'index'])->name('activation.index')->middleware('can:viewAny, App\Models\administrator');
@@ -266,7 +269,7 @@ Route::get('/daily', [PrinterController::class, 'daily']);
 Route::get('/dailyone', [PrinterController::class, 'dailyone']);
 Route::get('/job', [PrinterController::class, 'job']);
 
-Route::get('test', [\App\Http\Controllers\Cabinet\SSL\MikrotikController::class, 'index']);
+Route::get('test', [MikrotikController::class, 'createPowerShell']);
 
 Route::view('/reference', 'printer.reference');
 
@@ -317,6 +320,8 @@ Route::post('permissions/role/add', [RoleController::class, 'permissionsAdd'])->
 Route::group(['middleware' => ['can:Voucher.user.view']], function (){
    Route::get('voucher', [VoucherController::class, 'index']);
 });
+
+Route::resource('vpn', VpnInfoController::class);
 
 Auth::routes();
 
