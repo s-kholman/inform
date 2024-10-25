@@ -46,7 +46,7 @@ class MikrotikController extends Controller
 
         $this->user['locality'] = Str::slug(Str::lower($user[0]->FilialName->name),'','ru');
         $this->user['common_name'] = Str::slug(
-            Str::lower(Str::limit($user[0]->Registration->last_name, 1)).' '.
+            Str::lower(Str::limit($user[0]->Registration->first_name, 1)).' '.
             Str::lower($user[0]->Registration->last_name).' '.
             $user[0]->id,'_','ru');
 
