@@ -30,4 +30,9 @@ class Registration extends Model
     {
         return $this->belongsTo(Post::class);
     }
+
+    public function vpninfo()
+    {
+        return $this->belongsTo(VpnInfo::class, 'id', 'registration_id');
+    }
 }

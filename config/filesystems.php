@@ -55,6 +55,12 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
+        'ftp' => [
+          'driver' => 'ftp',
+          'host' => env('MIKROTIK_HOST'),
+          'username' => env('MIKROTIK_USERNAME'),
+          'password' => env('MIKROTIK_PASSWORD'),
+        ],
 
     ],
 

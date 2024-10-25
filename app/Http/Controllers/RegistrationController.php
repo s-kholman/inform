@@ -7,6 +7,7 @@ use App\Http\Requests\RegistrationRequest;
 use App\Models\Registration;
 use App\Models\Sms;
 use App\Models\User;
+use App\Models\VpnInfo;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,17 +39,18 @@ class RegistrationController extends Controller
     public function store(RegistrationRequest $request){
 
         $validated = $request->validated();
-        Registration::updateOrCreate([
-            'user_id' => auth()->user()->id
-        ],[
-            'last_name' => $validated['last_name'],
-            'first_name' => $validated['first_name'],
-            'middle_name' => $validated['middle_name'],
-            'filial_id' => $validated['filial_name'],
-            'post_id' => $validated['post_name'],
-            'phone' => $validated['phone'],
-            'infoFull' => true
-        ]);
+        Registration::query()->
+            updateOrCreate([
+                'user_id' => auth()->user()->id
+            ],[
+                'last_name' => $validated['last_name'],
+                'first_name' => $validated['first_name'],
+                'middle_name' => $validated['middle_name'],
+                'filial_id' => $validated['filial_name'],
+                'post_id' => $validated['post_name'],
+                'phone' => $validated['phone'],
+                'infoFull' => true,
+            ]);
         /**
          * Создание записи для SMS оповещения выносим в слушателя
          */
@@ -81,7 +83,7 @@ class RegistrationController extends Controller
     {
 
         $profile = Registration::query()
-            ->with(['filial', 'Post', 'User'])
+            ->with(['filial', 'Post', 'User', 'vpnInfo'])
             ->where('id',$request->profile)
             ->first();
 
@@ -89,8 +91,17 @@ class RegistrationController extends Controller
 
         $rolesUser = Role::whereNotIn('name', [$userRole])->get();;
 
-
             return view('profile.show', ['profile' => $profile, 'rolesUser' => $rolesUser]);
+    }
+
+    public function vpnAddInform(Request $request, Registration $registration)
+    {
+        $registration->update([
+            'ip' => $request->ip,
+            'login_domain' => $request->login_domain
+        ]);
+
+        return redirect('/profile/show/'.$registration->id);
     }
 
 }
