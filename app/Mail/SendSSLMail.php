@@ -32,7 +32,7 @@ class SendSSLMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'VPN доступ',
+            subject: 'VPN из дома',
         );
     }
 

@@ -136,6 +136,15 @@
                                    placeholder="Доменное имя"
                                    value="{{$profile->vpnInfo->login_domain ?? ''}}">
                         </div>
+                        <div class="col-sm-6">
+                            <label for="mail_send" class="col-sm-12 col-form-label">Email получения данных</label>
+                            <input class="form-control"
+                                   id="mail_send"
+                                   type="text"
+                                   name="mail_send"
+                                   placeholder="Email получения данных"
+                                   value="{{$profile->vpnInfo->mail_send ?? $profile->user->email}}">
+                        </div>
                         <div class="mt-2">
                             <button class="btn btn-secondary" type="submit">Сохранить</button>
                         </div>

@@ -62,7 +62,7 @@
                     @endcan
                     @can('VpnInfo.user.view')
                         <li class="nav-item">
-                            <a class="nav-link align-middle px-0" href="/vpn" class="nav-link px-0">
+                            <a class="nav-link align-middle px-0" href="{{route('vpn.index')}}" class="nav-link px-0">
                                 <i class="fs-4 bi-house-lock-fill"></i> <span class="ms-1 d-none d-sm-inline">VPN из дома</span></a>
                         </li>
                     @endcan

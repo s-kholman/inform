@@ -321,7 +321,7 @@ Route::group(['middleware' => ['can:Voucher.user.view']], function (){
    Route::get('voucher', [VoucherController::class, 'index']);
 });
 
-Route::resource('vpn', VpnInfoController::class);
+Route::resource('vpn', VpnInfoController::class)->middleware('can:VpnInfo.user.view');
 
 Auth::routes();
 

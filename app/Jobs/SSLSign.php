@@ -40,11 +40,9 @@ class SSLSign implements ShouldQueue
             ]
         );
 
-        $sslSign = (new Query(' /certificate/sign'))
+        $client->query((new Query(' /certificate/sign'))
             ->equal('ca', env('MIKROTIK_SSL_CA'))
-           // ->equal('ca-crl-host', '192.168.0.53')
             ->equal('number', $this->id)
-        ;
-        $client->query($sslSign)->read();
+        )->read();
     }
 }
