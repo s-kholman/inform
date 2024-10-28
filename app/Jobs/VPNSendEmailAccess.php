@@ -28,6 +28,11 @@ class VPNSendEmailAccess implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->email, $this->full_name)->send(new SendSSLMail($this->filepath));
+        if (count($this->email) > 1){
+            Mail::to($this->email[0], $this->full_name)->cc($this->email[1])->send(new SendSSLMail($this->filepath));
+        } else {
+            Mail::to($this->email[0], $this->full_name)->send(new SendSSLMail($this->filepath));
+        }
+
     }
 }
