@@ -30,7 +30,13 @@
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold">Данные ниже будут использованы для доставки:</div>
-                        <b>e-mail:</b> {{$info->vpninfo->mail_send ?? \Illuminate\Support\Facades\Auth::user()->email}}<br>
+                        <b>e-mail:</b>
+                        @if(empty($info->vpninfo->mail_send))
+                            {{\Illuminate\Support\Facades\Auth::user()->email}}
+                        @else
+                            {{\Illuminate\Support\Facades\Auth::user()->email . ' копия на '. $info->vpninfo->mail_send}}
+                        @endif
+                        <br>
                         <b>телефон:</b> {{$info->phone}}
                     </div>
                 </li>

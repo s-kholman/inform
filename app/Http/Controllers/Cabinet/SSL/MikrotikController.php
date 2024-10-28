@@ -69,9 +69,9 @@ class MikrotikController extends Controller
         }
 
         if(empty($vpn->mail_send)){
-            $this->user['email'] = $user[0]->email;
+            $this->user['email'] = [$user[0]->email];
         } else {
-            $this->user['email'] = $vpn->mail_send;
+            $this->user['email'] = [$user[0]->email, $vpn->mail_send];
         }
 
         if(empty($vpn->login_domain)){
