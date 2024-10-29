@@ -22,7 +22,7 @@ class VoucherController extends Controller
         Mail::to('sergey@krimm.ru', 'Администратор')->queue(new VoucherCreateMail($request->phone));
     }
 
-    public function voucherGet(): VoucherGetResource
+    public function voucherGet(Request $request): VoucherGetResource
     {
         $unifi_connection = $this->serverConnect();
 
@@ -30,7 +30,7 @@ class VoucherController extends Controller
 
         $data = $unifi_connection->stat_voucher();
 
-        $vouchers = collect($data)->where('note', '==', '79026223673');
+        $vouchers = collect($data)->where('note', '==', $request->phone);
         return new VoucherGetResource(
             $vouchers
         );
