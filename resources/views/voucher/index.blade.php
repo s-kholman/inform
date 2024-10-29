@@ -66,6 +66,8 @@
 
         async function voucherGetInfo() {
             try {
+                let formData = new FormData
+                formData.append('phone', phone)
                 const response = await fetch(url + '/api/v1/voucher/get',
                     {
                         method: 'post',
@@ -73,6 +75,7 @@
                             {
                                 "Accept": "application/json",
                             },
+                        body: formData,
                     })
                 if(!response.ok){
                    throw response.statusText
