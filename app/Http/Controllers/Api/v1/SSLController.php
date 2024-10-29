@@ -13,7 +13,7 @@ class SSLController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $responce = new MikrotikController($request->id);
+        $responce = new MikrotikController($request->id, $request->settings);
         return $responce->start();
     }
 }

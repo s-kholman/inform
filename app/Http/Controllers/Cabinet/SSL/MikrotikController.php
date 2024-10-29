@@ -24,8 +24,10 @@ class MikrotikController extends Controller
     private Client $client;
     private array $user;
     private string $path_temp;
+    private $settings;
+    private string $ipConfigW7;
 
-    public function __construct($userID)
+    public function __construct($userID, $settings)
     {
         $this->client = new Client(
             [
@@ -35,6 +37,7 @@ class MikrotikController extends Controller
                 'port' => 8728
             ]
         );
+        $this->settings = json_decode($settings);
 
         $this->path_temp = storage_path() . '/app/temp/';
 
@@ -100,6 +103,9 @@ class MikrotikController extends Controller
             ->read();
 
         if (array_key_exists(0,$getModeConfig)){
+            if($this->settings->W7 && array_key_exists('address', $getModeConfig[0])){
+                $this->ipConfigW7 = $getModeConfig[0]['address'];
+            }
             $position = strpos($getModeConfig[0]['split-include'], '/');
             $result = substr($getModeConfig[0]['split-include'], 0, $position);
             if ($result != $this->user['ip_domain']){
@@ -113,15 +119,25 @@ class MikrotikController extends Controller
         }
 
         if (!array_key_exists(0, $getModeConfig)){
-            $this->client->query(
-                (new Query('/ip/ipsec/mode-config/add'))
-                    ->equal('address-pool', 'POOL-IKEv2')
-                    ->equal('address-prefix-length', '32')
-                    ->equal('name', $this->user['common_name'])
-                    ->equal('split-include', $this->user['ip_domain']))
-                ->read();
-        }
+            if ($this->settings->W7){
+                $this->getIpClient();
+                $this->client->query(
+                    (new Query('/ip/ipsec/mode-config/add'))
+                        ->equal('address', $this->ipConfigW7)
+                        ->equal('name', $this->user['common_name'])
+                        ->equal('split-include', $this->user['ip_domain']))
+                    ->read();
+            } else{
+                $this->client->query(
+                    (new Query('/ip/ipsec/mode-config/add'))
+                        ->equal('address-pool', 'POOL-IKEv2')
+                        ->equal('address-prefix-length', '32')
+                        ->equal('name', $this->user['common_name'])
+                        ->equal('split-include', $this->user['ip_domain']))
+                    ->read();
+            }
 
+        }
         /*
          *Проверяем если активный сертификаты пользователя
          * со сроком окончания менее или равному 30 дней
@@ -144,10 +160,13 @@ class MikrotikController extends Controller
                     'revoke_friendly_name' => $sslGet[0]['name']
                 ]);
             } else {
-                $this->exportSSL($sslGet[0]['.id']);
-                $this->identityCreate($sslGet[0]['name']);
                 $this->createPowerShell($this->path_temp . $sslGet[0]['name']);
-                $this->downloadMikrotikToStorage($sslGet[0]['name']);
+
+                if (!$this->settings->scriptW10){
+                    $this->exportSSL($sslGet[0]['.id']);
+                    $this->identityCreate($sslGet[0]['name']);
+                    $this->downloadMikrotikToStorage($sslGet[0]['name']);
+                }
                 $this->arhiveAdd($sslGet[0]['name']);
                 $this->emailSend($sslGet[0]['name']);
                 return ['message' => 'Данные экспортированы'];
@@ -165,7 +184,7 @@ class MikrotikController extends Controller
                 ->equal('state', '72')
                 ->equal('locality', $this->user['locality'])
                 ->equal('organization', 'KRiMM')
-                ->equal('unit', 'IT')
+//                ->equal('unit', 'IT')
                 ->equal('common-name', $this->user['common_name'])
                 ->equal('key-size', 2048)
                 ->equal('days-valid', env('MIKROTIK_SSL_DAYS_VALID'))
@@ -187,12 +206,44 @@ class MikrotikController extends Controller
         return ['message' => 'Error'];
     }
 
+    private function getIpClient()
+    {
+        $pool_start = '192.168.55.';
+        $pool_length = 81+30;
+        $pool = [];
+
+        for($i = 81; $pool_length >= $i; ++$i){
+            $pool [$pool_start.$i] = true;
+        }
+
+        $getModeConfig = $this->client->query(
+            (new Query('/ip/ipsec/mode-config/print'))
+                ->where('address'))
+            ->read();
+
+        foreach ($getModeConfig as $modeConfig){
+            if (array_key_exists($modeConfig['address'], $pool)){
+                unset($pool[$modeConfig['address']]);
+            }
+
+        }
+
+        $this->ipConfigW7 = array_key_first($pool);
+
+    }
+
     private function arhiveAdd($fileName): void
     {
         $zip = new ZipArchive;
         if ($zip->open($this->path_temp .$fileName.'.zip', ZipArchive::CREATE) === TRUE) {
-            $zip->addFile($this->path_temp. $fileName.'.p12', 'ssl_'.$fileName.'.p12');
-            $zip->addFile($this->path_temp . $fileName, 'script_'.$fileName.'.ps1');
+            if (!$this->settings->scriptW10){
+                $zip->addFile($this->path_temp. $fileName.'.p12', 'ssl_'.$fileName.'.p12');
+            }
+            if ($this->settings->W7){
+                $zip->addFile($this->path_temp . $fileName, 'script_'.$fileName.'.cmd');
+            } else {
+                $zip->addFile($this->path_temp . $fileName, 'script_'.$fileName.'.ps1');
+            }
             $zip->close();
         }
     }
@@ -258,22 +309,28 @@ class MikrotikController extends Controller
 
     public function createPowerShell($fileName)
     {
+        if ($this->settings->W7){
+            $data = sprintf('route /p add %s mask 255.255.255.255 %s',$this->user['ip_domain'], $this->ipConfigW7
+            );
+        } else {
+            $data = sprintf(
+                'Set-ExecutionPolicy -Scope CurrentUser RemoteSigned'.PHP_EOL.
+                'if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`'.PHP_EOL.
+                '[Security.Principal.WindowsBuiltInRole] "Administrator")) {'.PHP_EOL.
+                'Start-Process powershell.exe -Verb RunAs -ArgumentList (\'-noprofile -noexit -file "{0}" -elevated\' -f ( $myinvocation.MyCommand.Definition ))'.PHP_EOL.
+                'Break}'.PHP_EOL.
+                'Get-VpnConnection | Where-Object { $_.Name -eq \'VPN-KRiMM\'} | Remove-VpnConnection -Name "VPN-KRiMM" -Force'.PHP_EOL.
+                'Add-VpnConnection -Name "VPN-KRiMM" -ServerAddress "welcome.krimm.ru" -TunnelType Ikev2 -AuthenticationMethod MachineCertificate -SplitTunneling -PassThru'.PHP_EOL.
+                'Add-VpnConnectionRoute -ConnectionName "VPN-KRiMM" -DestinationPrefix %s/32 –PassThru'.PHP_EOL.
+                '$DesktopPath = [Environment]::GetFolderPath("Desktop")'.PHP_EOL.
+                '$OFS = "`r`n"'.PHP_EOL.
+                '$msg = "username:s:krimm\%s" + $OFS + "full address:s:%s"'.PHP_EOL.
+                'New-Item -Path $DesktopPath -Name "KRiMM.rdp" -ItemType "file" -Value $msg -Force'.PHP_EOL.
+                'Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object { $_.FriendlyName -eq \'%s\' } | Remove-Item'
 
-        $data = sprintf(
-            'Set-ExecutionPolicy -Scope CurrentUser RemoteSigned'.PHP_EOL.
-            'if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`'.PHP_EOL.
-            '[Security.Principal.WindowsBuiltInRole] "Administrator")) {'.PHP_EOL.
-            'Start-Process powershell.exe -Verb RunAs -ArgumentList (\'-noprofile -noexit -file "{0}" -elevated\' -f ( $myinvocation.MyCommand.Definition ))'.PHP_EOL.
-            'Break}'.PHP_EOL.
-            'Get-VpnConnection | Where-Object { $_.Name -eq \'VPN-KRiMM\'} | Remove-VpnConnection -Name "VPN-KRiMM" -Force'.PHP_EOL.
-            'Add-VpnConnection -Name "VPN-KRiMM" -ServerAddress "welcome.krimm.ru" -TunnelType Ikev2 -AuthenticationMethod MachineCertificate -SplitTunneling -PassThru'.PHP_EOL.
-            '$DesktopPath = [Environment]::GetFolderPath("Desktop")'.PHP_EOL.
-            '$OFS = "`r`n"'.PHP_EOL.
-            '$msg = "username:s:krimm\%s" + $OFS + "full address:s:%s"'.PHP_EOL.
-            'New-Item -Path $DesktopPath -Name "KRiMM.rdp" -ItemType "file" -Value $msg -Force'.PHP_EOL.
-            'Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object { $_.FriendlyName -eq \'%s\' } | Remove-Item'
+                , $this->user['ip_domain'], $this->user['login_domain'], $this->user['ip_domain'], $this->user['revoke_friendly_name']);
+        }
 
-            , $this->user['login_domain'], $this->user['ip_domain'], $this->user['revoke_friendly_name']);
 
         file_put_contents($fileName, $data);
     }

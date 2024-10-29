@@ -145,6 +145,7 @@
                                    placeholder="Email получения данных"
                                    value="{{$profile->vpnInfo->mail_send ?? $profile->user->email}}">
                         </div>
+
                         <div class="mt-2">
                             <button class="btn btn-secondary" type="submit">Сохранить</button>
                         </div>
@@ -159,7 +160,18 @@
                                     <label>IP - {{$profile->vpnInfo->ip_domain ?? 'отсутствует'}}</label><br/>
                                     <label id="status"></label> <label id="timer"></label>
                                 </p>
-                                <button id="btnCreate" class="btn btn-danger" type="submit">Сгенерировать и отправить</button>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="scriptW10">
+                                    <label class="form-check-label" for="scriptW10">Генерация и отправка только скрипта W10</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="W7">
+                                    <label class="form-check-label" for="W7">Настройки под W7</label>
+                                </div>
+                                <div class="mt-2">
+                                    <button id="btnCreate" class="btn btn-danger" type="submit">Сгенерировать и отправить</button>
+                                </div>
+
                             </div>
                         </div>
                 </div>
@@ -173,16 +185,29 @@
         const btnCreate = document.getElementById('btnCreate')
         const statusLabel = document.getElementById('status')
         const timerLabel = document.getElementById('timer')
+        const scriptW10 = document.getElementById('scriptW10')
+        const W7 = document.getElementById('W7')
         const url = window.location.origin
+        let settings = {'scriptW10': scriptW10.checked, 'W7': W7.checked}
+
         btnCreate.addEventListener('click', () => {
             sslGet()
         })
+
+        scriptW10.addEventListener('click', () =>{
+            settings.scriptW10 = scriptW10.checked
+        })
+        W7.addEventListener('click', () =>{
+            settings.W7 = W7.checked
+        })
+
         async function sslGet() {
             try {
                 btnCreate.disabled = true;
                 statusLabel.textContent = 'Запрос данных, ожидайте'
                 let formData = new FormData
                 formData.append('id', '+' + id)
+                formData.append('settings', JSON.stringify(settings))
                 const response = await fetch(url + '/api/v1/ssl/sign',
                     {
                         method: 'POST',

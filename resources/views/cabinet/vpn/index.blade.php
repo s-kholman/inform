@@ -11,7 +11,10 @@
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
-                        <div class="fw-bold">С начало выполняем файл который начинается на "script_"</div>
+                        <div class="fw-bold">
+                            С начало выполняем файл который начинается на "script_".
+                            Некоторые антивирусы детектируют данный файл как угрозу, рекомендуется временно отключить антивирус
+                        </div>
                         Для этого необходимо нажать правой кнопки мыши и выбрать пункт <i>"Выполнить с помощью PowerShell"</i>.
                         На все запросы системы отвечать положительно".
                     </div>
@@ -29,7 +32,7 @@
                 <li class="list-group-item card-text">Производим подключение к VPN, если оно успешно, производим подключение к удаленному рабочему месту, пароль Ваш текущий он компьютера предприятия</li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
-                        <div class="fw-bold">Данные ниже будут использованы для доставки:</div>
+                        <div class="fw-bold">Данные ниже будут использованы для доставки файлов и пароля соответственно:</div>
                         <b>e-mail:</b>
                         @if(empty($info->vpninfo->mail_send))
                             {{\Illuminate\Support\Facades\Auth::user()->email}}
