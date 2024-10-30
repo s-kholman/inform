@@ -160,13 +160,23 @@
                                     <label>IP - {{$profile->vpnInfo->ip_domain ?? 'отсутствует'}}</label><br/>
                                     <label id="status"></label> <label id="timer"></label>
                                 </p>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="scriptW10">
-                                    <label class="form-check-label" for="scriptW10">Генерация и отправка только скрипта W10</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="W10" value="option1" checked>
+                                    <label class="form-check-label" for="W10">
+                                        Настройки под W10
+                                    </label>
                                 </div>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="W7">
-                                    <label class="form-check-label" for="W7">Настройки под W7</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="scriptW10" value="option2">
+                                    <label class="form-check-label" for="scriptW10">
+                                        Генерация и отправка только скрипта W10
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="W7" value="option3">
+                                    <label class="form-check-label" for="W7">
+                                        Настройки под W7
+                                    </label>
                                 </div>
                                 <div class="mt-2">
                                     <button id="btnCreate" class="btn btn-danger" type="submit">Сгенерировать и отправить</button>
@@ -186,18 +196,28 @@
         const statusLabel = document.getElementById('status')
         const timerLabel = document.getElementById('timer')
         const scriptW10 = document.getElementById('scriptW10')
+        const W10 = document.getElementById('W10')
         const W7 = document.getElementById('W7')
         const url = window.location.origin
         let settings = {'scriptW10': scriptW10.checked, 'W7': W7.checked}
+        function checked() {
+            settings = {'scriptW10': scriptW10.checked, 'W7': W7.checked}
+        }
 
         btnCreate.addEventListener('click', () => {
             sslGet()
         })
 
+        W10.addEventListener('click', () =>{
+            checked();
+        })
+
         scriptW10.addEventListener('click', () =>{
+            checked();
             settings.scriptW10 = scriptW10.checked
         })
         W7.addEventListener('click', () =>{
+            checked();
             settings.W7 = W7.checked
         })
 
