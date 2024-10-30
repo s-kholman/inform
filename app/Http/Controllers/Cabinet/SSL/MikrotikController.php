@@ -2,32 +2,31 @@
 
 namespace App\Http\Controllers\Cabinet\SSL;
 
-use App\Actions\Acronym\AcronymFullNameUser;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SMS\Send\SmsSend;
 use App\Jobs\SSLSign;
-use App\Jobs\VPNFileClear;
-use App\Jobs\VPNSendEmailAccess;
-use App\Models\User;
 use App\Models\VpnInfo;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use PHPUnit\Util\Exception;
 use RouterOS\Client;
 use RouterOS\Query;
-use ZipArchive;
 
 
 class MikrotikController extends Controller
 {
-    private Client $client;
-    private array $user;
-    private string $path_temp;
-    private $settings;
-    private string $ipConfigW7;
+    public $sslActive;
+    public $modeConfig;
+    private $identity;
+    private $newSSL;
+    public string $ipConfigW7 = '';
+    public bool $sing = false;
 
-    public function __construct($userID, $settings)
+    private Client $client;
+
+    private array $user;
+
+    public function __construct($user)
     {
         $this->client = new Client(
             [
@@ -37,89 +36,68 @@ class MikrotikController extends Controller
                 'port' => 8728
             ]
         );
-        $this->settings = json_decode($settings);
 
-        $this->path_temp = storage_path() . '/app/temp/';
-
-        if (!file_exists($this->path_temp)) {
-            mkdir($this->path_temp, 0777, true);
-        }
-
-        $user = User::query()
-            ->with(['Registration','FilialName'])
-            ->where('id', $userID)
-            ->limit(1)
-            ->get();
-
-        $vpn = VpnInfo::query()->where('registration_id', $user[0]->Registration->id)->first();
-
-        $this->user['locality'] = Str::slug(Str::lower($user[0]->FilialName->name),'_','ru');
-        $this->user['common_name'] = Str::slug(
-            Str::lower(Str::limit($user[0]->Registration->first_name, 1)).' '.
-            Str::lower($user[0]->Registration->last_name).' '.
-            $user[0]->id,'_','ru');
-
-        if(empty($vpn->revoke_friendly_name)){
-            $this->user['revoke_friendly_name'] = '';
-        } else {
-            $this->user['revoke_friendly_name'] = $vpn->revoke_friendly_name;
-        }
-
-        if(empty($vpn->ip_domain)){
-            $this->user['ip_domain'] = '';
-        } else {
-            $this->user['ip_domain'] = $vpn->ip_domain;
-        }
-
-        if(empty($vpn->mail_send)){
-            $this->user['email'] = [$user[0]->email];
-        } else {
-            $this->user['email'] = [$user[0]->email, $vpn->mail_send];
-        }
-
-        if(empty($vpn->login_domain)){
-            $this->user['login_domain'] = '';
-        } else {
-            $this->user['login_domain'] = $vpn->login_domain;
-        }
-
-        $this->user['phone'] = $user[0]->Registration->phone;
-        $this->user['registration_id'] = $user[0]->Registration->id;
-        $fullNameUser = new AcronymFullNameUser();
-        $this->user['full_name'] = $fullNameUser->Acronym($user[0]->Registration);
-
+        $this->user = $user;
 
     }
 
-    public function start()
-    {
-        if ($this->user['ip_domain'] == ''){
-            return ['message' => 'Нет IP адреса пользователя'];
-        }
 
-        $getModeConfig = $this->client->query(
+
+    public function getModeConfig()
+    {
+        $this->modeConfig = $this->client->query(
             (new Query('/ip/ipsec/mode-config/print'))
                 ->where('name', $this->user['common_name']))
             ->read();
+        $this->setAddressW7();
+        return $this;
+    }
 
-        if (array_key_exists(0,$getModeConfig)){
-            if($this->settings->W7 && array_key_exists('address', $getModeConfig[0])){
-                $this->ipConfigW7 = $getModeConfig[0]['address'];
+    private function setAddressW7()
+    {
+        if (!empty($this->modeConfig)){
+            if (array_key_exists(0,$this->modeConfig)) {
+                if ($this->user['settings']->W7 && array_key_exists('address', $this->modeConfig[0])) {
+                    $this->ipConfigW7 = $this->modeConfig[0]['address'];
+                }
             }
-            $position = strpos($getModeConfig[0]['split-include'], '/');
-            $result = substr($getModeConfig[0]['split-include'], 0, $position);
+        }
+    }
+
+    public function modeConfigRemove()
+    {
+        if (!empty($this->modeConfig)){
+            $this->client->query(
+                (new Query('/ip/ipsec/mode-config/remove'))
+                    ->equal('.id', $this->modeConfig[0]['.id']))
+                ->read();
+            $this->modeConfig = '';
+        }
+        return $this;
+    }
+
+    public function checkIpModeConfig()
+    {
+        if (array_key_exists(0,$this->modeConfig)){
+            $position = strpos($this->modeConfig[0]['split-include'], '/');
+            $result = substr($this->modeConfig[0]['split-include'], 0, $position);
             if ($result != $this->user['ip_domain']){
-                    $this->client->query(
-                   (new Query ('/ip/ipsec/mode-config/set'))
-                        ->equal('.id', $getModeConfig[0]['.id'])
+                $this->client->query(
+                    (new Query ('/ip/ipsec/mode-config/set'))
+                        ->equal('.id', $this->modeConfig[0]['.id'])
                         ->equal('split-include', $this->user['ip_domain'])
                 )
                     ->read();
             }
         }
+        return $this;
+    }
 
-        if (!array_key_exists(0, $getModeConfig)){
-            if ($this->settings->W7){
+
+    public function addModeConfig()
+    {
+        if (!array_key_exists(0, $this->modeConfig)){
+            if ($this->user['settings']->W7){
                 $this->getIpClient();
                 $this->client->query(
                     (new Query('/ip/ipsec/mode-config/add'))
@@ -136,74 +114,8 @@ class MikrotikController extends Controller
                         ->equal('split-include', $this->user['ip_domain']))
                     ->read();
             }
-
         }
-        /*
-         *Проверяем если активный сертификаты пользователя
-         * со сроком окончания менее или равному 30 дней
-         * если условия подходят аннулируем его и переходим к выпуску нового
-         * */
-        $sslGet = $this->client->query(
-            (new Query('/certificate/print'))
-            ->where('issued', "true")
-            ->where('common-name', $this->user['common_name'])
-        )->read();
-
-        if (!empty($sslGet)){
-            $day = Carbon::parse(date('Y-m-d',strtotime(Str::replace('/', ' ', $sslGet[0]['invalid-after']))))->diffInDays(now());
-            if ($day <= 30){
-                $revoke = (new Query('/certificate/issued-revoke'))
-                    ->equal('.id', $sslGet[0]['.id']);
-                $this->client->query($revoke)->read();
-                VpnInfo::query()->update([
-                    'registration_id' => $this->user['registration_id'],
-                    'revoke_friendly_name' => $sslGet[0]['name']
-                ]);
-            } else {
-                $this->createPowerShell($this->path_temp . $sslGet[0]['name']);
-
-                if (!$this->settings->scriptW10){
-                    $this->exportSSL($sslGet[0]['.id']);
-                    $this->identityCreate($sslGet[0]['name']);
-                    $this->downloadMikrotikToStorage($sslGet[0]['name']);
-                }
-                $this->arhiveAdd($sslGet[0]['name']);
-                $this->emailSend($sslGet[0]['name']);
-                return ['message' => 'Данные экспортированы'];
-                }
-        }
-
-        /*
-         * Создаем сертификат
-         * */
-        $sslNameGenerate = Str::uuid();
-        $sslCreate = $this->client->query(
-            (new Query('/certificate/add'))
-                ->equal('name', $sslNameGenerate)
-                ->equal('country', 'RU')
-                ->equal('state', '72')
-                ->equal('locality', $this->user['locality'])
-                ->equal('organization', 'KRiMM')
-//                ->equal('unit', 'IT')
-                ->equal('common-name', $this->user['common_name'])
-                ->equal('key-size', 2048)
-                ->equal('days-valid', env('MIKROTIK_SSL_DAYS_VALID'))
-                ->equal('key-usage', 'tls-client')
-        )->read();
-
-        /*
-         * Подписываем сертификат корневым
-         * вынести в очереди / убрать выгрузку и создание настроек
-         * */
-
-
-        if (array_key_exists('after', $sslCreate)){
-            if (array_key_exists('ret',$sslCreate['after'])){
-                SSLSign::dispatch($sslCreate['after']['ret']);
-                return ['message' => 'SSL sign'];
-            }
-        }
-        return ['message' => 'Error'];
+        return $this;
     }
 
     private function getIpClient()
@@ -227,76 +139,115 @@ class MikrotikController extends Controller
             }
 
         }
-
         $this->ipConfigW7 = array_key_first($pool);
 
+        return $this;
     }
 
-    private function arhiveAdd($fileName): void
+    public function sslGetActive()
     {
-        $zip = new ZipArchive;
-        if ($zip->open($this->path_temp .$fileName.'.zip', ZipArchive::CREATE) === TRUE) {
-            if (!$this->settings->scriptW10){
-                $zip->addFile($this->path_temp. $fileName.'.p12', 'ssl_'.$fileName.'.p12');
-            }
-            if ($this->settings->W7){
-                $zip->addFile($this->path_temp . $fileName, 'script_'.$fileName.'.cmd');
-            } else {
-                $zip->addFile($this->path_temp . $fileName, 'script_'.$fileName.'.ps1');
-            }
-            $zip->close();
-        }
-    }
-
-    private function emailSend($fileName)
-    {
-        Bus::chain([
-            new VPNSendEmailAccess($this->user['email'], $this->user['full_name'], $this->path_temp .$fileName.'.zip'),
-            new VPNFileClear($this->path_temp, $fileName),
-        ])->dispatch();
-    }
-
-    private function downloadMikrotikToStorage($fileName)
-    {
-        Storage::put('/temp/'.$fileName.'.p12',Storage::disk('ftp')->get('/cert_export_'.$fileName.'.p12'));
-    }
-
-    private function exportSSL($fileID): void
-    {
-        $password = rand(10000000,99999999);
-
-        $this->client->query((new Query('/certificate/export-certificate'))
-            ->equal('.id', $fileID)
-            ->equal('type', 'pkcs12')
-            ->equal('export-passphrase', $password)
+        $this->sslActive = $this->client->query(
+            (new Query('/certificate/print'))
+                ->where('issued', "true")
+                ->where('common-name', $this->user['common_name'])
         )->read();
 
-        $sendPassword = new SmsSend();
-        $sendPassword->send($this->user['phone'], 'Доступ к файлу - '.$password);
+        return $this;
     }
 
-    private function identityCreate($sslName)
+    public function sslCreate()
     {
-        $identityFind = $this->client->query(
+        if (empty($this->sslActive)){
+            $this->sslNameGenerate = Str::uuid();
+            $this->newSSL = $this->client->query(
+                (new Query('/certificate/add'))
+                    ->equal('name', $this->sslNameGenerate)
+                    ->equal('country', 'RU')
+                    ->equal('state', '72')
+                    ->equal('locality', $this->user['locality'])
+                    ->equal('organization', 'KRiMM')
+                    ->equal('common-name', $this->user['common_name'])
+                    ->equal('key-size', 2048)
+                    ->equal('days-valid', env('MIKROTIK_SSL_DAYS_VALID'))
+                    ->equal('key-usage', 'tls-client')
+            )->read();
+        }
+        return $this;
+    }
+
+    public function sslSing()
+    {
+        if(!empty($this->newSSL)){
+            if (array_key_exists('after', $this->newSSL)){
+                if (array_key_exists('ret',$this->newSSL['after'])){
+                     SSLSign::dispatch($this->newSSL['after']['ret']);
+                     $this->sing = true;
+                }
+            }
+        }
+        return $this;
+    }
+
+    public function sslCheckInvalidAfter()
+    {
+        if (!empty($this->sslActive)){
+            $day = Carbon::parse(date('Y-m-d',strtotime(Str::replace('/', ' ', $this->sslActive[0]['invalid-after']))))->diffInDays(now());
+            if ($day <= 30) {
+                $this->sslRevoke();
+            }
+        }
+        return $this;
+    }
+
+    public function sslRevoke()
+    {
+        if (!empty($this->sslActive)){
+            $revoke = (new Query('/certificate/issued-revoke'))
+                ->equal('.id', $this->sslActive[0]['.id']);
+            $this->client->query($revoke)->read();
+            VpnInfo::query()->update([
+                'registration_id' => $this->user['registration_id'],
+                'revoke_friendly_name' => $this->sslActive[0]['name']
+            ]);
+            $this->sslActive = '';
+        }
+        return $this;
+    }
+
+    public function identityGet()
+    {
+        $this->identity = $this->client->query(
             (new Query('/ip/ipsec/identity/print'))
                 ->where('mode-config', $this->user['common_name']))
             ->read();
+        return $this;
+    }
 
-        if (array_key_exists(0, $identityFind)) {
-            $this->client->query(
-                (new Query ('/ip/ipsec/identity/set'))
-                    ->equal('.id', $identityFind[0]['.id'])
-                    ->equal('certificate',env('MIKROTIK_SSL_SERVER'))
-                    ->equal('remote-certificate',$sslName)
-            )
-                ->read();
-        } else {
+    public function identitySet()
+    {
+        if (!empty($this->identity)){
+            if (array_key_exists(0, $this->identity)) {
+                $this->client->query(
+                    (new Query ('/ip/ipsec/identity/set'))
+                        ->equal('.id', $this->identity[0]['.id'])
+                        ->equal('certificate',env('MIKROTIK_SSL_SERVER'))
+                        ->equal('remote-certificate',$this->sslActive[0]['name'])
+                )
+                    ->read();
+            }
+        }
+        return $this;
+    }
+
+    public function identityAdd()
+    {
+        if (empty($this->identity)){
             $this->client->query(
                 (new Query('/ip/ipsec/identity/add'))
                     ->equal('peer','IKEv2-Peer')
                     ->equal('auth-method','digital-signature')
                     ->equal('certificate',env('MIKROTIK_SSL_SERVER'))
-                    ->equal('remote-certificate',$sslName)
+                    ->equal('remote-certificate',$this->sslActive[0]['name'])
                     ->equal('policy-template-group','IKEv2-Group')
                     ->equal('my-id','auto')
                     ->equal('remote-id','auto')
@@ -305,33 +256,32 @@ class MikrotikController extends Controller
                     ->equal('generate-policy','port-strict')
             )->read();
         }
+        return $this;
     }
 
-    public function createPowerShell($fileName)
+    public function identityRemove()
     {
-        if ($this->settings->W7){
-            $data = sprintf('route /p add %s mask 255.255.255.255 %s',$this->user['ip_domain'], $this->ipConfigW7
-            );
-        } else {
-            $data = sprintf(
-                'Set-ExecutionPolicy -Scope CurrentUser RemoteSigned'.PHP_EOL.
-                'if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`'.PHP_EOL.
-                '[Security.Principal.WindowsBuiltInRole] "Administrator")) {'.PHP_EOL.
-                'Start-Process powershell.exe -Verb RunAs -ArgumentList (\'-noprofile -noexit -file "{0}" -elevated\' -f ( $myinvocation.MyCommand.Definition ))'.PHP_EOL.
-                'Break}'.PHP_EOL.
-                'Get-VpnConnection | Where-Object { $_.Name -eq \'VPN-KRiMM\'} | Remove-VpnConnection -Name "VPN-KRiMM" -Force'.PHP_EOL.
-                'Add-VpnConnection -Name "VPN-KRiMM" -ServerAddress "welcome.krimm.ru" -TunnelType Ikev2 -AuthenticationMethod MachineCertificate -SplitTunneling -PassThru'.PHP_EOL.
-                'Add-VpnConnectionRoute -ConnectionName "VPN-KRiMM" -DestinationPrefix %s/32 –PassThru'.PHP_EOL.
-                '$DesktopPath = [Environment]::GetFolderPath("Desktop")'.PHP_EOL.
-                '$OFS = "`r`n"'.PHP_EOL.
-                '$msg = "username:s:krimm\%s" + $OFS + "full address:s:%s"'.PHP_EOL.
-                'New-Item -Path $DesktopPath -Name "KRiMM.rdp" -ItemType "file" -Value $msg -Force'.PHP_EOL.
-                'Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object { $_.FriendlyName -eq \'%s\' } | Remove-Item'
-
-                , $this->user['ip_domain'], $this->user['login_domain'], $this->user['ip_domain'], $this->user['revoke_friendly_name']);
+        if (!empty($this->identity)){
+            $this->client->query(
+                (new Query('/ip/ipsec/identity/remove'))
+                    ->equal('.id',$this->identity[0]['.id'])
+            )->read();
         }
+        $this->identity = '';
+        return $this;
+    }
 
+    public function exportSSL(): void
+    {
+        $password = rand(10000000,99999999);
 
-        file_put_contents($fileName, $data);
+        $this->client->query((new Query('/certificate/export-certificate'))
+            ->equal('.id', $this->sslActive[0]['.id'])
+            ->equal('type', 'pkcs12')
+            ->equal('export-passphrase', $password)
+        )->read();
+
+        $sendPassword = new SmsSend();
+        $sendPassword->send($this->user['phone'], 'Доступ к файлу - '.$password);
     }
 }

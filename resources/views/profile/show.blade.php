@@ -178,10 +178,15 @@
                                         Настройки под W7
                                     </label>
                                 </div>
-                                <div class="mt-2">
-                                    <button id="btnCreate" class="btn btn-danger" type="submit">Сгенерировать и отправить</button>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="settingDelete" value="option3">
+                                    <label class="form-check-label" for="settingDelete">
+                                        Удалить настройки (сертификат не отзывается)
+                                    </label>
                                 </div>
-
+                                <div class="mt-2">
+                                    <button id="btnCreate" class="btn btn-success" type="submit">Сгенерировать и отправить</button>
+                                </div>
                             </div>
                         </div>
                 </div>
@@ -198,11 +203,21 @@
         const scriptW10 = document.getElementById('scriptW10')
         const W10 = document.getElementById('W10')
         const W7 = document.getElementById('W7')
+        const settingDelete = document.getElementById('settingDelete')
         const url = window.location.origin
-        let settings = {'scriptW10': scriptW10.checked, 'W7': W7.checked}
+
+        let settings = {'scriptW10': scriptW10.checked, 'W7': W7.checked, 'W10': true, 'settingDelete': settingDelete.checked};
+
         function checked() {
-            settings = {'scriptW10': scriptW10.checked, 'W7': W7.checked}
+            settings = {'scriptW10': scriptW10.checked, 'W7': W7.checked, 'W10': W10.checked, 'settingDelete': settingDelete.checked}
         }
+
+        settingDelete.addEventListener('click', () => {
+            checked()
+            settings.settingDelete = settingDelete.checked
+            btnCreate.className = ('btn btn-danger');
+            btnCreate.textContent = 'Удалить'
+        })
 
         btnCreate.addEventListener('click', () => {
             sslGet()
@@ -210,15 +225,22 @@
 
         W10.addEventListener('click', () =>{
             checked();
+            settings.W10 = W10.checked
+            btnCreate.className = ('btn btn-success');
+            btnCreate.textContent = 'Сгенерировать и отправить'
         })
 
         scriptW10.addEventListener('click', () =>{
             checked();
             settings.scriptW10 = scriptW10.checked
+            btnCreate.className = ('btn btn-success');
+            btnCreate.textContent = 'Сгенерировать и отправить'
         })
         W7.addEventListener('click', () =>{
             checked();
             settings.W7 = W7.checked
+            btnCreate.className = ('btn btn-success');
+            btnCreate.textContent = 'Сгенерировать и отправить'
         })
 
         async function sslGet() {
@@ -228,7 +250,7 @@
                 let formData = new FormData
                 formData.append('id', '+' + id)
                 formData.append('settings', JSON.stringify(settings))
-                const response = await fetch(url + '/api/v1/ssl/sign',
+                const response = await fetch(url + '/api/v1/vpn',
                     {
                         method: 'POST',
                         headers:
