@@ -139,8 +139,12 @@
         }
 
        async function smsSend() {
-            checkSmsSend = document.querySelectorAll('.sms-send-check')
-            const phone = document.getElementById('phone-send').value
+           checkSmsSend = document.querySelectorAll('.sms-send-check')
+
+           let phone = document.getElementById('phone-send').value
+
+           phone = phone.replace(/[^0-9+]/g, '');
+
            const formatPhone = /^\+7\d{10}/
 
            if(formatPhone.test(phone) && checkSmsSend != null){
