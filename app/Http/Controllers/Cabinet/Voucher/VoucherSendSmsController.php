@@ -27,7 +27,7 @@ class VoucherSendSmsController extends Controller
         {
             $status = $this->smsSend->send($request->phone, "Код доступа на $request->day к сети KRiMM_INTERNET $request->code" );
             if ($status){
-                $this->message = 'Отправлено';
+                $this->message = 'Отправлено' . ' id = ' . $status->id;
             } else{
                 $this->message = 'Ошибка отправки';
             }
