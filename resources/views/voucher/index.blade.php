@@ -78,7 +78,7 @@
 
         setTimeout(voucherGetInfo,100)
 
-        //const update = setInterval(voucherGetInfo, 15000)
+        const update = setInterval(voucherGetInfo, 15000)
 
         setTimeout(() => {
             clearInterval(update)
@@ -102,7 +102,7 @@
                 }
                 const data = await response.json()
                 let show = ''
-                if (data['data'].length > 0 && data['data'] != checkInfo) {
+                if (data['data'].length > 0) {
                     for (let voucher in data['data']) {
                         show +=
                             '<div class="row">' +
@@ -114,9 +114,15 @@
                             + '<input class="form-check-input sms-send-check" type="checkbox" value="'+dayToStr(data['data'][voucher]['duration'])+'" id="'+ data['data'][voucher]['code']+'">'
                             + '</div>'
                             + '</div>'
+
                     }
-                    voucherChildInfo.innerHTML = show
-                    voucherDivInfo.appendChild(voucherChildInfo);
+                    if(checkInfo !== show){
+                        checkInfo = show
+                        voucherChildInfo.innerHTML = show
+                        voucherDivInfo.appendChild(voucherChildInfo);
+                    }
+
+
                 } else {
                     voucherChildInfo.innerHTML = 'Ключи не найдены'
                     voucherDivInfo.appendChild(voucherChildInfo)
