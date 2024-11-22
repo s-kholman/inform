@@ -4,7 +4,7 @@
 @section('info')
 <div class="container">
 
-    <div class="card  col-sm-5 text-center">
+    <div class="card  col-sm-12 text-center">
         <div class="card-header">
             Доступ к WiFi-сети <b>KRiMM_INTERNET</b>
         </div>
@@ -12,13 +12,29 @@
             <h5 class="card-title">Текущие ключи:</h5>
             <div class="card-text" id="voucher-get-info"></div>
             <div class="row col-sm mt-2">
-                <div class="col-sm-8 ">
+                <div class="col-sm-5 mt-auto ">
                     <button disabled id="voucher-get-btn" class="btn btn-primary" type="submit">Получить ключ</button>
                  </div>
-                <div class="col-sm-4 col-xl-3 text-center">
+                <div class="col-sm-3 col-xl-3 text-center">
+                    <label for="day">Кол-во дней</label>
                     <input class="form-control" type="number" id="day" placeholder="дней" min="1" max="365" step="1" value="365">
                 </div>
+
             </div>
+            @can('Voucher.user.create')
+                <div class="row col-sm mt-2">
+                    <div class="col-sm-5 mt-auto">
+                        <button id="sms-send-btn" class="btn btn-primary" type="submit">отправить по SMS</button>
+                    </div>
+                    <div class="col-sm-4 col-xl-4 text-center">
+                        <label for="phone-send">Телефон</label>
+                        <input class="form-control" id="phone-send" placeholder="+7">
+                    </div>
+                    <div class="col-sm-2 col-xl-2 text-center mt-auto " id="send-status">
+
+                    </div>
+                </div>
+            @endcan
         </div>
         <div class="card-footer text-muted">
             <p>Получить ключ можно в обратном SMS:<p><br/>
@@ -45,9 +61,13 @@
         const dayInput = document.getElementById('day')
         const voucherDivInfo = document.getElementById('voucher-get-info')
         const voucherGetBtn = document.getElementById('voucher-get-btn')
+        const smsSendBtn = document.getElementById('sms-send-btn')
+        const sendStatus = document.getElementById('send-status')
         const url = window.location.origin
         const phone = {!! json_decode($phone) !!};
-        let voucherChildInfo = document.createElement('label')
+        let checkSmsSend = ''
+        let voucherChildInfo = document.createElement('div')
+        let checkInfo = '';
         voucherChildInfo.textContent = 'Запрос к серверу...';
         voucherDivInfo.appendChild(voucherChildInfo);
 
@@ -58,7 +78,7 @@
 
         setTimeout(voucherGetInfo,100)
 
-        const update = setInterval(voucherGetInfo, 15000)
+        //const update = setInterval(voucherGetInfo, 15000)
 
         setTimeout(() => {
             clearInterval(update)
@@ -82,12 +102,18 @@
                 }
                 const data = await response.json()
                 let show = ''
-                if (data['data'].length > 0) {
+                if (data['data'].length > 0 && data['data'] != checkInfo) {
                     for (let voucher in data['data']) {
                         show +=
-                            '<b>'+data['data'][voucher]['code'].substr(0, 5) + '-' + data['data'][voucher]['code'].substr(4, 5)+'</b>'
+                            '<div class="row">' +
+                            '<div class="col-10">' +
+                            '<b>'+data['data'][voucher]['code'].substr(0, 5) + '-' + data['data'][voucher]['code'].substr(5)+'</b>'
                             + ' - доступ на ' + dayToStr(data['data'][voucher]['duration'])
-                            + '<br>'
+                            + '</div>'
+                            + '<div class="col-2 form-switch form-check mb-3">'
+                            + '<input class="form-check-input sms-send-check" type="checkbox" value="'+dayToStr(data['data'][voucher]['duration'])+'" id="'+ data['data'][voucher]['code']+'">'
+                            + '</div>'
+                            + '</div>'
                     }
                     voucherChildInfo.innerHTML = show
                     voucherDivInfo.appendChild(voucherChildInfo);
@@ -104,6 +130,45 @@
         } catch (error)  {
                 voucherGetBtn.disabled = true;
             }
+        }
+
+       async function smsSend() {
+            checkSmsSend = document.querySelectorAll('.sms-send-check')
+            const phone = document.getElementById('phone-send').value
+           const formatPhone = /^\+7\d{10}/
+
+           if(formatPhone.test(phone) && checkSmsSend != null){
+               for (let x=0;  x <= checkSmsSend.length; x++) {
+                   try {
+                       if(checkSmsSend[x].checked){
+                           try{
+                               let formData = new FormData
+                               formData.append('phone', phone)
+                               formData.append('code', checkSmsSend[x].id.substr(0, 5)+ '-' +checkSmsSend[x].id.substr(5))
+                               formData.append('day', checkSmsSend[x].value)
+
+                               const response = await  fetch(url + '/api/v1/cabinetVoucherSmsSend',
+                                   {
+                                       method: 'POST',
+                                       headers:
+                                           {
+                                               "Accept": "application/json",
+                                           },
+                                       body: formData,
+                                   })
+                               const data = await response.json()
+                               sendStatus.innerText = data.message
+                           } catch (error) {
+
+                           }
+                       }
+                   } catch (e){
+                   }
+               }
+           } else {
+               sendStatus.innerText = 'Проверьте телефон и выбранный пароль'
+           }
+
         }
 
         async function voucherCreate(){
@@ -123,6 +188,7 @@
                                 },
                             body: formData,
                         })
+
                 } catch (error) {
                     voucherChildInfo.innerHTML = 'Ошибка запроса: ' + error
                     voucherDivInfo.appendChild(voucherChildInfo)
@@ -133,6 +199,7 @@
         }
 
         voucherGetBtn.addEventListener('click', voucherCreate)
+        smsSendBtn.addEventListener('click', smsSend)
 
         function dayToStr(day)
         {
