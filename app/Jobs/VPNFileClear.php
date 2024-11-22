@@ -28,7 +28,7 @@ class VPNFileClear implements ShouldQueue
      */
     public function handle(): void
     {
-        File::delete(File::glob($this->path. $this->name . '*'));
+        File::delete(File::glob($this->path. '*' . $this->name . '*'));
         Storage::disk('ftp')->delete('/cert_export_' . $this->name . '.p12');
     }
 }

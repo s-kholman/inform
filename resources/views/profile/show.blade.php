@@ -161,25 +161,25 @@
                                     <label id="status"></label> <label id="timer"></label>
                                 </p>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="W10" value="option1" checked>
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="W10" value="CreateAccessVpnWindowsTen" checked>
                                     <label class="form-check-label" for="W10">
                                         Настройки под W10
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="scriptW10" value="option2">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="scriptW10" value="ScriptWindowsTen">
                                     <label class="form-check-label" for="scriptW10">
                                         Генерация и отправка только скрипта W10
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="W7" value="option3">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="W7" value="CreateAccessVpnWindowsSeven">
                                     <label class="form-check-label" for="W7">
                                         Настройки под W7
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="settingDelete" value="option3">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="settingDelete" value="SettingsDestroy">
                                     <label class="form-check-label" for="settingDelete">
                                         Удалить настройки (сертификат не отзывается)
                                     </label>
@@ -205,16 +205,23 @@
         const W7 = document.getElementById('W7')
         const settingDelete = document.getElementById('settingDelete')
         const url = window.location.origin
+        const checkFactory = document.getElementsByClassName('form-check-input');
 
-        let settings = {'scriptW10': scriptW10.checked, 'W7': W7.checked, 'W10': true, 'settingDelete': settingDelete.checked};
+        let factory = 'CreateAccessVpnWindowsTen'
 
         function checked() {
-            settings = {'scriptW10': scriptW10.checked, 'W7': W7.checked, 'W10': W10.checked, 'settingDelete': settingDelete.checked}
+            for (let x = 0; x <= checkFactory.length; x++){
+                try {
+                    if(checkFactory[x].checked){
+                        factory = checkFactory[x].value;
+                    }
+                } catch (e){
+                }
+            }
         }
 
         settingDelete.addEventListener('click', () => {
             checked()
-            settings.settingDelete = settingDelete.checked
             btnCreate.className = ('btn btn-danger');
             btnCreate.textContent = 'Удалить'
         })
@@ -225,32 +232,30 @@
 
         W10.addEventListener('click', () =>{
             checked();
-            settings.W10 = W10.checked
             btnCreate.className = ('btn btn-success');
             btnCreate.textContent = 'Сгенерировать и отправить'
         })
 
         scriptW10.addEventListener('click', () =>{
             checked();
-            settings.scriptW10 = scriptW10.checked
             btnCreate.className = ('btn btn-success');
             btnCreate.textContent = 'Сгенерировать и отправить'
         })
         W7.addEventListener('click', () =>{
             checked();
-            settings.W7 = W7.checked
             btnCreate.className = ('btn btn-success');
             btnCreate.textContent = 'Сгенерировать и отправить'
         })
+
 
         async function sslGet() {
             try {
                 btnCreate.disabled = true;
                 statusLabel.textContent = 'Запрос данных, ожидайте'
                 let formData = new FormData
-                formData.append('id', '+' + id)
-                formData.append('settings', JSON.stringify(settings))
-                const response = await fetch(url + '/api/v1/vpn',
+                formData.append('id', id)
+                formData.append('factory', factory)
+                const response = await fetch(url + '/api/v1/ike',
                     {
                         method: 'POST',
                         headers:
