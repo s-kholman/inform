@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Registration;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,11 +17,14 @@ class VoucherCreateMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public $phone = '';
+    public string $phone = '';
+    public $registration;
 
     public function __construct($phone)
     {
         $this->phone = $phone;
+
+        $this->registration = Registration::query()->where('phone', $phone)->first();
     }
 
     /**
