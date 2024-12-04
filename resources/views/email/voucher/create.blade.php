@@ -4,6 +4,6 @@
 Получен ваучер на номер: {{$phone}}<br>
 
 @if(!empty($registration))
-    {{$registration['last_name']}}
+    {{$registration->last_name}}
 @endif
 
