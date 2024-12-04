@@ -107,7 +107,7 @@
                         show +=
                             '<div class="row">' +
                             '<div class="col-10">' +
-                            '<b>'+data['data'][voucher]['code'].substr(0, 5) + '-' + data['data'][voucher]['code'].substr(5)+'</b>'
+                            '<b>'+data['data'][voucher]['code'].substr(0, 5) + '-' + data['data'][voucher]['code'].substr(5, 10)+'</b>'
                             + ' - доступ на ' + dayToStr(data['data'][voucher]['duration'])
                             + '</div>'
                             + '<div class="col-2 form-switch form-check mb-3">'

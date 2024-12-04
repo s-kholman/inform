@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\v1;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\VoucherGetResource;
@@ -36,9 +36,9 @@ class VoucherController extends Controller
         );
     }
 
-    private function serverConnect()
+    private function serverConnect(): Client
     {
-        $unifi_connection = new Client(
+        return new Client(
             env('UniFi_USER'),
             env('UniFi_PASSWORD'),
             env('UniFi_BASEURL'),
@@ -46,6 +46,5 @@ class VoucherController extends Controller
             env('UniFi_VERSION'),
             env('UniFi_SSLVEREFY')
         );
-        return $unifi_connection;
     }
 }
