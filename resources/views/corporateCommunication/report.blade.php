@@ -24,7 +24,7 @@
     <div class="container" id="delete-to-print-class">
         <div class="row" id="no-print-phone-header">
         @forelse(\App\Models\PhoneDetail::select('id','DetailDate')->orderby('DetailDate', 'DESC')->Limit(6)->get() as $mount)
-                <div class="list-inline-item col-3 col-md"> <p class="text-center"><a href="/limit_view/{{$mount->id}}">{{Str::ucfirst(\Carbon\Carbon::parse($mount->DetailDate)->translatedFormat('F Y'))}}</a></p> </div>
+                <div class="list-inline-item col-3 col-md"> <p class="text-center"><a href="/communication/report/show/{{$mount->id}}">{{Str::ucfirst(\Carbon\Carbon::parse($mount->DetailDate)->translatedFormat('F Y'))}}</a></p> </div>
         @empty
         @endforelse
         </div>
@@ -48,11 +48,17 @@
             @endforeach
             </tbody>
         </table>
-        <div class="row">
-            <div>
-                <button class="btn btn-primary" id="btnPrint">Печать</button>
-            </div>
+        <form action="/communication/load/index/">
+        <div class="d-grid gap-2 d-md-block">
+            @can('CorporateCommunication.user.view')
+            <button class="btn btn-primary" id="btnPrint">Печать</button>
+            @endcan
+            @can('CorporateCommunication.completed.create')
+            <button class="btn btn-info me-md-4" type="submit">Загрузить детализацию</button>
+            @endcan
         </div>
+        </form>
+
         </div>
 
 @endsection('info')
@@ -63,8 +69,9 @@
     const btnPrint = document.getElementById('btnPrint')
     const divContainer = document.getElementById('delete-to-print-class')
 
-    btnPrint.addEventListener('click', () =>{
+    btnPrint.addEventListener('click', (event) =>{
         window.print();
+        event.preventDefault();
     })
 
     window.addEventListener('beforeprint', () => {

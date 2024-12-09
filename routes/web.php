@@ -6,6 +6,10 @@ use App\Http\Controllers\Cabinet\SSL\MikrotikController;
 use App\Http\Controllers\cabinet\ssl\SslCreateController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\Commercial\CheckController;
+use App\Http\Controllers\CorporateCommunicationController;
+use App\Http\Controllers\CorporateCommunicationLoadDetailController;
+use App\Http\Controllers\CorporateCommunicationReportController;
+use App\Http\Controllers\CorporateСommunicationController;
 use App\Http\Controllers\CounterpartyController;
 use App\Http\Controllers\CultivationController;
 use App\Http\Controllers\CurrentStatusController;
@@ -117,15 +121,14 @@ Route::view('/register', 'register');
 /**
  * Отчет по расходу на сотовую связь
  */
-Route::get('/limit_add',[LimitsController::class, 'showLimitForm'])->name('limit_add')->middleware('can:viewAny, App\Models\administrator');;
-Route::post('/limit_add', [LimitsController::class, 'storeLimit'])->name('limit.save')->middleware('can:viewAny, App\Models\administrator');
-Route::post('/parser_add', [LimitsController::class, 'parserLimit'])->name('parser.save')->middleware('can:viewAny, App\Models\administrator');;
-Route::delete('/limit_delete/{limitID}', [LimitsController::class, 'limitdestroy'])->name('limit.destroy')->middleware('can:destroy, App\Models\administrator');
-Route::get('/limit_view/{phoneDetail?}',[LimitsController::class, 'showLimit'])
-    ->name('limit_view')
-    ->middleware('can:viewAny, App\Models\administrator')
-    ->where('phoneDetail','[0-9]+');
-Route::get('/edit_limit/{limitID}', [LimitsController::class, 'limitEdit'])->name('limit.edit')->middleware('can:destroy, App\Models\administrator');;
+Route::resource('communication', CorporateCommunicationController::class)
+    ->middleware('can:CorporateCommunication.completed.create');
+Route::get('/communication/report/show/{phoneDetail?}', CorporateCommunicationReportController::class)
+    ->middleware('can:CorporateCommunication.user.view')->name('communication.report.show');
+Route::get('/communication/load/index', [CorporateCommunicationLoadDetailController::class, 'index'])
+    ->middleware('can:CorporateCommunication.completed.create');
+Route::post('/communication/load/render', [CorporateCommunicationLoadDetailController::class, 'render'])
+    ->middleware('can:CorporateCommunication.completed.create')->name('communication.load.render');
 
 
 Route::get('/profile', [RegistrationController::class, 'index'])->name('profile.index')->middleware('auth');
@@ -235,7 +238,7 @@ Route::resource('year', HarvestYearController::class)->middleware('auth');
 Route::resource('extraction', PeatExtractionController::class)->middleware('auth');
 Route::resource('peat', PeatController::class)->middleware('auth');
 /**
- * Отчеты по мониторигу температуры хранения продукции в боксах
+ * Отчеты по мониторингу температуры хранения продукции в боксах
  */
 Route::get('monitoring/mode/show/{mode}', [StorageModeController::class, 'show'])->middleware('auth');
 Route::delete('monitoring/mode/destroy/{mode}', [StorageModeController::class, 'destroy'])->name('monitoring.mode.destroy')->middleware('auth');
@@ -268,8 +271,6 @@ Route::post('/printers', [PrinterController::class, 'index'])->name('printer.toD
 Route::get('/daily', [PrinterController::class, 'daily']);
 Route::get('/dailyone', [PrinterController::class, 'dailyone']);
 Route::get('/job', [PrinterController::class, 'job']);
-
-Route::get('test', [MikrotikController::class, 'createPowerShell']);
 
 Route::view('/reference', 'printer.reference');
 
@@ -309,13 +310,17 @@ Route::delete('/sowing_control_potato/{sowing_control_potato}', [SowingControlPo
 
 Route::resource('prikopki', PrikopkiController::class)->middleware('auth');
 
-Route::resource('role', RoleController::class);
 
-Route::post('user/role/destroy/{registration}', [RoleUserController::class, 'userRoleDestroy'])->name('user.role.destroy');
-Route::post('user/role/add/{registration}', [RoleUserController::class, 'userRoleAdd'])->name('user.role.add');
-Route::get('role', [RoleController::class, 'index'])->name('role.index');
-Route::get('permissions/role', [RoleController::class, 'permissions'])->name('permissions.role.index');
-Route::post('permissions/role/add', [RoleController::class, 'permissionsAdd'])->name('permissions.role.add');
+Route::group(['middleware' => ['can:super-user']], function () {
+    Route::resource('role', RoleController::class);
+    Route::post('user/role/destroy/{registration}', [RoleUserController::class, 'userRoleDestroy'])->name('user.role.destroy');
+    Route::post('user/role/add/{registration}', [RoleUserController::class, 'userRoleAdd'])->name('user.role.add');
+    Route::get('role', [RoleController::class, 'index'])->name('role.index');
+    Route::get('permissions/role', [RoleController::class, 'permissions'])->name('permissions.role.index');
+    Route::post('permissions/role/add', [RoleController::class, 'permissionsAdd'])->name('permissions.role.add');
+});
+
+
 
 Route::group(['middleware' => ['can:Voucher.user.view']], function (){
    Route::get('voucher', [VoucherController::class, 'index']);
