@@ -126,12 +126,13 @@
                                 <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Завод - сырье</span></a>
                         </li>
                     @endcan
-                    @can('viewMenu', 'App\Models\administrator')
+                    @can('CorporateCommunication.user.view')
                     <li class="nav-item">
-                        <a class="nav-link align-middle px-0" href="/limit_view" class="nav-link px-0">
+                        <a class="nav-link align-middle px-0" href="/communication/report/show/" class="nav-link px-0">
                             <i class="fs-4 bi-telephone"></i> <span class="ms-1 d-none d-sm-inline">Детализация сотовой связи</span></a>
                     </li>
-
+                    @endcan
+                    @can('viewMenu', 'App\Models\administrator')
                     <li>
                         <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                             <i class="fs-4 bi-book"></i> <span class="ms-1 d-none d-sm-inline">Справочники</span> </a>
@@ -142,7 +143,7 @@
                             </li>
 
                                 <li>
-                                    <a href="/limit_add" class="nav-link px-0"> <span class="d-none d-sm-inline">Корп связь</span></a>
+                                    <a href="/communication" class="nav-link px-0"> <span class="d-none d-sm-inline">Корп связь</span></a>
                                 </li>
 
                             <li>
