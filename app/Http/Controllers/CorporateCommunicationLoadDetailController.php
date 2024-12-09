@@ -16,7 +16,7 @@ class CorporateCommunicationLoadDetailController extends Controller
 
     public function render(Request $request)
     {
-        //$i=0;
+        $i=0;
 
         if ($request->hasFile('pdf')) {
             $parser = new Parser();
@@ -54,8 +54,6 @@ class CorporateCommunicationLoadDetailController extends Controller
                             'rashod' => $arrPhoneToSumma[$value->phone],
                             'pRashod' => $pRashod
                         ]);
-                    } else{
-                        return redirect()->route('communication.report.show');
                     }
                 }
                 //Сохраняем или обновляем запись по ключу месяц-год
