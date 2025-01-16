@@ -63,22 +63,24 @@ class ServiceController extends Controller
     public function show(IndexAction $indexAction)
     {
         $device = $indexAction(Carbon::now());
-
         $result = $device['result'];
         foreach ($device['device'] as $id => $value) {
 
-            $ff = $value->DeviceNames->toArray();
-            $filial = $value->filial->name;
+            $filial = $value->filial->name . ' ' . $value->comment;
+            $countToServiceDay =
+                Service::
+                    query()
+                    ->whereHas('DeviceNames', function ($query) {
+                    $query->where('brend_id', 1);
+                })
+                    ->with('DeviceNames')
+                    ->where('device_id', $value->device_id)
+                    ->where('service_names_id', 1)
+                    ->latest('date')
+                    ->take(1)
+                    ->get();
 
-
-            $countToServiceDay = Service::
-            whereHas('DeviceNames', function ($query) {
-                $query->where('brend_id', 1);})->
-            with('DeviceNames')->
-            where('device_id', $value->device_id)->
-            latest('date')->take(1)->get();
-
-            if ($countToServiceDay->isNotEmpty() && $ff['0']['brend_id'] == 1) {
+            if ($countToServiceDay->isNotEmpty() && $value->DeviceNames['0']['brend_id'] == 1) {
                 $count = DailyUse::
                 where('date', '<=', $countToServiceDay[0]->date)->
                 where('device_id', $value->device_id)->
@@ -89,14 +91,12 @@ class ServiceController extends Controller
                 if ($count->isNotEmpty()) {
                     $serviceCount [] = ['count' => $result[$id]['count'] - $count[0]->count, 'device' => $value->device_id, 'filial' => $filial];
                 }
-            } elseif ($ff['0']['brend_id'] == 1) {
+            } elseif ($value->DeviceNames['0']['brend_id'] == 1) {
                 $serviceCount [] = ['count' => $result[$id]['count'], 'device' => $value->device_id, 'filial' => $filial];
 
             }
         }
-
         $collection = collect($serviceCount);
-
         $already = $collection->filter(function ($value, $key) {
 
             return $value['count'] >= 20000;
@@ -105,12 +105,7 @@ class ServiceController extends Controller
             return $value['count'] >= 15000 and $value['count'] < 20000;
         });
         $itog = $already->merge($soon);
-
-
-return view('printer.service.service', ['itog' =>$itog]);
-
-
-
+        return view('printer.service.service', ['itog' => $itog]);
 
 
     }
