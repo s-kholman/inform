@@ -4,70 +4,65 @@ namespace App\Actions\Printer;
 
 use App\Models\CurrentStatus;
 use App\Models\DailyUse;
-use App\Models\filial;
 
 class IndexAction
 {
     public function __invoke($date): array
     {
         /**
-         * В переменной $date данные с POST, если пусто берем по умолчанию текущий день
+         * Переменной $date присваем данные с POST, если пусто берем по умолчанию текущий день
          * $status Получаем текущие устройства со статусом
-         * Форматируем коллекцию (сортируем, оставляем только неповторяющиеся, сортируем по филиалу, удаляем в статусе false
-         * В первом цикле берем последнею запись, но не за сегодня
+         * $device Форматируем коллекцию (сортируем, оставляем только неповторяющиеся, сортирум по филиалу, удаляем в стутсе false
+         * В первом цикле берем последнию запись, но не за сегодня
          * Во втором запросе получаем данные за сегодня
          * Во втором цикле получаем последнее показания о тоноре и количестве распечаток
-         * в toDayCount разница между двумя значениями
-         * В переменную $summa сумма коллекции по столбцу
+         * в toDayCount ложим разницу между двумя значениями
+         * В переменную $summa ложим сумму коллекции по столбцу
          */
 
-        $status = CurrentStatus::query()
-            ->distinct('device_id')
-            ->with(['status', 'DeviceNames'])
-            ->where('date','<=', $date)
-            ->whereHas('status', function ($query) {
-                $query->where('active', true);
-            })
-            ->get()
-            ->collect()
-            ->sortBy('filial.name');
+        $status = CurrentStatus::with('status')->with('DeviceNames')->where('date','<=', $date)->get();
 
-        foreach ($status as $id => $value){
+        $device = $status->
 
-            $temp =  DailyUse::query()
-                ->where('device_id',$value->device_id)
-                ->where('date', '<=', $date)
-                ->latest('date')
-                ->take(2)
-                ->get();
+        sortByDesc('date')->
+        sortByDesc('created_at')->
+        unique(['device_id'])->
+        sortBy('filial.name')->
+        whereNotIn('status.active', false);
+        foreach ($device as $id => $value){
+            $dual [$id] [] =  DailyUse::where('device_id',$value->device_id)->where('date', '<', $date)->latest('date')->take(1)->get();
+            $dual [$id] []=  DailyUse::where('device_id',$value->device_id)->where('date', $date)->get();
+        }
 
-                if ($temp->count() == 2 && $temp[0]->date == now()->format('Y-m-d')){
-                    $result [$id] = [
-                        'toner' => $temp[0]->toner,
-                        'count' => $temp[0]->count,
-                        'toDayCount' => $temp[0]->count-$temp[1]->count,
-                        'color' => $this->color($temp[0]->toner)
-                    ];
-                } elseif($temp->count() >= 1 && $temp[0]->date <> now()->format('Y-m-d')){
-                    $result [$id] = [
-                        'toner' => $temp[0]->toner,
-                        'count' => $temp[0]->count,
-                        'toDayCount' => 0,
-                        'color' => $this->color($temp[0]->toner)
-                    ];
-                } else{
-                    $result [$id] = [
-                        'toner' => 'н/д',
-                        'count' => 0,
-                        'toDayCount' => 0,
-                        'color' => '#ff0000'
-                    ];
-                }
+        foreach ($dual as $id => $value)
+        {
+            if ($value[0]->isNotEmpty() && $value[1]->isNotEmpty()){
+                $result [$id] = [
+                    'toner' => $value[1][0]->toner,
+                    'count' => $value[1][0]->count,
+                    'toDayCount' => $value[1][0]->count-$value[0][0]->count,
+                    'color' => $this->color($value[1][0]->toner)
+                ];
+            } elseif ($value[0]->isNotEmpty() && $value[1]->isEmpty()){
+                $result [$id] = [
+                    'toner' => $value[0][0]->toner,
+                    'count' => $value[0][0]->count,
+                    'toDayCount' => 0,
+                    'color' => $this->color($value[0][0]->toner)
+                ];
+            } elseif ($value[0]->isEmpty() && $value[1]->isEmpty()){
+                $result [$id] = [
+                    'toner' => 'н/д',
+                    'count' => 0,
+                    'toDayCount' => 0,
+                    'color' => '#ff0000'
+                ];
+            }
         }
 
         $summa = collect($result)->sum('toDayCount');
 
-        return ['summa'=>$summa, 'result' => $result, 'device' => $status];
+        return ['summa'=>$summa, 'result' => $result, 'device' => $device];
     }
 
     public function color ($toner_count): string
