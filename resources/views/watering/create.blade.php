@@ -81,7 +81,7 @@
                 </span>
             @enderror
 
-            <label for="comment">Коментарий</label>
+            <label for="comment">Комментарий</label>
             <input name="comment" id="comment" value="{{old('comment')}}" class="form-control @error('comment') is-invalid @enderror">
             @error('comment')
             <span class="invalid-feedback">

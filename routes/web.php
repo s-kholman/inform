@@ -69,6 +69,7 @@ use App\Http\Controllers\TakeController;
 use App\Http\Controllers\TypeFieldWorkController;
 use App\Http\Controllers\Voucher\VoucherController;
 use App\Http\Controllers\VpnInfoController;
+use App\Http\Controllers\WarmingController;
 use App\Http\Controllers\WateringController;
 use App\Http\Controllers\Yandex\AliceController;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -325,8 +326,10 @@ Route::group(['middleware' => ['can:super-user']], function () {
 Route::group(['middleware' => ['can:Voucher.user.view']], function (){
    Route::get('voucher', [VoucherController::class, 'index']);
 });
-
+Route::resource('warming', WarmingController::class);
 Route::resource('vpn', VpnInfoController::class)->middleware('can:VpnInfo.user.view');
+
+
 
 Auth::routes();
 
