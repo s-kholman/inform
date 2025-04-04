@@ -81,18 +81,18 @@ class ServiceController extends Controller
                     ->get();
 
             if ($countToServiceDay->isNotEmpty() && $value->DeviceNames['0']['brend_id'] == 1) {
-                $count = DailyUse::
-                where('date', '<=', $countToServiceDay[0]->date)->
-                where('device_id', $value->device_id)->
-                latest('date')->
-                take(1)->
-                get();
+                $count = DailyUse::query()
+                    ->where('date', '<=', $countToServiceDay[0]->date)
+                    ->where('device_id', $value->device_id)
+                    ->latest('date')
+                    ->take(1)
+                    ->get();
 
                 if ($count->isNotEmpty()) {
                     $serviceCount [] = ['count' => $result[$id]['count'] - $count[0]->count, 'device' => $value->device_id, 'filial' => $filial];
                 }
             } elseif ($value->DeviceNames['0']['brend_id'] == 1) {
-                $serviceCount [] = ['count' => $result[$id]['count'], 'device' => $value->device_id, 'filial' => $filial];
+                $serviceCount [] = ['count' => $result[$id]['count'] ?? 0, 'device' => $value->device_id, 'filial' => $filial];
 
             }
         }

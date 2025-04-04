@@ -8,11 +8,13 @@ class DeviceIndexAction
 {
     public function __invoke()
     {
-        $status = CurrentStatus::with('status')->get();
-        return $status->
-        sortByDesc('date')->
-        unique(['device_id'])->
-        sortBy('filial.name');
+        return CurrentStatus::query()
+            ->with('status')
+            ->get()
+            ->sortByDesc('date')
+            ->unique('device_id')
+            ->sortBy('filial.name')
+        ;
     }
 
 }
