@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\WarmingRequest;
 use App\Models\StorageName;
 use App\Models\Warming;
-use Illuminate\Support\Facades\Auth;
 
 class WarmingController extends Controller
 {
@@ -24,8 +23,25 @@ class WarmingController extends Controller
 
     public function create()
     {
-        $storage_name = StorageName::query()->where('filial_id', Auth::user()->Registration->filial_id)->get();
+        $storage_name = StorageName::query()->get()->sortBy('name');
         return view('warming.create', ['storage_name' => $storage_name]);
+    }
+
+    public function edit(Warming $warming)
+    {
+        return view('warming.edit', ['warming' => $warming]);
+    }
+
+    public function update(WarmingRequest $warmingRequest, Warming $warming){
+        //dd($warmingRequest['comment']);
+        $warming->update(
+            [
+                'comment' => $warmingRequest['comment'],
+                'comment_agronomist' => $warmingRequest['comment_agronomist'],
+                'comment_deputy_director' => $warmingRequest['comment_deputy_director'],
+            ]
+        );
+        return redirect()->route('warming.index');
     }
 
     public function store(WarmingRequest $warmingRequest)
@@ -38,8 +54,15 @@ class WarmingController extends Controller
                 'sowing_date' => $warmingRequest['sowing_date'],
                 'comment' => $warmingRequest['comment'],
                 'comment_agronomist' => $warmingRequest['comment_agronomist'],
-                'comment_deputy_director' => $warmingRequest['comment_agronomist'],
+                'comment_deputy_director' => $warmingRequest['comment_deputy_director'],
             ]);
         return redirect()->route('warming.index');
+    }
+
+    public function destroy(Warming $warming)
+    {
+        $warming->delete();
+        return response()->json(['status'=>true,"redirect_url"=>route('warming.index')]);
+        //return redirect()->route('warming.index');
     }
 }
