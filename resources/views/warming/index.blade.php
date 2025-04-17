@@ -39,8 +39,8 @@
                                         <tr>
                                             <td>{{$f->storageName->name}}</td>
                                             <td>{{$f->volume}}</td>
-                                            <td>{{$f->sowing_date}}</td>
-                                            <td>{{$f->warming_date}}</td>
+                                            <td>{{\Carbon\Carbon::parse($f->sowing_date)->translatedFormat('d-m-Y')}}</td>
+                                            <td>{{\Carbon\Carbon::parse($f->warming_date)->translatedFormat('d-m-Y')}}</td>
                                             <td>{{$f->comment ?? ''}}</td>
                                             <td>{{$f->comment_agronomist?? ''}}</td>
                                             <td>{{$f->comment_deputy_director ?? ''}}</td>
