@@ -16,7 +16,7 @@ class WarmingController extends Controller
 
         ;
 
-        $t = $warming->collect()->groupBy('storageName.filial_id');
+        $t = $warming->collect()->sortBy('warming_date')->groupBy('storageName.filial_id');
 
         return view('warming.index', ['warming' => $t]);
     }
