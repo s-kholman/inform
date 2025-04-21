@@ -36,6 +36,9 @@ class WarmingController extends Controller
         //dd($warmingRequest['comment']);
         $warming->update(
             [
+                'volume' => $warmingRequest['volume'],
+                'warming_date' => $warmingRequest['warming_date'],
+                'sowing_date' => $warmingRequest['sowing_date'],
                 'comment' => $warmingRequest['comment'],
                 'comment_agronomist' => $warmingRequest['comment_agronomist'],
                 'comment_deputy_director' => $warmingRequest['comment_deputy_director'],
