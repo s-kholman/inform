@@ -18,7 +18,7 @@
             @enderror
 
             <label for="volume">Объем</label>
-            <input readonly type="number" name="volume" id="volume" value="{{$warming->volume}}" class="form-control @error('volume') is-invalid @enderror">
+            <input type="number" name="volume" id="volume" value="{{$warming->volume}}" class="form-control @error('volume') is-invalid @enderror">
             @error('volume')
             <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
@@ -26,7 +26,7 @@
             @enderror
 
             <label for="sowing_date">Дата посадки</label>
-            <input readonly name="sowing_date" id="sowing_date" type="date" value="{{$warming->sowing_date}}"
+            <input name="sowing_date" id="sowing_date" type="date" value="{{$warming->sowing_date}}"
                    class="form-control @error('sowing_date') is-invalid @enderror">
             @error('sowing_date')
             <span class="invalid-feedback">
@@ -35,7 +35,7 @@
             @enderror
 
             <label for="warming_date">Дата прогрева</label>
-            <input readonly name="warming_date" id="warming_date" type="date" value="{{$warming->warming_date}}"
+            <input name="warming_date" id="warming_date" type="date" value="{{$warming->warming_date}}"
                    class="form-control @error('warming_date') is-invalid @enderror">
             @error('warming_date')
             <span class="invalid-feedback">
