@@ -34,6 +34,13 @@
 
                     </div>
                 </div>
+                <div class="row col-sm mt-2">
+                        <div class="col-sm-5 mt-auto">
+                            <form method="get" action="voucher/print">
+                                <button id="sms-send-btn" class="btn btn-primary" type="submit">Распечатать ваучеры</button>
+                            </form>
+                        </div>
+                </div>
             @endcan
         </div>
         <div class="card-footer text-muted">

@@ -68,6 +68,7 @@ use App\Http\Controllers\SzrController;
 use App\Http\Controllers\TakeController;
 use App\Http\Controllers\TypeFieldWorkController;
 use App\Http\Controllers\Voucher\VoucherController;
+use App\Http\Controllers\Voucher\VoucherPrintController;
 use App\Http\Controllers\VpnInfoController;
 use App\Http\Controllers\WarmingController;
 use App\Http\Controllers\WateringController;
@@ -326,6 +327,12 @@ Route::group(['middleware' => ['can:super-user']], function () {
 Route::group(['middleware' => ['can:Voucher.user.view']], function (){
    Route::get('voucher', [VoucherController::class, 'index']);
 });
+
+Route::group(['middleware' => ['can:Voucher.user.create']], function (){
+    Route::get('voucher/print', [VoucherPrintController::class, 'index']);
+    Route::post('voucher/pdf', [VoucherPrintController::class, 'generatePDF'])->name('voucher.generate.pdf');
+});
+
 Route::resource('warming', WarmingController::class);
 Route::resource('vpn', VpnInfoController::class)->middleware('can:VpnInfo.user.view');
 
