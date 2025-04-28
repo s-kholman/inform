@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Внесите данные о поливе')
+@section('title', 'Изменение данных о прогреве семян')
 
 @section('info')
 
@@ -52,7 +52,7 @@
             @enderror
 
             <label for="comment_agronomist">Контроль агроном</label>
-            <input name="comment_agronomist" id="comment_agronomist" value="{{$warming->comment_agronomist}}" class="form-control @error('comment_agronomist') is-invalid @enderror">
+            <input name="comment_agronomist" id="comment_agronomist" class="form-control @error('comment_agronomist') is-invalid @enderror">
             @error('comment_agronomist')
             <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
@@ -60,10 +60,10 @@
             @enderror
 
             <label for="comment_deputy_director">Контроль зам.дир.</label>
-            <input name="comment_deputy_director" id="comment_deputy_director" value="{{$warming->comment_deputy_director}}" class="form-control @error('comment_deputy_director') is-invalid @enderror">
+            <input name="comment_deputy_director" id="comment_deputy_director" class="form-control @error('comment_deputy_director') is-invalid @enderror">
             @error('comment_deputy_director')
             <span class="invalid-feedback">
-                    <strong>{{ $message }}</strong>
+                    <strong>{{ $message->collection }}</strong>
                 </span>
             @enderror
 

@@ -23,7 +23,7 @@ class CreateOneToHarvest implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if ($this->harvestAction->HarvestYear($value) <> $this->harvestAction->HarvestYear(now())){
-            $fail ('Запрещенно вносить указанной датой');
+            $fail ('Запрещено вносить указанной датой');
         }
     }
 }

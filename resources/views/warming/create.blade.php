@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Внесите данные о поливе')
+@section('title', 'Внесите данные о прогреве семян')
 
 @section('info')
 
@@ -31,7 +31,7 @@
             @enderror
 
             <label for="sowing_date">Дата посадки</label>
-            <input name="sowing_date" id="sowing_date" type="date" value="{{old('sowing_date') == "" ? date('Y-m-d') : old('date_sowing') }}"
+            <input name="sowing_date" id="sowing_date" type="date" value="{{old('sowing_date') == "" ? date('Y-m-d') : old('sowing_date') }}"
                    class="form-control @error('sowing_date') is-invalid @enderror">
             @error('sowing_date')
             <span class="invalid-feedback">
@@ -40,7 +40,7 @@
             @enderror
 
             <label for="warming_date">Дата прогрева</label>
-            <input name="warming_date" id="warming_date" type="date" value="{{old('warming_date') == "" ? date('Y-m-d') : old('date_warming') }}"
+            <input name="warming_date" id="warming_date" type="date" value="{{old('warming_date') == "" ? date('Y-m-d') : old('warming_date') }}"
                    class="form-control @error('warming_date') is-invalid @enderror">
             @error('warming_date')
             <span class="invalid-feedback">

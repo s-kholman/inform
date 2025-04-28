@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Closure;
 
 class WarmingRequest extends FormRequest
 {
@@ -27,8 +28,24 @@ class WarmingRequest extends FormRequest
             'sowing_date' => 'required|date',
             'warming_date' => 'required|date',
             'comment' => 'nullable|max:255',
-            'comment_agronomist' => 'nullable|max:255',
-            'comment_deputy_director' => 'nullable|max:255',
+            'comment_agronomist' => [
+                'nullable',
+                'max:255',
+                function (string $attribute, mixed $value, Closure $fail) {
+                    if (!auth()->user()->can('Warming.completed.create')){
+                        $fail("Нет прав доступа");
+                    }
+                }
+                ],
+            'comment_deputy_director' => [
+                'nullable',
+                'max:255',
+                function (string $attribute, mixed $value, Closure $fail) {
+                    if (!auth()->user()->can('Warming.deploy.create')){
+                        $fail("Нет прав доступа");
+                    }
+                }
+            ],
         ];
     }
 }

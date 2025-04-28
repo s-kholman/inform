@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Данные об опрыскивание ')
+@section('title', 'Данные о прогреве семян')
 
 @section('info')
 
@@ -39,11 +39,32 @@
                                         <tr>
                                             <td>{{$f->storageName->name}}</td>
                                             <td>{{$f->volume}}</td>
-                                            <td>{{\Carbon\Carbon::parse($f->sowing_date)->translatedFormat('d-m-Y')}}</td>
-                                            <td>{{\Carbon\Carbon::parse($f->warming_date)->translatedFormat('d-m-Y')}}</td>
+                                            <td>{{\Carbon\Carbon::parse($f->sowing_date)->translatedFormat('d.m.Y')}}</td>
+                                            <td>{{\Carbon\Carbon::parse($f->warming_date)->translatedFormat('d.m.Y')}}</td>
                                             <td>{{$f->comment ?? ''}}</td>
-                                            <td>{{$f->comment_agronomist?? ''}}</td>
-                                            <td>{{$f->comment_deputy_director ?? ''}}</td>
+                                            <td>
+                                                @forelse($f->warmingControl as $control)
+                                                    @if($control->level == 1)
+                                                {{$control->user->Registration->last_name}}:
+                                                ({{\Carbon\Carbon::parse($control->created_at)->translatedFormat('d.m.Y')}}) -
+                                                "{{$control->text}}"
+                                                        <br>
+                                                    @endif
+                                                @empty
+                                                @endforelse
+
+                                            </td>
+                                            <td>
+                                                @forelse($f->warmingControl as $control)
+                                                    @if($control->level == 2)
+                                                        {{$control->user->Registration->last_name}}:
+                                                        ({{\Carbon\Carbon::parse($control->created_at)->translatedFormat('d-m-Y')}})
+                                                        "{{$control->text}}"
+                                                        <br>
+                                                    @endif
+                                                @empty
+                                                @endforelse
+                                            </td>
                                             <td align="center">
                                                 <div class="dropdown">
                                                     <button type="button"
@@ -82,5 +103,5 @@
     </div>
 @endsection('info')
 @section('script')
-    @include('scripts\destroy-modal')
+    @include('scripts\destroy-modal-edit')
 @endsection

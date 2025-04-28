@@ -15,16 +15,14 @@ class Warming extends Model
         'warming_date',
         'sowing_date',
         'comment',
-        'comment_agronomist',
-        'comment_deputy_director'
     ];
 
     public function storageName(){
         return $this->hasOne(StorageName::class, 'id', 'storage_name_id');
     }
 
-    public function Filial()
+    public function warmingControl()
     {
-       // return $this->hasOneThrough(filial::class, /*car*/StorageName::class, 'filial_id', 'id,');
+       return $this->hasMany(WarmingControl::class);
     }
 }
