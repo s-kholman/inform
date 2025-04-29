@@ -6,7 +6,7 @@
     <div class="col-6">
         <form action="{{ route('sowing_control_potato.store') }}" method="POST">
             @csrf
-
+            <input hidden name="filial_id" value="{{$filial_id}}">
             <label for="date">Дата</label>
             <input name="date" id="date" type="date" value="{{old('date') == "" ? date('Y-m-d') : old('date') }}"
                    class="form-control @error('date') is-invalid @enderror">
@@ -92,11 +92,10 @@
                    id="result_control_director"
                    value="{{old('result_control_director')}}"
                    class="form-control @error('result_control_director') is-invalid @enderror"
-                   @if($post['DIRECTOR'] == $post_user || $post['DEPUTY'] == $post_user)
 
-                   @else
-                   readonly
-                @endif
+                  @cannot(['SowingControl.director.store'])
+                    readonly
+                  @endcannot
             >
             @error('result_control_director')
             <span class="invalid-feedback">
@@ -112,9 +111,10 @@
                    id="result_control_deputy_director"
                    value="{{old('result_control_deputy_director')}}"
                    class="form-control @error('result_control_deputy_director') is-invalid @enderror"
-                   @if($post['DEPUTY'] <> $post_user)
+
+               @cannot('SowingControl.deploy.store')
                    readonly
-                @endif
+                @endcannot
             >
             @error('result_control_deputy_director')
             <span class="invalid-feedback">

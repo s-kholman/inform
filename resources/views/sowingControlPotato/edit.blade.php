@@ -6,6 +6,7 @@
         <form action="{{ route('sowing_control_potato.update', ['sowing_control_potato' => $sowingControlPotato->id]) }}" method="POST">
             @csrf
             @method('PUT')
+            <input hidden name="filial_id" value="{{$filial_id}}">
             <label for="date">Дата</label>
             <input name="date" id="date" type="date" value="{{$sowingControlPotato->date}}"
                    class="form-control"
@@ -72,9 +73,9 @@
                    id="result_control_agronomist"
                    value="{{$sowingControlPotato->result_control_agronomist}}"
                    class="form-control @error('result_control_agronomist') is-invalid @enderror"
-                   @if($post['AGRONOMIST'] <> $post_user)
+                   @cannot(['SowingControl.completed.store'])
                    readonly
-                @endif
+                @endcannot
             >
             @error('result_control_agronomist')
             <span class="invalid-feedback">
@@ -91,11 +92,9 @@
                    value="{{$sowingControlPotato->result_control_director}}"
                    class="form-control @error('result_control_director') is-invalid @enderror"
 
-                   @if($post['DIRECTOR'] == $post_user || $post['DEPUTY'] == $post_user)
-
-                   @else
-                        readonly
-                   @endif
+                   @cannot(['SowingControl.director.store'])
+                   readonly
+                @endcannot
             >
             @error('result_control_director')
             <span class="invalid-feedback">
@@ -111,9 +110,9 @@
                    id="result_control_deputy_director"
                    value="{{$sowingControlPotato->result_control_deputy_director}}"
                    class="form-control @error('result_control_deputy_director') is-invalid @enderror"
-                   @if($post['DEPUTY'] <> $post_user)
-                   readonly
-                @endif
+                   @cannot('SowingControl.deploy.store')
+                    readonly
+                @endcannot
             >
             @error('result_control_deputy_director')
             <span class="invalid-feedback">

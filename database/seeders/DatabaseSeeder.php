@@ -15,12 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(
             [
-                SowingTypeSeeder::class,
-                SowingLastNameSeeder::class,
                 MachineSeeder::class,
                 ShiftSeeder::class,
-                SowingOutfitSeeder::class,
-                SowingSeeder::class,
             ]
         );
 
