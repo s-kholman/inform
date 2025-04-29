@@ -282,6 +282,9 @@ Route::resource('sowing_hoeing_potato', SowingHoeingPotatoController::class);//-
 Route::get('/sowing_hoeing_potato/show_to_pole/{id}', [SowingHoeingPotatoController::class, 'showToPole'])->name('sowing_hoeing_potato.show_to_pole')->middleware('auth');
 Route::resource('hoeing_result', HoeingResultController::class)->middleware('auth');
 
+
+Route::group(['middleware' => ['can:SowingControl.user.view']], function () {
+
 Route::get('/sowing_control_potato/index', [SowingControlPotatoController::class, 'index'])
     ->name('sowing_control_potato.index')
     ->middleware('can:viewAny,App\Models\sowingControlPotato');
@@ -309,6 +312,8 @@ Route::put('/sowing_control_potato/{sowing_control_potato}', [SowingControlPotat
 Route::delete('/sowing_control_potato/{sowing_control_potato}', [SowingControlPotatoController::class, 'delete'])
     ->name('sowing_control_potato.destroy')
     ->middleware('can:delete,sowing_control_potato');
+});
+
 
 Route::resource('prikopki', PrikopkiController::class)->middleware('auth');
 

@@ -23,6 +23,7 @@ class SowingControlPotatoRequest extends FormRequest
     {
         return [
             'date' => 'required|date',
+            'filial_id' => 'exists:filials,id',
             'type_field_work' => 'required|integer',
             'sowing_last_name' => 'required|integer',
             'pole' => 'required|integer',
