@@ -28,6 +28,7 @@ use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
 use App\Http\Controllers\PeatController;
 use App\Http\Controllers\PeatExtractionController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PoleController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrikopkiController;
@@ -37,6 +38,7 @@ use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\ProductMonitoringReportController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RoleUpdateController;
 use App\Http\Controllers\RoleUserController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceNameController;
@@ -320,6 +322,8 @@ Route::resource('prikopki', PrikopkiController::class)->middleware('auth');
 
 Route::group(['middleware' => ['can:super-user']], function () {
     Route::resource('role', RoleController::class);
+    Route::post('updateRoles',[RoleController::class, 'updateRoles'])->name('roles.update.admin');
+    Route::get('showRoles',[RoleController::class, 'showRoles'])->name('roles.show.admin');
     Route::post('user/role/destroy/{registration}', [RoleUserController::class, 'userRoleDestroy'])->name('user.role.destroy');
     Route::post('user/role/add/{registration}', [RoleUserController::class, 'userRoleAdd'])->name('user.role.add');
     Route::get('role', [RoleController::class, 'index'])->name('role.index');

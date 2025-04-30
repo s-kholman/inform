@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Acronym\AcronymFullNameUser;
 use App\Http\Requests\RoleRequest;
-use App\Models\PermissionName;
+use App\Http\Requests\RoleUpdateManualRequest;
+use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class RoleController extends Controller
 {
@@ -34,15 +40,9 @@ class RoleController extends Controller
     public function store(RoleRequest $roleRequest)
     {
 
-        foreach ($roleRequest['roles'] as $role){
-            Role::create(['name' => $roleRequest['model'] . '.' .$role]);
+        foreach ($roleRequest['roles'] as $role) {
+            Role::create(['name' => $roleRequest['model'] . '.' . $role]);
         }
-
-//        foreach (PermissionName::all() as $permission){
-//            Permission::create([
-//                'name' => $request->role . '.' . $permission->name
-//            ]);
-//        }
 
         return redirect()->route('role.index');
     }
@@ -50,9 +50,40 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showRoles(AcronymFullNameUser $fullNameUser)
     {
-        //
+        $users = User::query()
+            ->with('Registration')
+            ->get();
+
+        $roles = Role::query()
+            ->get();
+
+        foreach ($users as $user) {
+
+            $getRoleUser = $user->getRoleNames();
+
+            for ($i = 0; $i <= $roles->count() - 1; $i++) {
+                $uses[$roles[$i]->name] = false;
+            }
+
+            foreach ($getRoleUser as $roleUser) {
+
+                $uses[$roleUser] = true;
+
+            }
+
+            $uses['name'] = $fullNameUser->Acronym($user->Registration);
+            $roles_user [$user->id] = $uses;
+
+        }
+
+        return view('rolePermissions.role.show',
+            [
+                'roles' => $roles,
+                'roles_user' => $roles_user,
+            ]);
+
     }
 
     /**
@@ -66,9 +97,38 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updateRoles(RoleUpdateManualRequest $manualRequest)
     {
-        //
+
+        DB::beginTransaction();
+
+        try {
+            DB::table('model_has_roles')->delete();
+
+            foreach ($manualRequest['role'] as $key => $value) {
+
+                DB::table('model_has_roles')->insert(
+                    [
+                        'role_id' => Str::of($value)->after('_'),
+                        'model_type' => 'App\Models\User',
+                        'model_id' => Str::of($value)->before('_')
+                    ]
+                );
+            }
+
+            app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
+
+            DB::commit();
+
+        } catch (QueryException $exception) {
+
+            DB::rollBack();
+
+            return redirect()->route('roles.show.admin');
+
+        }
+
+        return redirect()->route('roles.show.admin');
     }
 
     /**
@@ -88,23 +148,23 @@ class RoleController extends Controller
     {
         $role = Role::query()->where('id', $request->role)->first();
 
-        if (!empty($request->permissions)){
-            $permissions = array_map(function ($arr) use($role) {
+        if (!empty($request->permissions)) {
+            $permissions = array_map(function ($arr) use ($role) {
                 Permission::query()
                     ->updateOrCreate(
                         [
-                            'name' => $role->name . '.'.$arr
+                            'name' => $role->name . '.' . $arr
                         ],
                         [
                             'guard_name' => 'web'
                         ]
                     );
-                return $role->name . '.'.$arr;
-            },$request->permissions);
+                return $role->name . '.' . $arr;
+            }, $request->permissions);
 
             $get = Permission::query()
                 ->whereIn('name', $permissions)->get();
-        } else{
+        } else {
             $get = [];
         }
 

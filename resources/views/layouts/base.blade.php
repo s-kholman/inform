@@ -189,6 +189,10 @@
                                 <a href="/permissions/role" class="nav-link px-0"> <span class="d-none d-sm-inline">Права для ролей</span></a>
                             </li>
 
+                            <li>
+                                <a href="{{route('roles.show.admin')}}" class="nav-link px-0"> <span class="d-none d-sm-inline">Назначить права пользователям</span></a>
+                            </li>
+
                             @endcan
                         </ul>
                     </li>
