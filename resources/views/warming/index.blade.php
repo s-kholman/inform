@@ -58,7 +58,7 @@
                                                 @forelse($f->warmingControl as $control)
                                                     @if($control->level == 2)
                                                         {{$control->user->Registration->last_name}}:
-                                                        ({{\Carbon\Carbon::parse($control->created_at)->translatedFormat('d-m-Y')}})
+                                                        ({{\Carbon\Carbon::parse($control->created_at)->translatedFormat('d.m.Y')}})
                                                         "{{$control->text}}"
                                                         <br>
                                                     @endif
