@@ -280,9 +280,16 @@ Route::view('/reference', 'printer.reference');
 
 Route::resource('type_field_work', TypeFieldWorkController::class)->middleware('can:viewAny, App\Models\administrator');
 
-Route::resource('sowing_hoeing_potato', SowingHoeingPotatoController::class);//->middleware('auth');
-Route::get('/sowing_hoeing_potato/show_to_pole/{id}', [SowingHoeingPotatoController::class, 'showToPole'])->name('sowing_hoeing_potato.show_to_pole')->middleware('auth');
-Route::resource('hoeing_result', HoeingResultController::class)->middleware('auth');
+
+Route::group(['middleware' => ['can:SowingHoeingPotato.user.view']], function (){
+    Route::resource('sowing_hoeing_potato', SowingHoeingPotatoController::class);
+
+    Route::get('/sowing_hoeing_potato/show_to_pole/{id}', [SowingHoeingPotatoController::class, 'showToPole'])
+        ->name('sowing_hoeing_potato.show_to_pole')
+        ->middleware('auth');
+});
+
+
 
 
 Route::group(['middleware' => ['can:SowingControl.user.view']], function () {

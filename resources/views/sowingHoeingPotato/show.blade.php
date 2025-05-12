@@ -5,8 +5,6 @@
 @section('info')
     <div class="container">
         <div class="row text-center text-wrap text-break">
-
-
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     @forelse($sowing_hoeing_potatoes->groupBy('HarvestYear.name') as $name => $item)
