@@ -191,10 +191,14 @@
         async function smsSend() {
 
            let phone = document.getElementById('phone-send').value
+
            let isDay = (x, a, b) => a <= x && x <= b;
 
-           //phone = phone.replace(/[^0-9+]/g, '');
-           phone = '+' + phone.replace(/\D/g, '');
+           phone = phone.replace(/\D/g, '');
+
+           phone = phone.substring(1)
+
+           phone = '+7' + phone
 
            const formatPhone = /^\+7\d{10}$/
 
