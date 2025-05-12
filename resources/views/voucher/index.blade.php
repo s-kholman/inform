@@ -193,9 +193,10 @@
            let phone = document.getElementById('phone-send').value
            let isDay = (x, a, b) => a <= x && x <= b;
 
-           phone = phone.replace(/[^0-9+]/g, '');
+           //phone = phone.replace(/[^0-9+]/g, '');
+           phone = '+' + phone.replace(/\D/g, '');
 
-           const formatPhone = /^\+7\d{10}/
+           const formatPhone = /^\+7\d{10}$/
 
            if(formatPhone.test(phone) && isDay(dayInput.value, 1, 365)){
 
