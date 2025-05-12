@@ -145,7 +145,7 @@
             }
         }
 
-       async function smsSend() {
+       /*async function smsSend() {
            checkSmsSend = document.querySelectorAll('.sms-send-check')
 
            let phone = document.getElementById('phone-send').value
@@ -184,6 +184,42 @@
                }
            } else {
                sendStatus.innerText = 'Проверьте телефон и выбранный пароль'
+           }
+
+        }*/
+
+        async function smsSend() {
+
+           let phone = document.getElementById('phone-send').value
+           let isDay = (x, a, b) => a <= x && x <= b;
+
+           phone = phone.replace(/[^0-9+]/g, '');
+
+           const formatPhone = /^\+7\d{10}/
+
+           if(formatPhone.test(phone) && isDay(dayInput.value, 1, 365)){
+
+                           try{
+                               let formData = new FormData
+                               formData.append('phone', phone)
+                               formData.append('day', dayInput.value)
+
+                               const response = await  fetch(url + '/api/v1/cabinetVoucherGetToSend',
+                                   {
+                                       method: 'POST',
+                                       headers:
+                                           {
+                                               "Accept": "application/json",
+                                           },
+                                       body: formData,
+                                   })
+                               const data = await response.json()
+                               sendStatus.innerText = data.message
+                           } catch (error) {
+
+                           }
+           } else {
+               sendStatus.innerText = 'Проверьте телефон и количество дней'
            }
 
         }

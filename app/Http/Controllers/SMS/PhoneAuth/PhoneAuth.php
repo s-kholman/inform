@@ -8,10 +8,14 @@ use Illuminate\Support\Str;
 
 class PhoneAuth
 {
-    public function phoneAuth($phone): bool
+    public function phoneAuth($phone, bool $check = false): bool
     {
-        if (Registration::where('phone', $phone)->where('activation', true)->count() ||
-            PhoneLimit::where('phone', Str::after($phone, '+'))->where('active', true)->count()){
+        if ($check){
+            return $check;
+        }
+
+        if (Registration::query()->where('phone', $phone)->where('activation', true)->count() ||
+            PhoneLimit::query()->where('phone', Str::after($phone, '+'))->where('active', true)->count()){
 
             return true;
 
