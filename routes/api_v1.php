@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\v1\SzrController;
 use App\Http\Controllers\api\v1\VoucherController;
 use App\Http\Controllers\Api\v1\VpnController;
 use App\Http\Controllers\Cabinet\Voucher\VoucherSendSmsController;
+use App\Http\Controllers\Voucher\VoucherGetToSendController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('productMonitoring/{id?}/{date?}', ProductMonitoringController::class);
@@ -19,3 +20,4 @@ Route::post('voucher/get', [VoucherController::class, 'voucherGet']);
 Route::post('vpn', VpnController::class);
 Route::post('ike', IkeVpnController::class);
 Route::post('cabinetVoucherSmsSend', VoucherSendSmsController::class);
+Route::post('cabinetVoucherGetToSend', VoucherGetToSendController::class);

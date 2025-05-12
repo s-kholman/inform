@@ -21,10 +21,10 @@ class VoucherGet
         $this->smsSend = new SmsSend();
     }
 
-    public function get(int $day, $phone, $count = 1, $note = ''): array
+    public function get(int $day, $phone, $count = 1, $note = '', bool $check = false): array
     {
 
-        if ($this->phoneAuth->phoneAuth($phone)){
+        if ($this->phoneAuth->phoneAuth($phone, $check)){
 
             $unifi_connection = new Client(
                 env('UniFi_USER'),
