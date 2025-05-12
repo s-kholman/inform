@@ -10,8 +10,7 @@
         transform: scale(-1, -1);
         height: 155px;
     }
-
-    .vertical-align{
+    .vertical-align {
         vertical-align: middle;
     }
 </style>
@@ -23,8 +22,8 @@
         <div class="row">
             @can('viewAny', 'App\Models\sowingcontrolpotato')
                 <div class="col-4 p-3"><a class="btn btn-outline-success" href="/sowing_hoeing_potato/create">Внести
-                        контроль</a></div>
-               {{-- <div class="col-4 p-3"><a class="btn btn-outline-success" href="/spraying/report">Отчеты</a></div>--}}
+                        контроль</a>
+                </div>
             @endcan
 
             @can('viewAny','App\Models\sowingcontrolpotato')
@@ -37,65 +36,84 @@
                             <li class="dropdown-item"><a href="/pole">Поля/севооборот</a></li>
                         </ul>
                     </div>
-
                 </div>
             @endcan
         </div>
 
-        <div class="container gx-4">
-            <div class="row">
-                <div class="col-xl-10">
-                    <div class="row">
-                        @forelse($sowing_hoeing_potatoes->groupBy('Filial.name') as $filial_name => $sowing_hoeing_potato)
-                            <div class="col"> {{$filial_name}}
-                                @foreach($sowing_hoeing_potato->groupBy('Pole.name') as $pole_name => $item)
-                                    <div><a href="/sowing_hoeing_potato/show_to_pole/{{$item[0]['pole_id']}}?pole_id={{$item[0]['pole_id']}}">{{$pole_name}}</a></div>
-                                @endforeach
-                            </div>
-                        @empty
-                            <p>Данные не найдены</p>
-                        @endforelse
-                    </div>
-                </div>
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                @forelse($sowing_hoeing_potatoes->sortByDesc('HarvestYear.name')->groupBy('HarvestYear.name') as $name => $item)
+                    @if($loop->first)
+                        <button class="nav-link active" id="nav-{{$name}}-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-{{$name}}" type="button" role="tab"
+                                aria-controls="nav-{{$name}}" aria-selected="true">{{$name}}</button>
+                    @else
+                        <button class="nav-link" id="nav-{{$name}}-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-{{$name}}" type="button" role="tab"
+                                aria-controls="nav-{{$name}}" aria-selected="false">{{$name}}</button>
+                    @endif
+                @empty
+                @endforelse
             </div>
-        </div>
+        </nav>
 
-        <div class="row p-4">
-            <table class="table table-bordered text-center table-striped caption-top">
-                <caption class="border text-center">
-                    Сводная по окучиванию на {{\Carbon\Carbon::parse(now())->translatedFormat('d-m-Y H:i')}}
-                </caption>
-                <thead>
-                <tr>
-                    <th rowspan="2">Дата</th>
-                    {!! $string_filial !!}
-                </tr>
-                <tr>
-                    {!! $string_pole !!}
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($detail as $date => $key)
-                    <tr><td>{{\Carbon\Carbon::parse($date)->translatedFormat('d-m-Y')}}</td>
-                        @foreach($key as $volume)
-                            <td>{{$volume ?: ''}}</td>
-                        @endforeach
-                    </tr>
-                @endforeach
-                </tbody>
+        @forelse($sowing_hoeing_potatoes->sortByDesc('HarvestYear.name')->groupBy('HarvestYear.name') as $harvest_year_name => $collections)
 
-                <tfoot>
-                <tr>
-                    <td>Итого:</td>
-                    @foreach($detail as $det)
-                        @foreach($det as $key => $volume)
-                            <td>{{$detail->sum($key)}}</td>
-                        @endforeach
-                        @break
-                @endforeach
-                </tr>
-                </tfoot>
-            </table>
-        </div>
+            @if($loop->first)<div class="tab-content" id="nav-tabContent">@endif
+                    <div class="tab-pane fade @if($loop->first) show active @endif" id="nav-{{$harvest_year_name}}" role="tabpanel"
+                         aria-labelledby="nav-{{$harvest_year_name}}-tab">
+                        <div class="row">
+                            @foreach($sowing_hoeing_potatoes->where('harvest_year_id', $collections[0]->harvest_year_id)->groupBy('Filial.name') as $filial_name => $sowing_control_potato)
+                                <div class="col"> {{$filial_name}}
+                                    @foreach($sowing_control_potato->groupBy('Pole.name') as $pole_name => $item)
+                                        <div>
+                                            <a href="/sowing_hoeing_potato/show_to_pole/{{$item[0]['pole_id']}}">{{$pole_name}}</a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endforeach
+                            <div class="row p-4">
+                                <table class="table table-bordered text-center table-striped caption-top">
+                                    <caption class="border text-center">
+                                        Сводная по окучиванию
+                                        на {{\Carbon\Carbon::parse(now())->translatedFormat('d-m-Y H:i')}}
+                                    </caption>
+                                    <thead>
+                                    <tr>
+                                        <th rowspan="2">Дата</th>
+                                        {!! $string_filial[$harvest_year_name] !!}
+                                    </tr>
+
+                                    <tr>
+                                        @foreach($collections->groupBy('Pole.name') as $value)
+                                        <th class="vertical-align">
+                                            <label class="rotate">{{ $value[0]->Pole->name}}</label>
+                                        </th>
+                                        @endforeach
+                                    </tr>
+
+                                    </thead>
+                                    <tbody>
+                                    @foreach($detail[$harvest_year_name] as $date => $key)
+
+                                        <tr>
+                                            <td>{{\Carbon\Carbon::parse($date)->translatedFormat('d-m-Y')}}</td>
+                                            @foreach($key as $volume)
+                                                <td>{{$volume ?: ''}}</td>
+                                            @endforeach
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+
+                                    <tfoot>
+
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @empty
+                    @endforelse
+                </div>
     </div>
 @endsection('info')

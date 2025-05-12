@@ -56,7 +56,7 @@
             </span>
             @enderror
 
-            <label for="volume">Обработанно, Га</label>
+            <label for="volume">Обработано, Га</label>
             <input name="volume"
                    type="number"
                    step="0.1"
@@ -115,11 +115,9 @@
             <select name="result_control_director"
                     id="result_control_director"
                     class="form-select @error('result_control_director') is-invalid @enderror"
-                    @if($post['DIRECTOR'] == $post_user || $post['DEPUTY'] == $post_user)
-
-                    @else
+                    @cannot('SowingHoeingPotato.director.store')
                     style="pointer-events: none"
-                @endif
+                @endcannot>
             >
                 <option value=""></option>
                 @forelse($hoeing_results as $hoeing_result)
@@ -138,11 +136,9 @@
             <select name="result_control_deputy_director"
                     id="result_control_deputy_director"
                     class="form-select @error('result_control_deputy_director') is-invalid @enderror"
-                    @if($post['DEPUTY'] == $post_user)
-
-                    @else
+                    @cannot('SowingHoeingPotato.deploy.store')
                     style="pointer-events: none"
-                @endif
+                @endcannot
             >
                 <option value=""></option>
                 @forelse($hoeing_results as $hoeing_result)

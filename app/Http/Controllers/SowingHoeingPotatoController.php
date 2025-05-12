@@ -16,57 +16,59 @@ use Illuminate\Support\Facades\Auth;
 
 class SowingHoeingPotatoController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(SowingHoeingPotato::class);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
 
-
         $sowing_hoeing_potatoes = SowingHoeingPotato::query()
             ->with(['Filial', 'Pole'])
             ->get()
-            ->sortBy(['Filial.name', 'Pole.name'])
-        ;
+            ->sortBy(['Filial.name', 'Pole.name']);
 
-        $string_filial = '';
-        $string_pole = '';
+        $r_string_filial = '';
         $detail = [];
 
-        if ($sowing_hoeing_potatoes->isNotEmpty()){
-            foreach ($sowing_hoeing_potatoes->groupBy('Filial.name') as $filial_name => $sowing_hoeing_potato){
-                foreach ($sowing_hoeing_potato->groupBy('Pole.name') as $pole_name => $sowingLastNames){
-                    foreach ($sowing_hoeing_potatoes->groupBy('date') as $date => $item)
-                    {
-                            $detail [$date] [$sowingLastNames[0]->pole_id] = $sowing_hoeing_potatoes
-                                ->where('date', $date)
-                                ->where('filial_id' , $sowing_hoeing_potato[0]->filial_id)
-                                ->where('pole_id' , $sowingLastNames[0]->pole_id)
-                                ->sum('volume')
-                            ;
-                    }
-                    $string_pole .=  '<th  class="vertical-align"><label class="rotate">' . $pole_name . '</label></th>';
-                }
-                $colspan = $sowing_hoeing_potato->groupBy('Pole.name')->count();
-                $string_filial .= "<th colspan=$colspan>" . $filial_name . '</th>';
-            }
-        }
+        if ($sowing_hoeing_potatoes->isNotEmpty()) {
+            foreach ($sowing_hoeing_potatoes->groupBy('HarvestYear.name') as $yearName => $value){
+            foreach ($value->groupBy('Filial.name') as $filial_name => $sowing_hoeing_potato) {
+                foreach ($sowing_hoeing_potato->groupBy('Pole.name') as $pole_name => $sowingLastNames) {
 
-        return view('sowingHoeingPotato.index', [
-            'sowing_hoeing_potatoes' => $sowing_hoeing_potatoes,
-            'string_filial' => $string_filial,
-            'string_pole' => $string_pole,
-            'detail' => collect($detail)->sortKeysDesc(),
-        ]);
+                         foreach ($value as $date => $item){
+
+                            $detail [$yearName] [$item->date] [$sowingLastNames[0]->pole_id] = $sowing_hoeing_potatoes
+                                ->where('date', $item->date)
+                                ->where('filial_id', $sowing_hoeing_potato[0]->filial_id)
+                                ->where('pole_id', $sowingLastNames[0]->pole_id)
+                                ->sum('volume');
+                        }
+                    }
+
+                    $colspan = $sowing_hoeing_potato->groupBy('Pole.name')->count();
+                    $r_string_filial .= "<th colspan=$colspan>" . $filial_name . '</th>';
+                }
+                $string_filial [$yearName] = $r_string_filial;
+                $r_string_filial = '';
+            }
+            return view('sowingHoeingPotato.index', [
+                'sowing_hoeing_potatoes' => $sowing_hoeing_potatoes,
+                'string_filial' => $string_filial,
+                'detail' => collect($detail)->sortKeysDesc(),
+            ]);
+        }
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(HarvestAction $harvestAction)
+    public function create()
     {
-        $post = json_decode(env('POST_ADD_POTATO', '{"DIRECTOR":0,"DEPUTY":0,"AGRONOMIST:0"}'),true);
-        $post_user = Auth::user()->registration->post_id;
 
         $poles = Pole::query()
             ->where('filial_id', Auth::user()->FilialName->id)
@@ -96,8 +98,6 @@ class SowingHoeingPotatoController extends Controller
             'poles' => $poles,
             'sowing_last_names' => $sowing_last_names,
             'type_field_works' => $type_field_works,
-            'post' => $post,
-            'post_user' => $post_user,
             'shifts' => $shifts,
             'hoeing_results' => $hoeing_results,
         ]);
@@ -137,28 +137,18 @@ class SowingHoeingPotatoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(SowingHoeingPotato $sowingHoeingPotato, Request $request)
+    public function show(SowingHoeingPotato $sowingHoeingPotato)
     {
-        //dd($request->pole_id);
+
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(SowingHoeingPotato $sowingHoeingPotato, HarvestAction $harvestAction)
+    public function edit(SowingHoeingPotato $sowingHoeingPotato)
     {
-
-        $post = json_decode(env('POST_ADD_POTATO', '{"DIRECTOR":0,"DEPUTY":0,"AGRONOMIST:0"}'),true);
-        $post_user = Auth::user()->registration->post_id;
-
-        if ($post['DEPUTY'] === $post_user){
-            $filial_id = $sowingHoeingPotato->filial_id;
-        } else{
-            $filial_id = Auth::user()->FilialName->id;
-        }
-
         $poles = Pole::query()
-            ->where('filial_id', $filial_id)
+            ->where('filial_id', $sowingHoeingPotato->filial_id)
             ->orderBy('name')
             ->get()
         ;
@@ -186,8 +176,6 @@ class SowingHoeingPotatoController extends Controller
             'poles' => $poles,
             'sowing_last_names' => $sowing_last_names,
             'type_field_works' => $type_field_works,
-            'post' => $post,
-            'post_user' => $post_user,
             'shifts' => $shifts,
             'hoeing_results' => $hoeing_results,
             'sowingHoeingPotato' => $sowingHoeingPotato,
@@ -197,7 +185,7 @@ class SowingHoeingPotatoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SowingHoeingPotato $sowingHoeingPotato, AcronymFullNameUser $acronymFullNameUser)
+    public function update(SowingHoeingPotato $sowingHoeingPotato, SowingHoeingPotatoRequest $request , AcronymFullNameUser $acronymFullNameUser)
     {
         if($request->comment <> null){
             $comment = $sowingHoeingPotato->comment . $acronymFullNameUser->Acronym(Auth::user()->registration) . ': ' . $request->comment . "<br/>";
@@ -240,7 +228,7 @@ class SowingHoeingPotatoController extends Controller
             ->with(['TypeFieldWork', 'SowingLastName', 'Pole', 'Filial','HarvestYear', 'Shift'])
             ->where('pole_id', $id)
             ->get()
-            ->sortByDesc(['HarvestYear.name'])
+            ->sortByDesc('HarvestYear.name')
         ;
         return view('sowingHoeingPotato.show', [
             'sowing_hoeing_potatoes' => $sowing_hoeing_potatoes

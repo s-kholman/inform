@@ -81,11 +81,12 @@
                             <i class="fs-4 bi-eye"></i> <span class="ms-1 d-none d-sm-inline">Контроль нормы высадки картофеля</span></a>
                     </li>
                     @endcan
+                    @can('SowingHoeingPotato.user.view')
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/sowing_hoeing_potato" class="nav-link px-0">
                             <i class="fs-4 bi-alt"></i> <span class="ms-1 d-none d-sm-inline">Окучивание</span></a>
                     </li>
-
+                    @endcan
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/watering/index" class="nav-link px-0">
                             <i class="fs-4 bi-umbrella"></i> <span class="ms-1 d-none d-sm-inline">Полив</span></a>
