@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Voucher;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SMS\Send\SmsSend;
-use Illuminate\Http\Request;
+use App\Http\Requests\VoucherGetToSendRequest;
 
 class VoucherGetToSendController extends Controller
 {
@@ -18,8 +18,9 @@ class VoucherGetToSendController extends Controller
         $this->smsSend = new SmsSend();
     }
 
-    public function __invoke(Request $request)
+    public function __invoke(VoucherGetToSendRequest $request)
     {
+
         $vouchers = $this->voucherGet->get($request->day, $request->phone, 1, $request->phone, true);
 
         $status = '';

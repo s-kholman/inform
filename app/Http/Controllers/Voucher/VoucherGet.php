@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Voucher;
 
 
+use App\Actions\Declension\DeclensionWord;
 use App\Http\Controllers\SMS\PhoneAuth\PhoneAuth;
 use App\Http\Controllers\SMS\Send\SmsSend;
 use Illuminate\Support\Str;
@@ -42,9 +43,14 @@ class VoucherGet
 
                 $vouchers = $unifi_connection->stat_voucher($voucher_result[0]->create_time);
 
+                $declensionWord = new DeclensionWord();
+
                 foreach ($vouchers as $voucher){
 
-                    $result [$voucher->_id] = ['message' => Str::substrReplace($voucher->code, '-', 5, 0), 'result' => true, 'day' => $this->dayName($day)];
+                    $result [$voucher->_id] = [
+                        'message' => Str::substrReplace($voucher->code, '-', 5, 0),
+                        'result' => true,
+                        'day' => $declensionWord($day, 'день', 'дня', 'дней')];
 
                 }
 
@@ -67,38 +73,6 @@ class VoucherGet
             $result [0] = ['message' => 'Номер телефона не подтвержден администратором', 'result' => false];
 
             return $result;
-
-        }
-
-    }
-
-    private function dayName (int $i): string
-    {
-        $day = $i;
-
-        if ($i >= 11 and $i <=14){
-
-            return $day.' дней';
-
-        }else{
-
-            $i = $i % 100;
-
-            $i = $i % 10;
-
-            if ($i == 1) {
-
-                return $day.' день';
-
-            } elseif ($i >= 2 and $i <= 4) {
-
-                return $day.' дня';
-
-            } else {
-
-                return $day.' дней';
-
-            }
         }
     }
 }
