@@ -29,7 +29,6 @@ class RegistrationRequest extends FormRequest
             'phone' => 'regex:/^\+7\d{10}/|max:12|min:12',
             'post_name' => 'required|integer|gt:0'
         ];
-        //preg_match('/^[а-яА-ЯёЁ]+ [а-яА-ЯёЁ]+ ?[а-яА-ЯёЁ]+$/u');
     }
 
 
@@ -38,7 +37,7 @@ class RegistrationRequest extends FormRequest
     {
         return [
             'required' => 'Заполните это поле',
-            'max' => 'Значение не должно быть длинне :max символов',
+            'max' => 'Значение не должно быть длиннее :max символов',
             'gt' => 'Выберите из списка',
             'min' => 'Должно содержать не менее :min символов',
             'phone.regex' => 'Должно соответствовать формату +7',

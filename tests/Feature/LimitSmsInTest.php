@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LimitSmsInTest extends TestCase
@@ -20,6 +18,7 @@ class LimitSmsInTest extends TestCase
                 ])
             ->assertStatus(302)
            ;
+
         $this
             ->post('/sms_in',
                 [

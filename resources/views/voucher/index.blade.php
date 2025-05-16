@@ -72,6 +72,7 @@
         const sendStatus = document.getElementById('send-status')
         const url = window.location.origin
         const phone = {!! json_decode($phone) !!};
+        let errorMessage;
         let checkSmsSend = ''
         let voucherChildInfo = document.createElement('div')
         let checkInfo = '';
@@ -113,13 +114,13 @@
                     for (let voucher in data['data']) {
                         show +=
                             '<div class="row">' +
-                            '<div class="col-10">' +
+                            '<div class="col-12">' +
                             '<b>'+data['data'][voucher]['code'].substr(0, 5) + '-' + data['data'][voucher]['code'].substr(5, 10)+'</b>'
                             + ' - доступ на ' + dayToStr(data['data'][voucher]['duration'])
                             + '</div>'
-                            + '<div class="col-2 form-switch form-check mb-3">'
-                            + '<input class="form-check-input sms-send-check" type="checkbox" value="'+dayToStr(data['data'][voucher]['duration'])+'" id="'+ data['data'][voucher]['code']+'">'
-                            + '</div>'
+                            //+ '<div class="col-2 form-switch form-check mb-3">'
+                            //+ '<input class="form-check-input sms-send-check" type="checkbox" value="'+dayToStr(data['data'][voucher]['duration'])+'" id="'+ data['data'][voucher]['code']+'">'
+                            //+ '</div>'
                             + '</div>'
 
                     }
@@ -145,68 +146,14 @@
             }
         }
 
-       /*async function smsSend() {
-           checkSmsSend = document.querySelectorAll('.sms-send-check')
-
-           let phone = document.getElementById('phone-send').value
-
-           phone = phone.replace(/[^0-9+]/g, '');
-
-           const formatPhone = /^\+7\d{10}/
-
-           if(formatPhone.test(phone) && checkSmsSend != null){
-               for (let x=0;  x <= checkSmsSend.length; x++) {
-                   try {
-                       if(checkSmsSend[x].checked){
-                           try{
-                               let formData = new FormData
-                               formData.append('phone', phone)
-                               formData.append('code', checkSmsSend[x].id.substr(0, 5)+ '-' +checkSmsSend[x].id.substr(5))
-                               formData.append('day', checkSmsSend[x].value)
-
-                               const response = await  fetch(url + '/api/v1/cabinetVoucherSmsSend',
-                                   {
-                                       method: 'POST',
-                                       headers:
-                                           {
-                                               "Accept": "application/json",
-                                           },
-                                       body: formData,
-                                   })
-                               const data = await response.json()
-                               sendStatus.innerText = data.message
-                           } catch (error) {
-
-                           }
-                       }
-                   } catch (e){
-                   }
-               }
-           } else {
-               sendStatus.innerText = 'Проверьте телефон и выбранный пароль'
-           }
-
-        }*/
 
         async function smsSend() {
 
-           let phone = document.getElementById('phone-send').value
-
-           let isDay = (x, a, b) => a <= x && x <= b;
-
-           phone = phone.replace(/\D/g, '');
-
-           phone = phone.substring(1)
-
-           phone = '+7' + phone
-
-           const formatPhone = /^\+7\d{10}$/
-
-           if(formatPhone.test(phone) && isDay(dayInput.value, 1, 365)){
+           let phoneSend = document.getElementById('phone-send').value
 
                            try{
                                let formData = new FormData
-                               formData.append('phone', phone)
+                               formData.append('phone', phoneSend)
                                formData.append('day', dayInput.value)
 
                                const response = await  fetch(url + '/api/v1/cabinetVoucherGetToSend',
@@ -223,10 +170,6 @@
                            } catch (error) {
 
                            }
-           } else {
-               sendStatus.innerText = 'Проверьте телефон и количество дней'
-           }
-
         }
 
         async function voucherCreate(){
