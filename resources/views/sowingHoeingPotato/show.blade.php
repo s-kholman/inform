@@ -28,8 +28,9 @@
 
                     @if($loop->first)
 
-                        <div class="tab-pane fade show active" id="nav-{{$harvest_year_name}}" role="tabpanel"
-                             aria-labelledby="nav-{{$harvest_year_name}}-tab">
+                        <div class="tab-content" id="nav-tabContent">@endif
+                            <div class="tab-pane fade @if($loop->first) show active @endif" id="nav-{{$harvest_year_name}}" role="tabpanel"
+                                 aria-labelledby="nav-{{$harvest_year_name}}-tab">
                             <table class="table table-bordered table-striped">
                                 <caption class="border rounded-3 p-3 caption-top">
                                     <p class="text-center">
@@ -39,52 +40,34 @@
                                 </caption>
                                 <thead>
                                 <tr>
-                                    <th rowspan="2" class="text-center">Дата</th>
-                                    <th rowspan="2" class="text-center">Механизатор</th>
-                                    <th rowspan="2" class="text-center">Вид работ</th>
-                                    <th rowspan="2" class="text-center">Смена</th>
-                                    <th rowspan="2" class="text-center">Га</th>
-                                    <th colspan="3" class="text-center">Результат контроля</th>
-                                    <th rowspan="2" class="text-center">Комментарий</th>
-                                    <th rowspan="2" class="text-center">Действия</th>
+                                    <th rowspan="3" class="text-center">Дата</th>
+                                    <th rowspan="3" class="text-center">Механизатор</th>
+                                    <th rowspan="3" class="text-center">Вид работ</th>
+                                    <th rowspan="3" class="text-center">Смена</th>
+                                    <th rowspan="3" class="text-center">Га</th>
+                                    <th colspan="9" class="text-center">Результат контроля</th>
+                                    <th rowspan="3" class="text-center">Комментарий</th>
+                                    <th rowspan="3" class="text-center">Действия</th>
                                 </tr>
                                 <tr>
-                                    <th class="text-center">Агроном</th>
-                                    <th class="text-center">Директор</th>
-                                    <th class="text-center">зам. ген. дир.</th>
+                                    <th colspan="3" class="text-center">Агроном</th>
+                                    <th colspan="3" class="text-center">Директор</th>
+                                    <th colspan="3" class="text-center">зам. ген. дир.</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">№1</th>
+                                    <th class="text-center">№2</th>
+                                    <th class="text-center">№3</th>
+                                    <th class="text-center">№1</th>
+                                    <th class="text-center">№2</th>
+                                    <th class="text-center">№3</th>
+                                    <th class="text-center">№1</th>
+                                    <th class="text-center">№2</th>
+                                    <th class="text-center">№3</th>
                                 </tr>
                                 </thead>
 
-                                @else
-                                    <div class="tab-pane fade " id="nav-{{$harvest_year_name}}" role="tabpanel"
-                                         aria-labelledby="nav-{{$harvest_year_name}}-tab">
-                                        <table class="table table-bordered table-striped">
-                                            <caption class="border rounded-3 p-3 caption-top">
-                                                <p class="text-center">
-                                                    Отчет по оценке качества: поле -
-                                                    <b>{{$collections[0]->Pole->name}}</b>, филиала -
-                                                    <b>{{$collections[0]->Filial->name}}</b>
-                                                </p>
-                                            </caption>
-                                            <thead>
-                                            <tr>
-                                                <th rowspan="2" class="text-center">Дата</th>
-                                                <th rowspan="2" class="text-center">Механизатор</th>
-                                                <th rowspan="2" class="text-center">Вид работ</th>
-                                                <th rowspan="2" class="text-center">Смена</th>
-                                                <th rowspan="2" class="text-center">Га</th>
-                                                <th colspan="3" class="text-center">Результат контроля</th>
-                                                <th rowspan="2" class="text-center">Комментарий</th>
-                                                <th rowspan="2" class="text-center">Действия</th>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-center">Агроном</th>
-                                                <th class="text-center">Директор</th>
-                                                <th class="text-center">зам. ген. дир.</th>
-                                            </tr>
-                                            </thead>
 
-                                            @endif
                                             <tbody>
 
                                             @foreach($collections->sortByDesc('date') as $sowing_hoeing_potato)
@@ -95,9 +78,20 @@
                                                     <td align="center">{{$sowing_hoeing_potato->TypeFieldWork->name}}</td>
                                                     <td align="center">{{$sowing_hoeing_potato->Shift->name}}</td>
                                                     <td align="center">{{$sowing_hoeing_potato->volume}}</td>
-                                                    <td align="center">{{\App\Models\HoeingResult::query()->where('id' ,$sowing_hoeing_potato->hoeing_result_agronomist)->value('name') ??   ''}}</td>
-                                                    <td align="center">{{\App\Models\HoeingResult::query()->where('id' ,$sowing_hoeing_potato->hoeing_result_director)->value('name') ??   ''}}</td>
-                                                    <td align="center">{{\App\Models\HoeingResult::query()->where('id' ,$sowing_hoeing_potato->hoeing_result_deputy_director)->value('name') ??   ''}}</td>
+
+                                                    <td align="center">{{$hoeingResults[$sowing_hoeing_potato->hoeing_result_agronomist_point_1][0]['name'] ?? ''}}</td>
+                                                    <td align="center">{{$hoeingResults[$sowing_hoeing_potato->hoeing_result_agronomist_point_2][0]['name'] ?? ''}}</td>
+                                                    <td align="center">{{$hoeingResults[$sowing_hoeing_potato->hoeing_result_agronomist_point_3][0]['name'] ?? ''}}</td>
+
+                                                    <td align="center">{{$hoeingResults[$sowing_hoeing_potato->hoeing_result_director_point_1][0]['name'] ?? ''}}</td>
+                                                    <td align="center">{{$hoeingResults[$sowing_hoeing_potato->hoeing_result_director_point_2][0]['name'] ?? ''}}</td>
+                                                    <td align="center">{{$hoeingResults[$sowing_hoeing_potato->hoeing_result_director_point_3][0]['name'] ?? ''}}</td>
+
+                                                    <td align="center">{{$hoeingResults[$sowing_hoeing_potato->hoeing_result_deputy_director_point_1][0]['name'] ?? ''}}</td>
+                                                    <td align="center">{{$hoeingResults[$sowing_hoeing_potato->hoeing_result_deputy_director_point_2][0]['name'] ?? ''}}</td>
+                                                    <td align="center">{{$hoeingResults[$sowing_hoeing_potato->hoeing_result_deputy_director_point_3][0]['name'] ?? ''}}</td>
+
+
                                                     <td align="center">{!!nl2br($sowing_hoeing_potato->comment)!!}</td>
                                                     <td align="center">
                                                         <div class="dropdown">

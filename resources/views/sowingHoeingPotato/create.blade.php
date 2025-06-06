@@ -61,7 +61,7 @@
             </span>
             @enderror
 
-            <label for="volume">Обработанно, Га</label>
+            <label for="volume">Обработано, Га</label>
             <input name="volume"
                    type="number"
                    step="0.1"
@@ -90,75 +90,221 @@
             </span>
             @enderror
 
-            <label for="result_control_agronomist">Результат контроля агроном</label>
+            <div class="row">
+                <label for="">Результат контроля агроном</label>
+                <div class="col-4">
+                    <label for="hoeing_result_agronomist_point_1">№1</label>
+                    <select
+                        name="hoeing_result_agronomist_point_1"
+                        id="hoeing_result_agronomist_point_1"
+                        class="form-select @error('hoeing_result_agronomist_point_1') is-invalid @enderror">
+                        <option value=""></option>
+                        @forelse($hoeing_results as $hoeing_result)
+                            <option {{old('hoeing_result_agronomist_point_1') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
+                        @empty
+                            <option value="">Данные не найдены</option>
+                        @endforelse
+                    </select>
+                    @error('hoeing_result_agronomist_point_1')
+                        <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
 
-            <select
-                name="result_control_agronomist"
-                    id="result_control_agronomist"
-                    class="form-select @error('result_control_agronomist') is-invalid @enderror"
-            >
-                <option value=""></option>
-                @forelse($hoeing_results as $hoeing_result)
-                    <option {{old('result_control_agronomist') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
-                @empty
-                    <option value="">Данные не найдены</option>
-                @endforelse
-            </select>
-            @error('result_control_agronomist')
-            <span class="invalid-feedback">
-            <strong>{{ $message }}</strong>
-            </span>
-            @enderror
+                </div>
 
-            @error('result_control_agronomist')
-            <span class="invalid-feedback">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
+                <div class="col-4">
+                    <label for="hoeing_result_agronomist_point_2">№2</label>
+                    <select
+                        name="hoeing_result_agronomist_point_2"
+                        id="hoeing_result_agronomist_point_2"
+                        class="form-select @error('hoeing_result_agronomist_point_2') is-invalid @enderror">
+                        <option value=""></option>
+                        @forelse($hoeing_results as $hoeing_result)
+                            <option {{old('hoeing_result_agronomist_point_2') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
+                        @empty
+                            <option value="">Данные не найдены</option>
+                        @endforelse
+                    </select>
+                    @error('hoeing_result_agronomist_point_2')
+                        <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
 
-            <label for="result_control_director">Результат контроля директор</label>
-            <select name="result_control_director"
-                    id="result_control_director"
-                    class="form-select @error('result_control_director') is-invalid @enderror"
+                <div class="col-4">
+                    <label for="hoeing_result_agronomist_point_3">№3</label>
+                    <select
+                        name="hoeing_result_agronomist_point_3"
+                        id="hoeing_result_agronomist_point_3"
+                        class="form-select @error('hoeing_result_agronomist_point_3') is-invalid @enderror">
+                        <option value=""></option>
+                        @forelse($hoeing_results as $hoeing_result)
+                            <option {{old('hoeing_result_agronomist_point_3') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
+                        @empty
+                            <option value="">Данные не найдены</option>
+                        @endforelse
+                    </select>
+                    @error('hoeing_result_agronomist_point_3')
+                        <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
 
-                    @cannot('SowingHoeingPotato.director.store')
-                    style="pointer-events: none"
-                    @endcannot>
-                <option value=""></option>
-                @forelse($hoeing_results as $hoeing_result)
-                    <option {{old('result_control_director') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
-                @empty
-                    <option value="">Данные не найдены</option>
-                @endforelse
-            </select>
-            @error('result_control_director')
-            <span class="invalid-feedback">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
+            <div class="row">
+                <label for="">Результат контроля директор</label>
+                <div class="col-4">
+                    <label for="hoeing_result_director_point_1">№1</label>
+                    <select
+                        name="hoeing_result_director_point_1"
+                        id="hoeing_result_director_point_1"
+                        class="form-select @error('hoeing_result_director_point_1') is-invalid @enderror"
+                        @cannot('SowingHoeingPotato.director.store')
+                            style="pointer-events: none"
+                        @endcannot>
 
-            <label for="result_control_deputy_director">Результат контроля зам.ген.дир.</label>
-            <select name="result_control_deputy_director"
-                    id="result_control_deputy_director"
-                    class="form-select @error('result_control_deputy_director') is-invalid @enderror"
+                        <option value=""></option>
+                        @forelse($hoeing_results as $hoeing_result)
+                            <option {{old('hoeing_result_director_point_1') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
+                        @empty
+                            <option value="">Данные не найдены</option>
+                        @endforelse
+                    </select>
+                    @error('hoeing_result_director_point_1')
+                    <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
 
-                    @cannot('SowingHoeingPotato.deploy.store')
-                    style="pointer-events: none"
-                    @endcannot
-            >
-                <option value=""></option>
-                @forelse($hoeing_results as $hoeing_result)
-                    <option {{old('result_control_deputy_director') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
-                @empty
-                    <option value="">Данные не найдены</option>
-                @endforelse
-            </select>
+                </div>
 
-            @error('result_control_deputy_director')
-            <span class="invalid-feedback">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
+                <div class="col-4">
+                    <label for="hoeing_result_director_point_2">№2</label>
+                    <select
+                        name="hoeing_result_director_point_2"
+                        id="hoeing_result_director_point_2"
+                        class="form-select @error('hoeing_result_director_point_2') is-invalid @enderror"
+                        @cannot('SowingHoeingPotato.director.store')
+                        style="pointer-events: none"
+                        @endcannot>
+
+                        <option value=""></option>
+                        @forelse($hoeing_results as $hoeing_result)
+                            <option {{old('hoeing_result_director_point_2') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
+                        @empty
+                            <option value="">Данные не найдены</option>
+                        @endforelse
+                    </select>
+                    @error('hoeing_result_director_point_2')
+                    <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <div class="col-4">
+                    <label for="hoeing_result_director_point_3">№3</label>
+                    <select
+                        name="hoeing_result_director_point_3"
+                        id="hoeing_result_director_point_3"
+                        class="form-select @error('hoeing_result_director_point_3') is-invalid @enderror"
+                        @cannot('SowingHoeingPotato.director.store')
+                        style="pointer-events: none"
+                        @endcannot>
+
+                        <option value=""></option>
+                        @forelse($hoeing_results as $hoeing_result)
+                            <option {{old('hoeing_result_director_point_3') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
+                        @empty
+                            <option value="">Данные не найдены</option>
+                        @endforelse
+                    </select>
+                    @error('hoeing_result_director_point_3')
+                    <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="">Результат контроля зам.ген.дир.</label>
+                <div class="col-4">
+                    <label for="hoeing_result_deputy_director_point_1">№1</label>
+                    <select
+                        name="hoeing_result_deputy_director_point_1"
+                        id="hoeing_result_deputy_director_point_1"
+                        class="form-select @error('hoeing_result_deputy_director_point_1') is-invalid @enderror"
+                        @cannot('SowingHoeingPotato.deploy.store')
+                        style="pointer-events: none"
+                        @endcannot>
+
+                        <option value=""></option>
+                        @forelse($hoeing_results as $hoeing_result)
+                            <option {{old('hoeing_result_deputy_director_point_1') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
+                        @empty
+                            <option value="">Данные не найдены</option>
+                        @endforelse
+                    </select>
+                    @error('hoeing_result_deputy_director_point_1')
+                    <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+
+                </div>
+
+                <div class="col-4">
+                    <label for="hoeing_result_deputy_director_point_2">№2</label>
+                    <select
+                        name="hoeing_result_deputy_director_point_2"
+                        id="hoeing_result_deputy_director_point_2"
+                        class="form-select @error('hoeing_result_deputy_director_point_2') is-invalid @enderror"
+                        @cannot('SowingHoeingPotato.deploy.store')
+                        style="pointer-events: none"
+                        @endcannot>
+
+                        <option value=""></option>
+                        @forelse($hoeing_results as $hoeing_result)
+                            <option {{old('hoeing_result_deputy_director_point_2') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
+                        @empty
+                            <option value="">Данные не найдены</option>
+                        @endforelse
+                    </select>
+                    @error('hoeing_result_deputy_director_point_2')
+                    <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <div class="col-4">
+                    <label for="hoeing_result_deputy_director_point_3">№3</label>
+                    <select
+                        name="hoeing_result_deputy_director_point_3"
+                        id="hoeing_result_deputy_director_point_3"
+                        class="form-select @error('hoeing_result_deputy_director_point_3') is-invalid @enderror"
+                        @cannot('SowingHoeingPotato.deploy.store')
+                        style="pointer-events: none"
+                        @endcannot>
+
+                        <option value=""></option>
+                        @forelse($hoeing_results as $hoeing_result)
+                            <option {{old('hoeing_result_deputy_director_point_3') == $hoeing_result->id ? "selected" : ""}} value="{{$hoeing_result->id}}">{{$hoeing_result->name}}</option>
+                        @empty
+                            <option value="">Данные не найдены</option>
+                        @endforelse
+                    </select>
+                    @error('hoeing_result_deputy_director_point_3')
+                    <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
 
             <label for="comment">Комментарий</label>
             <input name="comment" id="comment" value="{{old('comment')}}" class="form-control @error('comment') is-invalid @enderror">

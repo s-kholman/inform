@@ -59,7 +59,8 @@
 
         @forelse($sowing_hoeing_potatoes->sortByDesc('HarvestYear.name')->groupBy('HarvestYear.name') as $harvest_year_name => $collections)
 
-            @if($loop->first)<div class="tab-content" id="nav-tabContent">@endif
+            @if($loop->first)
+                <div class="tab-content" id="nav-tabContent">@endif
                     <div class="tab-pane fade @if($loop->first) show active @endif" id="nav-{{$harvest_year_name}}" role="tabpanel"
                          aria-labelledby="nav-{{$harvest_year_name}}-tab">
                         <div class="row">
@@ -75,8 +76,7 @@
                             <div class="row p-4">
                                 <table class="table table-bordered text-center table-striped caption-top">
                                     <caption class="border text-center">
-                                        Сводная по окучиванию
-                                        на {{\Carbon\Carbon::parse(now())->translatedFormat('d-m-Y H:i')}}
+                                        Сводная по окучиванию - {{$harvest_year_name}}
                                     </caption>
                                     <thead>
                                     <tr>
@@ -103,6 +103,18 @@
                                             @endforeach
                                         </tr>
                                     @endforeach
+
+                                    <tr>
+                                        <th>Итого:</th>
+                                        @foreach($collections->groupBy('Pole.name') as $value)
+                                            <th>
+                                                {{ $collections->where('HarvestYear.name',
+                                                $harvest_year_name)->where('Pole.name',
+                                                $value[0]->Pole->name)->sum('volume')}}
+                                            </th>
+                                        @endforeach
+                                    </tr>
+
                                     </tbody>
 
                                     <tfoot>
