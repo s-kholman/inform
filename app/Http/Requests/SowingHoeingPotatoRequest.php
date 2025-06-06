@@ -28,9 +28,15 @@ class SowingHoeingPotatoRequest extends FormRequest
             'sowing_last_name' => 'required|integer',
             'volume' => 'required|numeric',
             'shift' => 'required|integer',
-            'result_control_agronomist' => 'required_without_all:result_control_director,result_control_deputy_director|nullable|integer|min:1',
-            'result_control_director' => 'nullable|integer|min:1',
-            'result_control_deputy_director' => 'nullable|integer|min:1',
+            'hoeing_result_agronomist_point_1' => 'required_without_all:hoeing_result_agronomist_point_2,hoeing_result_agronomist_point_3,hoeing_result_director_point_1,hoeing_result_director_point_2,hoeing_result_director_point_3,hoeing_result_deputy_director_point_1,hoeing_result_deputy_director_point_2,hoeing_result_deputy_director_point_3|nullable|integer|min:1',
+            'hoeing_result_agronomist_point_2' => 'nullable|integer|min:1',
+            'hoeing_result_agronomist_point_3' => 'nullable|integer|min:1',
+            'hoeing_result_director_point_1' => 'nullable|integer|min:1',
+            'hoeing_result_director_point_2' => 'nullable|integer|min:1',
+            'hoeing_result_director_point_3' => 'nullable|integer|min:1',
+            'hoeing_result_deputy_director_point_1' => 'nullable|integer|min:1',
+            'hoeing_result_deputy_director_point_2' => 'nullable|integer|min:1',
+            'hoeing_result_deputy_director_point_3' => 'nullable|integer|min:1',
             'comment' => 'nullable|max:255',
         ];
     }

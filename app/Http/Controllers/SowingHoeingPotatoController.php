@@ -11,7 +11,6 @@ use App\Models\Shift;
 use App\Models\SowingHoeingPotato;
 use App\Models\SowingLastName;
 use App\Models\TypeFieldWork;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SowingHoeingPotatoController extends Controller
@@ -28,7 +27,7 @@ class SowingHoeingPotatoController extends Controller
     {
 
         $sowing_hoeing_potatoes = SowingHoeingPotato::query()
-            ->with(['Filial', 'Pole'])
+            ->with(['Filial', 'Pole', 'HarvestYear'])
             ->get()
             ->sortBy(['Filial.name', 'Pole.name']);
 
@@ -126,9 +125,15 @@ class SowingHoeingPotatoController extends Controller
                 'harvest_year_id' => $harvestAction->HarvestYear(now()),
                 'volume' => $request->volume,
                 'shift_id' => $request->shift,
-                'hoeing_result_agronomist' => $request->result_control_agronomist,
-                'hoeing_result_director' => $request->result_control_director,
-                'hoeing_result_deputy_director' => $request->result_control_deputy_director,
+                'hoeing_result_agronomist_point_1' => $request->hoeing_result_agronomist_point_1,
+                'hoeing_result_agronomist_point_2' => $request->hoeing_result_agronomist_point_2,
+                'hoeing_result_agronomist_point_3' => $request->hoeing_result_agronomist_point_3,
+                'hoeing_result_director_point_1' => $request->hoeing_result_director_point_1,
+                'hoeing_result_director_point_2' => $request->hoeing_result_director_point_2,
+                'hoeing_result_director_point_3' => $request->hoeing_result_director_point_3,
+                'hoeing_result_deputy_director_point_1' => $request->hoeing_result_deputy_director_point_1,
+                'hoeing_result_deputy_director_point_2' => $request->hoeing_result_deputy_director_point_2,
+                'hoeing_result_deputy_director_point_3' => $request->hoeing_result_deputy_director_point_3,
                 'comment' => $comment,
             ]);
         return redirect()->route('sowing_hoeing_potato.index');
@@ -204,9 +209,15 @@ class SowingHoeingPotatoController extends Controller
                 'filial_id' => $filial->filial_id,
                 'volume' => $request->volume,
                 'shift_id' => $request->shift,
-                'hoeing_result_agronomist' => $request->result_control_agronomist,
-                'hoeing_result_director' => $request->result_control_director,
-                'hoeing_result_deputy_director' => $request->result_control_deputy_director,
+                'hoeing_result_agronomist_point_1' => $request->hoeing_result_agronomist_point_1,
+                'hoeing_result_agronomist_point_2' => $request->hoeing_result_agronomist_point_2,
+                'hoeing_result_agronomist_point_3' => $request->hoeing_result_agronomist_point_3,
+                'hoeing_result_director_point_1' => $request->hoeing_result_director_point_1,
+                'hoeing_result_director_point_2' => $request->hoeing_result_director_point_2,
+                'hoeing_result_director_point_3' => $request->hoeing_result_director_point_3,
+                'hoeing_result_deputy_director_point_1' => $request->hoeing_result_deputy_director_point_1,
+                'hoeing_result_deputy_director_point_2' => $request->hoeing_result_deputy_director_point_2,
+                'hoeing_result_deputy_director_point_3' => $request->hoeing_result_deputy_director_point_3,
                 'comment' => $comment,
 
             ]);
@@ -224,6 +235,8 @@ class SowingHoeingPotatoController extends Controller
 
     public function showToPole($id)
     {
+        $hoeingResults = HoeingResult::query()->select(['id', 'name'])->get()->groupBy('id')->toArray();
+
         $sowing_hoeing_potatoes = SowingHoeingPotato::query()
             ->with(['TypeFieldWork', 'SowingLastName', 'Pole', 'Filial','HarvestYear', 'Shift'])
             ->where('pole_id', $id)
@@ -231,7 +244,8 @@ class SowingHoeingPotatoController extends Controller
             ->sortByDesc('HarvestYear.name')
         ;
         return view('sowingHoeingPotato.show', [
-            'sowing_hoeing_potatoes' => $sowing_hoeing_potatoes
+            'sowing_hoeing_potatoes' => $sowing_hoeing_potatoes,
+            'hoeingResults' => $hoeingResults
         ]);
     }
 }
