@@ -26,9 +26,14 @@ class SowingHoeingPotatoController extends Controller
     public function index()
     {
 
+        $local = false;
+            if (env('APP_ENV') == 'local'){
+                $local = true;
+            }
+
         $sowing_hoeing_potatoes = SowingHoeingPotato::query()
             ->with(['Filial', 'Pole', 'HarvestYear'])
-            ->limit(225)
+            ->when($local, function ($query){return $query->limit(50);})
             ->get()
             ->sortBy(['Filial.name', 'Pole.name']);
 
