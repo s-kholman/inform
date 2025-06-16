@@ -81,29 +81,40 @@
                                     <thead>
                                     <tr>
                                         <th rowspan="2">Дата</th>
-                                        {!! $string_filial[$harvest_year_name] !!}
+                                        {{--{!! $string_filial[$harvest_year_name] !!}--}}
+                                        @foreach($collections->groupBy('Filial.name') as $name => $value)
+                                            <th colspan="{{$value->groupBy('Pole.name')->count()}}">{{$name}}</th>
+                                        @endforeach
+
                                     </tr>
 
                                     <tr>
-                                        @foreach($collections->groupBy('Pole.name') as $value)
-                                        <th class="vertical-align">
-                                            <label class="rotate">{{ $value[0]->Pole->name}}</label>
-                                        </th>
+                                        @foreach($collections->groupBy('Filial.name') as $name => $value)
+                                            @foreach($value->groupBy('Pole.name') as $pole)
+                                                <th class="vertical-align">
+                                                    <label class="rotate">{{ $pole[0]->Pole->name}}</label>
+                                                </th>
+                                            @endforeach
                                         @endforeach
+
                                     </tr>
 
                                     </thead>
                                     <tbody>
-                                    @foreach($detail[$harvest_year_name] as $date => $key)
 
-                                        <tr>
-                                            <td>{{\Carbon\Carbon::parse($date)->translatedFormat('d-m-Y')}}</td>
-                                            @foreach($key as $volume)
-                                                <td>{{$volume ?: ''}}</td>
-                                            @endforeach
-                                        </tr>
-                                    @endforeach
+                                        @foreach(collect($detail[$harvest_year_name])->sortKeysDesc() as $date => $key)
+                                            <tr>
+                                                <td>{{\Carbon\Carbon::parse($date)->translatedFormat('d-m-Y')}}</td>
+                                                @foreach($collections->groupBy('Pole.name') as $value)
+                                                    <td>{{$detail [$harvest_year_name] [$date] [$value[0]->Pole->id] ?? ''}}</td>
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
 
+                                    </tbody>
+
+
+                                    <tfoot>
                                     <tr>
                                         <th>Итого:</th>
                                         @foreach($collections->groupBy('Pole.name') as $value)
@@ -114,11 +125,6 @@
                                             </th>
                                         @endforeach
                                     </tr>
-
-                                    </tbody>
-
-                                    <tfoot>
-
                                     </tfoot>
                                 </table>
                             </div>

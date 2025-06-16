@@ -28,6 +28,7 @@ class SowingHoeingPotatoController extends Controller
 
         $sowing_hoeing_potatoes = SowingHoeingPotato::query()
             ->with(['Filial', 'Pole', 'HarvestYear'])
+            ->limit(225)
             ->get()
             ->sortBy(['Filial.name', 'Pole.name']);
 
@@ -35,26 +36,24 @@ class SowingHoeingPotatoController extends Controller
         $detail = [];
 
         if ($sowing_hoeing_potatoes->isNotEmpty()) {
-            foreach ($sowing_hoeing_potatoes->groupBy('HarvestYear.name') as $yearName => $value){
-            foreach ($value->groupBy('Filial.name') as $filial_name => $sowing_hoeing_potato) {
-                foreach ($sowing_hoeing_potato->groupBy('Pole.name') as $pole_name => $sowingLastNames) {
 
-                         foreach ($value as $date => $item){
+            foreach ($sowing_hoeing_potatoes as $value) {
+                if (isset($detail [$value->HarvestYear->name] [$value->date] [$value->pole_id])) {
+                    $detail [$value->HarvestYear->name] [$value->date] [$value->pole_id] += $value->volume;
+                } else {
+                    $detail [$value->HarvestYear->name] [$value->date] [$value->pole_id] = $value->volume;
+                }
+            }
 
-                            $detail [$yearName] [$item->date] [$sowingLastNames[0]->pole_id] = $sowing_hoeing_potatoes
-                                ->where('date', $item->date)
-                                ->where('filial_id', $sowing_hoeing_potato[0]->filial_id)
-                                ->where('pole_id', $sowingLastNames[0]->pole_id)
-                                ->sum('volume');
-                        }
-                    }
-
+            foreach ($sowing_hoeing_potatoes->groupBy('HarvestYear.name') as $yearName => $value) {
+                foreach ($value->groupBy('Filial.name') as $filial_name => $sowing_hoeing_potato) {
                     $colspan = $sowing_hoeing_potato->groupBy('Pole.name')->count();
                     $r_string_filial .= "<th colspan=$colspan>" . $filial_name . '</th>';
                 }
                 $string_filial [$yearName] = $r_string_filial;
                 $r_string_filial = '';
             }
+
             return view('sowingHoeingPotato.index', [
                 'sowing_hoeing_potatoes' => $sowing_hoeing_potatoes,
                 'string_filial' => $string_filial,
