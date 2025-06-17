@@ -94,17 +94,46 @@ class SprayingController extends Controller
             interval_day_start,
             interval_day_end,
             dosage,
-            LEAD(date, 1) OVER (ORDER BY date DESC)'))
+            LEAD(date) OVER (ORDER BY date DESC)'))
             ->leftJoin('szrs', 'sprayings.szr_id', '=', 'szrs.id')
             ->leftJoin('sevooborots', 'sprayings.sevooborot_id', '=', 'sevooborots.id')
             ->where('interval_day_start', '<>', null)
             //->where('harvest_year_id', '=', 6)
             ->where('sprayings.pole_id', $spraying->id)
+            ->where('deleted_at', null)
             ->get()
             ->groupBy('id')
             ->toArray()
         ;
 
+        $interval_day_end = DB::table('sprayings')
+            ->select(DB::raw('
+            sprayings.id as id,
+            LEAD(interval_day_end) OVER (ORDER BY date DESC)'))
+            ->leftJoin('szrs', 'sprayings.szr_id', '=', 'szrs.id')
+            ->leftJoin('sevooborots', 'sprayings.sevooborot_id', '=', 'sevooborots.id')
+            ->where('interval_day_start', '<>', null)
+            ->where('sprayings.pole_id', $spraying->id)
+            ->where('deleted_at', null)
+            ->get()
+            ->groupBy('id')
+            ->toArray()
+        ;
+
+        $interval_day_start = DB::table('sprayings')
+            ->select(DB::raw('
+            sprayings.id as id,
+            LEAD(interval_day_start) OVER (ORDER BY date DESC)'))
+            ->leftJoin('szrs', 'sprayings.szr_id', '=', 'szrs.id')
+            ->leftJoin('sevooborots', 'sprayings.sevooborot_id', '=', 'sevooborots.id')
+            ->where('interval_day_start', '<>', null)
+            ->where('sprayings.pole_id', $spraying->id)
+            ->where('deleted_at', null)
+            ->get()
+            ->groupBy('id')
+            ->toArray()
+        ;
+//dd($interval_day_start);
         $sprayings = Spraying::query()
             ->where('pole_id', $spraying->id)
             ->with('Sevooborot.HarvestYear')
@@ -116,7 +145,13 @@ class SprayingController extends Controller
             $sprayings = $sprayings->groupBy('Sevooborot.HarvestYear.name');
         }
 
-        return view('spraying.show', ['sprayings' =>  $sprayings, 'harvest_show' => $harvest_show, 'check' => $check]);
+        return view('spraying.show', [
+            'sprayings' =>  $sprayings,
+            'harvest_show' => $harvest_show,
+            'check' => $check,
+            'interval_day_end' => $interval_day_end,
+            'interval_day_start' => $interval_day_start
+        ]);
     }
 
     /**
