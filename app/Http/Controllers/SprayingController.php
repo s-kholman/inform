@@ -12,6 +12,7 @@ use App\Models\SzrClasses;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SprayingController extends Controller
 {
@@ -85,6 +86,25 @@ class SprayingController extends Controller
      */
     public function show(Pole $spraying, HarvestShow $harvestShow)
     {
+
+        $check = DB::table('sprayings')
+            ->select(DB::raw('
+            sprayings.id as id,
+            sprayings.date,
+            interval_day_start,
+            interval_day_end,
+            dosage,
+            LEAD(date, 1) OVER (ORDER BY date DESC)'))
+            ->leftJoin('szrs', 'sprayings.szr_id', '=', 'szrs.id')
+            ->leftJoin('sevooborots', 'sprayings.sevooborot_id', '=', 'sevooborots.id')
+            ->where('interval_day_start', '<>', null)
+            //->where('harvest_year_id', '=', 6)
+            ->where('sprayings.pole_id', $spraying->id)
+            ->get()
+            ->groupBy('id')
+            ->toArray()
+        ;
+
         $sprayings = Spraying::query()
             ->where('pole_id', $spraying->id)
             ->with('Sevooborot.HarvestYear')
@@ -96,7 +116,7 @@ class SprayingController extends Controller
             $sprayings = $sprayings->groupBy('Sevooborot.HarvestYear.name');
         }
 
-        return view('spraying.show', ['sprayings' =>  $sprayings, 'harvest_show' => $harvest_show]);
+        return view('spraying.show', ['sprayings' =>  $sprayings, 'harvest_show' => $harvest_show, 'check' => $check]);
     }
 
     /**

@@ -13,7 +13,7 @@
         </div>
 
         <div class="row row-cols-12 text-center gy-5">
-            <p>Отчет по внесению СЗР за 2024 год</p>
+            <p>Отчет по внесению СЗР за {{\Illuminate\Support\Carbon::parse(now())->format('Y')}} год</p>
         </div>
 
         <div class="row px-5 g-4">

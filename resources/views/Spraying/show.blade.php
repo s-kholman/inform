@@ -83,7 +83,28 @@
                                                     <td>{{$value->szr->name}}</td>
                                                     <td>{{$value->doza}}</td>
                                                     <td>{{$value->volume}}</td>
-                                                    <td>{{$value->comments}}</td>
+                                                    {{--<td>{{$value->comments}}</td>--}}
+                                                    @if(array_key_exists($value->id, $check) && $check[$value->id][0]->lead !== null)
+
+                                                        @if(\Illuminate\Support\Carbon::parse($check[$value->id][0]->date)
+                                                                                            ->between(
+                                                                                                \Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_start),
+                                                                                                \Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_end))
+                                                                                            )
+                                                            <td class="bg-success">{{--В рамках.
+                                                                Допустимо с {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_start)->format('d.m.Y')}}
+                                                                по {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_end)->format('d.m.Y')}}<br>--}}{{$value->comments}}
+                                                            </td>
+                                                        @else
+                                                            <td class="bg-danger">Нарушение интервала обработки.
+                                                                Допустимо с {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_start)->format('d.m.Y')}}
+                                                                по {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_end)->format('d.m.Y')}}<br>{{$value->comments}}
+                                                            </td>
+                                                        @endif
+                                                    @else
+                                                        <td>{{$value->comments}}</td>
+                                                    @endif
+
                                                     @if($harvest_show[$spraying[0]->Sevooborot->HarvestYear->id])
                                                         <td align="center">
                                                             <div class="dropdown">
