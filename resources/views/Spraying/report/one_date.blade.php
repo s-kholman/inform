@@ -11,14 +11,15 @@
             <div class="col-6">
                 <form action="{{route('spraying.report.show')}}" method="POST">
                     @csrf
-                    <div class="form-group">
+{{--                    <div class="form-group">
                         <div class='input-group date' id='datetimepicker'>
                             <input type='text' class="form-control" />
                             <span class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar"></span>
-            </span>
+                    <span class="glyphicon glyphicon-calendar"
+                    ></span>
+                    </span>
                         </div>
-                    </div>
+                    </div>--}}
                     <label for="dateSelect">Выберите дату</label>
                     <input class="form-control" type="date" name="date"
                            value="{{\Illuminate\Support\Carbon::parse($date)->format('Y-m-d')}}" id="dateSelect">

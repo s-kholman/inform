@@ -9,7 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Szr extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'szr_classes_id'];
+    protected $fillable = [
+        'name',
+        'szr_classes_id',
+        'interval_day_start',
+        'interval_day_end',
+        'dosage'
+    ];
 
     public function SzrClasses() : BelongsTo
     {
