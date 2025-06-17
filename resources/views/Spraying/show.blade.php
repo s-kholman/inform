@@ -88,8 +88,8 @@
 
                                                         @if(\Illuminate\Support\Carbon::parse($check[$value->id][0]->date)
                                                                                             ->between(
-                                                                                                \Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_start),
-                                                                                                \Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_end))
+                                                                                                \Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($interval_day_start[$value->id][0]->lead),
+                                                                                                \Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($interval_day_end[$value->id][0]->lead))
                                                                                             )
                                                             <td class="bg-success">{{--В рамках.
                                                                 Допустимо с {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_start)->format('d.m.Y')}}
@@ -97,8 +97,8 @@
                                                             </td>
                                                         @else
                                                             <td class="bg-danger">Нарушение интервала обработки.
-                                                                Допустимо с {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_start)->format('d.m.Y')}}
-                                                                по {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_end)->format('d.m.Y')}}<br>{{$value->comments}}
+                                                                Допустимо с {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($interval_day_start[$value->id][0]->lead)->format('d.m.Y')}}
+                                                                по {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($interval_day_end[$value->id][0]->lead)->format('d.m.Y')}}<br>{{$value->comments}}
                                                             </td>
                                                         @endif
                                                     @else
