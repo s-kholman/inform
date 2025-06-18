@@ -31,7 +31,7 @@
                 @forelse($arr_value as $filial_id => $item)
                     @if ($loop->first)
                         <table class="table table-bordered">
-                            @endif
+                    @endif
                             <tr>
                                 <td colspan="3"><b>{{\App\Models\filial::where('id', $filial_id)->value('name')}} на
                                         {{\Illuminate\Support\Carbon::parse($date)->format('d-m-Y')}}</b>
@@ -59,6 +59,33 @@
                     <p>Нет данных по опрыскиванию на {{\Illuminate\Support\Carbon::parse($date)->format('d-m-Y')}}</p>
                 @endforelse
             </div>
+        </div>
+
+        <div class="row mt-5">
+            @forelse($export as $name_fileal => $value)
+                @if ($loop->first)
+                    <table class="table table-bordered caption-top">
+                        <caption>Просроченное опрыскивание</caption>
+                        <tr>
+                            <td>Филиал</td>
+                            <td>Поле</td>
+                            <td>Препарат</td>
+                            <td>Дата</td>
+                        </tr>
+                @endif
+                        @foreach($value as $item)
+                        <tr>
+                            <td>{{$name_fileal}} </td>
+                            <td>{{$item->pole_name}}</td>
+                            <td>{{$item->szr_name}}</td>
+                            <td>{{\Illuminate\Support\Carbon::parse($item->date)->addDays($item->interval_day_end)->format('d.m.Y')}}</td>
+                        </tr>
+                        @endforeach
+                        @if($loop->last)
+                    </table>
+                @endif
+            @empty
+            @endforelse
         </div>
     </div>
 @endsection('info')
