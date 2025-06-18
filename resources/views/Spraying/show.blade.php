@@ -1,6 +1,14 @@
 @extends('layouts.base')
 @section('title', 'Текущие данные об опрыскивание ')
+<style>
+    .color-text-success {
+        color: #7a1a3d;
+    }
 
+    .color-text-bad {
+        color: red;
+    }
+</style>
 @section('info')
 
     <div class="container gx-4">
@@ -76,7 +84,7 @@
                                             <tbody>
                                             @foreach($spraying as $value)
                                                 <tr>
-                                                    <td>{{\Carbon\Carbon::parse($value->date)->translatedFormat('d-m-Y')}}</td>
+                                                    <td>{{\Carbon\Carbon::parse($value->date)->translatedFormat('d.m.Y')}}</td>
                                                     <td>{{$value->Cultivation->name}} {{$value->Nomenklature->name}} {{$value->Reproduktion->name ?? null }}
                                                         ({{$value->Sevooborot->square}} Га)
                                                     </td>
@@ -84,23 +92,64 @@
                                                     <td>{{$value->doza}}</td>
                                                     <td>{{$value->volume}}</td>
                                                     {{--<td>{{$value->comments}}</td>--}}
-                                                    @if(array_key_exists($value->id, $check) && $check[$value->id][0]->lead !== null)
+
+
+
+                                                    @if(array_key_exists($value->id, $check) && $check[$value->id][0]->check !== null)
+
 
                                                         @if(\Illuminate\Support\Carbon::parse($check[$value->id][0]->date)
                                                                                             ->between(
-                                                                                                \Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($interval_day_start[$value->id][0]->lead),
-                                                                                                \Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($interval_day_end[$value->id][0]->lead))
+                                                                                                \Illuminate\Support\Carbon::parse($check[$value->id][0]->check)->addDays($check[$value->id][0]->start),
+                                                                                                \Illuminate\Support\Carbon::parse($check[$value->id][0]->check)->addDays($check[$value->id][0]->end))
                                                                                             )
-                                                            <td class="bg-success">{{--В рамках.
-                                                                Допустимо с {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_start)->format('d.m.Y')}}
-                                                                по {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($check[$value->id][0]->interval_day_end)->format('d.m.Y')}}<br>--}}{{$value->comments}}
+                                                            <td>
+                                                                <span class="color-text-success">
+                                                                    Дата следующей обработки c {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->date)->addDays($check[$value->id][0]->interval_day_start)->format('d.m.Y')}}
+                                                                    по {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->date)->addDays($check[$value->id][0]->interval_day_end)->format('d.m.Y')}}
+                                                                </span>
+                                                                <br>{{$value->comments}}
                                                             </td>
                                                         @else
-                                                            <td class="bg-danger">Нарушение интервала обработки.
-                                                                Допустимо с {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($interval_day_start[$value->id][0]->lead)->format('d.m.Y')}}
-                                                                по {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->lead)->addDays($interval_day_end[$value->id][0]->lead)->format('d.m.Y')}}<br>{{$value->comments}}
+                                                            <td>
+                                                                @if(array_key_exists($value->id, $bad_period) &&  \Illuminate\Support\Carbon::parse($check[$value->id][0]->date)->addDays($check[$value->id][0]->end)->lessThan(now()))
+                                                                    <span class="color-text-bad">
+                                                                    Просрочено следующее опрыскивание{{--3 = {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->date)->addDays($check[$value->id][0]->end)}}--}}
+                                                                </span> <br><br>
+                                                                @endif
+
+                                                                <span class="color-text-bad">
+                                                                    Нарушение интервала обработки.
+                                                                    Допустимо с {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->check)->addDays($check[$value->id][0]->start)->format('d.m.Y')}}
+                                                                    по {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->check)->addDays($check[$value->id][0]->end)->format('d.m.Y')}}
+                                                                </span> <br><br>
+                                                                <span class="color-text-success">
+{{--                                                                @if(array_key_exists($value->id, $bad_period) &&  \Illuminate\Support\Carbon::parse($check[$value->id][0]->date)->addDays($check[$value->id][0]->end)->lessThan(now()))
+                                                                    <span class="color-text-bad">
+                                                                        Просрочено следующие опрыскивание 2
+                                                                    </span> <br><br>
+                                                                    @endif--}}
+                                                                    Дата следующей обработки c {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->date)->addDays($check[$value->id][0]->interval_day_start)->format('d.m.Y')}}
+                                                                    по {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->date)->addDays($check[$value->id][0]->interval_day_end)->format('d.m.Y')}}
+                                                                </span>
+                                                                    <br> <br>{{$value->comments}}
                                                             </td>
                                                         @endif
+                                                    @elseif(array_key_exists($value->id, $check) && $check[$value->id][0]->check == null)
+                                                        <td>
+                                                            @if(array_key_exists($value->id, $bad_period) &&  \Illuminate\Support\Carbon::parse($check[$value->id][0]->date)->addDays($check[$value->id][0]->interval_day_end)->lessThan(now()))
+                                                                <span class="color-text-bad">
+
+                                                                    Просрочено следующее опрыскивание
+                                                                </span> <br><br>
+                                                            @endif
+                                                            <span class="color-text-success">
+                                                                Дата следующей обработки c {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->date)->addDays($check[$value->id][0]->interval_day_start)->format('d.m.Y')}}
+                                                                по {{\Illuminate\Support\Carbon::parse($check[$value->id][0]->date)->addDays($check[$value->id][0]->interval_day_end)->format('d.m.Y')}}
+                                                            </span>
+                                                                <br><br>{{$value->comments}}
+                                                        </td>
+
                                                     @else
                                                         <td>{{$value->comments}}</td>
                                                     @endif
