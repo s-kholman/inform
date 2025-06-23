@@ -31,7 +31,7 @@
                 <div class="row">
                     <div class="col-6">
                         <label for="interval_day_start">От</label>
-                        <input type="number" step="1" name="interval_day_start" id="interval_day_start" value="{{old('interval_day_start') ? old('interval_day_start') : 0}}"
+                        <input type="number" step="1" name="interval_day_start" id="interval_day_start" value="{{old('interval_day_start') ? old('interval_day_start') : null}}"
                                class="form-control @error('interval_day_start') is-invalid @enderror">
                         @error('interval_day_start')
                         <span class="invalid-feedback">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="col-6">
                         <label for="interval_day_end">До</label>
-                        <input type="number" step="1" name="interval_day_end" id="interval_day_end" value="{{old('interval_day_end') ? old('interval_day_end') : 0}}"
+                        <input type="number" step="1" name="interval_day_end" id="interval_day_end" value="{{old('interval_day_end') ? old('interval_day_end') : null}}"
                                class="form-control @error('interval_day_end') is-invalid @enderror">
                         @error('interval_day_end')
                         <span class="invalid-feedback">
