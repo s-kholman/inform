@@ -11,11 +11,14 @@ use App\Models\Spraying;
 use App\Models\SzrClasses;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SprayingController extends Controller
 {
+
+    private array $check;
 
     public function __construct()
     {
@@ -30,8 +33,8 @@ class SprayingController extends Controller
     {
         $arr = [];
         $sprayings = Spraying::query()->with('pole.filial')->get();
-        if ($sprayings->isNotEmpty()){
-            foreach ($sprayings->sortBy('pole.name')->sortBy('pole.filial.name') as $value){
+        if ($sprayings->isNotEmpty()) {
+            foreach ($sprayings->sortBy('pole.name')->sortBy('pole.filial.name') as $value) {
                 $arr [$value['pole'] ['filial'] ['name']][$value['pole']['id']] = $value;
             }
         }
@@ -45,9 +48,10 @@ class SprayingController extends Controller
     {
         $poles = Sevooborot::query()
             ->where('harvest_year_id', $harvestAction->HarvestYear(now()))
-            ->join('poles', function (JoinClause $join){
+            ->join('poles', function (JoinClause $join) {
                 $join->on('sevooborots.pole_id', '=', 'poles.id')
-                    ->where('filial_id', '=', Auth::user()->Registration->filial_id);})
+                    ->where('filial_id', '=', Auth::user()->Registration->filial_id);
+            })
             ->get()
             ->groupBy('name');
 
@@ -69,13 +73,13 @@ class SprayingController extends Controller
             ->create([
                 'pole_id' => $request['pole'],
                 'date' => $request['date'],
-                'sevooborot_id' =>  $request['kultura'],
+                'sevooborot_id' => $request['kultura'],
                 'szr_id' => $request['szr'],
                 'doza' => $request['dosage'],
                 'volume' => $request['volume'],
-                'comments'=> $request['comment'],
+                'comments' => $request['comment'],
                 'user_id' => auth()->user()->id
-                ]);
+            ]);
 
         return redirect()->route('spraying.show', ['spraying' => $request['pole']]);
 
@@ -88,31 +92,16 @@ class SprayingController extends Controller
     {
         $harvest = new HarvestAction();
 
-        $bad_period = Spraying::query()
-            ->select(['sprayings.id as id', 'sprayings.date', 'interval_day_start', 'interval_day_end'])
-            ->leftJoin('szrs', 'sprayings.szr_id', '=', 'szrs.id')
-            ->leftJoin('sevooborots', 'sprayings.sevooborot_id', '=', 'sevooborots.id')
-            ->where('harvest_year_id', '=', $harvest->HarvestYear(now()))
-            ->where('sprayings.pole_id', $spraying->id)
-            ->where('interval_day_start', '<>', null)
-            ->where('deleted_at', null)
-            ->orderBy('date', 'DESC')
-            ->limit(1)
-            ->get()
-            ->groupBy('id')
-            ->toArray()
-        ;
-
-        $check = DB::table('sprayings')
+        $this->check = DB::table('sprayings')
             ->select(DB::raw('
             sprayings.id as id,
             sprayings.date,
             interval_day_start,
             interval_day_end,
             dosage,
-            LEAD(date) OVER (ORDER BY harvest_year_id DESC) as check,
-            LEAD(interval_day_start) OVER (ORDER BY harvest_year_id DESC) as start,
-            LEAD(interval_day_end) OVER (ORDER BY harvest_year_id DESC) as end
+            LEAD(date) OVER (ORDER BY date DESC) as lead_date,
+            LEAD(interval_day_start) OVER (ORDER BY date DESC) as lead_interval_day_start,
+            LEAD(interval_day_end) OVER (ORDER BY date DESC) as lead_interval_day_end
             '))
             ->leftJoin('szrs', 'sprayings.szr_id', '=', 'szrs.id')
             ->leftJoin('sevooborots', 'sprayings.sevooborot_id', '=', 'sevooborots.id')
@@ -122,8 +111,11 @@ class SprayingController extends Controller
             ->where('deleted_at', null)
             ->get()
             ->groupBy('id')
-            ->toArray()
-        ;
+            ->toArray();
+
+        $this->badIntervalSpraying();
+        $this->nextIntervalDay();
+        $this->badDateSpraying();
 
         $sprayings = Spraying::query()
             ->where('pole_id', $spraying->id)
@@ -131,17 +123,15 @@ class SprayingController extends Controller
             ->orderby('date', 'desc')
             ->get();
 
-        if($sprayings->isNotEmpty()){
+        if ($sprayings->isNotEmpty()) {
             $harvest_show = $harvestShow->HarvestShow($sprayings->groupBy('Sevooborot.HarvestYear.id'));
             $sprayings = $sprayings->groupBy('Sevooborot.HarvestYear.name');
         }
 
         return view('spraying.show', [
-            'sprayings' =>  $sprayings,
+            'sprayings' => $sprayings,
             'harvest_show' => $harvest_show,
-            'check' => $check,
-            'bad_period' => $bad_period,
-
+            'check' => $this->check,
         ]);
     }
 
@@ -168,14 +158,49 @@ class SprayingController extends Controller
 
     {
 
-        if (auth()->user()->can('delete', $spraying))
-        {
+        if (auth()->user()->can('delete', $spraying)) {
 
             $spraying->update(['user_id' => auth()->user()->id]);
 
             $spraying->delete();
         }
-        return response()->json(['status'=>true,"redirect_url"=>url('spraying', ['spraying' => $spraying->pole_id])]);
+        return response()->json(['status' => true, "redirect_url" => url('spraying', ['spraying' => $spraying->pole_id])]);
     }
+
+    private function badDateSpraying(): void
+    {
+        if (array_key_exists(array_key_first($this->check), $this->check) && !Carbon::parse($this->check[array_key_first($this->check)][0]->date)->addDays($this->check[array_key_first($this->check)][0]->interval_day_end)->lessThanOrEqualTo(now())) {
+            $this->check[array_key_first($this->check)][0]->badDateSpraying = "Дата опрыскивания просрочена";
+        }
+    }
+
+    private function badIntervalSpraying(): void
+    {
+        foreach ($this->check as $value) {
+            $this->check[$value[0]->id][0]->badDateSpraying = null;
+            if ($value[0]->lead_date !== null && !Carbon::parse($value[0]->date)
+                    ->between(
+                        Carbon::parse($value[0]->lead_date)->addDays($value[0]->lead_interval_day_start),
+                        Carbon::parse($value[0]->lead_date)->addDays($value[0]->lead_interval_day_end)
+                    )) {
+
+                $this->check[$value[0]->id][0]->badIntervalSpraying = 'Нарушение интервала обработки';
+            } else {
+                $this->check[$value[0]->id][0]->badIntervalSpraying = null;
+            }
+        }
+    }
+
+    private function nextIntervalDay(): void
+    {
+        foreach ($this->check as $id => $value) {
+            $this->check[$id][0]->nextIntervalDay = "Дата следующей обработки c " .
+                Carbon::parse($value[0]->date)->addDays($value[0]->interval_day_start)->format('d.m.Y') .
+                " по " . Carbon::parse($value[0]->date)->addDays($value[0]->interval_day_end)->format('d.m.Y');
+
+        }
+
+    }
+
 
 }
