@@ -24,7 +24,10 @@ class SzrRequest extends FormRequest
         return [
             //'name' => 'required|max:255|unique:szrs,name',
             'name' => 'required|max:255',
-            'select' => 'required|numeric'
+            'select' => 'required|numeric',
+            'interval_day_start' => 'nullable|numeric|min:1',
+            'interval_day_end' => 'required_with:interval_day_start|gte:interval_day_start',
+            'dosage' => 'nullable',
         ];
     }
 
@@ -32,7 +35,9 @@ class SzrRequest extends FormRequest
     {
         return [
             'required' => 'Заполните это поле',
-            'numeric' => 'Выберите из списка',
+            'numeric' => 'Только числовые значения',
+            'required_with' => 'Обязательно к заполнению если указан От',
+            'gte' => 'Может быть больше или равен параметру От',
             'max' => 'Значение не должно быть длиннее :max символов',
             'unique' => 'Значение не уникально'
         ];
