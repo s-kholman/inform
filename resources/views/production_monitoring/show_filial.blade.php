@@ -23,7 +23,7 @@
                     @endif
 
                     <h5><p>
-                            <a href="/monitoring/filial/storage/{{$value->storage_name_id}}/year/{{$value->harvest_year_id}}">{{$value->storageName->name}}</a>
+                            <a href="/monitoring/filial/storage/{{$value->storage_name_id}}/year/{{$value->harvest_year_id}}">{{$value->name}}</a>
                         </p></h5><br>
                     @if($loop->last)
                         @if($value->storageName->filial_id == 11)

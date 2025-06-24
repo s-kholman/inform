@@ -138,7 +138,7 @@
                             <h5>Филиалы:</h5>
                         <div class="row p-5">
                             @endif
-                            <div class="col-12"><h4><p><a href="{{route('monitoring.show.filial', ['filial_id' => $value[0]->Storagefilial->nameFilial->id, 'harvest_year_id'=> $value[0]->harvest_year_id])}}">{{$filal_name}}</a></p></h4></div>
+                            <div class="col-12"><h4><p><a href="{{route('monitoring.show.filial', ['filial_id' => $value[0]->filial_id, 'harvest_year_id'=> $value[0]->harvest_year_id])}}">{{$filal_name}}</a></p></h4></div>
                             @if($loop->last)
                         </div>
                     @endif
