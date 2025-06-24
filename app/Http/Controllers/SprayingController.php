@@ -169,7 +169,8 @@ class SprayingController extends Controller
 
     private function badDateSpraying(): void
     {
-        if (array_key_exists(array_key_first($this->check), $this->check) && !Carbon::parse($this->check[array_key_first($this->check)][0]->date)->addDays($this->check[array_key_first($this->check)][0]->interval_day_end)->lessThanOrEqualTo(now())) {
+        //dd(Carbon::parse($this->check[array_key_first($this->check)][0]->date)->addDays($this->check[array_key_first($this->check)][0]->interval_day_end));
+        if (array_key_exists(array_key_first($this->check), $this->check) && !Carbon::parse($this->check[array_key_first($this->check)][0]->date)->addDays($this->check[array_key_first($this->check)][0]->interval_day_end)->greaterThanOrEqualTo(now())) {
             $this->check[array_key_first($this->check)][0]->badDateSpraying = "Дата опрыскивания просрочена";
         }
     }
