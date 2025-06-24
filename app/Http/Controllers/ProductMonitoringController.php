@@ -48,14 +48,15 @@ class ProductMonitoringController extends Controller
 
 
         $filial = ProductMonitoring::query()
-            ->with('Storagefilial')
+            ->select('filials.name as filial_name', 'filials.id as filial_id', 'harvest_year_id')
+            ->join('storage_names', 'storage_names.id', 'product_monitorings.storage_name_id')
+            ->join('filials', 'filials.id', 'filial_id')
             ->where('harvest_year_id', $harvest_year_id)
+            ->distinct('filial_id')
             ->get()
-            ->unique('Storagefilial.nameFilial.name')
-            ->sortBy('Storagefilial.nameFilial.name')
-            ->groupBy('Storagefilial.nameFilial.name');
-
-
+            ->sortBy('filial_name')
+            ->groupBy('filial_name')
+        ;
 
         return view('production_monitoring.index', ['filial' => $filial, 'year' => $year]);
     }
@@ -201,17 +202,15 @@ class ProductMonitoringController extends Controller
 
     public function showFilial($filial_id, $harvest_year_id)
     {
-
         $monitoring = ProductMonitoring::query()
-                ->with('storageName')
-                ->where('harvest_year_id', $harvest_year_id)
-                ->get()
-                ->where('storageName.filial_id', $filial_id)
-                ->unique('storage_name_id')
-                ->sortBy('storageName.name')
+            ->join('storage_names', 'storage_names.id', 'product_monitorings.storage_name_id')
+            ->where('harvest_year_id', $harvest_year_id)
+            ->where('filial_id', $filial_id)
+            ->distinct('storage_name_id')
+            ->get()
+            ->sortBy('name')
         ;
-
-
+//dd($monitoring);
         return view('production_monitoring.show_filial', ['monitoring' => $monitoring]);
     }
 
