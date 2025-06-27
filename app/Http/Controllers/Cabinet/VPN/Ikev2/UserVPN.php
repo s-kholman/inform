@@ -6,6 +6,7 @@ use App\Actions\Acronym\AcronymFullNameUser;
 use App\Models\User;
 use App\Models\VpnInfo;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class UserVPN
@@ -16,24 +17,11 @@ class UserVPN
     /**
      * @throws Exception
      */
-    public function __construct($User)
+    public function __construct(User $user)
     {
-        try {
-            $this->user = User::query()
-                ->with(['Registration','FilialName'])
-                ->where('id', $User)
-                ->limit(1)
-                ->first();
-        } catch (Exception $exception) {
+        $this->user = $user;
 
-        }
-
-        if (!empty($this->user)){
-            $this->vpn = VpnInfo::query()->where('registration_id', $this->user->Registration->id)->first();
-        } else {
-            throw new Exception('Пользователь не найден');
-        }
-
+        $this->vpn = VpnInfo::query()->where('registration_id', $this->user->Registration->id)->first();
 
     }
 
@@ -60,7 +48,7 @@ class UserVPN
 
     public function email() : array
     {
-        return empty($vpn->mail_send) ?  [$this->user->email] : [$this->user->email, $this->vpn->mail_send];
+        return empty($this->vpn->mail_send) ?  [$this->user->email] : [$this->user->email, $this->vpn->mail_send];
     }
 
     public function ip_domain()
@@ -70,7 +58,7 @@ class UserVPN
 
     public function revoke_friendly_name()
     {
-        if(empty($vpn->revoke_friendly_name)){
+        if(empty($this->vpn->revoke_friendly_name)){
             return '';
         } else {
             return $this->vpn->revoke_friendly_name;

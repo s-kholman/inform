@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\VPN\SSLInfo;
 use App\Http\Requests\VpnInfoRequest;
 use App\Models\Registration;
 use App\Models\VpnInfo;
@@ -9,14 +10,15 @@ use Illuminate\Support\Facades\Auth;
 
 class VpnInfoController extends Controller
 {
-    public function index()
+    public function index(SSLInfo $SSLInfo)
     {
         $info = Registration::query()
             ->with('vpninfo')
             ->where('user_id', Auth::user()->id)
             ->first();
 
-        return view('cabinet.vpn.index', ['info' => $info]);
+        return view('cabinet.vpn.index', ['info' => $info, 'ssl_info' => $SSLInfo(Auth::user())]);
+
     }
 
     public function store(VpnInfoRequest $request)

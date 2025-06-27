@@ -2,23 +2,28 @@
 
 namespace App\Http\Controllers\Cabinet\VPN\Ikev2;
 
+use App\Models\User;
 use Exception;
 
 abstract class IkevVpnFactory
 {
 
-    private MikrotikController $mikrotikController;
+    protected User $user;
 
-    private IkeReport $report;
+    protected MikrotikController $mikrotikController;
+
+    protected IkeReport $report;
 
     private UserVPN $userVPN;
 
-    public function __construct($userID)
+    public function __construct(User $user)
     {
+        $this->user = $user;
+
         $this->report = new IkeReport();
 
         try {
-            $this->userVPN = new UserVPN($userID);
+            $this->userVPN = new UserVPN($user);
         } catch (Exception $exception) {
             $this->report->set('error', $exception->getMessage());
         }
