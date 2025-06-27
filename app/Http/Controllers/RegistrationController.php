@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Actions\VPN\SSLInfo;
 use App\Http\Requests\RegistrationRequest;
 use App\Models\Registration;
 use App\Models\Sms;
@@ -79,7 +80,7 @@ class RegistrationController extends Controller
         return redirect()->route('/');
     }
 
-    public function show(Request $request)
+    public function show(Request $request, SSLInfo $SSLInfo)
     {
 
         $profile = Registration::query()
@@ -91,7 +92,12 @@ class RegistrationController extends Controller
 
         $rolesUser = Role::whereNotIn('name', [$userRole])->get();;
 
-            return view('profile.show', ['profile' => $profile, 'rolesUser' => $rolesUser]);
+            return view('profile.show',
+                [
+                    'profile' => $profile,
+                    'rolesUser' => $rolesUser,
+                    'ssl_info' => $SSLInfo($profile->User)
+                ]);
     }
 
     public function vpnAddInform(Request $request, Registration $registration)

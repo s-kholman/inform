@@ -15,7 +15,7 @@ class VpnInfo extends Model
 
     public function Registration(): HasOne
     {
-        return $this->hasOne(Registration::class);
+        return $this->hasOne(Registration::class, 'id', 'registration_id');
     }
 
 }

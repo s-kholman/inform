@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\UserDestroyEvent;
+use App\Listeners\UserDestroyToRegistrationDestroy;
+use App\Listeners\UserDestroyToSSLSettingDestroy;
+use App\Listeners\UserDestroyToVpnInfoDestroy;
 use App\Models\Pole;
 use App\Models\Registration;
 use App\Models\User;
@@ -9,6 +13,7 @@ use App\Observers\UserObserver;
 use App\Policies\PolePolicy;
 use App\Policies\RegistrationPolicy;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 
@@ -28,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Event::listen(UserDestroyEvent::class,UserDestroyToVpnInfoDestroy::class);
+        Event::listen(UserDestroyEvent::class,UserDestroyToRegistrationDestroy::class);
+        Event::listen(UserDestroyEvent::class,UserDestroyToSSLSettingDestroy::class);
+
         URL::forceScheme('https');
         User::observe(UserObserver::class);
         Paginator::useBootstrap();

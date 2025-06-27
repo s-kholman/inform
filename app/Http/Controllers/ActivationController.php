@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserDestroyEvent;
 use App\Models\Registration;
 use App\Models\Sms;
 use App\Models\User;
@@ -53,11 +54,9 @@ class ActivationController extends Controller
 
     public function destroy(Registration $registration)
     {
-        $registration->delete();
+        UserDestroyEvent::dispatch(User::query()->find($registration->user_id));
 
-        User::query()
-            ->find($registration->user_id)
-            ->delete();
+        $registration->User->delete();
 
         return response()->json(['status'=>true,"redirect_url"=>url('activation')]);
     }

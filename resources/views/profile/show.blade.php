@@ -163,7 +163,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="exampleRadios" id="W10" value="CreateAccessVpnWindowsTen" checked>
                                     <label class="form-check-label" for="W10">
-                                        Настройки под W10
+                                        Генерация сертификата и настройка под W10 (Новый за 30 дней до окончания)
                                     </label>
                                 </div>
                                 <div class="form-check">
@@ -175,7 +175,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="exampleRadios" id="W7" value="CreateAccessVpnWindowsSeven">
                                     <label class="form-check-label" for="W7">
-                                        Настройки под W7
+                                        Генерация сертификата и настройка под W7 (Новый за 30 дней до окончания)
                                     </label>
                                 </div>
                                 <div class="form-check">
@@ -184,11 +184,33 @@
                                         Удалить настройки (сертификат не отзывается)
                                     </label>
                                 </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="sslrevoke" value="SslRevoke">
+                                    <label class="form-check-label" for="sslrevoke">
+                                        Отозвать сертификат
+                                    </label>
+                                </div>
                                 <div class="mt-2">
                                     <button id="btnCreate" class="btn btn-success" type="submit">Сгенерировать и отправить</button>
                                 </div>
                             </div>
                         </div>
+                    <div class="card mt-4">
+                        <h5 class="card-header">Информация по сертификату</h5>
+                        <div class="card-body">
+                            @if(!empty($ssl_info))
+                                Данные по текущему SSL:
+                                <div class="fw-bold">
+                                    Дата окончания: {{ $ssl_info ['expire'] }} <br>
+                                    Дней до окончания: {{ $ssl_info ['expires_after'] }}
+                                </div>
+                            @else
+                                Данные по действующему SSL-сертификату не найдены!
+                            @endif
+                        </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -203,6 +225,7 @@
         const scriptW10 = document.getElementById('scriptW10')
         const W10 = document.getElementById('W10')
         const W7 = document.getElementById('W7')
+        const ssl_revoke = document.getElementById('sslrevoke')
         const settingDelete = document.getElementById('settingDelete')
         const url = window.location.origin
         const checkFactory = document.getElementsByClassName('form-check-input');
@@ -224,6 +247,12 @@
             checked()
             btnCreate.className = ('btn btn-danger');
             btnCreate.textContent = 'Удалить'
+        })
+
+        ssl_revoke.addEventListener('click', () => {
+            checked()
+            btnCreate.className = ('btn btn-danger');
+            btnCreate.textContent = 'Отозвать сертификат'
         })
 
         btnCreate.addEventListener('click', () => {

@@ -289,7 +289,11 @@ Route::group(['middleware' => ['can:SowingHoeingPotato.user.view']], function ()
         ->middleware('auth');
 });
 
+//Route::get('test', \App\Http\Controllers\Cabinet\VPN\Schedule\ExpirationSSL::class);
 
+/*Route::get('/test', function () {
+    return new App\Mail\ExpirationSSLMail('365 дней');
+});*/
 
 
 Route::group(['middleware' => ['can:SowingControl.user.view']], function () {

@@ -32,6 +32,19 @@
                 <li class="list-group-item card-text">Производим подключение к VPN, если оно успешно, производим подключение к удаленному рабочему месту, пароль Ваш текущий он компьютера предприятия</li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
+                        @if(!empty($ssl_info))
+                            Данные по текущему SSL:
+                        <div class="fw-bold">
+                            Дата окончания: {{ $ssl_info ['expire'] }} <br>
+                            Дней до окончания: {{ $ssl_info ['expires_after'] }}
+                        </div>
+                        @else
+                            Данные по действующему SSL-сертификату не найдены!
+                        @endif
+                    </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
                         <div class="fw-bold">Данные ниже будут использованы для доставки файлов и пароля соответственно:</div>
                         <b>e-mail:</b>
                         @if(empty($info->vpninfo->mail_send))

@@ -8,7 +8,6 @@ use App\Jobs\SSLSign;
 use App\Models\VpnInfo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use PHPUnit\Util\Exception;
 use RouterOS\Client;
 use RouterOS\Query;
 
@@ -205,9 +204,9 @@ class MikrotikController extends Controller
             $revoke = (new Query('/certificate/issued-revoke'))
                 ->equal('.id', $this->sslActive[0]['.id']);
             $this->client->query($revoke)->read();
-            VpnInfo::query()->update([
-                'registration_id' => $this->user->registration_id(),
-                'revoke_friendly_name' => $this->sslActive[0]['name']
+            VpnInfo::query()
+                ->where('registration_id', $this->user->registration_id())
+                ->update(['revoke_friendly_name' => $this->sslActive[0]['name']
             ]);
             $this->sslActive = '';
         }
