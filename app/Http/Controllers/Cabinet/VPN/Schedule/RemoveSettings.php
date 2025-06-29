@@ -17,7 +17,8 @@ class RemoveSettings
      * @throws \RouterOS\Exceptions\BadCredentialsException
      * @throws \RouterOS\Exceptions\ConfigException
      */
-    public function __construct()
+
+    public function __invoke()
     {
         $this->client = new Client(
             [
@@ -27,10 +28,6 @@ class RemoveSettings
                 'port' => 8728
             ]
         );
-    }
-
-    public function __invoke()
-    {
 
         $activeCertificate = array_filter($this->certificateGet(), function ($var){
            return !array_key_exists('expired', $var);

@@ -17,11 +17,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         //Опрос принтеров каждый час
-        $schedule->call(new PrinterRunSchedule())
-            ->hourly();
+        $schedule->call(new PrinterRunSchedule())->hourly();
         //Опрос по MQTT каждые 15 минут
-        $schedule->call(new TemperatureGetMQTTSchedule())
-            ->everyFifteenMinutes();
+        $schedule->call(new TemperatureGetMQTTSchedule())->everyFifteenMinutes();
         //Проверка сертификата пользователя и отправка Email за 30-15-3 дня до окончания
         //В 12 дня.
         $schedule->call(new ExpirationSSL())->dailyAt('12:00')->timezone('Asia/Yekaterinburg');
