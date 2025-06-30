@@ -179,7 +179,7 @@ class SprayingController extends Controller
     {
         foreach ($this->check as $value) {
             $this->check[$value[0]->id][0]->badDateSpraying = null;
-            if ($value[0]->lead_date !== null && !Carbon::parse($value[0]->date)
+            if ($value[0]->lead_date !== null && $value[0]->lead_date != $value[0]->date && !Carbon::parse($value[0]->date)
                     ->between(
                         Carbon::parse($value[0]->lead_date)->addDays($value[0]->lead_interval_day_start),
                         Carbon::parse($value[0]->lead_date)->addDays($value[0]->lead_interval_day_end)
