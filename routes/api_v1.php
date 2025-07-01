@@ -17,7 +17,6 @@ Route::get('sevooborot/{id?}', SevooborotController::class);
 Route::get('permission/{role}', PermissionController::class);
 Route::post('voucher/create', [VoucherController::class, 'voucherCreate']);
 Route::post('voucher/get', [VoucherController::class, 'voucherGet']);
-Route::post('vpn', VpnController::class);
 Route::post('ike', IkeVpnController::class);
 Route::post('cabinetVoucherSmsSend', VoucherSendSmsController::class);
 Route::post('cabinetVoucherGetToSend', VoucherGetToSendController::class);

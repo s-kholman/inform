@@ -6,6 +6,7 @@ use App\Actions\Acronym\AcronymFullNameUser;
 use App\Actions\Declension\DeclensionWord;
 use App\Actions\VPN\SSLInfo;
 use App\Mail\ExpirationSSLMail;
+use App\Models\Sms;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -38,5 +39,13 @@ class ExpirationSSLJobs implements ShouldQueue
             ->bcc('s-kholman@ya.ru')
             ->cc($this->userExpiration->mail_send)
             ->send(new ExpirationSSLMail($declensionWord($sslInfo['expires_after'], 'день', 'дня','дней')));
+
+        Sms::query()
+            ->create([
+                'smsText' => 'VPN доступ, для ' . $fullNameUser->Acronym($this->userExpiration->Registration) . ', закончится через ' . $declensionWord($sslInfo['expires_after'], 'день', 'дня','дней') . '. Подробности на https://inform.krimm.ru/vpn',
+                'phone' => $this->userExpiration->Registration->phone,
+                'smsType' => 1,
+                'smsActive' => true
+            ]);
     }
 }
