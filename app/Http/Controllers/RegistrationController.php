@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Actions\VPN\SSLInfo;
+use App\Http\Controllers\Application\ApplicationGetActive;
 use App\Http\Requests\RegistrationRequest;
+use App\Models\Application\ApplicationStatus;
 use App\Models\Registration;
 use App\Models\Sms;
 use App\Models\User;
@@ -90,13 +92,21 @@ class RegistrationController extends Controller
 
         $userRole = implode(',', $profile->user->getRolenames()->toArray());
 
-        $rolesUser = Role::whereNotIn('name', [$userRole])->get();;
+        $rolesUser = Role::whereNotIn('name', [$userRole])->get();
 
-            return view('profile.show',
+        $application = new ApplicationGetActive();
+
+        $applicationStatuses = ApplicationStatus::query()
+            ->where('status_code', '<>', 10)
+            ->get();
+
+            return view('profile.show.show',
                 [
                     'profile' => $profile,
                     'rolesUser' => $rolesUser,
-                    'ssl_info' => $SSLInfo($profile->User)
+                    'ssl_info' => $SSLInfo($profile->User),
+                    'application' => $application($profile->user->id, 'IKEv2AccessRequestType'),
+                    'applicationStatuses' => $applicationStatuses,
                 ]);
     }
 

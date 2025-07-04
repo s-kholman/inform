@@ -38,8 +38,28 @@
                             Дата окончания: {{ $ssl_info ['expire'] }} <br>
                             Дней до окончания: {{ $ssl_info ['expires_after'] }} <br>
                         </div>
+                            <div>
+                                @if($ssl_info ['expires_after'] <= 30)
+                                    @can('VpnInfo.user.create')
+                                        <a class="btn btn-success">Продлить доступ</a>
+                                    @endcan
+                                @endif
+                            </div>
                         @else
-                            Данные по действующему SSL-сертификату не найдены!
+                            Данные по действующему SSL-сертификату не найдены!<br>
+                            <div class="mt-1">
+                                @can('VpnInfo.user.create')
+                                    {{--@dump($application->last()->application_status_id)--}}
+                                    @if(($application !== null && $application->last()->application_status_id == 10) || $application == null)
+                                    <form method="post" action="{{route('vpn.access.request')}}">
+                                        @csrf
+                                        <input type="submit" class="btn btn-success" value="Запросить доступ">
+                                    </form>
+                                    @elseif($application !== null && $application->last()->application_status_id != 10)
+                                        Статус вашей заявки: {{$application->last()->ApplicationStatus->name}}
+                                    @endif
+                                @endcan
+                            </div>
                         @endif
                     </div>
                 </li>

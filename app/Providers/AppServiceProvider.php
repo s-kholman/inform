@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\ApplicationEvent;
 use App\Events\UserDestroyEvent;
+use App\Http\Controllers\Application\ApplicationRun;
+use App\Listeners\ApplicationRunListener;
 use App\Listeners\UserDestroyToRegistrationDestroy;
 use App\Listeners\UserDestroyToSSLSettingDestroy;
 use App\Listeners\UserDestroyToVpnInfoDestroy;
@@ -36,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(UserDestroyEvent::class,UserDestroyToVpnInfoDestroy::class);
         Event::listen(UserDestroyEvent::class,UserDestroyToRegistrationDestroy::class);
         Event::listen(UserDestroyEvent::class,UserDestroyToSSLSettingDestroy::class);
+        Event::listen(ApplicationEvent::class, ApplicationRunListener::class);
 
         URL::forceScheme('https');
         User::observe(UserObserver::class);

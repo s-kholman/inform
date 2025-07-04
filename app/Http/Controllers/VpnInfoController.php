@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Actions\VPN\SSLInfo;
+use App\Http\Controllers\Application\ApplicationGetActive;
 use App\Http\Requests\VpnInfoRequest;
+use App\Models\Application\Application;
+use App\Models\Application\ApplicationStatus;
 use App\Models\Registration;
 use App\Models\VpnInfo;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +20,15 @@ class VpnInfoController extends Controller
             ->where('user_id', Auth::user()->id)
             ->first();
 
-        return view('cabinet.vpn.index', ['info' => $info, 'ssl_info' => $SSLInfo(Auth::user())]);
+        $applications = new ApplicationGetActive();
+
+        return view('cabinet.vpn.index',
+            [
+                'info' => $info,
+                'ssl_info' => $SSLInfo(Auth::user()),
+                'application' => $applications(Auth::user()->id, 'IKEv2AccessRequestType'),
+
+            ]);
 
     }
 
