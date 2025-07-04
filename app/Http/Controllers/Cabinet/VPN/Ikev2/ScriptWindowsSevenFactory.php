@@ -27,7 +27,7 @@ class ScriptWindowsSevenFactory implements IkeVpnMikrotikInterface
             }
             $report->set('message', 'Скрипт сгенерирован');
         } else {
-            throw new \Exception('Настройка modeConfig не соответствует Windows 7');
+            throw new ExceptionInform('Класс обработчик не найден');
         }
 
     }

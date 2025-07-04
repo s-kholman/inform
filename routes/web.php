@@ -4,6 +4,7 @@ use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\BrendController;
 use App\Http\Controllers\Cabinet\SSL\MikrotikController;
 use App\Http\Controllers\cabinet\ssl\SslCreateController;
+use App\Http\Controllers\Cabinet\VPN\Ikev2\IKEv2AccessRequestToCabinet;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\Commercial\CheckController;
 use App\Http\Controllers\CorporateCommunicationController;
@@ -289,10 +290,14 @@ Route::group(['middleware' => ['can:SowingHoeingPotato.user.view']], function ()
         ->middleware('auth');
 });
 
-//Route::get('test', \App\Http\Controllers\Cabinet\VPN\Schedule\RemoveSettings::class);
+//Route::get('test', [\App\Http\Controllers\Application\Run::class, 'run']);
 
-/*Route::get('/test', function () {
-    return new App\Mail\ExpirationSSLMail('365 дней');
+//Route::get('test', \App\Http\Controllers\Application\Temp\Run::class);
+/*$text['body'] = 'Вы будите получать уведомления об этапах выполнения.';
+$text['status'] = 'зарегистрирована';
+$text['identification'] = 'identification';
+Route::get('/test', function () use ($text) {
+    return new App\Mail\RequestSSLMail('Имя Я.К.', $text);
 });*/
 
 
@@ -355,6 +360,7 @@ Route::group(['middleware' => ['can:Voucher.user.create']], function (){
 
 Route::resource('warming', WarmingController::class);
 Route::resource('vpn', VpnInfoController::class)->middleware('can:VpnInfo.user.view');
+Route::post('vpn/access/request', IKEv2AccessRequestToCabinet::class)->middleware('can:VpnInfo.user.create')->name('vpn.access.request');
 
 
 

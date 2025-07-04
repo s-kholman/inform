@@ -8,7 +8,7 @@ class IkeReport
 
     public function __construct()
     {
-        $this->report = [];
+        $this->report ['message'] =  'Значение по умолчанию';
     }
 
     public function set($key, $message): void

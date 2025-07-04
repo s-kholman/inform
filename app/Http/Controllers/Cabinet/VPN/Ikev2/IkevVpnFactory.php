@@ -31,7 +31,7 @@ abstract class IkevVpnFactory
         $this->mikrotikController = new MikrotikController($this->userVPN);
     }
 
-    public function render(): array
+    public function render(): IkeReport
     {
             try {
                 $service = $this->run();
@@ -47,9 +47,8 @@ abstract class IkevVpnFactory
                 $this->report->set('error', $exception->getMessage());
             }
             finally {
-                return $this->report->getMessage();
+                return $this->report;
             }
-
     }
 
     abstract function run():IkeVpnMikrotikInterface;

@@ -17,6 +17,8 @@ class CreateAccessVpnWindowsTenFactory implements IkeVpnMikrotikInterface
         {
             throw new ExceptionInform('SSL sign');
         }
+        //Удаляем все настройки
+        $mikrotikController->modeConfigGet()->identityGet()->identityRemove()->modeConfigRemove();
 
         //Запрос / корректировка / создание
         $mikrotikController->modeConfigGet()->checkIpModeConfig()->modeConfigAddDynamicIP();
