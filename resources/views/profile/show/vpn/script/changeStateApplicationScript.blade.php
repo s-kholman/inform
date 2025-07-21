@@ -1,7 +1,7 @@
 <script>
 
-    const applicationIdentification = {!! json_encode($application[0]->identification) !!};
-    const applicationNameId = {!! json_encode($application[0]->application_name_id) !!};
+    const applicationIdentification = {!! !empty($application[0]->identification) ?? json_encode($application[0]->identification) !!};
+    const applicationNameId = {!! !empty($application[0]->identification) ?? json_encode($application[0]->application_name_id) !!};
     const authorId = {!! \Illuminate\Support\Facades\Auth::user()->id !!};
     const change = document.getElementById('change')
     const applicationStatusId = document.getElementById('applicationStatus')
