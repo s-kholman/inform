@@ -44,8 +44,7 @@ class TermoPrinterController extends Controller
             $printer ->text("\n");
             $printer ->text("$passFilial->comments\n");
             $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->qrCode('https://develop.krimm.ru/pass/check?key='. $passFilial->id, 0, 4);
-            //$printer->qrCode('https://inform.krimm.ru/pass/check?key='. $passFilial->id, 0, 4);
+            $printer->qrCode('https://inform.krimm.ru/pass/check?key='. $passFilial->id, 0, 4);
             $printer -> cut();
             $printer ->  close();
             return ['messages' => 'Отправлено на печать'];
