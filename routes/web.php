@@ -27,6 +27,7 @@ use App\Http\Controllers\LimitsController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
+use App\Http\Controllers\PassFilialController;
 use App\Http\Controllers\PeatController;
 use App\Http\Controllers\PeatExtractionController;
 use App\Http\Controllers\PermissionController;
@@ -289,10 +290,15 @@ Route::group(['middleware' => ['can:SowingHoeingPotato.user.view']], function ()
         ->name('sowing_hoeing_potato.show_to_pole')
         ->middleware('auth');
 });
+Route::get('/pass/create', [PassFilialController::class, 'create'])->middleware('can:PassFilial.completed.create')->name('pass.filial.create');
+Route::get('/pass/index', [PassFilialController::class, 'index'])->middleware('can:PassFilial.user.view')->name('pass.filial.index');
+Route::get('/pass/check', [PassFilialController::class, 'check']);
+Route::post('/pass/store', [PassFilialController::class, 'store'])->middleware('can:PassFilial.completed.create')->name('pass.filial.store');
 
 //Route::get('test', [\App\Http\Controllers\Application\Run::class, 'run']);
 
-//Route::get('test', \App\Http\Controllers\Application\Temp\Run::class);
+//Route::get('test', App\Http\Controllers\TermoPrinter\TermoPrinterController::class)->middleware('auth');
+
 /*$text['body'] = 'Вы будите получать уведомления об этапах выполнения.';
 $text['status'] = 'зарегистрирована';
 $text['identification'] = 'identification';
