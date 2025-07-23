@@ -13,16 +13,19 @@ class SSLInfo
     {
         $ssl_info = [];
 
-        $userVPN = new UserVPN($user);
+        try {
+            $userVPN = new UserVPN($user);
 
-        $ssl = new MikrotikController($userVPN);
+            $ssl = new MikrotikController($userVPN);
 
-        if (array_key_exists(0, $ssl->sslGetActive()->sslActive)){
-            $r = (str_replace(['w', 'd', 'h', 'm', 's'], [' week ', ' day ', ' hour ', ' min ', ' second '], $ssl->sslGetActive()->sslActive[0]['expires-after']));
-            $ssl_info ['expire'] = Carbon::parse($r, 'Asia/Yekaterinburg')->format('d.m.Y H:i:s');
-            $ssl_info ['expires_after'] = Carbon::now('Asia/Yekaterinburg')->diffInDays(Carbon::parse($r));
+            if (array_key_exists(0, $ssl->sslGetActive()->sslActive)){
+                $r = (str_replace(['w', 'd', 'h', 'm', 's'], [' week ', ' day ', ' hour ', ' min ', ' second '], $ssl->sslGetActive()->sslActive[0]['expires-after']));
+                $ssl_info ['expire'] = Carbon::parse($r, 'Asia/Yekaterinburg')->format('d.m.Y H:i:s');
+                $ssl_info ['expires_after'] = Carbon::now('Asia/Yekaterinburg')->diffInDays(Carbon::parse($r));
+            }
+            return $ssl_info;
+        } catch (\Exception $exception){
+            return $ssl_info;
         }
-
-        return $ssl_info;
     }
 }
