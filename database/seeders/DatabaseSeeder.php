@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\SowingLastName;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,8 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(
             [
-                MachineSeeder::class,
-                ShiftSeeder::class,
+                TermPrinterSettingsSeeder::class,
+                RoleSeeder::class,
             ]
         );
 

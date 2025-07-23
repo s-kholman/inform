@@ -60,6 +60,14 @@
                                 <i class="fs-4 bi-wifi"></i> <span class="ms-1 d-none d-sm-inline">Доступ к WiFi</span></a>
                         </li>
                     @endcan
+
+                    @can('PassFilial.user.view')
+                        <li class="nav-item">
+                            <a class="nav-link align-middle px-0" href="/pass/index" class="nav-link px-0">
+                                <i class="fs-4 bi bi-truck-flatbed"></i> <span class="ms-1 d-none d-sm-inline">Пропуска</span></a>
+                        </li>
+                    @endcan
+
                     @can('VpnInfo.user.view')
                         <li class="nav-item">
                             <a class="nav-link align-middle px-0" href="{{route('vpn.index')}}" class="nav-link px-0">
