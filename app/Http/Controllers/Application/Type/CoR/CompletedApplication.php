@@ -9,7 +9,7 @@ class CompletedApplication extends AbstractHandler
 {
     public function handle(Application $application, ApplicationTypeInterface $applicationType)
     {
-        if ($application->ApplicationStatus->status_code == 40) {
+        if ($application->ApplicationStatus !== null && $application->ApplicationStatus->status_code == 40) {
             $applicationType->completedApplication();
         }elseif ($this->nextHandler !== null){
             $this->nextHandler->handle($application, $applicationType);

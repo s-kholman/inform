@@ -27,14 +27,13 @@ class ApplicationGetActive
                 ->where('user_id', $user_id)
                 ->where('application_name_id', $applicationName->id ?? '0')
                 ->first();
-            if (!empty($application_first) && $application_first->ApplicationStatus->status_code !== 100){
+            if (!empty($application_first) && $application_first->ApplicationStatus !== null && $application_first->ApplicationStatus->status_code !== 100){
 
                 return Application::query()
                     ->with('ApplicationStatus')
                     ->where('identification', $application_first->identification)
                     ->orderBy('created_at')
                     ->get()
-                    //->sortByDesc('created_at')
                     ;
             }
         }catch (Exception $exception){

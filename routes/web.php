@@ -5,6 +5,7 @@ use App\Http\Controllers\BrendController;
 use App\Http\Controllers\Cabinet\SSL\MikrotikController;
 use App\Http\Controllers\cabinet\ssl\SslCreateController;
 use App\Http\Controllers\Cabinet\VPN\Ikev2\IKEv2AccessRequestToCabinet;
+use App\Http\Controllers\Cards\CardsController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\Commercial\CheckController;
 use App\Http\Controllers\CorporateCommunicationController;
@@ -295,7 +296,7 @@ Route::get('/pass/index', [PassFilialController::class, 'index'])->middleware('c
 Route::get('/pass/check', [PassFilialController::class, 'check']);
 Route::post('/pass/store', [PassFilialController::class, 'store'])->middleware('can:PassFilial.completed.create')->name('pass.filial.store');
 
-//Route::get('test', [\App\Http\Controllers\Application\Run::class, 'run']);
+//Route::get('test', \App\Http\Controllers\XML\XMLParseController::class);
 
 //Route::get('test', App\Http\Controllers\TermoPrinter\TermoPrinterController::class)->middleware('auth');
 
@@ -306,6 +307,9 @@ Route::get('/test', function () use ($text) {
     return new App\Mail\RequestSSLMail('Имя Я.К.', $text);
 });*/
 
+Route::get('/card/{messages?}', [CardsController::class, 'index'])->name('card.index')->middleware('can:Card.user.view');
+Route::post('/createDischarge', [CardsController::class, 'createDischarge'])->name('card.loadInformation')->middleware('can:Card.user.view');
+Route::post('/card', [CardsController::class, 'loadStorageLocation'])->name('card.loadStorageLocation')->middleware('can:Card.user.view');
 
 Route::group(['middleware' => ['can:SowingControl.user.view']], function () {
 
