@@ -10,7 +10,7 @@ class RejectionApplication extends AbstractHandler
 
     public function handle(Application $application, ApplicationTypeInterface $applicationType)
     {
-        if ($application->ApplicationStatus->status_code == 30) {
+        if ($application->ApplicationStatus !== null && $application->ApplicationStatus->status_code == 30) {
             $applicationType->rejectionApplication();
         }elseif ($this->nextHandler !== null){
             $this->nextHandler->handle($application, $applicationType);

@@ -61,6 +61,13 @@
                         </li>
                     @endcan
 
+                    @can('Card.user.view')
+                        <li class="nav-item">
+                            <a class="nav-link align-middle px-0" href="/card" class="nav-link px-0">
+                                <i class="bi bi-credit-card-2-back-fill"></i> <span class="ms-1 d-none d-sm-inline">Топливные карты</span></a>
+                        </li>
+                    @endcan
+
                     @can('PassFilial.user.view')
                         <li class="nav-item">
                             <a class="nav-link align-middle px-0" href="/pass/index" class="nav-link px-0">
@@ -159,6 +166,8 @@
                                 <li>
                                     <a href="/communication" class="nav-link px-0"> <span class="d-none d-sm-inline">Корп связь</span></a>
                                 </li>
+
+
 
                             <li>
                                 <a href="/post" class="nav-link px-0"> <span class="d-none d-sm-inline">Должность</span></a>

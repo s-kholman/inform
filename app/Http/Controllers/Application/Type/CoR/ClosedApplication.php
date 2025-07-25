@@ -9,7 +9,7 @@ class ClosedApplication extends AbstractHandler
 {
     public function handle(Application $application, ApplicationTypeInterface $applicationType)
     {
-        if ($application->ApplicationStatus->status_code == 100) {
+        if ($application->ApplicationStatus !== null && $application->ApplicationStatus->status_code == 100) {
             $applicationType->closedApplication();
         }elseif ($this->nextHandler !== null){
             $this->nextHandler->handle($application, $applicationType);

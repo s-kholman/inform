@@ -22,7 +22,10 @@
         "ndum/laravel-snmp": "^1.9",
         "php-mqtt/client": "^2.0",
         "smalot/pdfparser": "^2.4",
-        "spatie/laravel-permission": "^6.9"
+        "spatie/laravel-permission": "^6.9",
+      "ext-simplexml": "*",
+        "ext-xmlreader": "*",
+        "ext-xmlwriter": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",

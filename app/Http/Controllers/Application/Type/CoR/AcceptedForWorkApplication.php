@@ -12,7 +12,7 @@ class AcceptedForWorkApplication extends AbstractHandler
     public function handle(Application $application, ApplicationTypeInterface $applicationType)
     {
 
-        if ($application->ApplicationStatus->status_code == 20) {
+        if ($application->ApplicationStatus !== null && $application->ApplicationStatus->status_code == 20) {
 
             $applicationType->acceptedForWorkApplication();
 
