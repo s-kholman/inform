@@ -108,7 +108,6 @@ class CreateExportInformationController extends Controller
                 $this->tag('ЕдиницаИзмеренияМест', '00000000-0000-0000-0000-000000000000');
                 $this->tag('Коэффициент', '1');
                 $this->tag('Количество', $value['value']);
-                //$this->tag('Цена', round($value['summa'] / $value['value'],2));
                 $this->tag('Цена', $value['price']);
                 $this->tag('Сумма', $value['summa']);
                 $this->tag('СтавкаНДС', $value['ndsText']);

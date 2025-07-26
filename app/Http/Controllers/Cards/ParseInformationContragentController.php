@@ -18,6 +18,7 @@ class ParseInformationContragentController extends Controller
         $reverse = [];
         $reverseStatus = false;
         $parse_csv = [];
+        $countRow = 0;
 
         $handle = fopen($path, 'r');
 
@@ -39,6 +40,7 @@ class ParseInformationContragentController extends Controller
                 }
 
                 if($data[7] > 0){
+                    $countRow++;
                     $parse_csv[$data[2]][] =
                         [
                             'value' => $data[7],
@@ -56,6 +58,8 @@ class ParseInformationContragentController extends Controller
                 }
             }
         }
+        $this->messages->addMessage('countRow', 'count', $countRow);
+        fclose($handle);
         return $parse_csv;
     }
 
@@ -77,7 +81,7 @@ class ParseInformationContragentController extends Controller
         if ($sklad_id){
             return $sklad_id;
         } else {
-            $this->messages->addMessage('skladIDEmpty',$data[2], $data[0]);
+            $this->messages->addMessage('skladIDEmpty',$data[2], '. Добавить склад: ' . substr($data[2],14,4));
             return '00000000-0000-0000-0000-000000000000';
         }
     }

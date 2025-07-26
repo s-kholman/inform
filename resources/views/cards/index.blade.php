@@ -10,7 +10,7 @@
                         @csrf
 
                         <label for="counterpartyDate">Дата входящего документа</label>
-                        <input name="counterpartyDate" id="counterpartyDate" type="date" value="{{old('counterpartyDate') ? old('counterpartyDate') : date('Y-m-d')}}"
+                        <input name="counterpartyDate" id="counterpartyDate" type="date" value="{{old('counterpartyDate') ? old('counterpartyDate') : date('Y-m-01')}}"
                                class="form-control @error('counterpartyDate') is-invalid @enderror">
                         @error('counterpartyDate')
                         <span class="invalid-feedback">
@@ -28,7 +28,7 @@
                         @enderror
 
                         <label for="documentDate">Дата документа</label>
-                        <input name="documentDate" id="documentDate" type="date" value="{{old('documentDate') ? old('documentDate') : date('Y-m-d')}}"
+                        <input name="documentDate" id="documentDate" type="date" value="{{old('documentDate')}}"
                                class="form-control @error('documentDate') is-invalid @enderror">
                         @error('documentDate')
                         <span class="invalid-feedback">
@@ -37,7 +37,7 @@
                         @enderror
 
                         <label for="loadInformation">Загрузите файл от контрагента</label>
-                        <input class="form-control @error('loadInformation') is-invalid @enderror" type="file" id="loadInformation" name="loadInformation" accept='text/csv'>
+                        <input class="form-control @error('loadInformation') is-invalid @enderror" type="file" id="loadInformation" name="loadInformation" accept="text/csv" >
                         @error('loadInformation')
                         <span class="invalid-feedback">
                             <strong>{{ $message }}</strong>
@@ -51,13 +51,18 @@
                             <a download href="{{\Illuminate\Support\Facades\Storage::url('card/export.xml') }}">Ссылка на файл от {{\Illuminate\Support\Carbon::parse($exportDateCrete)->setTimezone('Asia/Yekaterinburg')->format('H:i d-m-Y')}}</a>
                         @endif
                     </div>
-
                     <div class="mt-2" style="color: red ">
                         @if(!empty(json_decode($messages)))
                             @forelse(json_decode($messages) as $type => $message)
+                                @if($type == 'countRow')
+                                    @foreach($message as $key => $value)
+                                        <div class="row" style="font-size: 12px"> В документ добавлено строк - {{$value}}</div>
+                                    @endforeach
+                                @endif
+
                                 @if($type == 'skladIDEmpty')
                                     @foreach($message as $key => $value)
-                                        <div class="row" style="font-size: 12px">Найдена новая карточка № {{$key}}</div>
+                                        <div class="row" style="font-size: 12px">Найдена новая карточка № {{$key}}{{$value}}</div>
                                     @endforeach
                                 @endif
                                 @if($type == 'NDSError')
@@ -93,7 +98,7 @@
                                 <ul type="disc">
                                     <li>Обработка находится: "Сервис" -> "Дополнительные внешние отчеты и обработки" -> "Обработки"</li>
                                     <li>Перейти во вкладку "Загрузка"</li>
-                                    <li>Выбрыть сгенерированный файл</li>
+                                    <li>Выбрать сгенерированный файл</li>
                                     <li>Нажать на кнопку "Загрузить данные"</li>
                                 </ul>
                             </li>
@@ -107,7 +112,7 @@
                                     <li>
                                         <b>Решение:</b>
                                         <p>Обновить файл складов</p>
-                                        <p>Исправьте название склада, сопоставление происходит по 4 цифрам карты начиная с 14 символа.</p>
+                                        <p>Исправьте название склада, сопоставление происходит по 4 цифрам карты начиная с 15 символа.</p>
                                     </li>
                                 </ul>
                             </li>
@@ -179,7 +184,10 @@
                             <li>
                                 Файл сохраняется на сервере
                             </li>
-
+                            <li>
+                                Если при загрузке данных файла ссылка не появилась и/или не обновилась на текущие дату и время, значит в файле нет необходимой информации.
+                                Сделайте повторную выгрузку из 1С по инструкции и/или убедитесь что Вы загружаете правильный файл
+                            </li>
                         </ol>
                     </div>
                 </div>

@@ -50,8 +50,12 @@ class CardsController extends Controller
 
         if ($request->hasFile('loadStorageLocation')) {
 
-            Storage::putFileAs('public/card', $request->file('loadStorageLocation'), 'storageLocation.xml');
+            $checkFileValid = new ParserStorageLocationController();
+            $valid = $checkFileValid($request->file('loadStorageLocation')->get());
 
+            if (!empty($valid)){
+                Storage::putFileAs('public/card', $request->file('loadStorageLocation'), 'storageLocation.xml');
+            }
         }
 
         return redirect()->route('card.index');
