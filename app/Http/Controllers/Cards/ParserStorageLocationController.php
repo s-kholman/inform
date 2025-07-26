@@ -7,14 +7,19 @@ use App\Http\Controllers\Controller;
 class ParserStorageLocationController extends Controller
 {
 
-    public function __invoke():array
+    public function __invoke($pathFile = '/app/public/card/storageLocation.xml'):array
     {
         $storageLocation = [];
+        $ref = null;
+        $dom = new \XMLReader();
 
-        if (file_exists(storage_path() .'/app/public/card/storageLocation.xml'))
-        {
-            $dom = new \XMLReader();
-            $dom -> open(storage_path() .'/app/public/card/storageLocation.xml');
+        if (file_exists(storage_path() .$pathFile)){
+            $dom -> open(storage_path() .$pathFile);
+        } elseif ($pathFile != '/app/public/card/storageLocation.xml'){
+            $dom -> xml($pathFile);
+        } else{
+            return $storageLocation;
+        }
 
             while ($dom->read()){
                 if ($dom->nodeType == \XMLReader::ELEMENT && $dom->localName == 'CatalogObject.Склады'){
@@ -38,8 +43,6 @@ class ParserStorageLocationController extends Controller
                     }
                 }
             }
-        }
-
         return $storageLocation;
     }
 }
