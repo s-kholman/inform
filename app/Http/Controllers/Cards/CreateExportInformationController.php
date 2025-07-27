@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Cards;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoadCounterpartyInformationRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class CreateExportInformationController extends Controller
 {
-    private $xw;
+    private \XMLWriter $xw;
 
-    public function __invoke($request, CardMessagesController $messages)
+    public function __invoke(LoadCounterpartyInformationRequest $request, CardMessagesController $messages)
     {
         $parseInformationCounterparty = new ParseInformationContragentController();
 
