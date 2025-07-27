@@ -13,6 +13,9 @@ class CardsController extends Controller
 
     public function __construct()
     {
+        if (!is_dir(storage_path() .'/app/public/card')){
+            mkdir(storage_path() .'/app/public/card');
+        }
         $this->messages = new CardMessagesController();
     }
 
@@ -28,8 +31,12 @@ class CardsController extends Controller
         {
             $download = true;
             $exportDateCrete = filemtime(storage_path() .'/app/public/card/export.xml');
-            $messages = file_get_contents(storage_path() .'/app/public/card/inform_export.json');
+            if (file_exists(storage_path() .'/app/public/card/inform_export.json'))
+            {
+                $messages = file_get_contents(storage_path() .'/app/public/card/inform_export.json');
+            }
         }
+
         if (file_exists(storage_path() .'/app/public/card/storageLocation.xml'))
         {
             $storageLocationDateCrete = filemtime(storage_path() .'/app/public/card/storageLocation.xml');
@@ -62,16 +69,11 @@ class CardsController extends Controller
 
     public function createDischarge(LoadCounterpartyInformationRequest $request)
     {
-        if (!is_dir(storage_path() .'/app/public/card')){
-            mkdir(storage_path() .'/app/public/card');
-        }
-
         $createExportInformation = new CreateExportInformationController();
         $createExportInformation($request, $this->messages);
 
         file_put_contents(storage_path() .'/app/public/card/inform_export.json', json_encode($this->messages->messages));
 
         return redirect()->route('card.index');
-
     }
 }
