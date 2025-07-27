@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Cards;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoadCounterpartyInformationRequest;
 use App\Http\Requests\LoadStorageLocationRequest;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Storage;
 
 class CardsController extends Controller
@@ -23,14 +22,13 @@ class CardsController extends Controller
         $download = false;
         $exportDateCrete = '';
         $storageLocationDateCrete = '';
-
-        $messages = request()->cookie('cardMessages');
-        Cookie::queue('cardMessages', '', -1);
+        $messages = '';
 
         if (file_exists(storage_path() .'/app/public/card/export.xml'))
         {
             $download = true;
             $exportDateCrete = filemtime(storage_path() .'/app/public/card/export.xml');
+            $messages = file_get_contents(storage_path() .'/app/public/card/inform_export.json');
         }
         if (file_exists(storage_path() .'/app/public/card/storageLocation.xml'))
         {
@@ -64,13 +62,14 @@ class CardsController extends Controller
 
     public function createDischarge(LoadCounterpartyInformationRequest $request)
     {
+        if (!is_dir(storage_path() .'/app/public/card')){
+            mkdir(storage_path() .'/app/public/card');
+        }
 
         $createExportInformation = new CreateExportInformationController();
         $createExportInformation($request, $this->messages);
 
-        if (!empty($this->messages->messages)){
-           Cookie::queue('cardMessages', json_encode($this->messages->messages), 1);
-        }
+        file_put_contents(storage_path() .'/app/public/card/inform_export.json', json_encode($this->messages->messages));
 
         return redirect()->route('card.index');
 

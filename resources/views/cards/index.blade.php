@@ -10,7 +10,7 @@
                         @csrf
 
                         <label for="counterpartyDate">Дата входящего документа</label>
-                        <input name="counterpartyDate" id="counterpartyDate" type="date" value="{{old('counterpartyDate') ? old('counterpartyDate') : date('Y-m-01')}}"
+                        <input name="counterpartyDate" id="counterpartyDate" type="date" value="{{old('counterpartyDate')}}"
                                class="form-control @error('counterpartyDate') is-invalid @enderror">
                         @error('counterpartyDate')
                         <span class="invalid-feedback">

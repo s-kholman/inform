@@ -9,7 +9,7 @@ class CardMessagesController extends Controller
 {
     public array $messages;
 
-    public function addMessage ($type, $key, $value)
+    public function addMessage ($type, $key, $value): void
     {
         $this->messages[$type] [$key] = $value;
     }

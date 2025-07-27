@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 
 class ParseInformationContragentController extends Controller
 {
-    private $storageLocation;
-    private $messages;
+    private array $storageLocation;
+    private CardMessagesController $messages;
 
-    public function __invoke($path, CardMessagesController $messages)
+    public function __invoke($path, CardMessagesController $messages):array
     {
         $this->messages = $messages;
         $parserStorageLocation = new ParserStorageLocationController();
@@ -74,7 +74,7 @@ class ParseInformationContragentController extends Controller
         }
     }
 
-    private function skladID($data)
+    private function skladID($data):string
     {
         $sklad_id = array_search(substr($data[2],14,4), $this->storageLocation);
 
