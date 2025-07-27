@@ -157,20 +157,7 @@ class CreateExportInformationController extends Controller
 
         xmlwriter_end_document($this->xw);
 
-
-        if (!is_dir(storage_path() .'/app/public/card')){
-            mkdir(storage_path() .'/app/public/card');
-        }
-
-        $file = storage_path() .'/app/public/card/export.xml';
-
-        $current = xmlwriter_output_memory($this->xw);
-
-        file_put_contents($file, $current);
-
-
-
-
+        file_put_contents(storage_path() .'/app/public/card/export.xml', xmlwriter_output_memory($this->xw));
     }
 
     private function typeId($typeName): string
