@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Cards;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoadCounterpartyInformationRequest;
 use App\Http\Requests\LoadStorageLocationRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
 class CardsController extends Controller
@@ -19,11 +21,11 @@ class CardsController extends Controller
         $this->messages = new CardMessagesController();
     }
 
-    public function index()
+    public function index(): Response
     {
 
         $download = false;
-        $exportDateCrete = '';
+        $exportDateCrete  = '';
         $storageLocationDateCrete = '';
         $messages = '';
 
@@ -42,15 +44,18 @@ class CardsController extends Controller
             $storageLocationDateCrete = filemtime(storage_path() .'/app/public/card/storageLocation.xml');
         }
 
-        return view('cards.index', [
-            'download' => $download,
-            'exportDateCrete' => $exportDateCrete,
-            'messages' => $messages,
-            'storageLocationDateCrete' => $storageLocationDateCrete
-        ]);
+        return response()->view('cards.index',
+            [
+                'download' => $download,
+                'exportDateCrete' => $exportDateCrete,
+                'messages' => $messages,
+                'storageLocationDateCrete' => $storageLocationDateCrete
+            ],
+            200
+        );
     }
 
-    public function loadStorageLocation(LoadStorageLocationRequest $request)
+    public function loadStorageLocation(LoadStorageLocationRequest $request): RedirectResponse
     {
 
         if ($request->hasFile('loadStorageLocation')) {
@@ -63,17 +68,17 @@ class CardsController extends Controller
             }
         }
 
-        return redirect()->route('card.index');
+        return response()->redirectToRoute('card.index')->setStatusCode(302);
 
     }
 
-    public function createDischarge(LoadCounterpartyInformationRequest $request)
+    public function createDischarge(LoadCounterpartyInformationRequest $request): RedirectResponse
     {
         $createExportInformation = new CreateExportInformationController();
         $createExportInformation($request, $this->messages);
 
         file_put_contents(storage_path() .'/app/public/card/inform_export.json', json_encode($this->messages->messages));
 
-        return redirect()->route('card.index');
+        return response()->redirectToRoute('card.index')->setStatusCode(302);
     }
 }
