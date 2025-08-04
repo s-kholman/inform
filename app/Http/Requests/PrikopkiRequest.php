@@ -35,6 +35,7 @@ class PrikopkiRequest extends FormRequest
             'fraction_6' => 'nullable|numeric|min:0',
             'volume' => 'required|numeric|min:0.001',
             'comment' => 'nullable|max:255',
+            'production_type' => 'required',
         ];
     }
 

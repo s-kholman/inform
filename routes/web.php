@@ -344,6 +344,8 @@ Route::delete('/sowing_control_potato/{sowing_control_potato}', [SowingControlPo
 
 
 Route::resource('prikopki', PrikopkiController::class)->middleware('auth');
+Route::get('prikopki/year/{year}', [PrikopkiController::class, 'ShowYear'])->name('prikopki.showyear');
+Route::get('prikopki/year/{year}/pole/{pole}', [PrikopkiController::class, 'ShowYearPole'])->name('prikopki.year.pole');
 
 
 Route::group(['middleware' => ['can:super-user']], function () {

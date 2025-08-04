@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\ESP\StatusController;
 use App\Http\Controllers\Api\v1\IkeVpnController;
 use App\Http\Controllers\api\v1\PermissionController;
 use App\Http\Controllers\Api\v1\ProductMonitoringController;
@@ -22,3 +23,4 @@ Route::post('ike', IkeVpnController::class);
 Route::post('cabinetVoucherSmsSend', VoucherSendSmsController::class);
 Route::post('cabinetVoucherGetToSend', VoucherGetToSendController::class);
 Route::post('change/state/application', ChangeStatusApplication::class);
+Route::post('esp/status', StatusController::class);

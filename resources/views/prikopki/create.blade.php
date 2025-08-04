@@ -40,10 +40,7 @@
                         </span>
                         @enderror
                     </div>
-
-
                 </div>
-
 
                 <div class="row">
                     <div class="col-6">
@@ -78,10 +75,23 @@
 
                 <fieldset class="border p-2">
                     <legend class="float-none w-auto"><h6>Фракции</h6></legend>
-                    <div class="row">
-
+                    <div class="row ms-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="production_type" id="check_product" value="1">
+                            <label class="form-check-label" for="check_product">
+                                Товарный
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="production_type" id="check_seeds" value="2">
+                            <label class="form-check-label" for="check_seeds">
+                                Семенной
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
                         <div class="col-2 text-center">
-                            <label for="fraction_1">До 30</label>
+                            <label for="fraction_1" id="label_fraction_1">-</label>
                             <input name="fraction_1"
                                    type="number"
                                    step="0.001"
@@ -96,7 +106,7 @@
                         </div>
 
                         <div class="col-2 text-center">
-                            <label for="fraction_2">30-45</label>
+                            <label for="fraction_2" id="label_fraction_2">-</label>
                             <input name="fraction_2"
                                    type="number"
                                    step="0.001"
@@ -111,7 +121,7 @@
                         </div>
 
                         <div class="col-2 text-center">
-                            <label for="fraction_3">45-50</label>
+                            <label for="fraction_3" id="label_fraction_3">-</label>
                             <input name="fraction_3"
                                    type="number"
                                    step="0.001"
@@ -126,7 +136,7 @@
                         </div>
 
                         <div class="col-2 text-center">
-                            <label for="fraction_4">50-55</label>
+                            <label for="fraction_4" id="label_fraction_4">-</label>
                             <input name="fraction_4"
                                    type="number"
                                    step="0.001"
@@ -141,7 +151,7 @@
                         </div>
 
                         <div class="col-2 text-center">
-                            <label for="fraction_5">55-60</label>
+                            <label for="fraction_5" id="label_fraction_5">-</label>
                             <input name="fraction_5"
                                    type="number"
                                    step="0.001"
@@ -156,13 +166,15 @@
                         </div>
 
                         <div class="col-2 text-center">
-                            <label for="fraction_6">60+</label>
+                            <label for="fraction_6" id="label_fraction_1">-</label>
                             <input name="fraction_6"
                                    type="number"
                                    step="0.001"
                                    min="0"
                                    id="fraction_6"
-                                   class="form-control @error('fraction_6') is-invalid @enderror js-p-input">
+                                   class="form-control @error('fraction_6') is-invalid @enderror js-p-input"
+                                   readonly
+                            >
                             @error('fraction_6')
                             <span class="invalid-feedback">
                             <strong>{{$message}}</strong>
@@ -203,6 +215,29 @@
 
         let selectSecondObject = {!! $sevooborot_arr  !!};
         let selectFirstCheck = 0;
+        const label_fraction_1 = document.getElementById('label_fraction_1');
+        const label_fraction_2 = document.getElementById('label_fraction_2');
+        const label_fraction_3 = document.getElementById('label_fraction_3');
+        const label_fraction_4 = document.getElementById('label_fraction_4');
+        const label_fraction_5 = document.getElementById('label_fraction_5');
+        const label_fraction_6 = document.getElementById('label_fraction_6');
+        const check_product = document.getElementById('check_product');
+        const check_seeds = document.getElementById('check_seeds');
+
+        check_product.onchange = function (){
+            label_fraction_1.textContent = "до 45";
+            label_fraction_2.textContent = "45-50";
+            label_fraction_3.textContent = "50-55";
+            label_fraction_4.textContent = "55-80";
+            label_fraction_5.textContent = "80+";
+        }
+        check_seeds.onchange = function (){
+            label_fraction_1.textContent = "до 30";
+            label_fraction_2.textContent = "30-40";
+            label_fraction_3.textContent = "40-50";
+            label_fraction_4.textContent = "50-60";
+            label_fraction_5.textContent = "60+";
+        }
 
         selectFirst.onchange = function () {
             //Делаем не доступным для выбора зависимый select

@@ -3,27 +3,38 @@
 
 @section('info')
     <div class="container gx-4">
+        <div>
+            <a class="btn btn-info btn-sm" role="button" href="/prikopki">Назад</a>
+        </div>
         <div class="row">
+            @forelse($prikopkis as $type => $value)
             <table class="table table-bordered">
-                <caption class="caption-top text-center">Прикопки на поле: <b>{{$pole_name}}</b></caption>
+                <caption class="caption-top text-center">Прикопки
+                    @if($type == 1) товарного  @else семенного @endif картофеля на поле: <b>{{$value[0]->sevooborot->pole->name}}</b></caption>
                 <thead>
                 <tr>
                     <th>Дата</th>
                     <th>Номенклатура</th>
-                    <th>до 30</th>
-                    <th>30-45</th>
-                    <th>45-50</th>
-                    <th>50-55</th>
-                    <th>55-60</th>
-                    <th>60+</th>
+                    @foreach($fractions[$type] as $fraction)
+                        @if($value[0]->date > '2024-10-01')
+                        <th>{{$fraction}}</th>
+                        @else
+                            @foreach($fractions[3] as $s)
+                                <th>{{$s}}</th>
+                            @endforeach
+                            @break;
+                        @endif
+                    @endforeach
                     <th>Площадь</th>
                     <th>Вес</th>
-                    <th>Коментарии</th>
+                    <th>Комментарий</th>
                     <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>
-                @forelse($prikopkis as $prikopki)
+
+
+                    @foreach($value as $prikopki)
                     <tr>
                         <td>{{$prikopki['date']}}</td>
                         <td>{{$prikopki->sevooborot->nomenklature->name}} - {{$prikopki->sevooborot->reproduktion->name}}</td>
@@ -51,12 +62,15 @@
                             </div>
                         </td>
                     </tr>
+                    @endforeach
                 @empty
-                @endforelse
+
                 </tbody>
             </table>
+            @endforelse
         </div>
-        <a class="btn btn-info" href="/prikopki">Назад</a>
+
+
     </div>
 @endsection('info')
 @section('script')
