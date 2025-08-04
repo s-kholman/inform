@@ -75,19 +75,25 @@
 
                 <fieldset class="border p-2">
                     <legend class="float-none w-auto"><h6>Фракции</h6></legend>
-                    <div class="row ms-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="production_type" id="check_product" value="1">
-                            <label class="form-check-label" for="check_product">
+                    <div class="row ms-2"  >
+                        <div class="form-check" >
+                            <input class="form-check-input  {{--@error('production_type') is-invalid @enderror js-p-input--}}" type="radio" name="production_type" id="check_product" value="1">
+                            <label class="form-check-label" for="check_product" >
                                 Товарный
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="production_type" id="check_seeds" value="2">
-                            <label class="form-check-label" for="check_seeds">
+                            <input class="form-check-input {{--@error('production_type') is-invalid @enderror js-p-input--}}" type="radio" name="production_type" id="check_seeds" value="2">
+                            <label class="form-check-label @error('production_type') is-invalid @enderror js-p-input" for="check_seeds">
                                 Семенной
                             </label>
+                            @error('production_type')
+                            <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                            @enderror
                         </div>
+
                     </div>
                     <div class="row mt-2">
                         <div class="col-2 text-center">
