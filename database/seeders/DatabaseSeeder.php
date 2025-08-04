@@ -14,8 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(
             [
-                TermPrinterSettingsSeeder::class,
-                RoleSeeder::class,
+                PrikopkiUpdateSeeder::class,
             ]
         );
 

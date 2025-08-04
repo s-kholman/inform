@@ -15,33 +15,13 @@
 
         </div>
 
-
-        <div class="container gx-4">
-            <div class="row">
-                @forelse($prikopkis as $filial_name => $prikopki)
-                    <div class="col border border-1 text-center">
-                        {{$filial_name}}
-                    </div>
-                @empty
-                    <div class="col-xl-10">
-                        <div class="row">
-                            Информация о прикопках не найдена
-                        </div>
-                    </div>
-                @endforelse
-            </div>
-
-            <div class="row">
-                @forelse($prikopkis as $filial_name => $prikopki)
-                    <div class="col border border-1 text-center">
-                        @foreach($prikopki->groupBy('sevooborot.pole.name') as $pole)
-                            <a href="/prikopki/{{$pole[0]->sevooborot->pole_id}}" >{{$pole[0]->sevooborot->pole->name}}</a><br />
-                        @endforeach
-                    </div>
-                @empty
-                @endforelse
-            </div>
-
+        <div class="row">
+            @forelse($prikopkis->groupBy('HarvestYear.name') as $year => $value)
+                <a href="{{route('prikopki.showyear', ['year' => $year])}}">{{$year}}</a>
+            @empty
+            @endforelse
         </div>
+
+
     </div>
 @endsection('info')

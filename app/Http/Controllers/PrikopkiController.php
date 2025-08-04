@@ -21,12 +21,13 @@ class PrikopkiController extends Controller
 
     public function index()
     {
+
+
         $prikopkis = Prikopki::query()
-            ->with(['filial', 'sevooborot', 'sevooborot.Pole'])
+            ->with(['filial', 'sevooborot', 'sevooborot.Pole', 'HarvestYear'])
             ->get()
             ->sortBy('sevooborot.pole.name')
-            ->groupBy('filial.name')
-
+            //->groupBy('filial.name')
         ;
 
         return view('prikopki.index', ['prikopkis' => $prikopkis]);
@@ -66,7 +67,7 @@ class PrikopkiController extends Controller
 
     public function store(PrikopkiRequest $request)
     {
-
+        $harvest_year = new HarvestAction();
         Prikopki::query()
             ->create([
                 'date' => $request['date'],
@@ -80,6 +81,8 @@ class PrikopkiController extends Controller
                 'fraction_5' => $request['fraction_5'],
                 'fraction_6' => $request['fraction_6'],
                 'comment' => $request['comment'],
+                'production_type' => $request['production_type'],
+                'harvest_year_id' => $harvest_year->HarvestYear($request['date']),
             ]);
 
         //dd($request->post());
@@ -109,4 +112,38 @@ class PrikopkiController extends Controller
         $prikopki->delete();
         return response()->json(['status'=>true,"redirect_url"=>url('prikopki')]);
     }
+
+    public function ShowYear($year)
+    {
+        //dd($year);
+        $harvest_year = new HarvestAction();
+        $prikopkis = Prikopki::query()
+            ->with(['filial', 'sevooborot', 'sevooborot.Pole', 'HarvestYear'])
+            ->where('harvest_year_id', $harvest_year->HarvestYear('01-06-'.$year))
+            ->get()
+            /*->sortByDesc('sevooborot.filial.name')*/;
+
+        return response()->view('prikopki/show_year', ['prikopkis' => $prikopkis]);
+    }
+
+    public function ShowYearPole($year, $pole)
+    {
+        $fractions =
+            [
+                '1' => ["до 45","45-50","50-55","55-80","80+","-"],
+                '2' => ["до 30","30-40","40-50","50-60","60+","-"],
+                '3' => ["до 30","30-45","45-50","50-55","55-60","60+"],
+            ];
+
+        $prikopkis = Prikopki::query()
+            ->with(['sevooborot', 'PrikopkiSquare'])
+            ->where('harvest_year_id', $year)
+            ->orderBy('date')
+            ->get()
+            ->where('sevooborot.pole_id', $pole)
+            ->groupBy('production_type');
+
+        return view('prikopki.show', ['prikopkis' => $prikopkis, 'fractions' => $fractions]);
+    }
+
 }

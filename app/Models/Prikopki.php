@@ -21,6 +21,8 @@ class Prikopki extends Model
         'fraction_5',
         'fraction_6',
         'comment',
+        'production_type',
+        'harvest_year_id',
     ];
 
     public function Sevooborot()
@@ -38,4 +40,8 @@ class Prikopki extends Model
         return $this->belongsTo(PrikopkiSquare::class);
     }
 
+    public function HarvestYear(): BelongsTo
+    {
+        return $this->belongsTo(HarvestYear::class);
+    }
 }
