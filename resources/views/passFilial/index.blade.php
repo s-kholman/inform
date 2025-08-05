@@ -36,7 +36,7 @@
                         <td>{{$pass->last_name}}</td>
                         <td>{{\Illuminate\Support\Carbon::parse($pass->date)->format('d-m-Y')}}</td>
                         <td>{{$pass->comments}}</td>
-                        <td>{{$fullName->Acronym($pass->Registration) . ' в ' . \Illuminate\Support\Carbon::parse($pass->created_at)->format('H:s d-m-Y')}}</td>
+                        <td>{{$fullName->Acronym($pass->Registration) . ' в ' . \Illuminate\Support\Carbon::parse($pass->created_at)->format('H:i d-m-Y')}}</td>
                     </tr>
                     </tbody>
             @if($loop->last)

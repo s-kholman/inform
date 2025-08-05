@@ -4,9 +4,13 @@
 @section('info')
     <div class="container gx-4">
         <div class="row">
-
+            <div class="col-4 p-3"><a class="btn btn-outline-success" href="{{route('prikopki.create')}}">Внести
+                    прикопки</a></div>
+            <div class="col-4 p-3"></div>
+        </div>
+        <div class="row">
             <table class="table table-bordered">
-                <caption class="caption-top text-center">Прикопки на поле: <b>{{--{{$pole_name}}--}}</b></caption>
+                <caption class="caption-top text-center">Информация о прикопках <b>{{--{{$pole_name}}--}}</b></caption>
                 <thead>
                 <tr>
                     @foreach($prikopkis->groupBy('filial.name') as $filial => $value)
@@ -16,14 +20,15 @@
                 </thead>
                 <tbody>
                 <tr>
-                @forelse($prikopkis->groupBy('filial.name') as $filial => $value)
+                    @forelse($prikopkis->groupBy('filial.name') as $filial => $value)
                         <td>
-                    @foreach($value->groupBy('sevooborot.pole.name') as $pole => $info)
-                                <a href="/prikopki/year/{{$info[0]->harvest_year_id}}/pole/{{$info[0]->sevooborot->pole_id}}" >{{$info[0]->sevooborot->pole->name}}</a><br />
-                    @endforeach
+                            @foreach($value->groupBy('sevooborot.pole.name') as $pole => $info)
+                                <a href="/prikopki/year/{{$info[0]->harvest_year_id}}/pole/{{$info[0]->sevooborot->pole_id}}">{{$info[0]->sevooborot->pole->name}}</a>
+                                <br/>
+                            @endforeach
                         </td>
-                @empty
-                @endforelse
+                    @empty
+                    @endforelse
                 </tr>
                 </tbody>
             </table>
