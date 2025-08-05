@@ -14,21 +14,18 @@ use Illuminate\Support\Facades\Auth;
 class PrikopkiController extends Controller
 {
 
-    private function  display_null($value){
-
+    private function display_null($value)
+    {
         return $value ?: 'Н/Д';
     }
 
     public function index()
     {
-
-
         $prikopkis = Prikopki::query()
-            ->with(['filial', 'sevooborot', 'sevooborot.Pole', 'HarvestYear'])
+            ->with(['HarvestYear'])
+            ->distinct('harvest_year_id')
             ->get()
-            ->sortBy('sevooborot.pole.name')
-            //->groupBy('filial.name')
-        ;
+            ->sortByDesc('HarvestYear.name');
 
         return view('prikopki.index', ['prikopkis' => $prikopkis]);
     }
@@ -43,22 +40,22 @@ class PrikopkiController extends Controller
             ->where('harvest_year_id', $harvestAction->HarvestYear(now()))
             ->get();
 
-        if($poles->isNotEmpty()){
+        if ($poles->isNotEmpty()) {
             $poles = $poles
                 ->where('Pole.filial_id', $filial_id)
                 ->groupBy('Pole.name');
         }
 
 
-        foreach (Sevooborot::query()->where('harvest_year_id', $harvestAction->HarvestYear(now()))->get() as $value){
+        foreach (Sevooborot::query()->where('harvest_year_id', $harvestAction->HarvestYear(now()))->get() as $value) {
             $sevooborot_arr [$value->pole_id] [$value->id] =
-                $value->Nomenklature->name  . ' ' .
-                $this->display_null($value->Reproduktion->name ?? null) . ' ('. $value->square .' Га)';
+                $value->Nomenklature->name . ' ' .
+                $this->display_null($value->Reproduktion->name ?? null) . ' (' . $value->square . ' Га)';
         }
 
         $prikopki_squares = PrikopkiSquare::query()->get();
 
-        return view('prikopki.create',[
+        return view('prikopki.create', [
             'sevooborot_arr' => json_encode($sevooborot_arr, JSON_UNESCAPED_UNICODE),
             'poles' => $poles,
             'prikopki_squares' => $prikopki_squares,
@@ -68,7 +65,7 @@ class PrikopkiController extends Controller
     public function store(PrikopkiRequest $request)
     {
         $harvest_year = new HarvestAction();
-        Prikopki::query()
+        $model = Prikopki::query()
             ->create([
                 'date' => $request['date'],
                 'filial_id' => $request['filial_id'],
@@ -85,8 +82,7 @@ class PrikopkiController extends Controller
                 'harvest_year_id' => $harvest_year->HarvestYear($request['date']),
             ]);
 
-        //dd($request->post());
-        return redirect()->route('prikopki.index');
+        return redirect()->route('prikopki.year.pole', ['year' => $model->harvest_year_id, 'pole' => $model->sevooborot->pole_id]);
     }
 
     public function show(Request $request)
@@ -95,10 +91,9 @@ class PrikopkiController extends Controller
             ->with(['sevooborot', 'PrikopkiSquare'])
             ->orderBy('date')
             ->get()
-            ->where('sevooborot.pole_id', $request->prikopki)
-        ;
+            ->where('sevooborot.pole_id', $request->prikopki);
 
-        if ($prikopkis->count() > 0 ){
+        if ($prikopkis->count() > 0) {
             $pole_name = Pole::query()->find($request->prikopki)->name;
         } else {
             $pole_name = null;
@@ -110,19 +105,15 @@ class PrikopkiController extends Controller
     {
         $this->authorize('delete', $prikopki);
         $prikopki->delete();
-        return response()->json(['status'=>true,"redirect_url"=>url('prikopki')]);
+        return response()->json(['status' => true, "redirect_url" => url('prikopki')]);
     }
 
     public function ShowYear($year)
     {
-        //dd($year);
-        $harvest_year = new HarvestAction();
         $prikopkis = Prikopki::query()
             ->with(['filial', 'sevooborot', 'sevooborot.Pole', 'HarvestYear'])
-            ->where('harvest_year_id', $harvest_year->HarvestYear('01-06-'.$year))
-            ->get()
-            /*->sortByDesc('sevooborot.filial.name')*/;
-
+            ->where('harvest_year_id', $year)
+            ->get();
         return response()->view('prikopki/show_year', ['prikopkis' => $prikopkis]);
     }
 
@@ -130,9 +121,9 @@ class PrikopkiController extends Controller
     {
         $fractions =
             [
-                '1' => ["до 45","45-50","50-55","55-80","80+","-"],
-                '2' => ["до 30","30-40","40-50","50-60","60+","-"],
-                '3' => ["до 30","30-45","45-50","50-55","55-60","60+"],
+                '1' => ["до 45", "45-50", "50-55", "55-80", "80+", "-"],
+                '2' => ["до 30", "30-40", "40-50", "50-60", "60+", "-"],
+                '3' => ["до 30", "30-45", "45-50", "50-55", "55-60", "60+"],
             ];
 
         $prikopkis = Prikopki::query()
@@ -143,7 +134,7 @@ class PrikopkiController extends Controller
             ->where('sevooborot.pole_id', $pole)
             ->groupBy('production_type');
 
-        return view('prikopki.show', ['prikopkis' => $prikopkis, 'fractions' => $fractions]);
+        return view('prikopki.show', ['prikopkis' => $prikopkis, 'fractions' => $fractions, 'year' => $year]);
     }
 
 }
