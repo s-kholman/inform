@@ -9,21 +9,54 @@
                     @csrf
                     <div class="row mb-3">
                         <label for="fio" class="col-sm-2 col-form-label">ФИО</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="fio" id="fio">
+                        <div class="col-sm-6">
+                            <input
+                                type="text"
+                                class="form-control @error('fio') is-invalid @enderror"
+                                name="fio"
+                                id="fio"
+                                value="{{old('fio')}}"
+                            >
+                            @error('fio')
+                            <span class="invalid-feedback">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="phone" class="col-sm-2 col-form-label">Телефон</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="phone" id="phone">
+                        <div class="col-sm-6">
+                            <input
+                                type="text"
+                                class="form-control @error('phone') is-invalid @enderror"
+                                name="phone"
+                                id="phone"
+                                value="{{old('phone')}}"
+                            >
+                            @error('phone')
+                            <span class="invalid-feedback">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <label for="limit" class="col-sm-2 col-form-label">Лимит</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="limit" id="limit">
+                        <div class="col-sm-6">
+                            <input
+                                type="text"
+                                class="form-control @error('limit') is-invalid @enderror"
+                                name="limit"
+                                id="limit"
+                                value="{{old('limit')}}"
+                            >
+                            @error('limit')
+                            <span class="invalid-feedback">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
 

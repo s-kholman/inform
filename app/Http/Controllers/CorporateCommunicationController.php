@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CorporateCommunicationRequest;
 use App\Models\PhoneDetail;
 use App\Models\PhoneLimit;
-use Illuminate\Http\Request;
 
 class CorporateCommunicationController extends Controller
 {
@@ -38,7 +38,7 @@ class CorporateCommunicationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CorporateCommunicationRequest $request)
     {
         PhoneLimit::query()->updateOrCreate([
             'phone' => $request->phone,
@@ -76,11 +76,12 @@ class CorporateCommunicationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CorporateCommunicationRequest $request, $communication)
     {
         PhoneLimit::query()->updateOrCreate([
-            'phone' => $request->phone,
+            'id' => $communication
         ], [
+                'phone' => $request->phone,
                 'fio' => $request->fio,
                 'limit' => $request->limit,
                 'active' => true
