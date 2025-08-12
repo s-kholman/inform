@@ -16,6 +16,8 @@ use App\Http\Controllers\CounterpartyController;
 use App\Http\Controllers\CultivationController;
 use App\Http\Controllers\CurrentStatusController;
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\DeviceESPController;
+use App\Http\Controllers\DeviceESPSettingsController;
 use App\Http\Controllers\DeviceNameController;
 use App\Http\Controllers\FactoryGuesController;
 use App\Http\Controllers\FactoryMaterialController;
@@ -38,6 +40,7 @@ use App\Http\Controllers\PrikopkiController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductMonitoringControlController;
 use App\Http\Controllers\ProductMonitoringController;
+use App\Http\Controllers\ProductMonitoringDeviceController;
 use App\Http\Controllers\ProductMonitoringReportController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RoleController;
@@ -96,6 +99,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'index')->name('/');
+/**
+ *ESP
+ *
+ *
+ */
+
+Route::get('esp/settings', [DeviceESPSettingsController::class, 'show'])->name('esp.settings.show');
+Route::get('product/monitoring/devices', [ProductMonitoringDeviceController::class, 'show'])->name('product.monitoring.devices.show');
+Route::post('esp/settings/store', [DeviceESPSettingsController::class, 'store'])->name('esp.settings.store');
 
 /**
  * Посевная
