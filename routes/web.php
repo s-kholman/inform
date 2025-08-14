@@ -308,7 +308,7 @@ Route::get('/pass/index', [PassFilialController::class, 'index'])->middleware('c
 Route::get('/pass/check', [PassFilialController::class, 'check']);
 Route::post('/pass/store', [PassFilialController::class, 'store'])->middleware('can:PassFilial.completed.create')->name('pass.filial.store');
 
-//Route::get('test', \App\Http\Controllers\XML\XMLParseController::class);
+Route::get('test', \App\Http\Controllers\TestController::class);
 
 //Route::get('test', App\Http\Controllers\TermoPrinter\TermoPrinterController::class)->middleware('auth');
 

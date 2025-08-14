@@ -36,11 +36,11 @@
             @foreach($monitoring as $id => $value)
                 <tr>
                     <td>{{$value->created_at}}</td>
-                    <td>{{$value->temperaturePointOne}}</td>
-                    <td>{{$value->temperaturePointTwo}}</td>
-                    <td>{{$value->temperaturePointThree}}</td>
+                    <td>{{round($value->temperaturePointOne, 1)}}</td>
+                    <td>{{round($value->temperaturePointTwo, 1)}}</td>
+                    <td>{{round($value->temperaturePointThree, 1)}}</td>
                     <td>{{$value->device_e_s_p_id}}</td>
-                    <td>{{$value->ADC}}</td>
+                    <td>{{round(4.2/812*$value->ADC, 3)}}v</td>
                     <td>{{$value->RSSI}}</td>
                     <td>{{$value->version}}</td>
                 </tr>

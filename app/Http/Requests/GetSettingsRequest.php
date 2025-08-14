@@ -22,7 +22,7 @@ class GetSettingsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'deviceESP_id'
+            'id' => 'required'
         ];
     }
 }

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('device_e_s_p_id')->unique();
             $table->boolean('update_status')->default(false);
             $table->string('update_url')->nullable();
-            $table->json('thermometers')->nullable();
             $table->timestamps();
         });
     }

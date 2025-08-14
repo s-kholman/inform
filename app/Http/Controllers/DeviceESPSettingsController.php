@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeviceESPSettingsRequest;
 use App\Models\DeviceESP;
 use App\Models\DeviceESPSettings;
 use App\Models\DeviceThermometer;
+use App\Models\StorageName;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,16 +17,44 @@ class DeviceESPSettingsController extends Controller
     {
         $devices = DeviceESP::query()->get();
 
+        $storageNames = StorageName::query()->get();
+
         $thermometers = DeviceThermometer::query()
-            ->where('used', false)
+            ->where('device_e_s_p_id', null)
             ->get()
             ;
 
-        return response()->view('esp.show', ['devices' => $devices, 'thermometers' => $thermometers]);
+        return response()->view('esp.show',
+            [
+                'devices' => $devices,
+                'thermometers' => $thermometers,
+                'storageNames' => $storageNames,
+            ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(DeviceESPSettingsRequest $request): RedirectResponse
     {
+
+        DeviceESP::query()
+            ->where('id', $request->deviceESP)
+            ->update(
+                [
+                    'status' => boolval($request->deviceActivate),
+                    'description' => $request->description,
+                    'storage_name_id' => $request->storageName,
+                ]);
+
+        if ($request->thermometers <> null){
+            DeviceThermometer::query()
+                ->where('serial_number', $request->thermometers)
+                ->update(
+                    [
+                        'device_e_s_p_id' => $request->deviceESP,
+                        'temperature_point_id' => $request->pointSelect
+                    ]
+                );
+        }
+
 
         DeviceESPSettings::query()
             ->updateOrCreate(
@@ -32,7 +62,6 @@ class DeviceESPSettingsController extends Controller
                 [
                     'update_status' => $request->update_status,
                     'update_url' =>$request->update_url ,
-                    'thermometers' =>json_encode($request->thermometers),
                 ]
             );
         return \response()->redirectTo('esp/settings');

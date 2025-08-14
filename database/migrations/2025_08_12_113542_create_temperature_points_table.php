@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('device_thermometers', function (Blueprint $table) {
+        Schema::create('temperature_points', function (Blueprint $table) {
             $table->id();
-            $table->string('serial_number')->unique();
-            $table->foreignId('device_e_s_p_id')->nullable();
-            $table->foreignId('temperature_point_id')->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('device_thermometers');
+        Schema::dropIfExists('temperature_points');
     }
 };
