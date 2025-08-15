@@ -28,7 +28,7 @@ class DeviceESPSettingsRequest extends FormRequest
             'storageName' => 'required_if:deviceActivate,1',
             'deviceActivate' => 'required|boolean',
             'update_status' => 'required|boolean',
-            'update_url' => 'required|active_url',
+            'updateBin' => 'required_if:update_status,1',
             'thermometers' => 'nullable',
             'pointSelect' => 'nullable|required_with:thermometers',
         ];
@@ -39,7 +39,8 @@ class DeviceESPSettingsRequest extends FormRequest
         return [
             'required' => 'Поле обязательно для заполнения',
             'max' => 'Максимальное значение :max символов',
-            'required_if' => 'Для активации необходимо указать место установки',
+            'storageName.required_if' => 'Для активации необходимо указать место установки',
+            'updateBin.required_if' => 'Выберите версию прошивки',
             'active_url' => 'Проверьте URL',
             'required_with' => 'При выборе термометра необходимо указать точку измерения'
         ];

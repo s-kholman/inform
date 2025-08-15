@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('temperature_points', function (Blueprint $table) {
+        Schema::create('device_e_s_p_updates', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('pointTable')->nullable();
+            $table->date('date');
+            $table->string('url');
+            $table->string('version');
+            $table->text('description');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('temperature_points');
+        Schema::dropIfExists('device_e_s_p_updates');
     }
 };

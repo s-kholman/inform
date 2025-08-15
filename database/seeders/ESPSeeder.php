@@ -20,6 +20,9 @@ class ESPSeeder extends Seeder
             'Точка замера 1',
             'Точка замера 2',
             'Точка замера 3',
+            'Точка замера 4',
+            'Точка замера 5',
+            'Точка замера 6',
         ];
 
         $thermometers = [
@@ -28,14 +31,18 @@ class ESPSeeder extends Seeder
 		    '14284435012912183080'
         ];
 
+
+        $index = 1;
         foreach ($point as $value)
         {
             TemperaturePoint::query()
                 ->create(
                     [
                         'name' => $value,
+                        'pointTable' => $index
                     ]
                 )->get();
+            $index++;
         }
 
         foreach ($thermometers as $thermometer){
@@ -47,7 +54,7 @@ class ESPSeeder extends Seeder
                 );
         }
 
-        DeviceESP::query()
+/*        DeviceESP::query()
             ->create(
                 [
                     'mac' => '8C:AA:B5:51:0B:E1',
@@ -58,9 +65,10 @@ class ESPSeeder extends Seeder
 
         DeviceESPSettings::query()
             ->create(
+
                 [
                     'device_e_s_p_id' => 1,
                 ]
-            );
+            );*/
     }
 }

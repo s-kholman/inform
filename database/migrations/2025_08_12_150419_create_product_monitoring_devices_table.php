@@ -17,13 +17,16 @@ return new class extends Migration
             $table->float('temperaturePointOne')->nullable();
             $table->float('temperaturePointTwo')->nullable();
             $table->float('temperaturePointThree')->nullable();
+            $table->float('temperaturePointFour')->nullable();
+            $table->float('temperaturePointFive')->nullable();
+            $table->float('temperaturePointSix')->nullable();
             $table->float('temperatureHumidity')->nullable();
             $table->float('humidity')->nullable();
             $table->foreignId('harvest_year_id');
             $table->foreignId('device_e_s_p_id');
             $table->integer('ADC')->nullable();
             $table->string('RSSI')->nullable();
-            $table->string('version')->nullable();
+            $table->foreignId('device_e_s_p_update_id')->nullable();
             $table->timestamps();
         });
     }

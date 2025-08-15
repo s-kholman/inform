@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DeviceESPSettingsRequest;
 use App\Models\DeviceESP;
 use App\Models\DeviceESPSettings;
+use App\Models\DeviceESPUpdate;
 use App\Models\DeviceThermometer;
 use App\Models\StorageName;
 use Illuminate\Http\RedirectResponse;
@@ -24,11 +25,15 @@ class DeviceESPSettingsController extends Controller
             ->get()
             ;
 
+        $updateBin = DeviceESPUpdate::query()
+            ->get();
+
         return response()->view('esp.show',
             [
                 'devices' => $devices,
                 'thermometers' => $thermometers,
                 'storageNames' => $storageNames,
+                'updateBin' => $updateBin
             ]);
     }
 
@@ -61,9 +66,10 @@ class DeviceESPSettingsController extends Controller
                 ['device_e_s_p_id' => $request->deviceESP],
                 [
                     'update_status' => $request->update_status,
-                    'update_url' =>$request->update_url ,
+                    'device_e_s_p_updates_id' => $request->updateBin,
                 ]
             );
+
         return \response()->redirectTo('esp/settings');
     }
 }

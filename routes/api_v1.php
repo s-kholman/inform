@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\v1\ESP\ConfirmationController;
 use App\Http\Controllers\Api\v1\ESP\GetSettingsController;
 use App\Http\Controllers\Api\v1\ESP\StatusController;
+use App\Http\Controllers\Api\v1\ESP\StorageToDeviceController;
 use App\Http\Controllers\Api\v1\ESP\TemperatureHandlerController;
 use App\Http\Controllers\Api\v1\ESP\ThermometerDeactivate;
 use App\Http\Controllers\Api\v1\IkeVpnController;
@@ -31,3 +32,4 @@ Route::post('esp/confirmation', ConfirmationController::class);
 Route::post('esp/temperature', TemperatureHandlerController::class);
 Route::post('esp/get/settings', GetSettingsController::class);
 Route::post('esp/thermometer/deactivate', ThermometerDeactivate::class);
+Route::post('esp/storage/device/get', StorageToDeviceController::class);

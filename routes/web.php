@@ -18,6 +18,7 @@ use App\Http\Controllers\CurrentStatusController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\DeviceESPController;
 use App\Http\Controllers\DeviceESPSettingsController;
+use App\Http\Controllers\DeviceESPUpdateController;
 use App\Http\Controllers\DeviceNameController;
 use App\Http\Controllers\FactoryGuesController;
 use App\Http\Controllers\FactoryMaterialController;
@@ -104,6 +105,9 @@ Route::view('/', 'index')->name('/');
  *
  *
  */
+Route::get('esp/upload/bin', [DeviceESPUpdateController::class, 'index'])->name('esp.upload.bin.index');
+Route::post('esp/upload/bin', [DeviceESPUpdateController::class, 'store'])->name('esp.upload.bin.store');
+
 
 Route::get('esp/settings', [DeviceESPSettingsController::class, 'show'])->name('esp.settings.show');
 Route::get('product/monitoring/devices', [ProductMonitoringDeviceController::class, 'show'])->name('product.monitoring.devices.show');

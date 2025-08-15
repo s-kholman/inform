@@ -6,7 +6,6 @@ use App\Actions\harvest\HarvestAction;
 use App\Models\DeviceESP;
 use App\Models\DeviceESPSettings;
 use App\Models\DeviceThermometer;
-use App\Models\HarvestYear;
 use App\Models\ProductMonitoringDevice;
 use Illuminate\Http\JsonResponse;
 
@@ -47,15 +46,14 @@ class DeviceESPController extends Controller
     private function getSettings(): void
     {
         $settings = DeviceESPSettings::query()
+            ->with('deviceESPUpdate')
             ->where('device_e_s_p_id', $this->modelESP->id)
             ->first()
             ;
 
         $thermometers = DeviceThermometer::query()
-           // ->select('serial_number')
             ->where('device_e_s_p_id', $this->modelESP->id)
             ->pluck('serial_number')
-            //->toJson()
         ;
 
 
@@ -63,49 +61,39 @@ class DeviceESPController extends Controller
 
         if ($settings->update_status){
             $this->settings['fingerprint'] = '520f6fd0b3234e7530e7c0c7102fbcffe75701ae';
-                $this->settings['update_url'] = $settings->update_url;
+                $this->settings['update_url'] = $settings->deviceESPUpdate->url;
+                DeviceESPSettings::query()
+                    ->where('device_e_s_p_id', $this->modelESP->id)
+                    ->update(['update_status' => false]);
             } else{
             $this->settings['temperature'] = true;
                 //$this->settings['thermometer'] = json_decode($settings->thermometers);
-                $this->settings['thermometer'] =$thermometers;
+                $this->settings['thermometer'] = $thermometers;
             }
 
     }
 
-    private function store()//: void
+    private function store(): void
     {
-/*        $thermometers = json_decode($this->data['temperature']);
 
-        foreach ($thermometers as $thermometer => $value){
-            $this->settings[$thermometer] = $value;
-        }*/
         $harvest = new HarvestAction();
         $point = [];
 
-/*
- *         $thermometes = DeviceThermometer::query()
-            ->select('temperature_point_id', 'serial_number')
-            ->where('device_e_s_p_id',1)
-            ->get()
-            ;
-        $temp = $thermometes->where('serial_number', '18031439798487315240');
-        dd($temp[0]->temperature_point_id);*/
-
         $thermometers = DeviceThermometer::query()
             ->select(['temperature_point_id', 'serial_number'])
+            ->with('TemperaturePoint')
             ->where('device_e_s_p_id',$this->modelESP->id)
             ->get()
-            //->toArray();
-            ;
+            ->groupBy('serial_number')
+            ->toArray()
+        ;
 
-         foreach ($this->data['temperature'] as $thermometer => $value)
-         {
-             $id = $thermometers->where('serial_number', $thermometer)->first()->temperature_point_id ?? 0;
-             $point [$id] = $value;
-
-         }
-
-         unset($point [0]);
+            foreach ($this->data['temperature'] as $serial_number => $temperature)
+            {
+                if (array_key_exists($serial_number, $thermometers)){
+                    $point [$thermometers[$serial_number][0]['temperature_point']['pointTable']] = $temperature;
+                }
+            }
 
 
         if (!empty($point) && $this->modelESP->storage_name_id <> null)
@@ -117,22 +105,21 @@ class DeviceESPController extends Controller
                         'temperaturePointOne' => $point[1] ?? 0,
                         'temperaturePointTwo' => $point[2] ?? 0,
                         'temperaturePointThree' => $point[3] ?? 0,
+                        'temperaturePointFour' => $point[4] ?? 0,
+                        'temperaturePointFive' => $point[5] ?? 0,
+                        'temperaturePointSix' => $point[6] ?? 0,
                         'temperatureHumidity' => null,
                         'humidity' => null,
                         'harvest_year_id' => $harvest->HarvestYear(now()),
                         'device_e_s_p_id' => $this->modelESP->id,
                         'ADC' => $this->data['ADC'] ?? 0,
                         'RSSI' => $this->data['RSSI'] ?? null,
-                        'version'  => $this->data['version'] ?? null,
+                        'device_e_s_p_update_id'  => null,
                     ]
                 );
             $this->settings['messages'] =  'Ok';
         } else{
             $this->settings['messages'] =  'Нет данных для сохранения';
         }
-
-
     }
-
-
 }

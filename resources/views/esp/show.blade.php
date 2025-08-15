@@ -57,33 +57,39 @@
                     <strong>{{ $message }}</strong>
                 </span>
         @enderror
-
-        <label for="update_status">Статус обновления</label>
-        <select name="update_status" id="update_status" class="form-select @error('update_status') is-invalid @enderror" disabled>
-           {{--<option value="0">Не обновлять</option>--}}
-            {{-- <option value="0">Обновить</option>--}}
-        </select>
-        @error('update_status')
-        <span class="invalid-feedback">
-                    <strong>{{ $message }}</strong>
-                </span>
-        @enderror
-
-        <label for="update_url">URL обновления</label>
-        <input placeholder="URL обновления"
-               class="form-control @error('update_url') is-invalid @enderror"
-               value="https://develop.krimm.ru/storage/esp/update/temperature_v1.ino.bin"
-               id="update_url"
-               name="update_url"
-        >
-        @error('update_url')
-        <span class="invalid-feedback">
-                        <strong>{{$message}}</strong>
-                    </span>
-        @enderror
         <div class="row">
             <div class="col-6">
-                <label for="thermometers">Выберите термометр</label>
+                <label for="update_status">Статус обновления</label>
+                <select name="update_status" id="update_status" class="form-select @error('update_status') is-invalid @enderror" disabled>
+                </select>
+                @error('update_status')
+                <span class="invalid-feedback">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+            <div class="col-6">
+                <label for="updateBin">Версия</label>
+                <select name="updateBin" id="updateBin" class="form-select @error('updateBin') is-invalid @enderror" disabled>
+                    <option value=""></option>
+                    @forelse($updateBin as $version)
+                        <option value="{{ $version->id }}"> {{$version->version}}  -  {{\Illuminate\Support\Carbon::parse($version->date)->format('d.m.Y')}} </option>
+                    @empty
+                    @endforelse
+                </select>
+                @error('updateBin')
+                <span class="invalid-feedback">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-6">
+                <label for="thermometers">Термометр</label>
                 <select name="thermometers" id="thermometers" class="form-select @error('thermometers') is-invalid @enderror" disabled="true">
                     <option value=""></option>
                     @forelse($thermometers as $thermometer)
@@ -99,7 +105,7 @@
                 @enderror
             </div>
             <div class="col-6">
-                <label for="pointSelect">Выберите точку измерения</label>
+                <label for="pointSelect">Точка измерения</label>
                 <select name="pointSelect" id="pointSelect" class="form-select @error('pointSelect') is-invalid @enderror" disabled="true">
                     <option></option>
                 </select>
@@ -130,6 +136,7 @@
 @endsection('info')
 @section('script')
     <script>
+        const url = window.location.origin;
         const deviceESP = document.getElementById('deviceESP')
         const labelText = document.getElementById('labelText')
         const updateStatus = document.getElementById('update_status')
@@ -139,15 +146,35 @@
         const deviceActivateSelect = document.getElementById('deviceActivate')
         const description = document.getElementById('description')
         const storageNameSelect = document.getElementById('storageName')
-        const button2 = document.querySelector('.thermometer');
+        const updateBinSelect = document.getElementById('updateBin')
 
+        //const button2 = document.querySelector('.thermometer');
+
+        function changeUpdateStatusToUpdateBin(event)
+        {
+            if(event == '1'){
+                updateBinSelect.disabled = false
+            } else {
+                updateBinSelect.disabled = true
+            }
+
+        }
+
+        updateStatus.addEventListener('change', (event) =>{
+            changeUpdateStatusToUpdateBin(event.target.value)
+        })
+
+        storageNameSelect.addEventListener('change', (event) => {
+
+            if (deviceESP.options[deviceESP.selectedIndex].value == ''){
+                storageToDevice(event.target.value);
+            }
+        })
 
         document.body.addEventListener('dblclick', function(event) {
             if (event.target.classList.contains('thermometer')) {
-                //event.preventDefault()
                 thermometerDeactivate(event.target.id)
                 location.reload()
-                //console.log('Нажатие на динамический элемент:', event.target.id);
             }
         });
 
@@ -155,13 +182,10 @@
             if (event.target.classList.contains('thermometer')) {
                 event.preventDefault()
                 labelText.textContent = 'Двойной клик для отвязки от устройства'
-                //thermometerDeactivate(event.target.id)
-                //console.log('Нажатие на динамический элемент:', event.target.id);
             }
         });
 
         thermometersSelect.addEventListener('change', () =>{
-           // console.log(thermometersSelect.selectedIndex)
             if(thermometersSelect.selectedIndex > 0){
                 pointSelect.disabled = false
             } else {
@@ -174,15 +198,16 @@
             if(deviceESP.selectedIndex > 0){
                 thermometersSelect.disabled = false
             } else {
+                storageNameSelect.value = 0;
                 thermometersSelect.disabled = true
             }
             getSetting(deviceESP.options[deviceESP.selectedIndex].value);
         });
 
-        async function thermometerDeactivate(serial_number){
+        async function storageToDevice(storage_id){
             let formData = new FormData
-            formData.append('serial_number', serial_number)
-            const response = await fetch('https://develop.krimm.ru' + '/api/v1/esp/thermometer/deactivate',
+            formData.append('storage_id', storage_id)
+            const response = await fetch(url + '/api/v1/esp/storage/device/get',
                 {
                     method: 'POST',
                     headers:
@@ -192,22 +217,38 @@
                     body: formData,
                 })
             const data = await response.json()
-/*            console.log(data['message'])
-            if(data['message'] == 'Ok'){
-                console.log('Деактивирован = ' + serial_number)
-            } else {
-                console.log('Не деактивирован ' + serial_number)
-            }*/
+
+            if (data['message'] != 'empty'){
+
+                await getSetting(data['message']);
+                thermometersSelect.disabled = false
+            }
+        }
+
+        async function thermometerDeactivate(serial_number){
+            let formData = new FormData
+            formData.append('serial_number', serial_number)
+            const response = await fetch(url + '/api/v1/esp/thermometer/deactivate',
+                {
+                    method: 'POST',
+                    headers:
+                        {
+                            "Accept": "application/json",
+                        },
+                    body: formData,
+                })
+            const data = await response.json()
         }
 
         async function getSetting(id){
             clearButtonThermometer()
             clearForm()
+
             if(+id > 0){
                 try {
                     let formData = new FormData
                     formData.append('id', id)
-                    const response = await fetch('https://develop.krimm.ru' + '/api/v1/esp/get/settings',
+                    const response = await fetch(url + '/api/v1/esp/get/settings',
                         {
                             method: 'POST',
                             headers:
@@ -217,18 +258,18 @@
                             body: formData,
                         })
                     const data = await response.json()
+                   // console.log(data)
                     if (data['device_e_s_p_id'] == id) {
                         labelText.textContent = 'Ответ получен'
                         let device = data
-                        //console.log(data['deviceActivation']['status'])
                         for (let key in device) {
-                            //console.log(key + ": " + device[key]);
+                           // console.log(device)
                             if(key == "device_thermometer"){
                                 for(let thermometer in device[key]){
-                                    //console.log(device[key]);
                                     for (let serial in device[key][thermometer]){
+
                                         if (serial == 'serial_number'){
-                                            viewThermometer(device[key][thermometer][serial])
+                                            viewThermometer(device[key][thermometer][serial] + ' - (' + device[key][thermometer]['temperature_point']['name'] + ')')
                                         }
                                     }
                                 }
@@ -237,12 +278,14 @@
                                 point(device, key)
                             }
                         }
+
+                        updateBinSelected(data['deviceUpdate'])
                         updateStatusElement(data['update_status'])
                         deviceActivateStatus(data['deviceActivation']['status'])
                         descriptionElement(data['deviceActivation']['description'])
                         storageSelected(data['deviceActivation']['storage_name_id'])
+                        deviceESP.value = id;
 
-                        // console.log(data.data[0])
                     } else if(data['deviceActivation']['status'] == false){
                         deviceActivateStatus(false)
                         updateStatusElement(false)
@@ -262,7 +305,17 @@
             }
 
         }
+
+        function updateBinSelected(deviceUpdate) {
+
+            if(!deviceUpdate['message'] != ''){
+                updateBinSelect.value = deviceUpdate['id']
+                //console.log(deviceUpdate['id'])
+            }
+        }
+
             function clearForm() {
+                updateBinSelect.value = ''
                 description.value = '';
 
                 updateStatus.textContent = '';
@@ -294,7 +347,7 @@
 
             function storageSelected(id)
             {
-                storageNameSelect[+id].selected = true;
+                storageNameSelect.value = id
             }
 
             function updateStatusElement(update_status)
@@ -304,6 +357,7 @@
                 updateStatus.add(new Option("Не обновлять", "0"));
                 updateStatus.add(new Option("Обновить", "1"));
                 updateStatus[+update_status].selected = true;
+                changeUpdateStatusToUpdateBin(updateStatus.value)
             }
 
             function clearButtonThermometer(){

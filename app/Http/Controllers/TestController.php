@@ -12,43 +12,56 @@ class TestController extends Controller
 {
     public function __invoke()
     {
-        $ret = DeviceESPSettings::query()
+        $deviceSettings = DeviceESPSettings::query()
             ->where('device_e_s_p_id', 1)
-            ->with('deviceThermometer')
+            ->with(['deviceThermometer', 'deviceESPUpdate'])
             ->first()
         ;
 
-/*        $point = DeviceThermometer::query()
-            ->select('serial_number')
-            ->where('device_e_s_p_id', 1)
-            ->join('temperature_points', 'temperature_points.id', '<>', 'device_thermometers.temperature_point_id')
+        dump($deviceSettings->deviceESPUpdate);
+        dd($deviceSettings);
+        /**/
+
+        $data = [
+            "temperature" =>
+               ["18031439798487315240" => 24.8125],
+               ["17238757885560118056" => 25.25],
+               ["14284435012912183080" => 25.375]
+        ];
+
+/*        $data = [
+            "temperature" =>
+            []
+        ];*/
+
+        /*$thermometers = DeviceThermometer::query()
+            ->select(['temperature_point_id', 'serial_number'])
+            ->with('TemperaturePoint')
+            ->where('device_e_s_p_id',1)
             ->get()
-            ;*/
-
-        $usedPoint = DB::table('device_thermometers')
-            ->select('temperature_point_id')
-            ->where('device_e_s_p_id', 1)
-            //->where('temperature_point_id', '<>', null)
+            ->groupBy('serial_number')
+            ->toArray()
         ;
+        $point = [];
+        dump($thermometers);
+        foreach ($data as $value)
+        {
+            foreach ($value as $serial_number => $temperature)
+            {
+                dump($value);
+                if (array_key_exists($serial_number, $thermometers)){
+                    $point [$thermometers[$serial_number][0]['temperature_point']['pointTable']] = $temperature;
+                }
 
-        $point = DB::table('temperature_points')
-            ->whereNotIn('id', $usedPoint)
-            ->orderBy('name')
-            ->get()
+            }
 
-        ;
-        dd($point);
+           // dump($pointTable);
+            //
+           // $id = $thermometers->where('serial_number', $thermometer)->first()->temperature_point_id ?? 0;
+            //$point [$pointTable] = $value[0];
+        }*/
 
-        $point = TemperaturePoint::query()
-            ->select('device_thermometers.id as therm', 'temperature_points.id', 'device_e_s_p_id', 'temperature_points.name')
-            ->leftJoin('device_thermometers', 'device_thermometers.temperature_point_id', '=', 'temperature_points.id')
-            //->where('device_thermometers.device_e_s_p_id', '=', 1)
-            //->whereNotIn('device_thermometers.temperature_point_id')
-            ->get()
-
-        ;
-
-
-        dd($point);
+        dump($point);
+        dd('stop');
     }
 }

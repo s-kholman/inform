@@ -8,6 +8,7 @@ use App\Http\Resources\DeviceESPSettingGetResource;
 use App\Http\Resources\DeviceESPSettingsResource;
 use App\Models\DeviceESP;
 use App\Models\DeviceESPSettings;
+use App\Models\DeviceESPUpdate;
 use App\Models\DeviceThermometer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,9 +38,18 @@ class GetSettingsController extends Controller
 
         $deviceSettings = DeviceESPSettings::query()
             ->where('device_e_s_p_id', $request->id)
-            ->with('deviceThermometer')
+            ->with(['deviceThermometer', 'deviceESPUpdate', 'deviceThermometer.TemperaturePoint'])
             ->first()
             ;
+
+        $deviceUpdate = $deviceSettings->deviceESPUpdate;
+
+        if (empty($deviceUpdate)){
+            $arrayPoint ['deviceUpdate'] = ['message' => "Настройки прошивки найдены"];
+        } else{
+            $arrayPoint ['deviceUpdate'] = $deviceUpdate->toArray();
+        }
+
         if (empty($deviceSettings)){
             $deviceSettingsSend ['message'] = "Настройки не найдены";
         } else{
@@ -63,6 +73,7 @@ class GetSettingsController extends Controller
 
         $array = array_merge($deviceSettingsSend, $arrayPoint);
         //return Response::json($ret);
+
         return Response::json($array);
         //return $ret;
        return DeviceESPSettingGetResource::collection($ret);

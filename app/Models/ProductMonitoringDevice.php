@@ -15,12 +15,15 @@ class ProductMonitoringDevice extends Model
             'temperaturePointOne',
             'temperaturePointTwo',
             'temperaturePointThree',
+            'temperaturePointFour',
+            'temperaturePointFive',
+            'temperaturePointSix',
             'temperatureHumidity',
             'humidity',
             'harvest_year_id',
             'device_e_s_p_id',
             'ADC',
             'RSSI',
-            'version',
+            'device_e_s_p_update_id',
         ];
 }
