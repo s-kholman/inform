@@ -20,6 +20,7 @@ use App\Http\Controllers\DeviceESPController;
 use App\Http\Controllers\DeviceESPSettingsController;
 use App\Http\Controllers\DeviceESPUpdateController;
 use App\Http\Controllers\DeviceNameController;
+use App\Http\Controllers\DeviceThermometerController;
 use App\Http\Controllers\FactoryGuesController;
 use App\Http\Controllers\FactoryMaterialController;
 use App\Http\Controllers\FilialController;
@@ -105,6 +106,10 @@ Route::view('/', 'index')->name('/');
  *
  *
  */
+Route::get('esp/thermometer/show', [DeviceThermometerController::class, 'index'])->name('esp.thermometer.index');
+Route::get('esp/thermometer/create', [DeviceThermometerController::class, 'create'])->name('esp.thermometer.create');
+Route::post('esp/thermometer/store', [DeviceThermometerController::class, 'store'])->name('esp.thermometer.store');
+
 Route::get('esp/upload/bin', [DeviceESPUpdateController::class, 'index'])->name('esp.upload.bin.index');
 Route::post('esp/upload/bin', [DeviceESPUpdateController::class, 'store'])->name('esp.upload.bin.store');
 

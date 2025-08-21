@@ -14,18 +14,18 @@ return new class extends Migration
         Schema::create('product_monitoring_devices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('storage_name_id');
-            $table->float('temperaturePointOne')->nullable();
-            $table->float('temperaturePointTwo')->nullable();
-            $table->float('temperaturePointThree')->nullable();
-            $table->float('temperaturePointFour')->nullable();
-            $table->float('temperaturePointFive')->nullable();
-            $table->float('temperaturePointSix')->nullable();
-            $table->float('temperatureHumidity')->nullable();
-            $table->float('humidity')->nullable();
+            $table->float('temperature_point_one')->nullable()->default(null);
+            $table->float('temperature_point_two')->nullable()->default(null);
+            $table->float('temperature_point_three')->nullable()->default(null);
+            $table->float('temperature_point_four')->nullable()->default(null);
+            $table->float('temperature_point_five')->nullable()->default(null);
+            $table->float('temperature_point_six')->nullable()->default(null);
+            $table->float('temperature_humidity')->nullable()->default(null);
+            $table->float('humidity')->nullable()->default(null);
             $table->foreignId('harvest_year_id');
             $table->foreignId('device_e_s_p_id');
-            $table->integer('ADC')->nullable();
-            $table->string('RSSI')->nullable();
+            $table->integer('adc')->nullable();
+            $table->string('rssi')->nullable();
             $table->foreignId('device_e_s_p_update_id')->nullable();
             $table->timestamps();
         });

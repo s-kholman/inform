@@ -269,7 +269,7 @@
                                     for (let serial in device[key][thermometer]){
 
                                         if (serial == 'serial_number'){
-                                            viewThermometer(device[key][thermometer][serial] + ' - (' + device[key][thermometer]['temperature_point']['name'] + ')')
+                                            viewThermometer(device[key][thermometer][serial], device[key][thermometer][serial] + ' - (' + device[key][thermometer]['temperature_point']['name'] + ')')
                                         }
                                     }
                                 }
@@ -364,11 +364,11 @@
                 while (thermometers_view.firstChild) { thermometers_view.removeChild(thermometers_view.firstChild) }
             }
 
-            function viewThermometer(name){
+            function viewThermometer(serial, name){
                 btn = document.createElement("Button");
                 btn.setAttribute( 'class', 'btn btn-danger mt-2 thermometer' );
                 btn.innerText = "Отвязать - "+name;
-                btn.id = name
+                btn.id = serial
                 thermometers_view.appendChild(btn)
             }
 

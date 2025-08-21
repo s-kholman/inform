@@ -42,7 +42,7 @@ class GetSettingsController extends Controller
             ->first()
             ;
 
-        $deviceUpdate = $deviceSettings->deviceESPUpdate;
+        $deviceUpdate = $deviceSettings->deviceESPUpdate ?? null;
 
         if (empty($deviceUpdate)){
             $arrayPoint ['deviceUpdate'] = ['message' => "Настройки прошивки найдены"];

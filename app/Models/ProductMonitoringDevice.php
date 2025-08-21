@@ -12,18 +12,18 @@ class ProductMonitoringDevice extends Model
     protected $fillable =
         [
             'storage_name_id',
-            'temperaturePointOne',
-            'temperaturePointTwo',
-            'temperaturePointThree',
-            'temperaturePointFour',
-            'temperaturePointFive',
-            'temperaturePointSix',
-            'temperatureHumidity',
+            'temperature_point_one',
+            'temperature_point_two',
+            'temperature_point_three',
+            'temperature_point_four',
+            'temperature_point_five',
+            'temperature_point_six',
+            'temperature_humidity',
             'humidity',
             'harvest_year_id',
             'device_e_s_p_id',
-            'ADC',
-            'RSSI',
+            'adc',
+            'rssi',
             'device_e_s_p_update_id',
         ];
 }

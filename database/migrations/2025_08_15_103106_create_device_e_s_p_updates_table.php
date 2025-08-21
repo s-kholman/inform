@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->string('url');
-            $table->string('version');
+            $table->string('version')->unique();
             $table->text('description');
             $table->timestamps();
         });

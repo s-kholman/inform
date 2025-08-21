@@ -12,14 +12,17 @@ class TestController extends Controller
 {
     public function __invoke()
     {
-        $deviceSettings = DeviceESPSettings::query()
+
+dd($_SERVER['SERVER_NAME']);
+
+        $settings = DeviceESPSettings::query()
+            ->with('deviceESPUpdate')
             ->where('device_e_s_p_id', 1)
-            ->with(['deviceThermometer', 'deviceESPUpdate'])
             ->first()
         ;
 
-        dump($deviceSettings->deviceESPUpdate);
-        dd($deviceSettings);
+        dump($settings->deviceESPUpdate->url);
+        dd($settings);
         /**/
 
         $data = [

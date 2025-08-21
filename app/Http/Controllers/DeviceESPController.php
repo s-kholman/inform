@@ -102,18 +102,18 @@ class DeviceESPController extends Controller
                 ->create(
                     [
                         'storage_name_id' => $this->modelESP->storage_name_id,
-                        'temperaturePointOne' => $point[1] ?? 0,
-                        'temperaturePointTwo' => $point[2] ?? 0,
-                        'temperaturePointThree' => $point[3] ?? 0,
-                        'temperaturePointFour' => $point[4] ?? 0,
-                        'temperaturePointFive' => $point[5] ?? 0,
-                        'temperaturePointSix' => $point[6] ?? 0,
-                        'temperatureHumidity' => null,
+                        'temperature_point_one' => $point[1] ?? null,
+                        'temperature_point_two' => $point[2] ?? null,
+                        'temperature_point_three' => $point[3] ?? null,
+                        'temperature_point_four' => $point[4] ?? null,
+                        'temperature_point_five' => $point[5] ?? null,
+                        'temperature_point_six' => $point[6] ?? null,
+                        'temperature_humidity' => null,
                         'humidity' => null,
                         'harvest_year_id' => $harvest->HarvestYear(now()),
                         'device_e_s_p_id' => $this->modelESP->id,
-                        'ADC' => $this->data['ADC'] ?? 0,
-                        'RSSI' => $this->data['RSSI'] ?? null,
+                        'adc' => $this->data['ADC'] ?? 0,
+                        'rssi' => $this->data['RSSI'] ?? null,
                         'device_e_s_p_update_id'  => null,
                     ]
                 );

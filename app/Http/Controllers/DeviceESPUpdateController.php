@@ -33,7 +33,7 @@ class DeviceESPUpdateController extends Controller
             }
         }
 
-        $path = url('/'). '/storage' . substr($storage, 6);
+        $path = 'http://'.$_SERVER['SERVER_NAME']. '/storage' . substr($storage, 6);
 
         DeviceESPUpdate::query()
             ->create(
