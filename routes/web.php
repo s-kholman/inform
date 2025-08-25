@@ -16,7 +16,11 @@ use App\Http\Controllers\CounterpartyController;
 use App\Http\Controllers\CultivationController;
 use App\Http\Controllers\CurrentStatusController;
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\DeviceESPController;
+use App\Http\Controllers\DeviceESPSettingsController;
+use App\Http\Controllers\DeviceESPUpdateController;
 use App\Http\Controllers\DeviceNameController;
+use App\Http\Controllers\DeviceThermometerController;
 use App\Http\Controllers\FactoryGuesController;
 use App\Http\Controllers\FactoryMaterialController;
 use App\Http\Controllers\FilialController;
@@ -38,6 +42,7 @@ use App\Http\Controllers\PrikopkiController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductMonitoringControlController;
 use App\Http\Controllers\ProductMonitoringController;
+use App\Http\Controllers\ProductMonitoringDeviceController;
 use App\Http\Controllers\ProductMonitoringReportController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RoleController;
@@ -96,6 +101,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'index')->name('/');
+/**
+ *ESP
+ *
+ *
+ */
+Route::get('esp/thermometer/show', [DeviceThermometerController::class, 'index'])->name('esp.thermometer.index');
+Route::get('esp/thermometer/create', [DeviceThermometerController::class, 'create'])->name('esp.thermometer.create');
+Route::post('esp/thermometer/store', [DeviceThermometerController::class, 'store'])->name('esp.thermometer.store');
+
+Route::get('esp/upload/bin', [DeviceESPUpdateController::class, 'index'])->name('esp.upload.bin.index');
+Route::post('esp/upload/bin', [DeviceESPUpdateController::class, 'store'])->name('esp.upload.bin.store');
+
+
+Route::get('esp/settings', [DeviceESPSettingsController::class, 'show'])->name('esp.settings.show');
+Route::get('product/monitoring/devices', [ProductMonitoringDeviceController::class, 'show'])->name('product.monitoring.devices.show');
+Route::post('esp/settings/store', [DeviceESPSettingsController::class, 'store'])->name('esp.settings.store');
 
 /**
  * Посевная
@@ -296,7 +317,7 @@ Route::get('/pass/index', [PassFilialController::class, 'index'])->middleware('c
 Route::get('/pass/check', [PassFilialController::class, 'check']);
 Route::post('/pass/store', [PassFilialController::class, 'store'])->middleware('can:PassFilial.completed.create')->name('pass.filial.store');
 
-//Route::get('test', \App\Http\Controllers\XML\XMLParseController::class);
+Route::get('test', \App\Http\Controllers\TestController::class);
 
 //Route::get('test', App\Http\Controllers\TermoPrinter\TermoPrinterController::class)->middleware('auth');
 

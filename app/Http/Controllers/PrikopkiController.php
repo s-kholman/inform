@@ -23,6 +23,7 @@ class PrikopkiController extends Controller
     {
         $prikopkis = Prikopki::query()
             ->with(['HarvestYear'])
+            ->where('harvest_year_id', '<>', null)
             ->distinct('harvest_year_id')
             ->get()
             ->sortByDesc('HarvestYear.name');

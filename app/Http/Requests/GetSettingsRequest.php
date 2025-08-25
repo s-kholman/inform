@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ESPStatusRequest extends FormRequest
+class GetSettingsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,19 +22,7 @@ class ESPStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mac' => 'required|mac_address',
-            'version' => 'nullable',
-            '"ADC"' => 'nullable',
-            'RSSI' => 'nullable',
-            'temperature' => 'nullable'
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'mac' => 'не соответствует формату MAC - адресов',
-            'required' => 'Заполните это поле',
+            'id' => 'required'
         ];
     }
 }

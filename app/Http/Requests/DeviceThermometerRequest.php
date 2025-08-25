@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ESPStatusRequest extends FormRequest
+class DeviceThermometerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,19 +22,18 @@ class ESPStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mac' => 'required|mac_address',
-            'version' => 'nullable',
-            '"ADC"' => 'nullable',
-            'RSSI' => 'nullable',
-            'temperature' => 'nullable'
+            'serial_number' => 'required|min:20|max:20|unique:device_thermometers|regex:/^[0-9]+$/u'
         ];
     }
 
     public function messages()
     {
         return [
-            'mac' => 'не соответствует формату MAC - адресов',
-            'required' => 'Заполните это поле',
+            'max' => 'не более двадцати символов',
+            'min' => 'не менее двадцати символов',
+            'required' => 'Обязательно к заполнению',
+            'unique' => 'Значение не уникально',
+            'regex' => 'Только числа'
         ];
     }
 }
