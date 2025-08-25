@@ -46,7 +46,8 @@
                             <td>{{$prikopki['fraction_4']}}</td>
                             <td>{{$prikopki['fraction_5']}}</td>
                             <td>{{$prikopki['fraction_6']}}</td>
-                            <td>{{$prikopki->PrikopkiSquare->name}}&sup2;</td>
+                            <td>{{$prikopki->sevooborot->square}} Га</td>
+                           {{-- <td>{{$prikopki->PrikopkiSquare->name}}&sup2;</td>--}}
                             <td>{{$prikopki['fraction_1'] + $prikopki['fraction_2']+ $prikopki['fraction_3']+ $prikopki['fraction_4']+ $prikopki['fraction_5']+ $prikopki['fraction_6']}}</td>
                             <td>{{$prikopki['comment']}}</td>
                             <td>
