@@ -30,6 +30,7 @@
                         @endforeach
                         <th>Площадь</th>
                         <th>Вес</th>
+                        <th>Валовка</th>
                         <th>Комментарий</th>
                         <th>Действия</th>
                     </tr>
@@ -49,6 +50,7 @@
                             <td>{{$prikopki->sevooborot->square}} Га</td>
                            {{-- <td>{{$prikopki->PrikopkiSquare->name}}&sup2;</td>--}}
                             <td>{{$prikopki['fraction_1'] + $prikopki['fraction_2']+ $prikopki['fraction_3']+ $prikopki['fraction_4']+ $prikopki['fraction_5']+ $prikopki['fraction_6']}}</td>
+                            <td>{{($prikopki['fraction_1'] + $prikopki['fraction_2']+ $prikopki['fraction_3']+ $prikopki['fraction_4']+ $prikopki['fraction_5']+ $prikopki['fraction_6'])*$prikopki->sevooborot->square}}</td>
                             <td>{{$prikopki['comment']}}</td>
                             <td>
                                 <div class="dropdown">
