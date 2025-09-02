@@ -31,7 +31,7 @@ class StatusController extends Controller
         //Создаем или получаем модель контроллера
         $device->getRequest();
 
-        if ($device->modelESP->status){
+        if ($device->modelESP->device_operating_code > 0){
 
             return $device->render();
 

@@ -42,10 +42,12 @@ class GetSettingsController extends Controller
             ->first()
             ;
 
+        $deviceSettingsSend ['correction_ads'] = $deviceSettings->correction_ads ?? 0;
+
         $deviceUpdate = $deviceSettings->deviceESPUpdate ?? null;
 
         if (empty($deviceUpdate)){
-            $arrayPoint ['deviceUpdate'] = ['message' => "Настройки прошивки найдены"];
+            $arrayPoint ['deviceUpdate'] = ['message' => "Настройки прошивки не найдены"];
         } else{
             $arrayPoint ['deviceUpdate'] = $deviceUpdate->toArray();
         }

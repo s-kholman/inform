@@ -14,7 +14,7 @@ class DeviceESP extends Model
         'mac',
         'description',
         'storage_name_id',
-        'status',
+        'device_operating_code',
     ];
 
     public function UpdateSetting(): BelongsTo

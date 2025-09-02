@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('device_e_s_p_id')->unique();
             $table->boolean('update_status')->default(false);
             $table->foreignId('device_e_s_p_updates_id')->nullable();
+            $table->integer('correction_ads')->nullable()->default(0);
             $table->timestamps();
         });
     }

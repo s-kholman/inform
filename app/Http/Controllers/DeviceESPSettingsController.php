@@ -6,6 +6,7 @@ use App\Http\Requests\DeviceESPSettingsRequest;
 use App\Models\DeviceESP;
 use App\Models\DeviceESPSettings;
 use App\Models\DeviceESPUpdate;
+use App\Models\DeviceOperatingMode;
 use App\Models\DeviceThermometer;
 use App\Models\StorageName;
 use Illuminate\Http\RedirectResponse;
@@ -28,23 +29,28 @@ class DeviceESPSettingsController extends Controller
         $updateBin = DeviceESPUpdate::query()
             ->get();
 
+        $device_operating_code = DeviceOperatingMode::query()->get();
+
         return response()->view('esp.show',
             [
                 'devices' => $devices,
                 'thermometers' => $thermometers,
                 'storageNames' => $storageNames,
-                'updateBin' => $updateBin
+                'updateBin' => $updateBin,
+                'device_operating_code' => $device_operating_code,
             ]);
     }
 
     public function store(DeviceESPSettingsRequest $request): RedirectResponse
+    //public function store(Request $request): RedirectResponse
     {
 
         DeviceESP::query()
             ->where('id', $request->deviceESP)
             ->update(
                 [
-                    'status' => boolval($request->deviceActivate),
+                    //'status' => boolval($request->deviceActivate),
+                    'device_operating_code' => $request->device_operating_code,
                     'description' => $request->description,
                     'storage_name_id' => $request->storageName,
                 ]);
@@ -67,6 +73,7 @@ class DeviceESPSettingsController extends Controller
                 [
                     'update_status' => $request->update_status,
                     'device_e_s_p_updates_id' => $request->updateBin,
+                    'correction_ads' => $request->correction_ads,
                 ]
             );
 

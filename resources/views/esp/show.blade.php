@@ -11,7 +11,7 @@
         <select name="deviceESP" id="deviceESP" class="form-select @error('deviceESP') is-invalid @enderror">
             <option value=""></option>
             @forelse($devices as $device)
-                <option value="{{$device->id}}"> {{$device->mac}} </option>
+                <option value="{{$device->id}}"> {{$device->mac}} @if(!empty($device->description)) - {{$device->description}}@endif</option>
             @empty
                 <option value="">Записи не найдены</option>
             @endforelse
@@ -49,10 +49,15 @@
                 </span>
         @enderror
 
-        <label for="deviceActivate">Активировать устройство</label>
-        <select name="deviceActivate" id="deviceActivate" class="form-select @error('deviceActivate') is-invalid @enderror" disabled>
+        <label for="device_operating_code">Режим работы устройства</label>
+        <select name="device_operating_code" id="device_operating_code" class="form-select @error('device_operating_code') is-invalid @enderror" disabled>
+            @forelse($device_operating_code as $device_operating)
+                <option value="{{$device_operating->code}}"> {{$device_operating->name}} </option>
+            @empty
+                <option value="">Записи не найдены</option>
+            @endforelse
         </select>
-        @error('deviceActivate')
+        @error('device_operating_code')
         <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>
@@ -115,6 +120,21 @@
                 </span>
                 @enderror
             </div>
+
+            <label for="correction_ads">Корректировка ADS</label>
+            <input placeholder="Поправочный коэффициент"
+                   class="form-control @error('correction_ads') is-invalid @enderror"
+                   value="{{old('correction_ads')}}"
+                   id="correction_ads"
+                   name="correction_ads"
+            >
+
+            @error('correction_ads')
+            <span class="invalid-feedback">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
+
         </div>
 
         <div class="row">
@@ -143,10 +163,11 @@
         const thermometers_view = document.getElementById('thermometers_view')
         const pointSelect = document.getElementById('pointSelect')
         const thermometersSelect = document.getElementById('thermometers')
-        const deviceActivateSelect = document.getElementById('deviceActivate')
+        const deviceActivateSelect = document.getElementById('device_operating_code')
         const description = document.getElementById('description')
         const storageNameSelect = document.getElementById('storageName')
         const updateBinSelect = document.getElementById('updateBin')
+        const correctionADS = document.getElementById('correction_ads')
 
         //const button2 = document.querySelector('.thermometer');
 
@@ -281,13 +302,15 @@
 
                         updateBinSelected(data['deviceUpdate'])
                         updateStatusElement(data['update_status'])
-                        deviceActivateStatus(data['deviceActivation']['status'])
+                        deviceActivateStatus(data['deviceActivation']['device_operating_code'])
                         descriptionElement(data['deviceActivation']['description'])
                         storageSelected(data['deviceActivation']['storage_name_id'])
+                        correctionADS.value = data['correction_ads']
                         deviceESP.value = id;
 
-                    } else if(data['deviceActivation']['status'] == false){
-                        deviceActivateStatus(false)
+
+                    } else if(data['deviceActivation']['device_operating_code'] == 0){
+                        deviceActivateStatus(data['deviceActivation']['device_operating_code'])
                         updateStatusElement(false)
                         point(data, 'point')
 
@@ -318,11 +341,13 @@
                 updateBinSelect.value = ''
                 description.value = '';
 
+                correctionADS.value = '';
+
                 updateStatus.textContent = '';
                 updateStatus.disabled = true
 
-                deviceActivateSelect.textContent = '';
-                deviceActivateSelect.disabled = true
+               // deviceActivateSelect.textContent = '';
+               // deviceActivateSelect.disabled = true
 
                 pointSelect.textContent = '';
                 pointSelect.add(new Option('', ''));
@@ -333,11 +358,13 @@
 
             function deviceActivateStatus(status)
             {
-                deviceActivateSelect.textContent = '';
+                console.log(status);
+                //deviceActivateSelect.textContent = '';
                 deviceActivateSelect.disabled = false
-                deviceActivateSelect.add(new Option("Нет", "0"));
-                deviceActivateSelect.add(new Option("Да", "1"));
-                deviceActivateSelect[+status].selected = true;
+                ///deviceActivateSelect.add(new Option("Нет", "0"));
+                //deviceActivateSelect.add(new Option("Да", "1"));
+                //deviceActivateSelect[+status].selected = true;
+                deviceActivateSelect.value = status
             }
 
             function descriptionElement(text)

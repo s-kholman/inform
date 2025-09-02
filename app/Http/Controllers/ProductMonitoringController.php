@@ -7,6 +7,7 @@ use App\Http\Requests\ProductMonitoringRequest;
 use App\Http\Requests\ProductMonitoringUpdateRequest;
 use App\Models\ProductMonitoring;
 use App\Models\ProductMonitoringControl;
+use App\Models\ProductMonitoringDevice;
 use App\Models\StorageMode;
 use App\Models\StorageName;
 use Illuminate\Http\Request;
@@ -24,7 +25,6 @@ class ProductMonitoringController extends Controller
      */
     public function index(Request $request)
     {
-
 
         $year = ProductMonitoring::query()
             ->with('harvestYear')
@@ -53,12 +53,24 @@ class ProductMonitoringController extends Controller
             ->join('filials', 'filials.id', 'filial_id')
             ->where('harvest_year_id', $harvest_year_id)
             ->distinct('filial_id')
-            ->get()
-            ->sortBy('filial_name')
-            ->groupBy('filial_name')
+            //->get()
+            //->sortBy('filial_name')
+            //->groupBy('filial_name')
         ;
 
-        return view('production_monitoring.index', ['filial' => $filial, 'year' => $year]);
+        $filial_device = ProductMonitoringDevice::query()
+            ->select('filials.name as filial_name', 'filials.id as filial_id', 'harvest_year_id')
+            ->where('harvest_year_id', $harvest_year_id)
+            ->join('storage_names', 'storage_names.id', 'product_monitoring_devices.storage_name_id')
+            ->join('filials', 'filials.id', 'filial_id')
+            ->distinct('filial_id')
+            //->distinct('filial_id')
+            //->get()
+        ;
+
+        $union = $filial->union($filial_device)->get()->sortBy('filial_name')->groupBy('filial_name');
+        //dd($union);
+        return view('production_monitoring.index', ['filial' => $union, 'year' => $year]);
     }
 
     /**
@@ -203,19 +215,37 @@ class ProductMonitoringController extends Controller
     public function showFilial($filial_id, $harvest_year_id)
     {
         $monitoring = ProductMonitoring::query()
+            ->select('storage_names.name', 'storage_name_id', 'harvest_year_id')
             ->join('storage_names', 'storage_names.id', 'product_monitorings.storage_name_id')
             ->where('harvest_year_id', $harvest_year_id)
             ->where('filial_id', $filial_id)
             ->distinct('storage_name_id')
-            ->get()
-            ->sortBy('name')
+            //->get()
+            //->sortBy('name')
         ;
-//dd($monitoring);
-        return view('production_monitoring.show_filial', ['monitoring' => $monitoring]);
+
+/*        $monitoring_device = ProductMonitoringDevice::query()
+            ->selectRaw('*')
+            ->get()
+        ;*/
+
+        $monitoring_device = ProductMonitoringDevice::query()
+            ->select('storage_names.name', 'storage_name_id', 'harvest_year_id')
+            ->join('storage_names', 'storage_names.id', 'product_monitoring_devices.storage_name_id')
+            ->where('harvest_year_id', $harvest_year_id)
+            ->where('storage_names.filial_id', $filial_id)
+            ->distinct('storage_name_id')
+            //->get()
+            //->sortBy('name')
+        ;
+        $union = $monitoring->union($monitoring_device)->get()->sortBy('name');
+
+        return view('production_monitoring.show_filial', ['monitoring' => $union]);
     }
 
     public function showFilialMonitoring($storage_id, $harvest_year_id)
     {
+
         $var = ProductMonitoring::query()
             ->with(['phase.StoragePhaseTemperature', 'productMonitoringControl'])
             ->where('storage_name_id', $storage_id)
@@ -227,7 +257,9 @@ class ProductMonitoringController extends Controller
         if ($var->isNotEmpty()) {
             return view('production_monitoring.showFilialMonitoringTable', ['monitoring' => $var]);
         } else {
-            return redirect()->route('monitoring.index');
+            $only_monitoring_device = new ProductMonitoringDeviceController();
+            return $only_monitoring_device->showStorage($storage_id, $harvest_year_id);
+            //return redirect()->route('monitoring.index');
         }
     }
 

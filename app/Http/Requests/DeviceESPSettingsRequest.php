@@ -24,9 +24,9 @@ class DeviceESPSettingsRequest extends FormRequest
         return [
             'deviceESP' => 'required',
             'description' => 'nullable|string|max:50',
-            //'storageName' => 'nullable|integer|min:1',
             'storageName' => 'required_if:deviceActivate,1',
-            'deviceActivate' => 'required|boolean',
+            'correction_ads' => 'required|between:0,1023',
+            'device_operating_code' => 'required',
             'update_status' => 'required|boolean',
             'updateBin' => 'required_if:update_status,1',
             'thermometers' => 'nullable',

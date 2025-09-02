@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\DeviceESP;
 use App\Models\DeviceESPSettings;
+use App\Models\DeviceOperatingMode;
 use App\Models\DeviceThermometer;
 use App\Models\TemperaturePoint;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -16,6 +17,15 @@ class ESPSeeder extends Seeder
      */
     public function run(): void
     {
+        $device_operating_modes =
+            [
+                'Отключено' => 0,
+                'Опрос температуры' => 1,
+                'Опрос влажности' => 2,
+                'Опрос температуры и влажности' => 3,
+                'Зарегистрировать градусник' => 4
+            ];
+
         $point = [
             'Точка замера 1',
             'Точка замера 2',
@@ -23,6 +33,12 @@ class ESPSeeder extends Seeder
             'Точка замера 4',
             'Точка замера 5',
             'Точка замера 6',
+            'Точка замера 7',
+            'Точка замера 8',
+            'Точка замера 9',
+            'Точка замера 10',
+            'Точка замера 11',
+            'Точка замера 12',
         ];
 
         $thermometers = [
@@ -30,6 +46,18 @@ class ESPSeeder extends Seeder
 		    '17238757885560118056',
 		    '14284435012912183080'
         ];
+
+        foreach ($device_operating_modes as $name => $code)
+        {
+            DeviceOperatingMode::query()
+                ->create(
+                    [
+                        'name' => $name,
+                        'code' => $code
+                    ]
+                );
+        }
+
 
 
         $index = 1;
