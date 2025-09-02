@@ -27,7 +27,7 @@
             <div class="mt-2">
                 <input type="submit" class="btn btn-primary" value="Сохранить">
 
-                {{--<a class="btn btn-info" href="/pass/index">Назад</a>--}}
+                <a class="btn btn-info" href="/esp/settings">Назад</a>
             </div>
         </form>
                     {{--<label for="deviceESP">Выберите устройство</label>

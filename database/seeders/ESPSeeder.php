@@ -72,31 +72,15 @@ class ESPSeeder extends Seeder
                 )->get();
             $index++;
         }
-
-        foreach ($thermometers as $thermometer){
-            DeviceThermometer::query()
-                ->create(
-                    [
-                        'serial_number' => $thermometer
-                    ]
-                );
+        if (env('APP_ENV') == 'local'){
+            foreach ($thermometers as $thermometer){
+                DeviceThermometer::query()
+                    ->create(
+                        [
+                            'serial_number' => $thermometer
+                        ]
+                    );
+            }
         }
-
-/*        DeviceESP::query()
-            ->create(
-                [
-                    'mac' => '8C:AA:B5:51:0B:E1',
-                    'storage_name_id' => 1,
-                    'status' => true
-                ]
-            );
-
-        DeviceESPSettings::query()
-            ->create(
-
-                [
-                    'device_e_s_p_id' => 1,
-                ]
-            );*/
-    }
+   }
 }

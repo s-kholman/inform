@@ -166,9 +166,9 @@
                                 <li>
                                     <a href="/communication" class="nav-link px-0"> <span class="d-none d-sm-inline">Корп связь</span></a>
                                 </li>
-
-
-
+                            <li>
+                                <a href="/esp/settings" class="nav-link px-0"> <span class="d-none d-sm-inline">Настройка ESP</span></a>
+                            </li>
                             <li>
                                 <a href="/post" class="nav-link px-0"> <span class="d-none d-sm-inline">Должность</span></a>
                             </li>

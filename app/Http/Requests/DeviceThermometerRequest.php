@@ -22,15 +22,15 @@ class DeviceThermometerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'serial_number' => 'required|min:20|max:20|unique:device_thermometers|regex:/^[0-9]+$/u'
+            'serial_number' => 'required|min:19|max:20|unique:device_thermometers|regex:/^[0-9]+$/u'
         ];
     }
 
     public function messages()
     {
         return [
-            'max' => 'не более двадцати символов',
-            'min' => 'не менее двадцати символов',
+            'max' => 'не более :max символов',
+            'min' => 'не менее :min символов',
             'required' => 'Обязательно к заполнению',
             'unique' => 'Значение не уникально',
             'regex' => 'Только числа'

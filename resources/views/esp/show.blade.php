@@ -3,7 +3,19 @@
 
 @section('info')
     <div class="container gx-4">
-        <div class="col-xl-6 col-lg-6 col-sm-6">
+
+        <div class="row mb-5">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Справочники
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="/esp/thermometer/create">Термометр</a></li>
+                    <li><a class="dropdown-item" href="/esp/upload/bin">Прошивка</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-sm-6 ">
     <form action="{{route('esp.settings.store')}}" method="post">
         @csrf
 

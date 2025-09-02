@@ -106,18 +106,19 @@ Route::view('/', 'index')->name('/');
  *
  *
  */
-Route::get('esp/thermometer/show', [DeviceThermometerController::class, 'index'])->name('esp.thermometer.index');
-Route::get('esp/thermometer/create', [DeviceThermometerController::class, 'create'])->name('esp.thermometer.create');
-Route::post('esp/thermometer/store', [DeviceThermometerController::class, 'store'])->name('esp.thermometer.store');
+Route::get('esp/thermometer/show', [DeviceThermometerController::class, 'index'])->name('esp.thermometer.index')->middleware('can:DeviceESP.user.view');
+Route::get('esp/thermometer/create', [DeviceThermometerController::class, 'create'])->name('esp.thermometer.create')->middleware('can:DeviceESP.user.view');
+Route::post('esp/thermometer/store', [DeviceThermometerController::class, 'store'])->name('esp.thermometer.store')->middleware('can:DeviceESP.user.view');
 
-Route::get('esp/upload/bin', [DeviceESPUpdateController::class, 'index'])->name('esp.upload.bin.index');
-Route::post('esp/upload/bin', [DeviceESPUpdateController::class, 'store'])->name('esp.upload.bin.store');
+Route::get('esp/upload/bin', [DeviceESPUpdateController::class, 'index'])->name('esp.upload.bin.index')->middleware('can:DeviceESP.user.view');
+Route::post('esp/upload/bin', [DeviceESPUpdateController::class, 'store'])->name('esp.upload.bin.store')->middleware('can:DeviceESP.user.view');
 
+Route::get('esp/settings', [DeviceESPSettingsController::class, 'show'])->name('esp.settings.show')->middleware('can:DeviceESP.user.view');
+Route::post('esp/settings/store', [DeviceESPSettingsController::class, 'store'])->name('esp.settings.store')->middleware('can:DeviceESP.user.view');
 
-Route::get('esp/settings', [DeviceESPSettingsController::class, 'show'])->name('esp.settings.show');
 Route::get('product/monitoring/devices', [ProductMonitoringDeviceController::class, 'show'])->name('product.monitoring.devices.show');
 Route::get('product/monitoring/devices/show/storage/{id}/year/{year}', [ProductMonitoringDeviceController::class, 'showStorage'])->name('product.monitoring.devices.show.storage');
-Route::post('esp/settings/store', [DeviceESPSettingsController::class, 'store'])->name('esp.settings.store');
+
 
 /**
  * Посевная

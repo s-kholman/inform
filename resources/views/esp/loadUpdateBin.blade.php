@@ -45,5 +45,8 @@
                         @enderror
                         <button class="form-control" type="submit">Загрузить</button>
                     </form>
+                    <div class="mt-2">
+                        <a class="btn btn-info" href="/esp/settings">Назад</a>
+                    </div>
     </div>
 @endsection('info')
