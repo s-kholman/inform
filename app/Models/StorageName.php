@@ -11,6 +11,8 @@ class StorageName extends Model
     use HasFactory;
     protected $fillable = ['name', 'filial_id'];
 
+    protected $hidden = ['created_at'];
+
     public function filial() : BelongsTo
     {
         return $this->belongsTo(filial::class);

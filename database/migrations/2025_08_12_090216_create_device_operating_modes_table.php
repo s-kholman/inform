@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('device_e_s_p_s', function (Blueprint $table) {
+        Schema::create('device_operating_modes', function (Blueprint $table) {
             $table->id();
-            $table->macAddress('mac')->unique();
-            $table->text('description')->nullable();
-            $table->foreignId('storage_name_id')->nullable();
-            $table->foreignId('device_operating_code')->default(0);
+            $table->string('name');
+            $table->integer('code');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('device_e_s_p_s');
+        Schema::dropIfExists('device_operating_modes');
     }
 };

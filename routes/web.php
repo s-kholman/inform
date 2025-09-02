@@ -116,6 +116,7 @@ Route::post('esp/upload/bin', [DeviceESPUpdateController::class, 'store'])->name
 
 Route::get('esp/settings', [DeviceESPSettingsController::class, 'show'])->name('esp.settings.show');
 Route::get('product/monitoring/devices', [ProductMonitoringDeviceController::class, 'show'])->name('product.monitoring.devices.show');
+Route::get('product/monitoring/devices/show/storage/{id}/year/{year}', [ProductMonitoringDeviceController::class, 'showStorage'])->name('product.monitoring.devices.show.storage');
 Route::post('esp/settings/store', [DeviceESPSettingsController::class, 'store'])->name('esp.settings.store');
 
 /**

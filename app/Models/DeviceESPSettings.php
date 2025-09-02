@@ -15,6 +15,7 @@ class DeviceESPSettings extends Model
         'device_e_s_p_id',
         'update_status',
         'device_e_s_p_updates_id',
+        'correction_ads',
     ];
 
     public function deviceThermometer(): HasMany

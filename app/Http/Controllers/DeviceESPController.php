@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Actions\harvest\HarvestAction;
+use App\Http\Requests\DeviceThermometerRequest;
 use App\Models\DeviceESP;
 use App\Models\DeviceESPSettings;
 use App\Models\DeviceThermometer;
 use App\Models\ProductMonitoringDevice;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 class DeviceESPController extends Controller
 {
     public $modelESP;
@@ -31,9 +33,16 @@ class DeviceESPController extends Controller
 
     public function render(): JsonResponse
     {
-        if (array_key_exists('temperature', $this->data)){
+        //Log::info(count($this->data));
+        //if (array_key_exists('temperature', $this->data)){
+        if (count($this->data) > 2 && ($this->modelESP->device_operating_code == 1 || $this->modelESP->device_operating_code == 2 || $this->modelESP->device_operating_code == 3)){
             $this->store();
-        } else {
+        } elseif (array_key_exists('thermometer', $this->data) && $this->modelESP->device_operating_code == 4){
+
+            $this->storeThermometerSerialNumber($this->data['thermometer']);
+
+        }
+        else {
             $this->getSettings();
         }
 
@@ -56,8 +65,13 @@ class DeviceESPController extends Controller
             ->pluck('serial_number')
         ;
 
-
-        $this->settings['update'] = $settings->update_status;
+        /*
+         * Формируем первоначальный JSON настроек
+         * */
+        $this->settings['update'] = $settings->update_status ?? false;
+        $this->settings['thermometer_get_sn'] = false;
+        $this->settings['temperature_get'] = false;
+        $this->settings['humidity_get'] = false;
 
         if ($settings->update_status){
             $this->settings['fingerprint'] = '520f6fd0b3234e7530e7c0c7102fbcffe75701ae';
@@ -65,28 +79,40 @@ class DeviceESPController extends Controller
                 DeviceESPSettings::query()
                     ->where('device_e_s_p_id', $this->modelESP->id)
                     ->update(['update_status' => false]);
-            } else{
-            $this->settings['temperature'] = true;
-                //$this->settings['thermometer'] = json_decode($settings->thermometers);
+            } elseif($this->modelESP->device_operating_code == 1){
+                $this->settings['temperature_get'] = true;
                 $this->settings['thermometer'] = $thermometers;
-            }
 
+            } elseif($this->modelESP->device_operating_code == 4) {
+                $this->settings['thermometer_get_sn'] = true;
+
+            } elseif($this->modelESP->device_operating_code == 2) {
+            $this->settings['humidity_get'] = true;
+
+            } elseif($this->modelESP->device_operating_code == 3) {
+            $this->settings['humidity_get'] = true;
+            $this->settings['temperature_get'] = true;
+            $this->settings['thermometer'] = $thermometers;
+        }
     }
 
     private function store(): void
     {
-
         $harvest = new HarvestAction();
         $point = [];
+        $humidity = null;
+        $temperature_humidity = null;
 
-        $thermometers = DeviceThermometer::query()
-            ->select(['temperature_point_id', 'serial_number'])
-            ->with('TemperaturePoint')
-            ->where('device_e_s_p_id',$this->modelESP->id)
-            ->get()
-            ->groupBy('serial_number')
-            ->toArray()
-        ;
+        if (($this->modelESP->device_operating_code == 1 || $this->modelESP->device_operating_code == 3) && array_key_exists('temperature', $this->data) ){
+           // Log::info('temperature');
+            $thermometers = DeviceThermometer::query()
+                ->select(['temperature_point_id', 'serial_number'])
+                ->with('TemperaturePoint')
+                ->where('device_e_s_p_id',$this->modelESP->id)
+                ->get()
+                ->groupBy('serial_number')
+                ->toArray()
+            ;
 
             foreach ($this->data['temperature'] as $serial_number => $temperature)
             {
@@ -94,9 +120,15 @@ class DeviceESPController extends Controller
                     $point [$thermometers[$serial_number][0]['temperature_point']['pointTable']] = $temperature;
                 }
             }
+        }
 
+        if (($this->modelESP->device_operating_code == 2 || $this->modelESP->device_operating_code == 3) && array_key_exists('humidity', $this->data)){
+            $humidity = $this->data['humidity'] ?? null;
+            $temperature_humidity = $this->data['humidity_t'] ?? null;
+        }
 
-        if (!empty($point) && $this->modelESP->storage_name_id <> null)
+        //!empty($point) &&
+        if ($this->modelESP->storage_name_id <> null)
         {
             ProductMonitoringDevice::query()
                 ->create(
@@ -108,11 +140,18 @@ class DeviceESPController extends Controller
                         'temperature_point_four' => $point[4] ?? null,
                         'temperature_point_five' => $point[5] ?? null,
                         'temperature_point_six' => $point[6] ?? null,
-                        'temperature_humidity' => null,
-                        'humidity' => null,
-                        'harvest_year_id' => $harvest->HarvestYear(now()),
+                        'temperature_point_seven' => $point[7] ?? null,
+                        'temperature_point_eight' => $point[8] ?? null,
+                        'temperature_point_nine' => $point[9] ?? null,
+                        'temperature_point_ten' => $point[10] ?? null,
+                        'temperature_point_eleven' => $point[11] ?? null,
+                        'temperature_point_twelve' => $point[12] ?? null,
+                        'temperature_humidity' => $temperature_humidity,
+                        'humidity' => $humidity,
+                        'harvest_year_id' => $harvest->HarvestYear(now(), 7),
                         'device_e_s_p_id' => $this->modelESP->id,
-                        'adc' => $this->data['ADC'] ?? 0,
+                        'adc' => $this->adsToVoltage($this->data['ADC'] ?? null),
+                        //'adc' => $this->data['ADC'] ?? 0,
                         'rssi' => $this->data['RSSI'] ?? null,
                         'device_e_s_p_update_id'  => null,
                     ]
@@ -121,5 +160,49 @@ class DeviceESPController extends Controller
         } else{
             $this->settings['messages'] =  'Нет данных для сохранения';
         }
+    }
+
+    public function storeThermometerSerialNumber($serial_number)
+    {
+        //$request = new Illuminate\Http\Request($test_array);
+        //Log::info($serial_number);
+
+        if (strlen($serial_number) === 20 || strlen($serial_number) === 19){
+            $r = preg_match('/^[0-9]+$/u', $serial_number);
+            if ($r){
+                DeviceThermometer::query()
+                    ->updateOrCreate(
+                        [
+                            'serial_number' => $serial_number
+                        ]
+                    );
+                $r = 'YES';
+            } else{
+                $r = 'NO';
+            }
+        } else{
+            $r = 'NO';
+        }
+
+
+        $this->settings['thermometer_store'] = $r;
+        //app('log')->info("storeThermometerSerialNumber - ", $serial_number);
+    }
+
+    private function adsToVoltage($ads): float|null
+    {
+
+        if (is_numeric($ads)){
+            $correct_ads = DeviceESPSettings::query()->where('device_e_s_p_id', $this->modelESP->id)->first();
+            //Log::info($correct_ads->correction_ads);
+
+            if (empty($correct_ads->correction_ads)){
+                return null;
+            } else{
+                $correct_ads = $correct_ads->correction_ads;
+            }
+            return round(4.2 / $correct_ads * $ads, 2);
+        }
+        return null;
     }
 }

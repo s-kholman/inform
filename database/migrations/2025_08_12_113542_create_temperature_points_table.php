@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('temperature_points', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('pointTable')->nullable();
+            $table->integer('pointTable');
             $table->timestamps();
         });
     }
