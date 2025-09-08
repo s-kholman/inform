@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\filial;
 use App\Models\ProductMonitoringDevice;
+use App\Models\StorageName;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -52,7 +54,7 @@ dump($group_monitoring);
 
     public function showStorage($storage_name_id, $year_id)
     {
-        $monitoring = ProductMonitoringDevice::query()
+/*        $monitoring = ProductMonitoringDevice::query()
             ->select(['product_monitoring_devices.*', 'storage_names.filial_id', 'device_e_s_p_settings.correction_ads'])
             ->where('storage_name_id', $storage_name_id)
             ->where('harvest_year_id', $year_id)
@@ -64,7 +66,7 @@ dump($group_monitoring);
         ;
         if ($monitoring->isEmpty()){
             return redirect()->back();
-        }
+        }*/
 //        dd($monitoring);
 //$dailyEvents = Event::selectRaw('DATE(created_at) as date, COUNT(*) as count') -> groupBy('date') -> get();
         $group_monitoring = DB::select(
@@ -104,18 +106,47 @@ dump($group_monitoring);
     MIN (temperature_point_eleven) as min_temperature_point_eleven,
     AVG (temperature_point_twelve) as avg_temperature_point_twelve,
     MAX (temperature_point_twelve) as max_temperature_point_twelve,
-    MIN (temperature_point_twelve) as min_temperature_point_twelve
+    MIN (temperature_point_twelve) as min_temperature_point_twelve,
+    AVG (temperature_humidity) as avg_temperature_humidity,
+    MAX (temperature_humidity) as max_temperature_humidity,
+    MIN (temperature_humidity) as min_temperature_humidity,
+    AVG (humidity) as avg_humidity,
+    MAX (humidity) as max_humidity,
+    MIN (humidity) as min_humidity
                     from product_monitoring_devices
                     where storage_name_id = :id and harvest_year_id = :year_id
                         group by date
                             order by date", ['id' => $storage_name_id, 'year_id' => $year_id]
         )
         ;
+        if (empty($group_monitoring)){
+            return redirect()->back();
+        }
+//dd($group_monitoring);
+        $filial_id = StorageName::query()
+            ->find($storage_name_id);
 
         return response()->view('production_monitoring.device.show',
             [
-                'monitoring' => $monitoring,
+                'filial_id' => $filial_id['filial_id'],
+                'year_id' => $year_id,
+                'storage_name_id' => $storage_name_id,
                 'group_monitoring' => collect($group_monitoring),
+            ]);
+    }
+
+    public function showDay($storage_name_id, $year_id, $date)
+    {
+        $monitoring = ProductMonitoringDevice::query()
+            ->whereDate('product_monitoring_devices.created_at', $date)
+            ->where('storage_name_id', $storage_name_id)
+            ->where('harvest_year_id', $year_id)
+            ->get()
+        ;
+        //dd($monitoring);
+        return response()->view('production_monitoring.device.show_day',
+            [
+                'monitoring' => $monitoring,
             ]);
     }
 

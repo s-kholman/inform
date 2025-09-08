@@ -128,7 +128,7 @@ class DeviceESPController extends Controller
         }
 
         //!empty($point) &&
-        if ($this->modelESP->storage_name_id <> null)
+        if ($this->modelESP->storage_name_id <> null && (array_key_exists('humidity', $this->data) || array_key_exists('temperature', $this->data)))
         {
             ProductMonitoringDevice::query()
                 ->create(
@@ -146,8 +146,8 @@ class DeviceESPController extends Controller
                         'temperature_point_ten' => $point[10] ?? null,
                         'temperature_point_eleven' => $point[11] ?? null,
                         'temperature_point_twelve' => $point[12] ?? null,
-                        'temperature_humidity' => $temperature_humidity,
-                        'humidity' => $humidity,
+                        'temperature_humidity' => $temperature_humidity, //(!$temperature_humidity == 300) ? $temperature_humidity : null,
+                        'humidity' => $humidity,//(!$humidity == 300) ? $humidity : null,
                         'harvest_year_id' => $harvest->HarvestYear(now(), 7),
                         'device_e_s_p_id' => $this->modelESP->id,
                         'adc' => $this->adsToVoltage($this->data['ADC'] ?? null),
@@ -167,25 +167,25 @@ class DeviceESPController extends Controller
         //$request = new Illuminate\Http\Request($test_array);
         //Log::info($serial_number);
 
-        if (strlen($serial_number) === 20 || strlen($serial_number) === 19){
-            $r = preg_match('/^[0-9]+$/u', $serial_number);
-            if ($r){
+        //if (strlen($serial_number) === 20 || strlen($serial_number) === 19){
+           // $r = preg_match('/^[0-9]+$/u', $serial_number);
+           // if ($r){
                 DeviceThermometer::query()
                     ->updateOrCreate(
                         [
                             'serial_number' => $serial_number
                         ]
                     );
-                $r = 'YES';
-            } else{
-                $r = 'NO';
-            }
-        } else{
-            $r = 'NO';
-        }
+               // $r = 'YES';
+           // } else{
+           //     $r = 'NO';
+           // }
+        //} else{
+        //    $r = 'NO';
+        //}
 
 
-        $this->settings['thermometer_store'] = $r;
+        $this->settings['thermometer_store'] = "message";
         //app('log')->info("storeThermometerSerialNumber - ", $serial_number);
     }
 
