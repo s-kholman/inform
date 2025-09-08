@@ -118,6 +118,7 @@ Route::post('esp/settings/store', [DeviceESPSettingsController::class, 'store'])
 
 Route::get('product/monitoring/devices', [ProductMonitoringDeviceController::class, 'show'])->name('product.monitoring.devices.show');
 Route::get('product/monitoring/devices/show/storage/{id}/year/{year}', [ProductMonitoringDeviceController::class, 'showStorage'])->name('product.monitoring.devices.show.storage');
+Route::get('product/monitoring/devices/show/storage/{id}/year/{year}/day/{day}', [ProductMonitoringDeviceController::class, 'showDay'])->name('product.monitoring.devices.show.storage.day');
 
 
 /**

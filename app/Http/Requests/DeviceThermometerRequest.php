@@ -22,7 +22,7 @@ class DeviceThermometerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'serial_number' => 'required|min:19|max:20|unique:device_thermometers|regex:/^[0-9]+$/u'
+            'serial_number' => 'required|min:10|max:25|unique:device_thermometers|regex:/^[0-9]+$/u'
         ];
     }
 

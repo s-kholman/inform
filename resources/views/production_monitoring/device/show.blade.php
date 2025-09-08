@@ -22,7 +22,7 @@
     <div class="container">
         <div class="row">
             <div class="col-4">
-                <a class="btn btn-secondary " href="{{route('monitoring.show.filial', ['filial_id' => $monitoring[0]->filial_id, 'harvest_year_id' => $monitoring[0]->harvest_year_id])}}">Назад</a>
+                <a class="btn btn-secondary " href="{{route('monitoring.show.filial', ['filial_id' => $filial_id, 'harvest_year_id' => $year_id])}}">Назад</a>
             </div>
             @canany(['ProductMonitoring.director.create', 'ProductMonitoring.completed.create'])
                 <div class="col-sm-4 ">
@@ -30,7 +30,8 @@
                 </div>
             @endcanany
             <div class="mt-2">
-                <table class="table table-bordered text-center">
+                <table class="table table-bordered text-center caption-top">
+                    <caption class="text-center">Максимальная/Минимальная/Средняя температура в разрезе суток по точкам измерения. Для подробного представления нажмите на соответствующею дату</caption>
                     <tr>
                         <th class="vertical-align" rowspan="2"><label class="rotate">Дата</label></th>
                         @if($group_monitoring->where('avg_temperature_point_one', '>', 0)->count() > 0)
@@ -69,6 +70,12 @@
                         @endif
                         @if($group_monitoring->where('avg_temperature_point_twelve', '>', 0)->count() > 0)
                             <th class="vertical-align" colspan="3"><label >Точка замера №12</label></th>
+                        @endif
+                        @if($group_monitoring->where('avg_temperature_humidity', '>', 0)->count() > 0)
+                            <th class="vertical-align" colspan="3"><label >Точка замера устройство</label></th>
+                        @endif
+                        @if($group_monitoring->where('avg_humidity', '>', 0)->count() > 0)
+                            <th class="vertical-align" colspan="3"><label >Влажность</label></th>
                         @endif
                     </tr>
                     <tr>
@@ -138,11 +145,22 @@
                                 <td>MIN</td>
                                 <td>AVG</td>
                             @endif
+                            @if($group_monitoring->where('avg_temperature_humidity', '>', 0)->count() > 0)
+                                <td>MAX</td>
+                                <td>MIN</td>
+                                <td>AVG</td>
+                            @endif
+                            @if($group_monitoring->where('avg_humidity', '>', 0)->count() > 0)
+                                <td>MAX</td>
+                                <td>MIN</td>
+                                <td>AVG</td>
+                            @endif
                     </tr>
 
                     @foreach($group_monitoring as $value)
                         <tr>
-                            <td>{{$value->date}}</td>
+                            <td><a href="{{route('product.monitoring.devices.show.storage.day', ['id' => $storage_name_id, 'year' => $year_id, 'day' => $value->date])}}">{{\Illuminate\Support\Carbon::parse($value->date)->format('d.m.Y')}}</a></td>
+                            {{--<td>{{$value->date}}</td>--}}
                             @if($group_monitoring->where('avg_temperature_point_one', '>', 0)->count() > 0)
                                 <td>{{round($value->max_temperature_point_one, 1)}}</td>
                                 <td>{{round($value->min_temperature_point_one, 1)}}</td>
@@ -204,6 +222,16 @@
                                 <td>{{round($value->min_temperature_point_twelve, 1)}}</td>
                                 <td>{{round($value->avg_temperature_point_twelve, 1)}}</td>
                             @endif
+                            @if($group_monitoring->where('avg_temperature_humidity', '>', 0)->count() > 0)
+                                <td>{{round($value->max_temperature_humidity, 1)}}</td>
+                                <td>{{round($value->min_temperature_humidity, 1)}}</td>
+                                <td>{{round($value->avg_temperature_humidity, 1)}}</td>
+                            @endif
+                            @if($group_monitoring->where('avg_humidity', '>', 0)->count() > 0)
+                                <td>{{round($value->max_humidity, 1)}}</td>
+                                <td>{{round($value->min_humidity, 1)}}</td>
+                                <td>{{round($value->avg_humidity, 1)}}</td>
+                            @endif
                         </tr>
                     @endforeach
                 </table>
@@ -211,7 +239,7 @@
 
         </div>
 
-        <table class="table table-bordered text-center">
+       {{-- <table class="table table-bordered text-center">
             <tr>
                 <th class="vertical-align"><label class="rotate">Дата</label></th>
                 @if($group_monitoring->where('avg_temperature_point_one', '>', 0)->count() > 0)
@@ -252,10 +280,12 @@
                 @endif
                 <th class="vertical-align"><label class="rotate">Влажность</label></th>
                 <th class="vertical-align"><label class="rotate">Точка замера "влажность"</label></th>
+                @can('DeviceESP.user.view')
                 <th class="vertical-align"><label class="rotate">ID устройства</label></th>
                 <th class="vertical-align"><label class="rotate">ADC</label></td>
                 <th class="vertical-align"><label class="rotate">RSSI</label></th>
                 <th class="vertical-align"><label class="rotate">Version</label></td>
+                @endcan
             </tr>
             @foreach($monitoring as $id => $value)
                 <tr>
@@ -298,14 +328,15 @@
                     @endif
                     <td>{{round($value->humidity, 2)}}</td>
                     <td>{{round($value->temperature_humidity, 2)}}</td>
+                    @can('DeviceESP.user.view')
                     <td>{{$value->device_e_s_p_id}}</td>
-                    {{--<td>{{round(4.2/$value->correction_ads*$value->adc, 3)}}v</td>--}}
                     <td>{{$value->adc}}@if(!empty($value->adc))v @endif</td>
                     <td>{{$value->rssi}}</td>
                     <td>{{$value->version}}</td>
+                    @endcan
                 </tr>
             @endforeach
-        </table>
+        </table>--}}
     </div>
 @endsection('info')
 
