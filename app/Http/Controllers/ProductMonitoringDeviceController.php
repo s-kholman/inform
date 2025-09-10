@@ -141,6 +141,7 @@ dump($group_monitoring);
             ->whereDate('product_monitoring_devices.created_at', $date)
             ->where('storage_name_id', $storage_name_id)
             ->where('harvest_year_id', $year_id)
+            ->orderByDesc('created_at')
             ->get()
         ;
         //dd($monitoring);
