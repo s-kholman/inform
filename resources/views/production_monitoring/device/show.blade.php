@@ -35,10 +35,10 @@
                     <tr>
                         <th class="vertical-align" rowspan="2"><label class="rotate">Дата</label></th>
                         @if($group_monitoring->where('avg_temperature_point_one', '>', 0)->count() > 0)
-                            <th class="vertical-align" colspan="3"><label >Точка замера №1</label></th>
+                            <th class="vertical-align" colspan="3"><label >Температура в бурте</label></th>
                         @endif
                         @if($group_monitoring->where('avg_temperature_point_two', '>', 0)->count() > 0)
-                            <th class="vertical-align" colspan="3"><label >Точка замера №2</label></th>
+                            <th class="vertical-align" colspan="3"><label >Температура в шахте</label></th>
                         @endif
                         @if($group_monitoring->where('avg_temperature_point_three', '>', 0)->count() > 0)
                             <th class="vertical-align" colspan="3"><label >Точка замера №3</label></th>
