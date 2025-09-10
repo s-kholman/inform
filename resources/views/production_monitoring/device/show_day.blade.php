@@ -29,10 +29,10 @@
             <tr>
                 <th class="vertical-align"><label class="rotate">Дата</label></th>
                 @if($monitoring->groupBy('temperature_point_one')->count() > 1)
-                    <th class="vertical-align" ><label >Точка замера №1</label></th>
+                    <th class="vertical-align" ><label >Температура в бурте</label></th>
                 @endif
                 @if($monitoring->groupBy('temperature_point_two')->count() > 1)
-                        <th class="vertical-align" ><label >Точка замера №2</label></th>
+                        <th class="vertical-align" ><label >Температура в шахте</label></th>
                 @endif
                 @if($monitoring->groupBy('temperature_point_three')->count() > 1)
                         <th class="vertical-align" ><label >Точка замера №3</label></th>
@@ -65,7 +65,7 @@
                         <th class="vertical-align" ><label >Точка замера №12</label></th>
                 @endif
                 <th class="vertical-align"><label class="rotate">Влажность</label></th>
-                <th class="vertical-align"><label class="rotate">Точка замера "влажность"</label></th>
+                <th class="vertical-align"><label class="rotate">Точка замера устройство</label></th>
                 @can('DeviceESP.user.view')
                 <th class="vertical-align"><label class="rotate">ID устройства</label></th>
                 <th class="vertical-align"><label class="rotate">ADC</label></td>
