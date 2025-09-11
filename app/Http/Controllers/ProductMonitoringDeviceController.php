@@ -116,7 +116,7 @@ dump($group_monitoring);
                     from product_monitoring_devices
                     where storage_name_id = :id and harvest_year_id = :year_id
                         group by date
-                            order by date", ['id' => $storage_name_id, 'year_id' => $year_id]
+                            order by date desc", ['id' => $storage_name_id, 'year_id' => $year_id]
         )
         ;
         if (empty($group_monitoring)){
@@ -148,6 +148,7 @@ dump($group_monitoring);
         return response()->view('production_monitoring.device.show_day',
             [
                 'monitoring' => $monitoring,
+                'storage_name_id' => $storage_name_id,
             ]);
     }
 
