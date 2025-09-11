@@ -124,6 +124,9 @@ class DeviceESPController extends Controller
 
         if (($this->modelESP->device_operating_code == 2 || $this->modelESP->device_operating_code == 3) && array_key_exists('humidity', $this->data)){
             $humidity = $this->data['humidity'] ?? null;
+            if ($humidity > 100) {
+                $humidity = null;
+            }
             $temperature_humidity = $this->data['humidity_t'] ?? null;
         }
 
