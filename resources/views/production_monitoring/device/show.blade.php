@@ -22,6 +22,7 @@
     <div class="container">
         <div class="row">
             <div class="col-4">
+                {{--<a class="btn btn-secondary " href="{{route('monitoring.show.filial.all', ['storage_name_id' => $storage_name_id, 'harvest_year_id' => $year_id])}}">Назад</a>--}}
                 <a class="btn btn-secondary " href="{{route('monitoring.show.filial', ['filial_id' => $filial_id, 'harvest_year_id' => $year_id])}}">Назад</a>
             </div>
             @canany(['ProductMonitoring.director.create', 'ProductMonitoring.completed.create'])
@@ -31,7 +32,7 @@
             @endcanany
             <div class="mt-2">
                 <table class="table table-bordered text-center caption-top">
-                    <caption class="text-center">Максимальная/Минимальная/Средняя температура в разрезе суток по точкам измерения. Для подробного представления нажмите на соответствующею дату</caption>
+                    <caption class="text-center"><b>{{\App\Models\StorageName::query()->where('id', $storage_name_id)->first('name')['name']}}</b><br>Максимальная/Минимальная/Средняя температура в разрезе суток по точкам измерения. Для подробного представления нажмите на соответствующею дату</caption>
                     <tr>
                         <th class="vertical-align" rowspan="2"><label class="rotate">Дата</label></th>
                         @if($group_monitoring->where('avg_temperature_point_one', '>', 0)->count() > 0)

@@ -25,7 +25,8 @@
                <a class="btn btn-secondary " href="{{route('product.monitoring.devices.show.storage', ['id' => $monitoring[0]->storage_name_id, 'year' => $monitoring[0]->harvest_year_id])}}">Назад</a>
             </div>
         </div>
-        <table class="table table-bordered text-center">
+        <table class="table table-bordered text-center caption-top">
+            <caption><b>{{\App\Models\StorageName::query()->where('id', $storage_name_id)->first('name')['name']}}</b><br></caption>
             <tr>
                 <th class="vertical-align"><label class="rotate">Дата</label></th>
                 @if($monitoring->groupBy('temperature_point_one')->count() > 1)
