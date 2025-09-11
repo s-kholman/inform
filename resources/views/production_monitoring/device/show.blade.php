@@ -10,16 +10,15 @@
         transform: scale(-1, -1);
         height: 150px;
     }
-
     .vertical-align{
         vertical-align: middle;
     }
-    .background-color-director{
-        background-color: #f3f9ff;
-    }
+
 </style>
 @section('info')
     <div class="container">
+        {!! $chart1->renderHtml() !!}
+        <canvas id="myChart"></canvas>
         <div class="row">
             <div class="col-4">
                 {{--<a class="btn btn-secondary " href="{{route('monitoring.show.filial.all', ['storage_name_id' => $storage_name_id, 'harvest_year_id' => $year_id])}}">Назад</a>--}}
@@ -239,105 +238,10 @@
             </div>
 
         </div>
-
-       {{-- <table class="table table-bordered text-center">
-            <tr>
-                <th class="vertical-align"><label class="rotate">Дата</label></th>
-                @if($group_monitoring->where('avg_temperature_point_one', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №1</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_two', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №2</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_three', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №3</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_four', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №4</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_five', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №5</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_six', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №6</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_seven', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №7</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_eight', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №8</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_nine', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №9</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_ten', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №10</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_eleven', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №11</label></th>
-                @endif
-                @if($group_monitoring->where('avg_temperature_point_twelve', '>', 0)->count() > 0)
-                <th class="vertical-align"><label class="rotate">Точка замера №12</label></th>
-                @endif
-                <th class="vertical-align"><label class="rotate">Влажность</label></th>
-                <th class="vertical-align"><label class="rotate">Точка замера "влажность"</label></th>
-                @can('DeviceESP.user.view')
-                <th class="vertical-align"><label class="rotate">ID устройства</label></th>
-                <th class="vertical-align"><label class="rotate">ADC</label></td>
-                <th class="vertical-align"><label class="rotate">RSSI</label></th>
-                <th class="vertical-align"><label class="rotate">Version</label></td>
-                @endcan
-            </tr>
-            @foreach($monitoring as $id => $value)
-                <tr>
-                    <td>{{$value->created_at}}</td>
-                    @if($group_monitoring->where('avg_temperature_point_one', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_one, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_two', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_two, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_three', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_three, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_four', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_four, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_five', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_five, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_six', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_six, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_seven', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_seven, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_eight', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_eight, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_nine', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_nine, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_ten', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_ten, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_eleven', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_eleven, 1)}}</td>
-                    @endif
-                    @if($group_monitoring->where('avg_temperature_point_twelve', '>', 0)->count() > 0)
-                        <td>{{round($value->temperature_point_twelve, 1)}}</td>
-                    @endif
-                    <td>{{round($value->humidity, 2)}}</td>
-                    <td>{{round($value->temperature_humidity, 2)}}</td>
-                    @can('DeviceESP.user.view')
-                    <td>{{$value->device_e_s_p_id}}</td>
-                    <td>{{$value->adc}}@if(!empty($value->adc))v @endif</td>
-                    <td>{{$value->rssi}}</td>
-                    <td>{{$value->version}}</td>
-                    @endcan
-                </tr>
-            @endforeach
-        </table>--}}
     </div>
 @endsection('info')
 
+@section('script')
+    {!! $chart1->renderChartJsLibrary() !!}
+    {!! $chart1->renderJs() !!}
+@endsection

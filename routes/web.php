@@ -285,6 +285,7 @@ Route::group(['middleware' => ['can:ProductMonitoring.user.view']], function () 
     Route::resource('monitoring', ProductMonitoringController::class);
     Route::get('monitoring/show/filial/{filial_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilial'])->name('monitoring.show.filial');
     Route::get('monitoring/filial/storage/{storage_name_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilialMonitoring'])->name('monitoring.show.filial.all');
+
     Route::get('monitoring/control/storage/{storage_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'controlStorage'])->name('monitoring.control.storage');
     Route::resource('storage/phase/temperatures',StoragePhaseTemperatureController::class);
     Route::post('product/monitoring/control', [ProductMonitoringControlController::class, 'store'])->name('product.monitoring.control.store');
