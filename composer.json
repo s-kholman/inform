@@ -6,6 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "ext-simplexml": "*",
+        "ext-xmlreader": "*",
+        "ext-xmlwriter": "*",
         "art-of-wifi/unifi-api-client": "^1.1",
         "barryvdh/laravel-dompdf": "^3.1",
         "ben-menking/routeros-api": "^1.6",
@@ -17,15 +20,13 @@
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
         "laravelcollective/html": "^6.4",
+        "laraveldaily/laravel-charts": "^0.2.3",
         "league/flysystem-ftp": "^3.29",
         "mike42/escpos-php": "^4.0",
         "ndum/laravel-snmp": "^1.9",
         "php-mqtt/client": "^2.0",
         "smalot/pdfparser": "^2.4",
-        "spatie/laravel-permission": "^6.9",
-      "ext-simplexml": "*",
-        "ext-xmlreader": "*",
-        "ext-xmlwriter": "*"
+        "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",

@@ -8,6 +8,7 @@ use App\Models\StorageName;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 
 class ProductMonitoringDeviceController extends Controller
 {
@@ -54,21 +55,7 @@ dump($group_monitoring);
 
     public function showStorage($storage_name_id, $year_id)
     {
-/*        $monitoring = ProductMonitoringDevice::query()
-            ->select(['product_monitoring_devices.*', 'storage_names.filial_id', 'device_e_s_p_settings.correction_ads'])
-            ->where('storage_name_id', $storage_name_id)
-            ->where('harvest_year_id', $year_id)
-            ->leftJoin('storage_names', 'storage_name_id', '=', 'storage_names.id')
-            ->join('device_e_s_p_settings', 'device_e_s_p_settings.device_e_s_p_id', '=', 'device_e_s_p_settings.device_e_s_p_id')
-            ->distinct('id')
-            ->get()
-            ->sortBy('created_at')
-        ;
-        if ($monitoring->isEmpty()){
-            return redirect()->back();
-        }*/
-//        dd($monitoring);
-//$dailyEvents = Event::selectRaw('DATE(created_at) as date, COUNT(*) as count') -> groupBy('date') -> get();
+
         $group_monitoring = DB::select(
             "select DATE(created_at) as date,
     AVG (temperature_point_one) as avg_temperature_point_one,
@@ -122,9 +109,46 @@ dump($group_monitoring);
         if (empty($group_monitoring)){
             return redirect()->back();
         }
-//dd($group_monitoring);
         $filial_id = StorageName::query()
             ->find($storage_name_id);
+
+        $chart_options_one = [
+            'chart_title' => 'Средняя температура бурт',
+            'report_type' => 'group_by_date',
+            'model' => 'App\Models\ProductMonitoringDevice',
+            'conditions'            => [
+                ['name' => 'В бурте', 'condition' => 'storage_name_id = '.$storage_name_id . 'and harvest_year_id = ' .$year_id , 'color' => 'blue', 'fill' => true],
+            ],
+            'aggregate_function' => 'avg',
+            'aggregate_field' => 'temperature_point_one',
+            'group_by_field' => 'created_at',
+            'group_by_period' => 'day',
+            'chart_type' => 'line',
+            'filter_field' => 'created_at',
+            'filter_days' => 30,
+            'date_format ' => 'd.m.Y',
+            'chart_height' => 100,
+        ];
+
+        $chart_options_two = [
+            'chart_title' => 'Средняя температура шахта',
+            'report_type' => 'group_by_date',
+            'model' => 'App\Models\ProductMonitoringDevice',
+            'conditions'            => [
+                ['name' => 'В бурте', 'condition' => 'storage_name_id = '.$storage_name_id . 'and harvest_year_id = ' .$year_id , 'color' => 'green', 'fill' => true],
+            ],
+            'aggregate_function' => 'avg',
+            'aggregate_field' => 'temperature_point_two',
+            'group_by_field' => 'created_at',
+            'group_by_period' => 'day',
+            'chart_type' => 'line',
+            'filter_field' => 'created_at',
+            'filter_days' => 30,
+
+        ];
+
+
+        $chart1 = new LaravelChart($chart_options_one, $chart_options_two);
 
         return response()->view('production_monitoring.device.show',
             [
@@ -132,7 +156,11 @@ dump($group_monitoring);
                 'year_id' => $year_id,
                 'storage_name_id' => $storage_name_id,
                 'group_monitoring' => collect($group_monitoring),
+                'chart1' => $chart1,
             ]);
+
+
+
     }
 
     public function showDay($storage_name_id, $year_id, $date)
