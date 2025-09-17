@@ -17,8 +17,8 @@
 </style>
 @section('info')
     <div class="container">
-        {!! $chart1->renderHtml() !!}
-        <canvas id="myChart"></canvas>
+        <div> {!! $chart1->renderHtml() !!}</div>
+
         <div class="row">
             <div class="col-4">
                 {{--<a class="btn btn-secondary " href="{{route('monitoring.show.filial.all', ['storage_name_id' => $storage_name_id, 'harvest_year_id' => $year_id])}}">Назад</a>--}}

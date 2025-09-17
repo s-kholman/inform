@@ -6,6 +6,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class DeviceESPSettingsRequest extends FormRequest
 {
+/*    protected function prepareForValidation(): void
+    {
+        if (is_null($this->correction_ads)){
+            $this->merge([
+                'correction_ads' =>  0
+            ]);
+        }
+
+    }*/
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -25,7 +34,7 @@ class DeviceESPSettingsRequest extends FormRequest
             'deviceESP' => 'required',
             'description' => 'nullable|string|max:50',
             'storageName' => 'required_if:deviceActivate,1',
-            'correction_ads' => 'required|between:0,1023',
+            'correction_ads' => 'nullable|int|between:1,1024',
             'device_operating_code' => 'required',
             'update_status' => 'required|boolean',
             'updateBin' => 'required_if:update_status,1',

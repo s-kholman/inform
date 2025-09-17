@@ -70,10 +70,14 @@ class GetSettingsController extends Controller
             $arrayPoint ['deviceActivation'] = $deviceActivation->toArray();
         }
 
+        /**
+         * Массив с настройками ничего лишнего
+        */
 
+        $settings ['update_device'] = ['update' => false, 'version_id' => null];
+        $settings ['points'] = [];
 
-
-        $array = array_merge($deviceSettingsSend, $arrayPoint);
+        $array = array_merge($deviceSettingsSend, $arrayPoint, $settings);
         //return Response::json($ret);
 
         return Response::json($array);

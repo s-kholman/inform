@@ -55,31 +55,41 @@
                         @if(!empty(json_decode($messages)))
                             @forelse(json_decode($messages) as $type => $message)
                                 @if($type == 'countRow')
-                                    @foreach($message as $key => $value)
-                                        <div class="row" style="font-size: 12px"> В документ добавлено строк - {{$value}}</div>
+                                    @foreach($message as $value)
+                                        @foreach($value as $key => $messages)
+                                            <div class="row" style="font-size: 12px"> В документ добавлено строк - {{$messages}}</div>
+                                        @endforeach
                                     @endforeach
                                 @endif
 
                                 @if($type == 'skladIDEmpty')
-                                    @foreach($message as $key => $value)
-                                        <div class="row" style="font-size: 12px">Найдена новая карточка № {{$key}}{{$value}}</div>
+                                        @foreach($message as $value)
+                                            @foreach($value as $key => $messages)
+                                                <div class="row" style="font-size: 12px">Найдена новая карточка № {{$key}}{{$messages}}</div>
+                                            @endforeach
                                     @endforeach
                                 @endif
                                 @if($type == 'NDSError')
-                                    @foreach($message as $key => $value)
-                                        <div class="row" style="font-size: 12px"> Ошибка НДС карта № {{$key}} транзакция от {{$value}}</div>
-                                    @endforeach
+                                        @foreach($message as $value)
+                                            @foreach($value as $key => $messages)
+                                                <div class="row" style="font-size: 12px"> Ошибка НДС карта № {{$key}} транзакция от {{$messages}}</div>
+                                            @endforeach
+                                        @endforeach
                                 @endif
 
                                     @if($type == 'Reverse')
-                                        @foreach($message as $key => $value)
-                                            <div class="row" style="font-size: 12px"> Сторнировано по карте № {{$key}} транзакция от {{$value}}</div>
+                                        @foreach($message as $value)
+                                            @foreach($value as $key => $messages)
+                                                 <div class="row" style="font-size: 12px"> Сторнировано по карте № {{$key}} транзакция от {{$messages}}</div>
+                                            @endforeach
                                         @endforeach
                                     @endif
 
                                     @if($type == 'ReverseFailed')
-                                        @foreach($message as $key => $value)
-                                            <div class="row" style="font-size: 12px"> Ошибка сторнирования по карте № {{$key}} {{$value}}</div>
+                                        @foreach($message as $value)
+                                            @foreach($value as $key => $messages)
+                                                <div class="row" style="font-size: 12px"> Ошибка сторнирования по карте № {{$key}} {{$messages}}</div>
+                                            @endforeach
                                         @endforeach
                                     @endif
                             @empty

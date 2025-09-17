@@ -10,14 +10,13 @@ use App\Models\DeviceOperatingMode;
 use App\Models\DeviceThermometer;
 use App\Models\StorageName;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class DeviceESPSettingsController extends Controller
 {
     public function show(): Response
     {
-        $devices = DeviceESP::query()->get();
+        $devices = DeviceESP::query()->with('storageName')->get()->sortBy('storageName.name');
 
         $storageNames = StorageName::query()->get();
 
@@ -41,10 +40,9 @@ class DeviceESPSettingsController extends Controller
             ]);
     }
 
-    public function store(DeviceESPSettingsRequest $request): RedirectResponse
+    public function store(DeviceESPSettingsRequest $request)//: RedirectResponse
     //public function store(Request $request): RedirectResponse
     {
-
         DeviceESP::query()
             ->where('id', $request->deviceESP)
             ->update(

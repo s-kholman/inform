@@ -15,6 +15,7 @@
                 </ul>
             </div>
         </div>
+        <div class="row">
         <div class="col-xl-6 col-lg-6 col-sm-6 ">
     <form action="{{route('esp.settings.store')}}" method="post">
         @csrf
@@ -23,7 +24,7 @@
         <select name="deviceESP" id="deviceESP" class="form-select @error('deviceESP') is-invalid @enderror">
             <option value=""></option>
             @forelse($devices as $device)
-                <option value="{{$device->id}}"> {{$device->mac}} @if(!empty($device->description)) - {{$device->description}}@endif</option>
+                <option value="{{$device->id}}"> {{$device->storageName->name ?? ''}} {{$device->mac}}</option>
             @empty
                 <option value="">Записи не найдены</option>
             @endforelse
@@ -87,10 +88,10 @@
             </div>
             <div class="col-6">
                 <label for="updateBin">Версия</label>
-                <select name="updateBin" id="updateBin" class="form-select @error('updateBin') is-invalid @enderror" disabled>
+                <select name="updateBin" id="updateBin" class="form-select @error('updateBin') is-invalid @enderror">
                     <option value=""></option>
                     @forelse($updateBin as $version)
-                        <option value="{{ $version->id }}"> {{$version->version}}  -  {{\Illuminate\Support\Carbon::parse($version->date)->format('d.m.Y')}} </option>
+                        <option disabled value="{{ $version->id }}"> {{$version->version}}  -  {{\Illuminate\Support\Carbon::parse($version->date)->format('d.m.Y')}} </option>
                     @empty
                     @endforelse
                 </select>
@@ -150,7 +151,7 @@
         </div>
 
         <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xxl-2 p-2 ">
+            <div class="col-3 p-2 ">
                 <a class="btn btn-primary" href="/esp/settings">Назад</a>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xxl-2 p-2 text-end">
@@ -164,10 +165,20 @@
     </form>
 
         </div>
+        <div class="col-6">
+            <div><b>Описание устройства</b></div>
+            <div id="DeviceDescription" class="mb-4"></div>
+            <div><b>Описание Прошивки</b></div>
+            <div id="updateDescription"></div>
+        </div>
+        </div>
     </div>
+
 @endsection('info')
 @section('script')
     <script>
+        const deviceInfo = {!! $devices !!};
+        const updateBin = {!! $updateBin !!};
         const url = window.location.origin;
         const deviceESP = document.getElementById('deviceESP')
         const labelText = document.getElementById('labelText')
@@ -180,21 +191,38 @@
         const storageNameSelect = document.getElementById('storageName')
         const updateBinSelect = document.getElementById('updateBin')
         const correctionADS = document.getElementById('correction_ads')
+        const deviceDescription = document.getElementById('DeviceDescription')
+        const updateDescription = document.getElementById('updateDescription')
+        let dataSettings = '';
 
-        //const button2 = document.querySelector('.thermometer');
+        deviceInfoArray = Object.entries(deviceInfo);
 
         function changeUpdateStatusToUpdateBin(event)
         {
             if(event == '1'){
-                updateBinSelect.disabled = false
+                for (let i = 0; i < updateBinSelect.length; i++) {
+                    updateBinSelect.options[i].disabled = false;
+                }
             } else {
-                updateBinSelect.disabled = true
+                for (let i = 0; i < updateBinSelect.length; i++) {
+                    updateBinSelect.options[i].disabled = true;
+                }
+                updateBinSelected(dataSettings['deviceUpdate'])
             }
 
         }
 
         updateStatus.addEventListener('change', (event) =>{
             changeUpdateStatusToUpdateBin(event.target.value)
+        })
+
+        updateBinSelect.addEventListener('change', (event) =>{
+            let updateInfoArray = Object.entries(updateBin);
+            for (let key in updateInfoArray) {
+                if (updateInfoArray[key][1]['id'] == event.target.value){
+                    updateDescription.textContent = updateInfoArray[key][1]['description']
+                }
+            }
         })
 
         storageNameSelect.addEventListener('change', (event) => {
@@ -228,7 +256,16 @@
         })
 
         deviceESP.addEventListener('change', () =>{
+            deviceDescription.textContent = ''
+            description.textContent = ''
             if(deviceESP.selectedIndex > 0){
+                for (let key in updateBin) {
+                    if (deviceInfoArray[key][1]['id'] == deviceESP.selectedIndex){
+                        let description = deviceInfoArray[key][1]['description'];
+                        descriptionElement(description)
+                        deviceDescription.textContent = deviceInfoArray[key][1]['description']
+                    }
+                }
                 thermometersSelect.disabled = false
             } else {
                 storageNameSelect.value = 0;
@@ -290,13 +327,12 @@
                                 },
                             body: formData,
                         })
-                    const data = await response.json()
-                   // console.log(data)
-                    if (data['device_e_s_p_id'] == id) {
+                    //const data = await response.json()
+                    dataSettings = await response.json()
+                    if (dataSettings['device_e_s_p_id'] == id) {
                         labelText.textContent = 'Ответ получен'
-                        let device = data
+                        let device = dataSettings
                         for (let key in device) {
-                           // console.log(device)
                             if(key == "device_thermometer"){
                                 for(let thermometer in device[key]){
                                     for (let serial in device[key][thermometer]){
@@ -312,19 +348,19 @@
                             }
                         }
 
-                        updateBinSelected(data['deviceUpdate'])
-                        updateStatusElement(data['update_status'])
-                        deviceActivateStatus(data['deviceActivation']['device_operating_code'])
-                        descriptionElement(data['deviceActivation']['description'])
-                        storageSelected(data['deviceActivation']['storage_name_id'])
-                        correctionADS.value = data['correction_ads']
+                        updateStatusElement(dataSettings['update_status'])
+                        //updateBinSelected(dataSettings['deviceUpdate'])
+                        deviceActivateStatus(dataSettings['deviceActivation']['device_operating_code'])
+                       // descriptionElement(dataSettings['deviceActivation']['description'])
+                        storageSelected(dataSettings['deviceActivation']['storage_name_id'])
+                        correctionADS.value = dataSettings['correction_ads']
                         deviceESP.value = id;
 
 
-                    } else if(data['deviceActivation']['device_operating_code'] == 0){
-                        deviceActivateStatus(data['deviceActivation']['device_operating_code'])
+                    } else if(dataSettings['deviceActivation']['device_operating_code'] == 0){
+                        deviceActivateStatus(dataSettings['deviceActivation']['device_operating_code'])
                         updateStatusElement(false)
-                        point(data, 'point')
+                        point(dataSettings, 'point')
 
                     }
                     else {
@@ -332,7 +368,6 @@
                         clearForm()
                         clearButtonThermometer();
                     }
-
                 } catch (error) {
 
                     labelText.textContent = 'Ошибка сервера'
@@ -343,16 +378,22 @@
 
         function updateBinSelected(deviceUpdate) {
 
+            //dataSettings['deviceUpdate']
             if(!deviceUpdate['message'] != ''){
                 updateBinSelect.value = deviceUpdate['id']
-                //console.log(deviceUpdate['id'])
+                updateBinSelect.options[updateBinSelect.selectedIndex].disabled = false;
+
+                updateDescription.textContent = deviceUpdate['description']
+            } else{
+                updateBinSelect.value = ''
             }
         }
 
             function clearForm() {
-                updateBinSelect.value = ''
-                description.value = '';
 
+                updateDescription.textContent = ''
+                updateBinSelect.value = ''
+               // description.value = '';
                 correctionADS.value = '';
 
                 updateStatus.textContent = '';
@@ -370,7 +411,6 @@
 
             function deviceActivateStatus(status)
             {
-                console.log(status);
                 //deviceActivateSelect.textContent = '';
                 deviceActivateSelect.disabled = false
                 ///deviceActivateSelect.add(new Option("Нет", "0"));

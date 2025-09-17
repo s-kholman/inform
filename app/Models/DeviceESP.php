@@ -21,4 +21,9 @@ class DeviceESP extends Model
     {
         return $this->belongsTo(DeviceESPUpdate::class);
     }
+
+    public function storageName(): BelongsTo
+    {
+        return $this->belongsTo(StorageName::class);
+    }
 }
