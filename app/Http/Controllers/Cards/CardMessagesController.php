@@ -11,6 +11,6 @@ class CardMessagesController extends Controller
 
     public function addMessage ($type, $key, $value): void
     {
-        $this->messages[$type] [$key] = $value;
+        $this->messages[$type] [] [$key] = $value;
     }
 }
