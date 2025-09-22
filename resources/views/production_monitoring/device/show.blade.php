@@ -17,8 +17,12 @@
 </style>
 @section('info')
     <div class="container">
+        <div style="width:75%;">
+            <x-chartjs-component :chart="$chart" />
+        </div>
+{{--        @if($group_monitoring->count() >= 7)
         <div> {!! $chart1->renderHtml() !!}</div>
-
+        @endif--}}
         <div class="row">
             <div class="col-4">
                 {{--<a class="btn btn-secondary " href="{{route('monitoring.show.filial.all', ['storage_name_id' => $storage_name_id, 'harvest_year_id' => $year_id])}}">Назад</a>--}}
@@ -241,7 +245,7 @@
     </div>
 @endsection('info')
 
-@section('script')
+{{--@section('script')
     {!! $chart1->renderChartJsLibrary() !!}
     {!! $chart1->renderJs() !!}
-@endsection
+@endsection--}}

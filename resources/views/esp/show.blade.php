@@ -169,7 +169,7 @@
             <div><b>Описание устройства</b></div>
             <div id="DeviceDescription" class="mb-4"></div>
             <div><b>Описание Прошивки</b></div>
-            <div id="updateDescription"></div>
+            <pre><div id="updateDescription"></div></pre>
         </div>
         </div>
     </div>
@@ -220,7 +220,7 @@
             let updateInfoArray = Object.entries(updateBin);
             for (let key in updateInfoArray) {
                 if (updateInfoArray[key][1]['id'] == event.target.value){
-                    updateDescription.textContent = updateInfoArray[key][1]['description']
+                    updateDescription.innerHTML = updateInfoArray[key][1]['description']
                 }
             }
         })
@@ -383,7 +383,7 @@
                 updateBinSelect.value = deviceUpdate['id']
                 updateBinSelect.options[updateBinSelect.selectedIndex].disabled = false;
 
-                updateDescription.textContent = deviceUpdate['description']
+                updateDescription.innerHTML = deviceUpdate['description']
             } else{
                 updateBinSelect.value = ''
             }
