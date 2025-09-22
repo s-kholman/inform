@@ -19,7 +19,7 @@
                         @enderror
 
                         <label for="versionBin">Версия прошивки</label>
-                        <input name="versionBin" id="versionBin" type="text" value="0.0.1"
+                        <input name="versionBin" id="versionBin" type="text" placeholder="Укажите версию прошивки"
                                class="form-control @error('versionBin') is-invalid @enderror">
                         @error('versionBin')
                         <span class="invalid-feedback">
@@ -28,8 +28,8 @@
                         @enderror
 
                         <label for="descriptionBin">Описание прошивки</label>
-                        <textarea name="descriptionBin" id="descriptionBin"
-                                  class="form-control @error('descriptionBin') is-invalid @enderror">Прошивка версии 0.0.1</textarea>
+                        <textarea name="descriptionBin" id="descriptionBin" placeholder="Описание изменений прошивки"
+                                  class="form-control @error('descriptionBin') is-invalid @enderror"></textarea>
                         @error('descriptionBin')
                         <span class="invalid-feedback">
                             <strong>{{ $message }}</strong>

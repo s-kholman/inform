@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\filial;
 use App\Models\ProductMonitoringDevice;
 use App\Models\StorageName;
+use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 
@@ -58,7 +60,7 @@ dump($group_monitoring);
 
         $group_monitoring = DB::select(
             "select DATE(created_at) as date,
-    AVG (temperature_point_one) as avg_temperature_point_one,
+    ROUND(AVG (temperature_point_one)::numeric, 2) as avg_temperature_point_one,
     MAX (temperature_point_one) as max_temperature_point_one,
     MIN (temperature_point_one) as min_temperature_point_one,
     AVG (temperature_point_two) as avg_temperature_point_two,
@@ -112,7 +114,17 @@ dump($group_monitoring);
         $filial_id = StorageName::query()
             ->find($storage_name_id);
 
-        $chart_options_one = [
+        $oneAvgTemp = collect($group_monitoring)->where('avg_temperature_point_one', '<>', null)->sortBy('date')->pluck('avg_temperature_point_one');
+        $oneAvgTempDate = collect($group_monitoring)->where('avg_temperature_point_one', '<>', null)->sortBy('date')->pluck('date')->toArray();
+
+        $oneAvgTempDateFormat = collect($oneAvgTempDate)->map(function (?string $date) {
+            return Carbon::parse($date)->format('d.m.Y');
+        })->reject(function (string $date) {
+            return empty($date);
+        });
+        //dump($temp);
+        //dd($oneAvgTempDateFormat);
+        /*$chart_options_one = [
             'chart_title' => 'Средняя температура бурт',
             'report_type' => 'group_by_date',
             'model' => 'App\Models\ProductMonitoringDevice',
@@ -148,7 +160,38 @@ dump($group_monitoring);
         ];
 
 
-        $chart1 = new LaravelChart($chart_options_one, $chart_options_two);
+        $chart1 = new LaravelChart($chart_options_one, $chart_options_two);*/
+
+        $chart = Chartjs::build()
+            ->name('lineChartTest')
+            ->type('line')
+            ->size(['width' => 400, 'height' => 200])
+            ->labels($oneAvgTempDateFormat->toArray())
+            ->datasets([
+                [
+                    "label" => "Температура в бурте",
+                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
+                    'borderColor' => 'red',//"rgba(38, 185, 154, 0.7)",
+                    "pointBorderColor" => 'blue',//"rgba(38, 185, 154, 0.7)",
+                    "pointBackgroundColor" => 'yellow',//"rgba(38, 185, 154, 0.7)",
+                    "pointHoverBackgroundColor" => "#fff",
+                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                    "data" => $oneAvgTemp,
+                    "fill" => false,
+                ],
+/*                [
+                    "label" => "My Second dataset",
+                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
+                    'borderColor' => "rgba(38, 185, 154, 0.7)",
+                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
+                    "pointHoverBackgroundColor" => "#fff",
+                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                    "data" => $temp,
+                    "fill" => false,
+                ]*/
+            ])
+            ->options([]);
 
         return response()->view('production_monitoring.device.show',
             [
@@ -156,7 +199,8 @@ dump($group_monitoring);
                 'year_id' => $year_id,
                 'storage_name_id' => $storage_name_id,
                 'group_monitoring' => collect($group_monitoring),
-                'chart1' => $chart1,
+                //'chart1' => $chart1,
+                'chart' => $chart,
             ]);
 
 
@@ -172,7 +216,6 @@ dump($group_monitoring);
             ->orderByDesc('created_at')
             ->get()
         ;
-        //dd($monitoring);
         return response()->view('production_monitoring.device.show_day',
             [
                 'monitoring' => $monitoring,
