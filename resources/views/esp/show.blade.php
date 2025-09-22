@@ -259,7 +259,7 @@
             deviceDescription.textContent = ''
             description.value = ''
             if(deviceESP.selectedIndex > 0){
-                for (let key in updateBin) {
+                for (let key in deviceInfoArray) {
                     if (deviceInfoArray[key][1]['id'] == deviceESP.value){
                         let description = deviceInfoArray[key][1]['description'];
                         descriptionElement(description)
