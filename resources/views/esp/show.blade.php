@@ -257,10 +257,10 @@
 
         deviceESP.addEventListener('change', () =>{
             deviceDescription.textContent = ''
-            description.textContent = ''
+            description.value = ''
             if(deviceESP.selectedIndex > 0){
                 for (let key in updateBin) {
-                    if (deviceInfoArray[key][1]['id'] == deviceESP.selectedIndex){
+                    if (deviceInfoArray[key][1]['id'] == deviceESP.value){
                         let description = deviceInfoArray[key][1]['description'];
                         descriptionElement(description)
                         deviceDescription.textContent = deviceInfoArray[key][1]['description']
