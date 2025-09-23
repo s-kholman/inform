@@ -22,6 +22,7 @@ class DeviceESPSettingsController extends Controller
 
         $thermometers = DeviceThermometer::query()
             ->where('device_e_s_p_id', null)
+            ->orderBy('serial_number')
             ->get()
             ;
 
