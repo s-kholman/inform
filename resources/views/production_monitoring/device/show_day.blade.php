@@ -72,6 +72,7 @@
                 <th class="vertical-align"><label class="rotate">ADC</label></td>
                 <th class="vertical-align"><label class="rotate">RSSI</label></th>
                 <th class="vertical-align"><label class="rotate">Version</label></td>
+                <th class="vertical-align"><label class="rotate">Удалить</label></td>
                 @endcan
             </tr>
             @foreach($monitoring as $id => $value)
@@ -121,6 +122,13 @@
                     <td>{{$value->adc}}@if(!empty($value->adc))v @endif</td>
                     <td>{{$value->rssi}}</td>
                     <td>{{$value->version}}</td>
+                        <td>
+                            <form action="{{ route('product.monitoring.devices.destroy', ['productMonitoringDevice' => $value->id])}}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <input type="submit" class="btn btn-danger" value="Удалить">
+                            </form>
+                        </td>
                     @endcan
                 </tr>
             @endforeach
