@@ -114,59 +114,14 @@ dump($group_monitoring);
         $filial_id = StorageName::query()
             ->find($storage_name_id);
 
-        $oneAvgTemp = collect($group_monitoring)->where('avg_temperature_point_one', '<>', null)->sortBy('date')->pluck('avg_temperature_point_one');
-        $oneAvgTempDate = collect($group_monitoring)->where('avg_temperature_point_one', '<>', null)->sortBy('date')->pluck('date')->toArray();
-
-        $oneAvgTempDateFormat = collect($oneAvgTempDate)->map(function (?string $date) {
-            return Carbon::parse($date)->format('d.m.Y');
-        })->reject(function (string $date) {
-            return empty($date);
-        });
-        //dump($temp);
-        //dd($oneAvgTempDateFormat);
-        /*$chart_options_one = [
-            'chart_title' => 'Средняя температура бурт',
-            'report_type' => 'group_by_date',
-            'model' => 'App\Models\ProductMonitoringDevice',
-            'conditions'            => [
-                ['name' => 'В бурте', 'condition' => 'storage_name_id = '.$storage_name_id . 'and harvest_year_id = ' .$year_id , 'color' => 'blue', 'fill' => true],
-            ],
-            'aggregate_function' => 'avg',
-            'aggregate_field' => 'temperature_point_one',
-            'group_by_field' => 'created_at',
-            'group_by_period' => 'day',
-            'chart_type' => 'line',
-            'filter_field' => 'created_at',
-            'filter_days' => 30,
-            'date_format ' => 'd.m.Y',
-            'chart_height' => 100,
-        ];
-
-        $chart_options_two = [
-            'chart_title' => 'Средняя температура шахта',
-            'report_type' => 'group_by_date',
-            'model' => 'App\Models\ProductMonitoringDevice',
-            'conditions'            => [
-                ['name' => 'В бурте', 'condition' => 'storage_name_id = '.$storage_name_id . 'and harvest_year_id = ' .$year_id , 'color' => 'green', 'fill' => true],
-            ],
-            'aggregate_function' => 'avg',
-            'aggregate_field' => 'temperature_point_two',
-            'group_by_field' => 'created_at',
-            'group_by_period' => 'day',
-            'chart_type' => 'line',
-            'filter_field' => 'created_at',
-            'filter_days' => 30,
-
-        ];
-
-
-        $chart1 = new LaravelChart($chart_options_one, $chart_options_two);*/
+        $oneAvgData = $this->renderDataChart('one', $group_monitoring);
+        $twoAvgData = $this->renderDataChart('two', $group_monitoring);
 
         $chart = Chartjs::build()
             ->name('lineChartTest')
             ->type('line')
             ->size(['width' => 400, 'height' => 200])
-            ->labels($oneAvgTempDateFormat->toArray())
+            ->labels($oneAvgData['avgDateFormat']->toArray())
             ->datasets([
                 [
                     "label" => "Температура в бурте",
@@ -176,20 +131,20 @@ dump($group_monitoring);
                     "pointBackgroundColor" => 'yellow',//"rgba(38, 185, 154, 0.7)",
                     "pointHoverBackgroundColor" => "#fff",
                     "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    "data" => $oneAvgTemp,
+                    "data" => $oneAvgData['avg'],
                     "fill" => false,
                 ],
-/*                [
-                    "label" => "My Second dataset",
+                [
+                    "label" => "Температура в шахте",
                     'backgroundColor' => "rgba(38, 185, 154, 0.31)",
                     'borderColor' => "rgba(38, 185, 154, 0.7)",
                     "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
                     "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
                     "pointHoverBackgroundColor" => "#fff",
                     "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    "data" => $temp,
+                    "data" => $twoAvgData['avg'],
                     "fill" => false,
-                ]*/
+                ]
             ])
             ->options([]);
 
@@ -199,11 +154,8 @@ dump($group_monitoring);
                 'year_id' => $year_id,
                 'storage_name_id' => $storage_name_id,
                 'group_monitoring' => collect($group_monitoring),
-                //'chart1' => $chart1,
                 'chart' => $chart,
             ]);
-
-
 
     }
 
@@ -221,6 +173,25 @@ dump($group_monitoring);
                 'monitoring' => $monitoring,
                 'storage_name_id' => $storage_name_id,
             ]);
+    }
+
+    public function destroy(ProductMonitoringDevice $productMonitoringDevice): \Illuminate\Http\RedirectResponse
+    {
+        $productMonitoringDevice->delete();
+        return \response()->redirectToRoute('product.monitoring.devices.show.storage', ['id' => $productMonitoringDevice->storage_name_id, 'year' => $productMonitoringDevice->harvest_year_id]);
+    }
+
+    private function renderDataChart(string $namePoint, $dataMonitoring): array
+    {
+        $avg = collect($dataMonitoring)->where('avg_temperature_point_' . $namePoint, '<>', null)->sortBy('date')->pluck('avg_temperature_point_' . $namePoint);
+        $avgDate = collect($dataMonitoring)->where('avg_temperature_point_' . $namePoint, '<>', null)->sortBy('date')->pluck('date')->toArray();
+
+        $avgDateFormat = collect($avgDate)->map(function (?string $date) {
+            return Carbon::parse($date)->format('d.m.Y');
+        })->reject(function (string $date) {
+            return empty($date);
+        });
+        return ['avg' => $avg, 'avgDateFormat' => $avgDateFormat];
     }
 
 }
