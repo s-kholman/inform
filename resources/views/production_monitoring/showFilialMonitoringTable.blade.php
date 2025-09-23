@@ -42,7 +42,7 @@
                 </div>
                 @endcanany
 
-                @if($visibleButton < 0)
+                @if($visibleButton > 0)
                 <div class="col-4 mt-2">
                     <a class="btn btn-outline-primary" href="{{route('product.monitoring.devices.show.storage', ['id' => $monitoring[0]->storage_name_id, 'year' => $monitoring[0]->harvest_year_id])}}">Автоматический контроль</a>
                 </div>
