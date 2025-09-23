@@ -21,7 +21,6 @@
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
         "laravelcollective/html": "^6.4",
-        "laraveldaily/laravel-charts": "^0.2.3",
         "league/flysystem-ftp": "^3.29",
         "mike42/escpos-php": "^4.0",
         "ndum/laravel-snmp": "^1.9",
