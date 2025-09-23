@@ -246,7 +246,7 @@ class ProductMonitoringController extends Controller
     public function showFilialMonitoring($storage_id, $harvest_year_id)
     {
 
-        $var = ProductMonitoring::query()
+        $monitoring = ProductMonitoring::query()
             ->with(['phase.StoragePhaseTemperature', 'productMonitoringControl'])
             ->where('storage_name_id', $storage_id)
             ->where('harvest_year_id', $harvest_year_id)
@@ -254,18 +254,26 @@ class ProductMonitoringController extends Controller
             ->paginate(25)
         ;
 
-        if ($var->isNotEmpty()) {
-            return view('production_monitoring.showFilialMonitoringTable', ['monitoring' => $var]);
+        $visibleButton = ProductMonitoringDevice::query()
+            ->where('harvest_year_id', $harvest_year_id)
+            ->where('storage_name_id', $storage_id)
+            ->count();
+
+        if ($monitoring->isNotEmpty()) {
+            return view('production_monitoring.showFilialMonitoringTable',
+                [
+                    'monitoring' => $monitoring,
+                    'visibleButton' => $visibleButton,
+                ]
+            );
         } else {
             $only_monitoring_device = new ProductMonitoringDeviceController();
             return $only_monitoring_device->showStorage($storage_id, $harvest_year_id);
-            //return redirect()->route('monitoring.index');
         }
     }
 
     public function controlStorage(Request $request)
     {
-
         $storage_model = StorageName::query()->findOrFail($request->storage_id);
 
         return view('production_monitoring.control', ['storage_model' => $storage_model]);

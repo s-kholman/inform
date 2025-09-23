@@ -63,7 +63,7 @@ dump($group_monitoring);
     ROUND(AVG (temperature_point_one)::numeric, 2) as avg_temperature_point_one,
     MAX (temperature_point_one) as max_temperature_point_one,
     MIN (temperature_point_one) as min_temperature_point_one,
-    AVG (temperature_point_two) as avg_temperature_point_two,
+    ROUND(AVG (temperature_point_two)::numeric, 2) as avg_temperature_point_two,
     MAX (temperature_point_two) as max_temperature_point_two,
     MIN (temperature_point_two) as min_temperature_point_two,
     AVG (temperature_point_three) as avg_temperature_point_three,

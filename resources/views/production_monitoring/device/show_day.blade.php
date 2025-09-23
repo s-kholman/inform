@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Мониторинг температуры c устройства - ТЕСТИРОВАНИЕ')
+@section('title', 'Мониторинг температуры автоматической фиксации')
 <style>
     .rotate {
         writing-mode: vertical-rl;
