@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\filial;
+use App\Models\ProductMonitoring;
 use App\Models\ProductMonitoringDevice;
 use App\Models\StorageName;
 use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
@@ -105,9 +106,45 @@ dump($group_monitoring);
                     from product_monitoring_devices
                     where storage_name_id = :id and harvest_year_id = :year_id
                         group by date
-                            order by date desc", ['id' => $storage_name_id, 'year_id' => $year_id]
-        )
+                           order by date desc", ['id' => $storage_name_id, 'year_id' => $year_id]
+        );
+
+        $line_query = ProductMonitoring::query()
+            ->with('phase.StoragePhaseTemperature')
+            ->whereDate('date', '>=', array_pop($group_monitoring)->date)
+            ->where('storage_name_id', $storage_name_id)
+            ->where('harvest_year_id', $year_id)
+            ->distinct('storage_phase_id')
+            ->get()
+            //->groupBy('date');
         ;
+
+        $step = 0;
+        $line_min = [];
+        $count = true;
+        $one_date = '';
+        $data = '';
+        $t = collect($group_monitoring);
+
+        foreach ($line_query as $value){
+
+            if (count($line_query) > 1 && $count){
+                $count = false;
+            } elseif(!$count) {
+               foreach ($t->whereBetween('date', [$one_date, Carbon::parse($value->date)->subDay()->format('Y-m-d')]) as $r){
+                   $line_min [] = $data->phase->StoragePhaseTemperature->temperature_min ?? null;
+               }
+                }
+            $data = $value;
+            $one_date = $value->date;
+            $step++;
+                if (count($line_query) == $step){
+                    foreach ($t->whereBetween('date', [$one_date, now()]) as $o){
+                        $line_min [] = $value->phase->StoragePhaseTemperature->temperature_min ?? null;
+                    }
+                }
+            }
+
         if (empty($group_monitoring)){
             return redirect()->back();
         }
@@ -115,7 +152,7 @@ dump($group_monitoring);
             ->find($storage_name_id);
 
         $oneAvgData = $this->renderDataChart('one', $group_monitoring);
-        $twoAvgData = $this->renderDataChart('two', $group_monitoring);
+        $twoAvgData = $this->renderDataChart('eleven', $group_monitoring);
 
         $chart = Chartjs::build()
             ->name('lineChartTest')
@@ -126,9 +163,9 @@ dump($group_monitoring);
                 [
                     "label" => "Температура в бурте",
                     'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => 'red',//"rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => 'blue',//"rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => 'yellow',//"rgba(38, 185, 154, 0.7)",
+                    'borderColor' => 'blue',//"rgba(38, 185, 154, 0.7)",
+                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                    "pointBackgroundColor" => 'blue',//"rgba(38, 185, 154, 0.7)",
                     "pointHoverBackgroundColor" => "#fff",
                     "pointHoverBorderColor" => "rgba(220,220,220,1)",
                     "data" => $oneAvgData['avg'],
@@ -143,6 +180,17 @@ dump($group_monitoring);
                     "pointHoverBackgroundColor" => "#fff",
                     "pointHoverBorderColor" => "rgba(220,220,220,1)",
                     "data" => $twoAvgData['avg'],
+                    "fill" => false,
+                ],
+                [
+                    "label" => "Температура по инструкции минимум",
+                    'backgroundColor' => "#541010",
+                    'borderColor' => '#541010',
+                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                    "pointBackgroundColor" => "#541010",
+                    "pointHoverBackgroundColor" => "#541010",
+                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                    "data" => $line_min,
                     "fill" => false,
                 ]
             ])

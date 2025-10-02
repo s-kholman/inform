@@ -18,7 +18,7 @@
 @section('info')
     <div class="container">
         <div style="width:75%;">
-            @if($group_monitoring->count() >= 7)
+            @if($group_monitoring->count() >= 3)
                 <x-chartjs-component :chart="$chart" />
             @endif
         </div>
