@@ -106,7 +106,9 @@ dump($group_monitoring);
                     from product_monitoring_devices
                     where storage_name_id = :id and harvest_year_id = :year_id
                         group by date
-                           order by date desc", ['id' => $storage_name_id, 'year_id' => $year_id]
+                           order by date desc
+                           limit 30
+                           ", ['id' => $storage_name_id, 'year_id' => $year_id]
         );
 
         $line_query = ProductMonitoring::query()
@@ -119,32 +121,33 @@ dump($group_monitoring);
             //->groupBy('date');
         ;
 
+
+
         $step = 0;
         $line_min = [];
         $count = true;
-        $one_date = '';
         $data = '';
         $t = collect($group_monitoring);
 
-        foreach ($line_query as $value){
+        foreach ($line_query->sortBy('date') as $value){
 
             if (count($line_query) > 1 && $count){
                 $count = false;
             } elseif(!$count) {
-               foreach ($t->whereBetween('date', [$one_date, Carbon::parse($value->date)->subDay()->format('Y-m-d')]) as $r){
+               foreach ($t->whereBetween('date', [$data->date, Carbon::parse($value->date)->subDay()->format('Y-m-d')]) as $r){
                    $line_min [] = $data->phase->StoragePhaseTemperature->temperature_min ?? null;
                }
                 }
+
             $data = $value;
-            $one_date = $value->date;
             $step++;
+
                 if (count($line_query) == $step){
-                    foreach ($t->whereBetween('date', [$one_date, now()]) as $o){
+                    foreach ($t->whereBetween('date', [$data->date, now()]) as $o){
                         $line_min [] = $value->phase->StoragePhaseTemperature->temperature_min ?? null;
                     }
                 }
             }
-
         if (empty($group_monitoring)){
             return redirect()->back();
         }
@@ -152,7 +155,7 @@ dump($group_monitoring);
             ->find($storage_name_id);
 
         $oneAvgData = $this->renderDataChart('one', $group_monitoring);
-        $twoAvgData = $this->renderDataChart('eleven', $group_monitoring);
+        $twoAvgData = $this->renderDataChart('two', $group_monitoring);
 
         $chart = Chartjs::build()
             ->name('lineChartTest')
