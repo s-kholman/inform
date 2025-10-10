@@ -111,17 +111,16 @@ dump($group_monitoring);
                            ", ['id' => $storage_name_id, 'year_id' => $year_id]
         );
 
+        $line_query_group_monitoring = $group_monitoring;
         $line_query = ProductMonitoring::query()
             ->with('phase.StoragePhaseTemperature')
-            ->whereDate('date', '>=', array_pop($group_monitoring)->date)
+            ->whereDate('date', '>=', array_pop($line_query_group_monitoring)->date)
             ->where('storage_name_id', $storage_name_id)
             ->where('harvest_year_id', $year_id)
             ->distinct('storage_phase_id')
             ->get()
             //->groupBy('date');
         ;
-
-
 
         $step = 0;
         $line_min = [];
@@ -148,6 +147,7 @@ dump($group_monitoring);
                     }
                 }
             }
+
         if (empty($group_monitoring)){
             return redirect()->back();
         }

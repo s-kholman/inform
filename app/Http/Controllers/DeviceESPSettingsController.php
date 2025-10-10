@@ -52,6 +52,7 @@ class DeviceESPSettingsController extends Controller
                     'device_operating_code' => $request->device_operating_code,
                     'description' => $request->description,
                     'storage_name_id' => $request->storageName,
+                    'activate_code' => $request->activate_code,
                 ]);
 
         if ($request->thermometers <> null){
