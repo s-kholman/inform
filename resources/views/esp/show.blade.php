@@ -48,6 +48,20 @@
                 </span>
         @enderror
 
+        <label for="activate_code">Код активации</label>
+        <input placeholder="код активации"
+               class="form-control @error('description') is-invalid @enderror"
+               value="{{old('activate_code')}}"
+               id="activate_code"
+               name="activate_code"
+               readonly
+        >
+        @error('description')
+        <span class="invalid-feedback">
+                    <strong>{{ $message }}</strong>
+                </span>
+        @enderror
+
         <label for="storageName">Выберите место установки</label>
         <select name="storageName" id="storageName" class="form-select @error('storageName') is-invalid @enderror">
             <option value=""></option>
@@ -193,6 +207,7 @@
         const correctionADS = document.getElementById('correction_ads')
         const deviceDescription = document.getElementById('DeviceDescription')
         const updateDescription = document.getElementById('updateDescription')
+        const activate_code = document.getElementById('activate_code')
         let dataSettings = '';
 
         deviceInfoArray = Object.entries(deviceInfo);
@@ -239,6 +254,10 @@
             }
         });
 
+        activate_code.addEventListener('dblclick', function(event) {
+            activate_code.readOnly = !activate_code.readOnly;
+        });
+
         document.body.addEventListener('click', function(event) {
             if (event.target.classList.contains('thermometer')) {
                 event.preventDefault()
@@ -263,6 +282,7 @@
                     if (deviceInfoArray[key][1]['id'] == deviceESP.value){
                         let description = deviceInfoArray[key][1]['description'];
                         descriptionElement(description)
+                        activate_code.value = deviceInfoArray[key][1]['activate_code']
                         deviceDescription.textContent = deviceInfoArray[key][1]['description']
                     }
                 }
@@ -354,6 +374,7 @@
                        // descriptionElement(dataSettings['deviceActivation']['description'])
                         storageSelected(dataSettings['deviceActivation']['storage_name_id'])
                         correctionADS.value = dataSettings['correction_ads']
+                       // activate_code.value = dataSettings['activate_code']
                         deviceESP.value = id;
 
 

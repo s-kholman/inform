@@ -15,6 +15,7 @@ class DeviceESP extends Model
         'description',
         'storage_name_id',
         'device_operating_code',
+        'activate_code',
     ];
 
     public function UpdateSetting(): BelongsTo

@@ -32,7 +32,8 @@ class DeviceESPSettingsRequest extends FormRequest
     {
         return [
             'deviceESP' => 'required',
-            'description' => 'nullable|string|max:50',
+            'description' => 'nullable|string|max:255',
+            'activate_code' => 'nullable|string|max:50',
             'storageName' => 'required_if:deviceActivate,1',
             'correction_ads' => 'nullable|int|between:1,1024',
             'device_operating_code' => 'required',
