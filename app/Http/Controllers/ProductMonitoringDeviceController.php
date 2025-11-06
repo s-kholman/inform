@@ -111,6 +111,11 @@ dump($group_monitoring);
                            ", ['id' => $storage_name_id, 'year_id' => $year_id]
         );
 
+        if (empty($group_monitoring)){
+            //return redirect()->back();
+            return \response()->redirectToRoute('monitoring.index', ['year' => $year_id]);
+        }
+
         $line_query_group_monitoring = $group_monitoring;
         $line_query = ProductMonitoring::query()
             ->with('phase.StoragePhaseTemperature')
@@ -148,9 +153,7 @@ dump($group_monitoring);
                 }
             }
 
-        if (empty($group_monitoring)){
-            return redirect()->back();
-        }
+
         $filial_id = StorageName::query()
             ->find($storage_name_id);
 
@@ -228,7 +231,13 @@ dump($group_monitoring);
 
     public function destroy(ProductMonitoringDevice $productMonitoringDevice): \Illuminate\Http\RedirectResponse
     {
-        $productMonitoringDevice->delete();
+        try {
+            $productMonitoringDevice->delete();
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return \response()->redirectToRoute('monitoring.show.filial.all', ['storage_name_id' => $productMonitoringDevice->storage_name_id, 'harvest_year_id' => $productMonitoringDevice->harvest_year_id]);
+        }
+        //<a class="btn btn-secondary " href="{{route('monitoring.show.filial', ['filial_id' => $filial_id, 'harvest_year_id' => $year_id])}}">Назад</a>
         return \response()->redirectToRoute('product.monitoring.devices.show.storage', ['id' => $productMonitoringDevice->storage_name_id, 'year' => $productMonitoringDevice->harvest_year_id]);
     }
 

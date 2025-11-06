@@ -151,8 +151,17 @@
                 @endforelse
 
                     <div class="row text-center">
-                        <div class="col-12 ">
+{{--                        <div class="col-12 ">
                             <a class="btn btn-success" href="/monitoring/reports/">Отчеты</a>
+                        </div>--}}
+                        <div class="col-12 p-3 dropdown">
+                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
+                                Отчеты
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item"><a href="/monitoring/reports/">Данные внесенные вручную</a></li>
+                                <li class="dropdown-item"><a href="/monitoring/devices/report">Данные с автоматического учета</a></li>
+                            </ul>
                         </div>
                     </div>
 

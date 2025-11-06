@@ -276,13 +276,15 @@ Route::get('monitoring/mode/show/{mode}', [StorageModeController::class, 'show']
 Route::delete('monitoring/mode/destroy/{mode}', [StorageModeController::class, 'destroy'])->name('monitoring.mode.destroy')->middleware('auth');
 Route::get('monitoring/reports', [ProductMonitoringReportController::class, 'index'])->middleware('auth');
 Route::post('monitoring/reports', [ProductMonitoringReportController::class, 'index'])->middleware('auth')->name('monitoring.report.day');
+Route::get('monitoring/devices/report', [ProductMonitoringReportController::class, 'deviceReport'])->middleware('auth');
+Route::post('monitoring/devices/report', [ProductMonitoringReportController::class, 'deviceReport'])->middleware('auth')->name('monitoring.device.report.day');;
 
 /**
  * Отчет по температурному мониторингу продукции в буртах
  */
 Route::group(['middleware' => ['can:ProductMonitoring.user.view']], function () {
     Route::resource('phase', StoragePhaseController::class);
-    Route::get('monitoring/index/{year?}', [ProductMonitoringController::class, 'index']);
+    Route::get('monitoring/index/{year?}', [ProductMonitoringController::class, 'index'])->name('monitoring.index');
     Route::resource('monitoring', ProductMonitoringController::class);
     Route::get('monitoring/show/filial/{filial_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilial'])->name('monitoring.show.filial');
     Route::get('monitoring/filial/storage/{storage_name_id}/year/{harvest_year_id}', [ProductMonitoringController::class, 'showFilialMonitoring'])->name('monitoring.show.filial.all');
