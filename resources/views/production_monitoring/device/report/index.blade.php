@@ -45,36 +45,36 @@
             </div>
         </form>
 
-        <table class="table table-bordered text-center">
+        <table class="table table-hover table-bordered text-center">
             <tr>
-                <th rowspan="2">Бокс</th>
-                <th colspan="3">Бурт</th>
-                <th colspan="3">Шахта</th>
+                <th  rowspan="2">Бокс</th>
+                <th style="background-color: #f3f9ff" colspan="3">Бурт</th>
+                <th style="background-color: #c0e1e7" colspan="3">Шахта</th>
                 <th colspan="3">Устройство</th>
             </tr>
             <tr>
-                <th>MAX</th>
-                <th>MIN</th>
-                <th>AVG</th>
-                <th>MAX</th>
-                <th>MIN</th>
-                <th>AVG</th>
+                <th style="background-color: #f3f9ff">MAX</th>
+                <th style="background-color: #f3f9ff">MIN</th>
+                <th style="background-color: #f3f9ff">AVG</th>
+                <th style="background-color: #c0e1e7" >MAX</th>
+                <th style="background-color: #c0e1e7" >MIN</th>
+                <th style="background-color: #c0e1e7" >AVG</th>
                 <th>MAX</th>
                 <th>MIN</th>
                 <th>AVG</th>
             </tr>
             @foreach($group_monitoring as $value)
                 <tr>
-                    <th>{{$value->name}}</th>
-                    <th>{{$value->max_temperature_point_one}}</th>
-                    <th class="@if($value->min_temperature_point_one < 0) bg-danger @endif ">{{$value->min_temperature_point_one}}</th>
-                    <th>{{$value->avg_temperature_point_one}}</th>
-                    <th>{{$value->max_temperature_point_two}}</th>
-                    <th class="@if($value->min_temperature_point_two < 0) bg-danger @endif ">{{$value->min_temperature_point_two}}</th>
-                    <th>{{$value->avg_temperature_point_two}}</th>
-                    <th>{{$value->max_temperature_humidity}}</th>
-                    <th class="@if($value->min_temperature_humidity < 0) bg-danger @endif ">{{$value->min_temperature_humidity}}</th>
-                    <th>{{$value->avg_temperature_humidity}}</th>
+                    <td>{{$value->name}}</td>
+                    <td style="background-color: #f3f9ff">{{$value->max_temperature_point_one}} &degС</td>
+                    <td style="background-color: #f3f9ff" class="@if($value->min_temperature_point_one < 0) bg-danger @endif ">{{$value->min_temperature_point_one}} &degС</td>
+                    <td style="background-color: #f3f9ff">{{$value->avg_temperature_point_one}} &degС</td>
+                    <td style="background-color: #c0e1e7" >{{$value->max_temperature_point_two}} &degС</td>
+                    <td style="background-color: #c0e1e7"  class="@if($value->min_temperature_point_two < 0) bg-danger @endif ">{{$value->min_temperature_point_two}} &degС</td>
+                    <td style="background-color: #c0e1e7" >{{$value->avg_temperature_point_two}} &degС</td>
+                    <td>{{$value->max_temperature_humidity}} &degС</td>
+                    <td class="@if($value->min_temperature_humidity < 0) bg-danger @endif ">{{$value->min_temperature_humidity}} &degС</td>
+                    <td>{{$value->avg_temperature_humidity}} &degС</td>
                 </tr>
             @endforeach
         </table>
