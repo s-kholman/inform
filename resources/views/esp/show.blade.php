@@ -288,6 +288,7 @@
                 }
                 thermometersSelect.disabled = false
             } else {
+                activate_code.value = '';
                 storageNameSelect.value = 0;
                 thermometersSelect.disabled = true
             }
@@ -411,7 +412,6 @@
         }
 
             function clearForm() {
-
                 updateDescription.textContent = ''
                 updateBinSelect.value = ''
                // description.value = '';
