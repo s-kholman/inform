@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\harvest\HarvestAction;
 use App\Models\ProductMonitoring;
 use App\Models\ProductMonitoringDevice;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class ProductMonitoringReportController extends Controller
         }
     }
 
-    public function deviceReport (Request $request)
+    public function deviceReport (Request $request, HarvestAction $harvestAction)
     {
         if (array_key_exists('date', $request->post())) {
             $dateSelect = $request->date;
@@ -34,11 +35,11 @@ class ProductMonitoringReportController extends Controller
             $group_monitoring = $this->reportDevice(now());
         }
 
-
+       // dd($group_monitoring);
         return view('production_monitoring.device.report.index',
             [
                 'date' => $dateSelect,
-                'show' => 0,
+                'harvest' => $harvestAction->HarvestYear($dateSelect),
                 'group_monitoring' => $group_monitoring,
             ]
         );
@@ -47,7 +48,7 @@ class ProductMonitoringReportController extends Controller
     private function reportDevice($date)
     {
        return DB::select(
-            "select storage_names.name as name,
+            "select storage_names.name as name, storage_name_id,
 
                     ROUND(AVG (temperature_point_one)::numeric, 1) as avg_temperature_point_one,
                     ROUND(MAX (temperature_point_one)::numeric, 1) as max_temperature_point_one,
@@ -63,7 +64,7 @@ class ProductMonitoringReportController extends Controller
                     join storage_names ON storage_names.id = product_monitoring_devices.storage_name_id
                     where product_monitoring_devices.created_at::date = :day
 
-                        group by name
+                        group by name, storage_name_id
 
                            limit 30
                            ", ['day' => $date],
