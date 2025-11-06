@@ -65,7 +65,7 @@
             </tr>
             @foreach($group_monitoring as $value)
                 <tr>
-                    <td><a href="https://develop.krimm.ru/product/monitoring/devices/show/storage/{{$value->storage_name_id}}/year/{{$harvest}}">{{$value->name}}</a></td>
+                    <td><a href={{\Illuminate\Support\Facades\URL::route('product.monitoring.devices.show.storage', ['id' => $value->storage_name_id, 'year' => $harvest])}}>{{$value->name}}</a></td>
                     <td style="background-color: #f3f9ff">{{$value->max_temperature_point_one}} &degС</td>
                     <td style="background-color: #f3f9ff" class="@if($value->min_temperature_point_one < 0) bg-danger @endif ">{{$value->min_temperature_point_one}} &degС</td>
                     <td style="background-color: #f3f9ff">{{$value->avg_temperature_point_one}} &degС</td>
