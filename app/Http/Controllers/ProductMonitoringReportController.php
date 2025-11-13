@@ -58,7 +58,8 @@ class ProductMonitoringReportController extends Controller
                     ROUND(MIN (temperature_point_two)::numeric, 1) as min_temperature_point_two,
                     ROUND(AVG (temperature_humidity)::numeric, 1) as avg_temperature_humidity,
                     ROUND(MAX (temperature_humidity)::numeric, 1) as max_temperature_humidity,
-                    ROUND(MIN (temperature_humidity)::numeric, 1) as min_temperature_humidity
+                    ROUND(MIN (temperature_humidity)::numeric, 1) as min_temperature_humidity,
+                    ROUND(AVG (adc)::numeric, 2) as avg_adc
 
                     from product_monitoring_devices
                     join storage_names ON storage_names.id = product_monitoring_devices.storage_name_id

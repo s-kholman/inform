@@ -51,6 +51,9 @@
                 <th style="background-color: #f3f9ff" colspan="3">Бурт</th>
                 <th style="background-color: #c0e1e7" colspan="3">Шахта</th>
                 <th colspan="3">Устройство</th>
+                @can('DeviceESP.user.view')
+                <th rowspan="2">ADC</th>
+                @endcan
             </tr>
             <tr>
                 <th style="background-color: #f3f9ff">MAX</th>
@@ -75,6 +78,9 @@
                     <td>{{$value->max_temperature_humidity}} &degС</td>
                     <td class="@if($value->min_temperature_humidity < 0) bg-danger @endif ">{{$value->min_temperature_humidity}} &degС</td>
                     <td>{{$value->avg_temperature_humidity}} &degС</td>
+                    @can('DeviceESP.user.view')
+                        <td class="@if($value->avg_adc <= 3.4) bg-danger @endif ">{{$value->avg_adc}}</td>
+                    @endcan
                 </tr>
             @endforeach
         </table>
