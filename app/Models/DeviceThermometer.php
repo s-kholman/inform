@@ -12,6 +12,7 @@ class DeviceThermometer extends Model
     protected $fillable = [
         'serial_number',
         'used',
+        'calibration',
     ];
 
     public function TemperaturePoint(): BelongsTo

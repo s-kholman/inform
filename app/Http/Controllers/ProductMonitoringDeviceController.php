@@ -107,7 +107,7 @@ dump($group_monitoring);
                     where storage_name_id = :id and harvest_year_id = :year_id
                         group by date
                            order by date desc
-                           limit 30
+                           limit 90
                            ", ['id' => $storage_name_id, 'year_id' => $year_id]
         );
 

@@ -8,6 +8,7 @@ use App\Models\DeviceESPSettings;
 use App\Models\DeviceThermometer;
 use App\Models\ProductMonitoringDevice;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class DeviceESPController extends Controller
 {
@@ -105,7 +106,7 @@ class DeviceESPController extends Controller
         if (($this->modelESP->device_operating_code == 1 || $this->modelESP->device_operating_code == 3) && array_key_exists('temperature', $this->data)) {
             // Log::info('temperature');
             $thermometers = DeviceThermometer::query()
-                ->select(['temperature_point_id', 'serial_number'])
+                ->select(['temperature_point_id', 'serial_number', 'calibration'])
                 ->with('TemperaturePoint')
                 ->where('device_e_s_p_id', $this->modelESP->id)
                 ->get()
@@ -114,7 +115,8 @@ class DeviceESPController extends Controller
 
             foreach ($this->data['temperature'] as $serial_number => $temperature) {
                 if (array_key_exists($serial_number, $thermometers)) {
-                    $point [$thermometers[$serial_number][0]['temperature_point']['pointTable']] = $temperature;
+                    $point [$thermometers[$serial_number][0]['temperature_point']['pointTable']] = $temperature + $thermometers[$serial_number][0]['calibration'];
+                    Log::info("calibration " . $thermometers[$serial_number][0]['serial_number'] . ' ('. $thermometers[$serial_number][0]['calibration'] . ') = ' . $temperature + $thermometers[$serial_number][0]['calibration']);
                 }
             }
         }

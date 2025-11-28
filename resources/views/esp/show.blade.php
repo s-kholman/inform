@@ -10,7 +10,8 @@
                     Справочники
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="/esp/thermometer/create">Термометр</a></li>
+                    <li><a class="dropdown-item" href="/esp/thermometer/create">Термометр - создание</a></li>
+                    <li><a class="dropdown-item" href="/esp/thermometer/show">Термометр - калибровка</a></li>
                     <li><a class="dropdown-item" href="/esp/upload/bin">Прошивка</a></li>
                 </ul>
             </div>
