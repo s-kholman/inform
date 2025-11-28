@@ -106,7 +106,9 @@ Route::view('/', 'index')->name('/');
  *
  *
  */
-Route::get('esp/thermometer/show', [DeviceThermometerController::class, 'index'])->name('esp.thermometer.index')->middleware('can:DeviceESP.user.view');
+Route::get('esp/thermometer/show', [DeviceThermometerController::class, 'show'])->name('esp.thermometer.show')->middleware('can:DeviceESP.user.view');
+Route::get('esp/thermometer/edit/{thermometer}', [DeviceThermometerController::class, 'edit'])->name('esp.thermometer.edit')->middleware('can:DeviceESP.user.view');
+Route::post('esp/thermometer/storeCalibration/{thermometer}', [DeviceThermometerController::class, 'storeCalibration'])->name('esp.thermometer.storeCalibration')->middleware('can:DeviceESP.user.view');
 Route::get('esp/thermometer/create', [DeviceThermometerController::class, 'create'])->name('esp.thermometer.create')->middleware('can:DeviceESP.user.view');
 Route::post('esp/thermometer/store', [DeviceThermometerController::class, 'store'])->name('esp.thermometer.store')->middleware('can:DeviceESP.user.view');
 

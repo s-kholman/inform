@@ -12,17 +12,10 @@ use Illuminate\Http\Response;
 
 class DeviceThermometerController extends Controller
 {
-    public function index(): Response
-    {
-        $thermometers = DeviceThermometer::query()
-            ->get();
+    /*    public function index(): Response
+        {
 
-        return response()->view('esp.thermometer.show',
-            [
-                'thermometers' => $thermometers
-            ]
-        );
-    }
+        }*/
 
     public function create(): Response
     {
@@ -51,5 +44,43 @@ class DeviceThermometerController extends Controller
             );
 
         return \response()->redirectTo('esp/thermometer/create');
+    }
+
+    public function show()
+    {
+        $thermometers = DeviceThermometer::query()
+            ->get()->sortBy('serial_number');
+
+        return response()->view('esp.thermometer.show',
+            [
+                'thermometers' => $thermometers
+            ]
+        );
+    }
+
+    public function edit(DeviceThermometer $thermometer)
+    {
+        return response()->view('esp.thermometer.edit',
+            [
+                'thermometer' => $thermometer
+            ]
+        );
+    }
+
+    public function storeCalibration(Request $request, DeviceThermometer $thermometer)
+    {
+       // dd($thermometer);
+        $thermometer->update([
+            'calibration' => $request->calibration,
+        ]);
+
+        $thermometers = DeviceThermometer::query()
+            ->get()->sortBy('serial_number');
+
+        return response()->view('esp.thermometer.show',
+            [
+                'thermometers' => $thermometers
+            ]
+        );
     }
 }
