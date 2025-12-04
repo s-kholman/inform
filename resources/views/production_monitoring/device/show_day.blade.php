@@ -29,12 +29,6 @@
             <caption><b>{{\App\Models\StorageName::query()->where('id', $storage_name_id)->first('name')['name']}}</b><br></caption>
             <tr>
                 <th class="vertical-align"><label class="rotate">Дата</label></th>
-{{--
-                @dump($monitoring->where('temperature_point_four', '<>', null)->groupBy('temperature_point_four')->count())
-                @dump($monitoring->groupBy('temperature_point_four')->count())
-
-                @dump($monitoring->where('temperature_point_two', '<>', null)->groupBy('temperature_point_two')->count())
-                @dump($monitoring->where('temperature_point_one', '<>', null)->groupBy('temperature_point_one')->count())--}}
 
                 @if($monitoring->where('temperature_point_one', '<>', null)->groupBy('temperature_point_one')->count() > 0)
                     <th class="vertical-align" ><label >Температура в бурте</label></th>
@@ -43,7 +37,7 @@
                         <th class="vertical-align" ><label >Температура в шахте</label></th>
                 @endif
                 @if($monitoring->where('temperature_point_three', '<>', null)->groupBy('temperature_point_three')->count() > 0)
-                        <th class="vertical-align" ><label >Точка замера №3</label></th>
+                        <th class="vertical-align" ><label >Точка замера устройство</label></th>
                 @endif
                 @if($monitoring->where('temperature_point_four', '<>', null)->groupBy('temperature_point_four')->count() > 0)
                         <th class="vertical-align" ><label >Точка замера №4</label></th>

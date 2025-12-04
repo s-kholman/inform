@@ -44,7 +44,7 @@
                             <th class="vertical-align" colspan="3"><label >Температура в шахте</label></th>
                         @endif
                         @if($group_monitoring->where('avg_temperature_point_three', '>', 0)->count() > 0)
-                            <th class="vertical-align" colspan="3"><label >Точка замера №3</label></th>
+                            <th class="vertical-align" colspan="3"><label >Точка замера устройство</label></th>
                         @endif
                         @if($group_monitoring->where('avg_temperature_point_four', '>', 0)->count() > 0)
                             <th class="vertical-align" colspan="3"><label >Точка замера №4</label></th>
@@ -164,6 +164,7 @@
                         <tr>
                             <td><a href="{{route('product.monitoring.devices.show.storage.day', ['id' => $storage_name_id, 'year' => $year_id, 'day' => $value->date])}}">{{\Illuminate\Support\Carbon::parse($value->date)->format('d.m.Y')}}</a></td>
                             {{--<td>{{$value->date}}</td>--}}
+                           {{-- {{$number = \Faker\Core\Number::spell(88, locale: 'fr');}}--}}
                             @if($group_monitoring->where('avg_temperature_point_one', '>', 0)->count() > 0)
                                 <td>{{round($value->max_temperature_point_one, 1)}}</td>
                                 <td>{{round($value->min_temperature_point_one, 1)}}</td>
