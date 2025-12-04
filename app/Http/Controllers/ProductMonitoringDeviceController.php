@@ -7,7 +7,6 @@ use App\Models\ProductMonitoring;
 use App\Models\ProductMonitoringDevice;
 use App\Models\StorageName;
 use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -116,6 +115,7 @@ dump($group_monitoring);
             return \response()->redirectToRoute('monitoring.index', ['year' => $year_id]);
         }
 
+       // Number::spell();
         $line_query_group_monitoring = $group_monitoring;
         $line_query = ProductMonitoring::query()
             ->with('phase.StoragePhaseTemperature')

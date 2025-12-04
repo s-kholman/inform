@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-simplexml": "*",
         "ext-xmlreader": "*",
         "ext-xmlwriter": "*",
@@ -16,17 +16,19 @@
         "evilfreelancer/routeros-api-php": "^1.5",
         "guzzlehttp/guzzle": "^7.2",
         "icehouse-ventures/laravel-chartjs": "^4.2",
-        "laravel/framework": "^10.0",
-        "laravel/sanctum": "^3.2",
+        "laravel/framework": "^11",
+        "nunomaduro/termwind": "^v2",
+        "laravel/sanctum": "^4",
+        "ndum/laravel-snmp": "^v2",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
-        "laravelcollective/html": "^6.4",
         "league/flysystem-ftp": "^3.29",
         "mike42/escpos-php": "^4.0",
-        "ndum/laravel-snmp": "^1.9",
+        "nesbot/carbon": "^2.73",
         "php-mqtt/client": "^2.0",
         "smalot/pdfparser": "^2.4",
-        "spatie/laravel-permission": "^6.9"
+        "spatie/laravel-permission": "^6.9",
+        "xenon/laravelhtml-collective": "^6.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
@@ -34,7 +36,6 @@
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.0",
         "spatie/laravel-ignition": "^2.0"
     },
