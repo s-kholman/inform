@@ -25,12 +25,17 @@ class CorporateCommunicationLoadDetailController extends Controller
             preg_match("/(\d{2})\.(\d{2})\.(\d{4})/", $pdf, $date);
             //Проверка файла на корректность (Если регулярное выражение не вернуло строку, значит что-то не так)
 
-
             if (array_key_exists(0, $date)){
                 $mount = date('n', strtotime($date[0]));
                 $year = date('Y', strtotime($date[0]));
 
-                preg_match_all("/(?<=Абонент\s)\d{11}/", $pdf, $arrPhone); //Получаем массив телефонов
+                /*Получаем массив телефонов*/
+                preg_match_all("/(?<=Абонент)\d{11}/", $pdf, $arrPhone);
+                if (empty($arrPhone)){
+                    preg_match_all("/(?<=Абонент\s)\d{11}/", $pdf, $arrPhone);
+                }
+                /*Получаем массив телефонов*/
+
                 preg_match_all("/(?<=Итого начисления)(.+?)р/", $pdf, $arrSumma); //Получаем начисления по телефонам
                 //получаем связку телефон = сумма начисления
                 foreach ($arrSumma[1] as $value){
