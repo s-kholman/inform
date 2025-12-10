@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('productMonitoring/{id?}/{date?}', ProductMonitoringController::class);
 Route::get('szr/{id?}', SzrController::class);
 Route::get('sevooborot/{id?}', SevooborotController::class);
-Route::get('permission/{role}', PermissionController::class);
+//Route::get('permission/{role}', PermissionController::class);
 Route::post('voucher/create', [VoucherController::class, 'voucherCreate']);
 Route::post('voucher/get', [VoucherController::class, 'voucherGet']);
 Route::post('ike', IkeVpnController::class);
