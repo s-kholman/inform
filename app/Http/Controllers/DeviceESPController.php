@@ -129,6 +129,12 @@ class DeviceESPController extends Controller
             $temperature_humidity = $this->data['humidity_t'] ?? null;
         }
 
+        //Переписываем измерения на устройстве если активирован 13 градусник
+
+        if (!empty($point[13])){
+            $temperature_humidity = $point[13];
+        }
+
         //!empty($point) &&
         if ($this->modelESP->storage_name_id <> null && (array_key_exists('humidity', $this->data) || array_key_exists('temperature', $this->data))) {
             ProductMonitoringDevice::query()
