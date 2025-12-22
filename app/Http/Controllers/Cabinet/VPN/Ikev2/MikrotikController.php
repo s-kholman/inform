@@ -7,6 +7,7 @@ use App\Http\Controllers\SMS\Send\SmsSend;
 use App\Jobs\SSLSign;
 use App\Models\VpnInfo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use RouterOS\Client;
 use RouterOS\Query;
@@ -190,7 +191,7 @@ class MikrotikController extends Controller
     public function sslCheckInvalidAfter()
     {
         if (!empty($this->sslActive)){
-            $day = Carbon::parse(date('Y-m-d',strtotime(Str::replace('/', ' ', $this->sslActive[0]['invalid-after']))))->diffInDays(now());
+            $day = Carbon::parse(date('Y-m-d',strtotime(Str::replace('/', ' ', $this->sslActive[0]['invalid-after']))))->diffInDays(now())*-1;
             if ($day <= 30) {
                 $this->sslRevoke();
             }
