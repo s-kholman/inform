@@ -7,7 +7,7 @@ use App\Http\Requests\LoadCounterpartyInformationRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-class CreateExportInformationController extends Controller
+class CreateExportInformationUPPController extends Controller
 {
     private \XMLWriter $xw;
 
