@@ -74,7 +74,8 @@ class CardsController extends Controller
 
     public function createDischarge(LoadCounterpartyInformationRequest $request): RedirectResponse
     {
-        $createExportInformation = new CreateExportInformationController();
+        //$createExportInformation = new CreateExportInformationUPPController();
+        $createExportInformation = new CreateExportInformationERPController();
         $createExportInformation($request, $this->messages);
 
         file_put_contents(storage_path() .'/app/public/card/inform_export.json', json_encode($this->messages->messages));

@@ -84,8 +84,8 @@ class ParseInformationContragentController extends Controller
 
     private function ndsText($data):string
     {
-        if (round($data[13]) == 20){
-            return 'НДС20';
+        if (round($data[13]) == 22){
+            return 'bf48a54e-d192-11f0-902e-005056bd6494';
         } else {
             $this->messages->addMessage('NDSError',$data[2], $data[0]);
             return 'НДС0';

@@ -191,7 +191,10 @@ class MikrotikController extends Controller
     public function sslCheckInvalidAfter()
     {
         if (!empty($this->sslActive)){
-            $day = Carbon::parse(date('Y-m-d',strtotime(Str::replace('/', ' ', $this->sslActive[0]['invalid-after']))))->diffInDays(now())*-1;
+            $day = Carbon::parse(date('Y-m-d',strtotime(Str::replace('/', ' ', $this->sslActive[0]['invalid-after']))))->diffInDays(now());
+            if ($day < 0){
+                $day = $day *-1;
+            }
             if ($day <= 30) {
                 $this->sslRevoke();
             }
