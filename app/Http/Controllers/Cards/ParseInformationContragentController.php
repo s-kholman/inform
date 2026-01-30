@@ -86,9 +86,13 @@ class ParseInformationContragentController extends Controller
     {
         if (round($data[13]) == 22){
             return 'bf48a54e-d192-11f0-902e-005056bd6494';
-        } else {
+        }
+        elseif (round($data[13]) == 20){
+            return '5879dd35-6d05-11f0-902c-005056bd6494';
+        }
+        else {
             $this->messages->addMessage('NDSError',$data[2], $data[0]);
-            return 'НДС0';
+            return '00000000-0000-0000-0000-000000000000';
         }
     }
 

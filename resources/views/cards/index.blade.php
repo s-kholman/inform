@@ -19,7 +19,7 @@
                         @enderror
 
                         <label for="counterpartyNumber">Номер входящего документа</label>
-                        <input name="counterpartyNumber" id="counterpartyNumber" type="text" value="{{old('counterpartyNumber')}}"
+                        <input name="counterpartyNumber" id="counterpartyNumber" type="text" value="{{old('counterpartyNumber') ?? '1'}}"
                                class="form-control @error('counterpartyNumber') is-invalid @enderror">
                         @error('counterpartyNumber')
                         <span class="invalid-feedback">
@@ -28,7 +28,7 @@
                         @enderror
 
                         <label for="documentDate">Дата документа</label>
-                        <input name="documentDate" id="documentDate" type="date" value="{{old('documentDate')}}"
+                        <input name="documentDate" id="documentDate" type="date" value="{{old('documentDate') ?? now()->format('Y-m-01')}}"
                                class="form-control @error('documentDate') is-invalid @enderror">
                         @error('documentDate')
                         <span class="invalid-feedback">
@@ -129,7 +129,7 @@
                             <li>
                                 <b>Ошибка НДС ...</b>
                                 <ul>
-                                    <li><b>Причина:</b> <p>В файле от контрагента НДС отлична от 20</p></li>
+                                    <li><b>Причина:</b> <p>В файле от контрагента НДС отлична от допустимой ставки 20% или 22%</p></li>
                                     <li>
                                         <b>Решение:</b>
                                         <p>Исправить вручную в документе 1С</p>
