@@ -55,11 +55,11 @@ class CreateExportInformationERPController extends Controller
         $this->tag('v8:Number');
         $this->tag('v8:Posted', 'false');
         $this->tagAtr('v8:Валюта', '98e04e57-6d04-11f0-902c-005056bd6494','xsi:type','v8:CatalogRef.Валюты');
-        $this->tagAtr('v8:Партнер', 'dd8ac8d8-c213-41df-85e1-72f5ac9741cb','xsi:type','v8:CatalogRef.Партнеры');
+        $this->tagAtr('v8:Партнер', '2d61a426-088a-11f0-812e-6eae8b538cc9','xsi:type','v8:CatalogRef.Партнеры');
         $this->tag('v8:ХозяйственнаяОперация', 'ЗакупкаУПоставщика');
         $this->tagAtr('v8:Подразделение', '00000000-0000-0000-0000-000000000000', 'xsi:type', 'v8:CatalogRef.СтруктураПредприятия');
         $this->tagAtr('v8:Склад', '13d00eac-c415-11e5-80e5-6eae8b538cc9', 'xsi:type', 'v8:CatalogRef.Склады');
-        $this->tagAtr('v8:Контрагент', 'dd8ac8d8-c213-41df-85e1-72f5ac9741cb', 'xsi:type', 'v8:CatalogRef.Контрагенты');
+        $this->tagAtr('v8:Контрагент', '2d61a426-088a-11f0-812e-6eae8b538cc9', 'xsi:type', 'v8:CatalogRef.Контрагенты');
         $this->tag('v8:СуммаДокумента', '1000');
         $this->tag('v8:СуммаВзаиморасчетовПоЗаказу', '0');
         $this->tagAtr('v8:Менеджер', '8d1d6cb4-7881-11ea-811f-6eae8b538cc9', 'xsi:type', 'v8:CatalogRef.Пользователи');
@@ -85,7 +85,7 @@ class CreateExportInformationERPController extends Controller
         $this->tag('v8:ПоступлениеПоЗаказам', 'false');
         $this->tagAtr('v8:ГруппаФинансовогоУчета', '00000000-0000-0000-0000-000000000000', 'xsi:type', 'v8:CatalogRef.ГруппыФинансовогоУчетаРасчетов');
         $this->tag('v8:РегистрироватьЦеныПоставщика', 'false');
-        $this->tagAtr('v8:Договор', '4961ffc4-f4b9-11f0-9f62-0024ecf4e982', 'xsi:type', 'v8:CatalogRef.ДоговорыКонтрагентов');
+        $this->tagAtr('v8:Договор', '2d61a427-088a-11f0-812e-6eae8b538cc9', 'xsi:type', 'v8:CatalogRef.ДоговорыКонтрагентов');
         $this->tagAtr('v8:Автор', '8d1d6cb4-7881-11ea-811f-6eae8b538cc9', 'xsi:type', 'v8:CatalogRef.Пользователи');
         $this->tagAtr('v8:Руководитель', 'a7b1f485-d429-11f0-9f62-0024ecf4e982', 'xsi:type', 'v8:CatalogRef.ОтветственныеЛицаОрганизаций');
         $this->tag('v8:ПорядокРасчетов', 'ПоДоговорамКонтрагентов');
