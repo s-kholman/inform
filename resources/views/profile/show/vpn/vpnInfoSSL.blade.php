@@ -5,7 +5,7 @@
             Данные по текущему SSL:
             <div class="fw-bold">
                 Дата окончания: {{ $ssl_info ['expire'] }} <br>
-                Дней до окончания: {{ $ssl_info ['expires_after'] }}
+                Дней до окончания: {{ round($ssl_info ['expires_after']) }}
             </div>
         @else
             Данные по действующему SSL-сертификату не найдены!<br />
