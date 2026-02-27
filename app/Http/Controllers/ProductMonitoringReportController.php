@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Actions\harvest\HarvestAction;
 use App\Models\ProductMonitoring;
-use App\Models\ProductMonitoringDevice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\isNull;
 
 class ProductMonitoringReportController extends Controller
 {
@@ -35,7 +33,6 @@ class ProductMonitoringReportController extends Controller
             $group_monitoring = $this->reportDevice(now());
         }
 
-       // dd($group_monitoring);
         return view('production_monitoring.device.report.index',
             [
                 'date' => $dateSelect,
@@ -67,7 +64,6 @@ class ProductMonitoringReportController extends Controller
 
                         group by name, storage_name_id
 
-                           limit 30
                            ", ['day' => $date],
         );
     }

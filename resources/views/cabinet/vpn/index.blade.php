@@ -36,7 +36,7 @@
                             Данные по текущему SSL:
                         <div class="fw-bold">
                             Дата окончания: {{ $ssl_info ['expire'] }} <br>
-                            Дней до окончания: {{ $ssl_info ['expires_after'] }} <br>
+                            Дней до окончания: {{ round($ssl_info ['expires_after']) }} <br>
                         </div>
                             <div>
                                 @if($ssl_info ['expires_after'] <= 30)
