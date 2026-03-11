@@ -12,6 +12,7 @@ use App\Models\StorageMode;
 use App\Models\StorageName;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProductMonitoringController extends Controller
 {
@@ -246,14 +247,41 @@ class ProductMonitoringController extends Controller
     public function showFilialMonitoring($storage_id, $harvest_year_id)
     {
 
-        $monitoring = ProductMonitoring::query()
-            ->with(['phase.StoragePhaseTemperature', 'productMonitoringControl'])
-            ->where('storage_name_id', $storage_id)
-            ->where('harvest_year_id', $harvest_year_id)
-            ->orderBy('date', 'desc')
-            ->paginate(25)
-        ;
+        $monitoring_device = DB::select(
+            "select product_monitoring_devices.created_at::date as dateCreate,
 
+                    ROUND(AVG (temperature_point_one)::numeric, 1) as avg_temperature_point_one,
+                    ROUND(AVG (temperature_point_two)::numeric, 1) as avg_temperature_point_two,
+                    ROUND(AVG (temperature_humidity)::numeric, 1) as avg_temperature_humidity,
+                    ROUND(AVG (humidity)::numeric, 0) as avg_humidity
+
+                    from product_monitoring_devices
+                    where product_monitoring_devices.storage_name_id = :storage_name_id
+                        and product_monitoring_devices.harvest_year_id = :harvest_year_id
+
+                    group by dateCreate
+                           ", ['storage_name_id' => $storage_id, 'harvest_year_id' => $harvest_year_id]
+        );
+
+        if (!empty($monitoring_device)){
+            foreach ($monitoring_device as $item) {
+                foreach ($item as $item2) {
+                    $outArray[$item2] = $item;
+                    break;
+                }
+            }
+        } else {
+            $outArray [] = [];
+        }
+
+
+         $monitoring = ProductMonitoring::query()
+     ->with(['phase.StoragePhaseTemperature', 'productMonitoringControl'])
+     ->where('storage_name_id', $storage_id)
+     ->where('harvest_year_id', $harvest_year_id)
+     ->orderBy('date', 'desc')
+     ->paginate(25)
+ ;
         $visibleButton = ProductMonitoringDevice::query()
             ->where('harvest_year_id', $harvest_year_id)
             ->where('storage_name_id', $storage_id)
@@ -264,6 +292,7 @@ class ProductMonitoringController extends Controller
                 [
                     'monitoring' => $monitoring,
                     'visibleButton' => $visibleButton,
+                    'monitoring_device' => $outArray,
                 ]
             );
         } else {
