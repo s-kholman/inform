@@ -57,6 +57,7 @@
                 <th colspan="4">Работа исполнителя</th>
                 <th rowspan="2" class="vertical-align"><label class="rotate">Контроль директор</label></th>
                 <th rowspan="2" class="vertical-align"><label class="rotate">Контроль зам. ген. дир</label></th>
+                <th colspan="4">Авто контроль</th>
             </tr>
             <tr>
                 <th class="vertical-align" style="background-color: #f3f9ff"><label class="rotate">Фаза хранения</label></th>
@@ -67,6 +68,10 @@
                 <th class="vertical-align"><label class="rotate">Влажность в боксе</label></th>
                 <th class="vertical-align"><label class="rotate">Конденсат</label></td>
                 <th class="vertical-align"><label class="rotate">Комментарий</label></th>
+                <th class="vertical-align"><label class="rotate">Температура в бурте</label></td>
+                <th class="vertical-align"><label class="rotate">Температура в шахте</label></td>
+                <th class="vertical-align"><label class="rotate">Температура устройство</label></td>
+                <th class="vertical-align"><label class="rotate">Влажность</label></td>
             </tr>
 
             @foreach($monitoring as $id => $value)
@@ -119,6 +124,26 @@
                             @endif
                         @empty
                         @endforelse
+                    </td>
+                    <td>
+                       @if(array_key_exists($value->date, $monitoring_device))
+                            {{$monitoring_device[$value->date]->avg_temperature_point_one ?? ''}}
+                        @endif
+                    </td>
+                    <td>
+                        @if(array_key_exists($value->date, $monitoring_device))
+                            {{$monitoring_device[$value->date]->avg_temperature_point_two ?? ''}}
+                        @endif
+                    </td>
+                    <td>
+                        @if(array_key_exists($value->date, $monitoring_device))
+                            {{$monitoring_device[$value->date]->avg_temperature_humidity ?? ''}}
+                        @endif
+                    </td>
+                    <td>
+                        @if(array_key_exists($value->date, $monitoring_device))
+                            {{$monitoring_device[$value->date]->avg_humidity ?? ''}}
+                        @endif
                     </td>
                 </tr>
             @endforeach

@@ -43,6 +43,7 @@ class ParserStorageLocationController extends Controller
                     }
                 }
             }
+        dd($storageLocation);
         return $storageLocation;
     }
 }

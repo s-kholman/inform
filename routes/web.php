@@ -297,9 +297,9 @@ Route::get('/printers', [PrinterController::class, 'index'])->name('Printer.inde
 Route::get('/printer/{id}/show/{currentStatus}', [PrinterController::class, 'show'])->name('printer.show')->middleware('can:viewAny, App\Models\administrator');
 Route::post('/printers', [PrinterController::class, 'index'])->name('printer.toDayGet')->middleware('can:viewAny, App\Models\administrator');
 
-Route::get('/daily', [PrinterController::class, 'daily']);
-Route::get('/dailyone', [PrinterController::class, 'dailyone']);
-Route::get('/job', [PrinterController::class, 'job']);
+//Route::get('/daily', [PrinterController::class, 'daily']);
+//Route::get('/dailyone', [PrinterController::class, 'dailyone']);
+//Route::get('/job', [PrinterController::class, 'job']);
 
 Route::view('/reference', 'printer.reference');
 
