@@ -17,6 +17,7 @@ use App\Http\Controllers\DeviceESPSettingsController;
 use App\Http\Controllers\DeviceESPUpdateController;
 use App\Http\Controllers\DeviceNameController;
 use App\Http\Controllers\DeviceThermometerController;
+use App\Http\Controllers\DeviceWarningTemperatureStorageController;
 use App\Http\Controllers\FactoryGuesController;
 use App\Http\Controllers\FactoryMaterialController;
 use App\Http\Controllers\FilialController;
@@ -276,6 +277,18 @@ Route::post('monitoring/devices/report', [ProductMonitoringReportController::cla
 /**
  * Отчет по температурному мониторингу продукции в буртах
  */
+
+/**
+ * Мониторинг и отправка оповещения о критической температуре в боксах
+ **/
+Route::group(['middleware' => ['can:super-user']], function () {
+    Route::get('device/warning/temperature/storage', [DeviceWarningTemperatureStorageController::class, 'index']);
+    Route::post('device/warning/temperature/storage/store', [DeviceWarningTemperatureStorageController::class, 'store'])->name('device.warning.temperature.storage.store');
+    Route::delete('device/warning/temperature/storage/destroy/{storage}', [DeviceWarningTemperatureStorageController::class, 'destroy'])->name('device.warning.temperature.storage.destroy');
+});
+/**
+ * Мониторинг и отправка оповещения о критической температуре в боксах
+ **/
 Route::group(['middleware' => ['can:ProductMonitoring.user.view']], function () {
     Route::resource('phase', StoragePhaseController::class);
     Route::get('monitoring/index/{year?}', [ProductMonitoringController::class, 'index'])->name('monitoring.index');

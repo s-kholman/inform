@@ -43,7 +43,7 @@ class SmsSend
 
     private function messageLength($message) : bool
     {
-        if(strlen($message) <= 100) {
+        if(mb_strlen($message) <= 100) {
 
             return true;
 
