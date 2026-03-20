@@ -38,8 +38,8 @@
             @enderror
 
             <label for="role">Выберите роль оповещения</label>
-            <select name="role" id="role" class="form-select @error('role') is-invalid @enderror">
-                <option value=""></option>
+            <select name="role" id="role" class="form-select @error('role') is-invalid @enderror" disabled>
+                <option value="0"></option>
                 @forelse($role as $item)
                     <option value="{{$item->id}}"> {{$item->name}}</option>
                 @empty
@@ -61,6 +61,7 @@
                            value="{{old('temperatureMax')}}"
                            id="temperatureMax"
                            name="temperatureMax"
+                           disabled
                     >
                 </div>
                 <div class="col-6">
@@ -70,6 +71,7 @@
                            value="{{old('temperatureMin') ?? 0}}"
                            id="temperatureMin"
                            name="temperatureMin"
+                           disabled
                     >
                 </div>
 
@@ -92,7 +94,7 @@
 
 
 
-    <div class="col-sm-8">
+    <div class="col-sm-8 mt-4">
     @forelse($deviceWarningTemperatureStorage as $item)
         @if($loop->first)
             <table class="table table-bordered text-center caption-top">
@@ -132,7 +134,6 @@
                         </div>
                     </td>
                 </tr>
-            <br>
         @if($loop->last)
             </table>
             @endif
@@ -141,7 +142,7 @@
     @endforelse
     </div>
 
-    <div class="col-sm-8">
+    <div class="col-sm-8 mt-4">
         @forelse($role as $item)
             @if($loop->first)
                 <table class="table table-bordered text-center caption-top">
@@ -161,7 +162,6 @@
                             @endforelse
                         </td>
                     </tr>
-                    <br>
                     @if($loop->last)
                 </table>
             @endif
@@ -173,6 +173,88 @@
 @endsection('info')
 
 @section('script')
+        <script>
+            const url = window.location.origin;
+            const storageNameObject = {!! $storageName !!};
+            const storageNameSelect = document.getElementById('storageName')
+            const roleSelect = document.getElementById('role')
+            const valueTemperatureMax = document.getElementById('temperatureMax')
+            const valueTemperatureMin = document.getElementById('temperatureMin')
+            const checkedActive = document.getElementById('active')
+
+            storageNameSelect.addEventListener('change', (event) => {
+
+                if(storageNameSelect.selectedIndex > 0){
+                    storageToDevice(event.target.value)
+                    roleSelect.disabled = false
+                } else {
+                    roleSelect.disabled = true
+                }
+
+            })
+
+            roleSelect.addEventListener('change', (event) => {
+
+                if(roleSelect.selectedIndex > 0){
+                    valueTemperatureMax.disabled = false
+                    valueTemperatureMin.disabled = false
+                } else {
+                    valueTemperatureMax.value = ''
+                    valueTemperatureMin.value = 0
+                    valueTemperatureMax.disabled = true
+                    valueTemperatureMin.disabled = true
+                }
+
+            })
+
+            async function storageToDevice(storageNameId){
+                let formData = new FormData
+                formData.append('storageNameId', storageNameId)
+                const response = await fetch(url + '/api/v1/device/warning/temperature/storage/get',
+                    {
+                        method: 'POST',
+                        headers:
+                            {
+                                "Accept": "application/json",
+                            },
+                        body: formData,
+                    })
+                const data = await response.json()
+
+
+
+                if (data['message'] != 'empty'){
+
+                    updateRoleSelect(data['role_id'])
+                    updateTemperature(data)
+                    checkedActiveStatus(data)
+
+                } else {
+                    roleSelect.value = 0;
+                    valueTemperatureMax.value = ''
+                    valueTemperatureMin.value = 0
+                    valueTemperatureMax.disabled = true
+                    valueTemperatureMin.disabled = true
+                    checkedActive.checked = true
+                }
+            }
+
+            function updateRoleSelect(role_id) {
+                roleSelect.value = role_id
+            }
+
+            function updateTemperature(data) {
+                valueTemperatureMax.disabled = false
+                valueTemperatureMin.disabled = false
+                valueTemperatureMax.value = data['temperature_max']
+                valueTemperatureMin.value = data['temperature_min']
+            }
+
+            function checkedActiveStatus(data) {
+                checkedActive.checked = data['active']
+            }
+
+        </script>
 
     @include('scripts\destroy-modal')
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\DeviceWarningTemperatureStorage\DeviceWarningTemperatureStorageGet;
 use App\Http\Controllers\Api\v1\ESP\ConfirmationController;
 use App\Http\Controllers\Api\v1\ESP\GetSettingsController;
 use App\Http\Controllers\Api\v1\ESP\StatusController;
@@ -7,7 +8,6 @@ use App\Http\Controllers\Api\v1\ESP\StorageToDeviceController;
 use App\Http\Controllers\Api\v1\ESP\TemperatureHandlerController;
 use App\Http\Controllers\Api\v1\ESP\ThermometerDeactivate;
 use App\Http\Controllers\Api\v1\IkeVpnController;
-use App\Http\Controllers\api\v1\PermissionController;
 use App\Http\Controllers\Api\v1\ProductMonitoringController;
 use App\Http\Controllers\Api\v1\SevooborotController;
 use App\Http\Controllers\Api\v1\SzrController;
@@ -33,3 +33,4 @@ Route::post('esp/temperature', TemperatureHandlerController::class);
 Route::post('esp/get/settings', GetSettingsController::class);
 Route::post('esp/thermometer/deactivate', ThermometerDeactivate::class);
 Route::post('esp/storage/device/get', StorageToDeviceController::class);
+Route::post('device/warning/temperature/storage/get', DeviceWarningTemperatureStorageGet::class);
