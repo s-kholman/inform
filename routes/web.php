@@ -25,6 +25,7 @@ use App\Http\Controllers\GuesController;
 use App\Http\Controllers\HarvestYearController;
 use App\Http\Controllers\HeightController;
 use App\Http\Controllers\MachineController;
+use App\Http\Controllers\MaxBot\MaxBotTestController;
 use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
 use App\Http\Controllers\PassFilialController;
@@ -409,7 +410,9 @@ Route::resource('warming', WarmingController::class);
 Route::resource('vpn', VpnInfoController::class)->middleware('can:VpnInfo.user.view');
 Route::post('vpn/access/request', IKEv2AccessRequestToCabinet::class)->middleware('can:VpnInfo.user.create')->name('vpn.access.request');
 
-
+Route::group(['middleware' => ['can:super-user']], function () {
+    ///Route::get('max/bot', [MaxBotTestController::class, 'index']);
+});
 
 Auth::routes();
 
