@@ -195,7 +195,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-
+        /*
+         * MAX BOT
+         * */
+        BushlanovDev\MaxMessengerBot\Laravel\MaxBotServiceProvider::class,
     ],
 
     /*
@@ -211,6 +214,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'MaxBot' => BushlanovDev\MaxMessengerBot\Laravel\MaxBotFacade::class,
     ])->toArray(),
 
 ];
