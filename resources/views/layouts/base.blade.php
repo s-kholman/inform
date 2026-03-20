@@ -170,6 +170,9 @@
                                 <a href="/esp/settings" class="nav-link px-0"> <span class="d-none d-sm-inline">Настройка ESP</span></a>
                             </li>
                             <li>
+                                <a href="/device/warning/temperature/storage" class="nav-link px-0"> <span class="d-none d-sm-inline">Крит температура</span></a>
+                            </li>
+                            <li>
                                 <a href="/post" class="nav-link px-0"> <span class="d-none d-sm-inline">Должность</span></a>
                             </li>
                             <li>

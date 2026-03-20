@@ -28,7 +28,8 @@
         "php-mqtt/client": "^2.0",
         "smalot/pdfparser": "^2.4",
         "spatie/laravel-permission": "^6.9",
-        "xenon/laravelhtml-collective": "^6.5"
+        "xenon/laravelhtml-collective": "^6.5",
+      "ext-pdo": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
