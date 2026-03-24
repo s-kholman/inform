@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\MaxBot\MaxBotSendMessageController;
 use App\Http\Controllers\SMS\Send\SmsSend;
 use App\Models\DeviceWarningTemperatureStorage;
 use App\Models\ProductMonitoringDevice;
@@ -34,32 +35,43 @@ class DeviceWarningTemperatureStorageParserController extends Controller
 
         if (!empty($parser)) {
 
-            $users = User::with(['roles', 'Registration'])->get()
+            $users = User::with(['roles', 'Registration.MaxBotUser'])->get()
                 ->filter(fn($user) => $user->roles->where('name', '=', $parser->role->name)->toArray()
                 );
 
             if ($users->isNotEmpty()) {
 
                 $sms = new SmsSend();
+                $maxBotSendMessage = new MaxBotSendMessageController();
 
                 $message = $parser->storageName->name;
 
                 if (!empty($productMonitoringDevice->temperature_point_one) && $parser->temperature_min > $productMonitoringDevice->temperature_point_one) {
-                    $message .= " Бурт t " . round($productMonitoringDevice->temperature_point_one, 1) . "  ниже нормы";
+                    $message .= " бурт t " . round($productMonitoringDevice->temperature_point_one, 1) . "  ниже нормы";
                 } elseif (!empty($productMonitoringDevice->temperature_point_one) && $parser->temperature_max < $productMonitoringDevice->temperature_point_one) {
-                    $message .= " Бурт t " . round($productMonitoringDevice->temperature_point_one, 1) . ", это выше нормы";
+                    $message .= " бурт t " . round($productMonitoringDevice->temperature_point_one, 1) . ", это выше нормы";
                 }
 
                 if (!empty($productMonitoringDevice->temperature_point_two) && $parser->temperature_min > $productMonitoringDevice->temperature_point_two) {
-                    $message .= " Шахта t " . round($productMonitoringDevice->temperature_point_two, 1) . " ниже нормы";
+                    $message .= " шахта t " . round($productMonitoringDevice->temperature_point_two, 1) . " ниже нормы";
                 }
                 if (!empty($productMonitoringDevice->temperature_humidity) && $parser->temperature_min > $productMonitoringDevice->temperature_humidity) {
-                    $message .= " Устр. t " . round($productMonitoringDevice->temperature_humidity, 1 . " ниже нормы");
+                    $message .= " устр. t " . round($productMonitoringDevice->temperature_humidity, 1 . " ниже нормы");
                 }
 
                 foreach ($users as $user) {
 
                     $sms->send($user->Registration->phone, $message);
+
+                    if (!empty($user->Registration->MaxBotUser->max_user_id)){
+
+                        try {
+                            $maxBotSendMessage($user->Registration->MaxBotUser, $message);
+                        }catch (\Throwable $exception){
+                            Log::warning('Error send message MAX: ' . $exception);
+                        }
+
+                    }
 
                 }
 
