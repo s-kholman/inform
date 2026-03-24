@@ -6,6 +6,8 @@ use App\Actions\PhonePrepare\PhonePrepare;
 use App\Http\Controllers\Controller;
 use App\Models\MaxBotUser;
 use App\Models\Registration;
+use BushlanovDev\MaxMessengerBot\Api;
+use BushlanovDev\MaxMessengerBot\Enums\MessageFormat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -39,7 +41,15 @@ class MaxBotValidateToPhoneController extends Controller
                 }
 
             } else {
-                Log::info('оповещаем администратора о регистрации в MAX, от пользователя просим ФИО');
+                $api = new Api(env('MAXBOT_ACCESS_TOKEN'));
+
+                $api->sendMessage(
+                    env('MAXBOT_ADMIN_USER'),
+                    null,
+                    'В чат бота отправили контакт id '.$userId.', телефон ' . $validate['phone'],
+                    null,
+                    MessageFormat::Markdown
+                );
             }
         }
     }
