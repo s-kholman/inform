@@ -20,7 +20,7 @@ class MaxBotMessageController extends Controller
                 [
                     'max_user_id' => $request['message']['sender']['user_id'],
                     'max_chat_id' => $request['message']['recipient']['chat_id'] ?? null,
-                    'timestamp' => Carbon::createFromTimestampMs($request['timestamp'])->format('Y-m-d H:i:s'),
+                    'timestamp' => Carbon::createFromTimestampMs($request['timestamp'])->setTimezone('Asia/Yekaterinburg')->format('Y-m-d H:i:s'),
                     'message' => $request['message']['body']['text']
                 ]
             );
