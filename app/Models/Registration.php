@@ -35,4 +35,10 @@ class Registration extends Model
     {
         return $this->belongsTo(VpnInfo::class, 'id', 'registration_id');
     }
+
+    public function MaxBotUser(): BelongsTo
+    {
+        return$this->belongsTo(MaxBotUser::class, 'id', 'registration_id');
+    }
+
 }

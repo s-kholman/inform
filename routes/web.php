@@ -411,7 +411,7 @@ Route::resource('vpn', VpnInfoController::class)->middleware('can:VpnInfo.user.v
 Route::post('vpn/access/request', IKEv2AccessRequestToCabinet::class)->middleware('can:VpnInfo.user.create')->name('vpn.access.request');
 
 Route::group(['middleware' => ['can:super-user']], function () {
-    ///Route::get('max/bot', [MaxBotTestController::class, 'index']);
+    Route::get('max/bot', [MaxBotTestController::class, 'index']);
 });
 
 Auth::routes();
