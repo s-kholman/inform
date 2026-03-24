@@ -28,7 +28,7 @@ class MaxBotMessageController extends Controller
         $api = new Api(env('MAXBOT_ACCESS_TOKEN'));
 
         $api->sendMessage(
-            $request['message']['sender']['user_id'],
+            env('MAXBOT_ADMIN_USER'),
             null,
             'В чат бота отправили сообщение ('.$request['message']['sender']['user_id'].'): ' . $request['message']['body']['text'],
             null,
