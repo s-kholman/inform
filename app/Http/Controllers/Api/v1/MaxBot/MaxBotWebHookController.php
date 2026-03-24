@@ -51,7 +51,6 @@ class MaxBotWebHookController extends Controller
 
                 $messageStore->store($request);
 
-              //  Log::info($message['body']['text']);
             }
         }
 
