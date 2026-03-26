@@ -10,14 +10,5 @@ use function env;
 
 class MaxBotUserController extends Controller
 {
-    public function BotStarted ($WebHook)
-    {
 
-
-    }
-
-    public function sendMaxBot(MaxBotUser $maxBotUser)
-    {
-
-    }
 }
