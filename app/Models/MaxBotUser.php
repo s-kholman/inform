@@ -10,6 +10,7 @@ class MaxBotUser extends Model
         [
             'max_user_id',
             'first_name',
+            'last_name',
             'registration_id',
             'description',
         ];

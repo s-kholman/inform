@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class MaxBotValidateToPhoneController extends Controller
 {
-    public function __invoke(string $phone, string $userId)
+    public function __invoke(string $phone, $message)
     {
         $vPhone = new PhonePrepare();
         $validate = $vPhone($phone);
@@ -24,10 +24,10 @@ class MaxBotValidateToPhoneController extends Controller
                 ->where('activation', true)
                 ->first()
             ;
-
+//empty($message['body']['attachments'][0]['payload']['vcf_info']
             if (!empty($registration)){
                 $maxUser = MaxBotUser::query()
-                    ->where('max_user_id', $userId)
+                    ->where('max_user_id', $message['body']['attachments'][0]['payload']['max_info']['user_id'])
                     ->first();
 
                 if (!empty($maxUser)){
@@ -47,7 +47,11 @@ class MaxBotValidateToPhoneController extends Controller
                 $api->sendMessage(
                     env('MAXBOT_ADMIN_USER'),
                     null,
-                    'В чат бота отправили контакт id '.$userId.', телефон ' . $validate['phone'],
+                    'В чат бота отправили контакт id '.
+                    $message['body']['attachments'][0]['payload']['max_info']['user_id']. ' '.
+                    $message['body']['attachments'][0]['payload']['max_info']['first_name']. ' '.
+                    $message['body']['attachments'][0]['payload']['max_info']['last_name']. ' '.
+                    ', телефон ' . $validate['phone'],
                     null,
                     MessageFormat::Markdown
                 );
