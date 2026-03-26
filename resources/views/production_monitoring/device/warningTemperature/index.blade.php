@@ -113,7 +113,7 @@
                     <td>{{$item->storageName->name}}</td>
                     <td>{{$item->temperature_max}}</td>
                     <td>{{$item->temperature_min}}</td>
-                    <td>{{$item->active ? 'Включено' : 'Выключено'}}</td>
+                    <td @if($item->active)style="color: #1c7430"@else style="color: #c92828"@endif>{{$item->active ? 'Включено' : 'Выключено'}}</td>
                     <td>{{$item->role->name}}</td>
                     <td>
                         <div class="dropdown">
@@ -148,7 +148,7 @@
                 <table class="table table-bordered text-center caption-top">
                     <tr>
                         <th>№</th>
-                        <th>Модель</th>
+                        <th>Роль</th>
                         <th>ФИО</th>
                     </tr>
                     @endif
