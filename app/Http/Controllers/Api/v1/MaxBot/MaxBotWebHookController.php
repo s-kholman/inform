@@ -42,7 +42,7 @@ class MaxBotWebHookController extends Controller
 
                 $validate = new MaxBotValidateToPhoneController();
 
-                $validate($phone, $message['body']['attachments'][0]['payload']['max_info']['user_id']);
+                $validate($phone, $message);
             }
 
             if (!empty($message['body']['text'])) {
