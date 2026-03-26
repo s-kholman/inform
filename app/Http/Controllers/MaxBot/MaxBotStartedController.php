@@ -19,8 +19,6 @@ class MaxBotStartedController extends Controller
                     ],
                     [
                         'first_name' => $maxUser['first_name'],
-                        //'registration_id' => null,
-                        //'description' => null,
                     ]
                 );
             $identificationUser = new MaxBotIdentificationUserController();

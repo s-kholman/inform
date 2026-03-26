@@ -53,6 +53,5 @@ class MaxBotWebHookController extends Controller
 
             }
         }
-
     }
 }

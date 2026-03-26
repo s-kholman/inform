@@ -21,6 +21,7 @@ class MaxBotValidateToPhoneController extends Controller
         if ($validate['status']){
             $registration = Registration::query()
                 ->where('phone', $validate['phone'])
+                ->where('activation', true)
                 ->first()
             ;
 

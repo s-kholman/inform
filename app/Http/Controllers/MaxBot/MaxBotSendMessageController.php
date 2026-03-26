@@ -17,9 +17,9 @@ class MaxBotSendMessageController extends Controller
         $api->sendMessage(
             $maxBotUser->max_user_id,
             null,
-            $message, // Текст сообщения, вы можете использовать HTML или Markdown
+            $message,
             null,
-            MessageFormat::Markdown // Формат сообщения (Markdown или HTML)
+            MessageFormat::Markdown
         );
     }
 }

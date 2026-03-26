@@ -6,7 +6,6 @@ use App\Actions\Acronym\AcronymFullNameUser;
 use App\Http\Controllers\Controller;
 use App\Models\MaxBotUser;
 use App\Models\Registration;
-use Illuminate\Http\Request;
 
 class MaxBotIdentificationUserController extends Controller
 {

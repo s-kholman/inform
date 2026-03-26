@@ -9,12 +9,13 @@ use App\Http\Requests\SMS\SmsInRequest;
 use App\Models\Sms;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class SmsController extends Controller
 {
 
-    public function smsIn(SmsInRequest $request): Builder|Model|bool
+    public function smsIn(SmsInRequest $request)//: Builder|Model|bool
     {
             $sms = Sms::query()
                 ->create(
@@ -24,9 +25,10 @@ class SmsController extends Controller
                         'smsType' => 2,
                         'smsActive' => true
                     ]);
-
+       // Log::warning('ggg');
+        //return response( ['message', 'error'], 201);
                 $smsParser = new SmsParser($sms);
-
-                return $smsParser->smsParser();
+                $smsParser->smsParser();
+                return response(null, 200);
     }
 }

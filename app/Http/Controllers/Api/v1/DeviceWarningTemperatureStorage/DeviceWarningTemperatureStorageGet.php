@@ -11,7 +11,6 @@ class DeviceWarningTemperatureStorageGet extends Controller
 {
     public function __invoke(Request $request)
     {
-        Log::info('ID = ' . $request->post('storageNameId'));
          $model = DeviceWarningTemperatureStorage::query()
             ->where('storage_name_id', $request->post('storageNameId'))
             ->first()
