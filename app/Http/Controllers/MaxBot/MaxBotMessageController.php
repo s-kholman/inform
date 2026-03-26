@@ -30,7 +30,11 @@ class MaxBotMessageController extends Controller
         $api->sendMessage(
             env('MAXBOT_ADMIN_USER'),
             null,
-            'В чат бота отправили сообщение ('.$request['message']['sender']['user_id'].'): ' . $request['message']['body']['text'],
+            'В чат бота отправили сообщение (id:'.
+            $request['message']['sender']['user_id'].') ' .
+            $request['message']['sender']['first_name'].' ' .
+            $request['message']['sender']['last_name'].': ' .
+            $request['message']['body']['text'],
             null,
             MessageFormat::Markdown
         );
