@@ -6,11 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\MaxBotUser;
 use BushlanovDev\MaxMessengerBot\Api;
 use BushlanovDev\MaxMessengerBot\Enums\MessageFormat;
-use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline\CallbackButton;
-use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline\LinkButton;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline\RequestContactButton;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Requests\InlineKeyboardAttachmentRequest;
-use Illuminate\Http\Request;
 
 class MaxBotRequestContactController extends Controller
 {

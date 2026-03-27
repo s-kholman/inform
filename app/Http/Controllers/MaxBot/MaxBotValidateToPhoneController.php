@@ -8,8 +8,6 @@ use App\Models\MaxBotUser;
 use App\Models\Registration;
 use BushlanovDev\MaxMessengerBot\Api;
 use BushlanovDev\MaxMessengerBot\Enums\MessageFormat;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class MaxBotValidateToPhoneController extends Controller
 {
@@ -24,7 +22,7 @@ class MaxBotValidateToPhoneController extends Controller
                 ->where('activation', true)
                 ->first()
             ;
-//empty($message['body']['attachments'][0]['payload']['vcf_info']
+
             if (!empty($registration)){
                 $maxUser = MaxBotUser::query()
                     ->where('max_user_id', $message['body']['attachments'][0]['payload']['max_info']['user_id'])
@@ -52,6 +50,14 @@ class MaxBotValidateToPhoneController extends Controller
                     $message['body']['attachments'][0]['payload']['max_info']['first_name']. ' '.
                     $message['body']['attachments'][0]['payload']['max_info']['last_name']. ' '.
                     ', телефон ' . $validate['phone'],
+                    null,
+                    MessageFormat::Markdown
+                );
+
+                $api->sendMessage(
+                    $message['body']['attachments'][0]['payload']['max_info']['user_id'],
+                    null,
+                    'Бот не смог идентифицировать вас автоматически, напишите в чат ваше ФИО и администратор свяжется с вами',
                     null,
                     MessageFormat::Markdown
                 );

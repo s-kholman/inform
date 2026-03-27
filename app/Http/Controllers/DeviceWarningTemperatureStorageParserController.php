@@ -35,12 +35,13 @@ class DeviceWarningTemperatureStorageParserController extends Controller
 
         if (!empty($parser)) {
 
-            $users = User::with(['roles', 'Registration.MaxBotUser'])->get()
-                ->filter(fn($user) => $user->roles->where('name', '=', $parser->role->name)->toArray()
-                );
+            $users = User::with(['roles', 'Registration.MaxBotUser'])
+                ->get()
+                ->filter(fn($user) => $user->roles->where('name', '=', $parser->role->name)
+                    ->toArray())
+            ;
 
             if ($users->isNotEmpty()) {
-
                 $sms = new SmsSend();
                 $maxBotSendMessage = new MaxBotSendMessageController();
 
@@ -61,15 +62,17 @@ class DeviceWarningTemperatureStorageParserController extends Controller
 
                 foreach ($users as $user) {
 
-                    $sms->send($user->Registration->phone, $message);
-
-                    if (!empty($user->Registration->MaxBotUser->max_user_id)){
-
+                    if (!empty($user->Registration->MaxBotUser->max_user_id) && $user->Registration->MaxBotUser->status_bot){
                         try {
                             $maxBotSendMessage($user->Registration->MaxBotUser, $message);
                         }catch (\Throwable $exception){
                             Log::warning('Error send message MAX: ' . $exception);
+                            $sms->send($user->Registration->phone, $message);
                         }
+
+                    } else {
+
+                        $sms->send($user->Registration->phone, $message);
 
                     }
 
