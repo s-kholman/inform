@@ -13,5 +13,6 @@ class MaxBotUser extends Model
             'last_name',
             'registration_id',
             'description',
+            'status_bot',
         ];
 }

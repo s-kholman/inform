@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\v1\MaxBot;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\MaxBot\MaxBotStartedController;
+use App\Http\Controllers\MaxBot\MaxBotStatusController;
 use App\Http\Controllers\MaxBot\MaxBotValidateToPhoneController;
 use App\Http\Controllers\MaxBot\MaxBotMessageController;
 use BushlanovDev\MaxMessengerBot\Laravel\MaxBotManager;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MaxBotWebHookController extends Controller
 {
@@ -24,11 +25,21 @@ class MaxBotWebHookController extends Controller
 
         }
 
+      //  Log::info(json_encode($request->post()));
+
         if (!empty($request->post('update_type')) && $request->post('update_type') == 'bot_started') {
 
-            $maxBotUserController = new MaxBotStartedController();
+            $maxBotUserController = new MaxBotStatusController();
 
-            $maxBotUserController($request);
+            $maxBotUserController($request, true);
+
+        }
+
+        if (!empty($request->post('update_type')) && $request->post('update_type') == 'bot_stopped') {
+
+            $maxBotUserController = new MaxBotStatusController();
+
+            $maxBotUserController($request, false);
 
         }
 
