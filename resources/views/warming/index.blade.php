@@ -6,19 +6,50 @@
 
     <div class="container gx-4">
 
-            <div class="row">
-                <div class="col-4 p-3"><a class="btn btn-outline-success" href="{{route('warming.create')}}">Внести
-                        прогрев</a></div>
+        <div class="row">
+            <div class="col-4 p-3"><a class="btn btn-outline-success" href="{{route('warming.create')}}">Внести
+                    прогрев</a></div>
+        </div>
+    </div>
+
+    <div class="container gx-4">
+        <div class="row text-center text-wrap text-break">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    @foreach($warming as $filial_id => $name)
+                        @if($loop->first)
+                            <button class="nav-link active" id="nav-{{$name[0]->storageName->filial->id}}-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#nav-{{$name[0]->storageName->filial->id}}" type="button"
+                                    role="tab"
+                                    aria-controls="nav-{{$name[0]->storageName->filial->id}}"
+                                    aria-selected="true">{{$name[0]->storageName->filial->name}}</button>
+                        @else
+                            <button class="nav-link" id="nav-{{$name[0]->storageName->filial->id}}-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#nav-{{$name[0]->storageName->filial->id}}" type="button"
+                                    role="tab"
+                                    aria-controls="nav-{{$name[0]->storageName->filial->id}}"
+                                    aria-selected="false">{{$name[0]->storageName->filial->name}}</button>
+                        @endif
+                    @endforeach
                 </div>
-            </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                @foreach($warming as $name)
+                    @if($loop->first)
+                        <div class="tab-pane fade show active" id="nav-{{$name[0]->storageName->filial->id}}"
+                             role="tabpanel"
+                             aria-labelledby="nav-{{$name[0]->storageName->filial->id}}-tab">
 
-        <div class="container gx-4">
-            <div class="row">
+                        {{--</div>--}}
+                    @else
+                        <div class="tab-pane fade " id="nav-{{$name[0]->storageName->filial->id}}" role="tabpanel"
+                             aria-labelledby="nav-{{$name[0]->storageName->filial->id}}-tab">
 
+                        {{--</div>--}}
 
-               <div class="col-xl-10">
-                        @foreach($warming as $filial_id => $name)
-                            {{\App\Models\filial::query()->where('id', $filial_id)->value('name')}} <br>
+                    @endif
                             @foreach($name as $f)
                                 @if($loop->first)
                                     <table class="table table-bordered">
@@ -45,9 +76,10 @@
                                             <td>
                                                 @forelse($f->warmingControl as $control)
                                                     @if($control->level == 1)
-                                                {{$control->user->Registration->last_name}}:
-                                                ({{\Carbon\Carbon::parse($control->created_at)->translatedFormat('d.m.Y')}}) -
-                                                "{{$control->text}}"
+                                                        {{$control->user->Registration->last_name}}:
+                                                        ({{\Carbon\Carbon::parse($control->created_at)->translatedFormat('d.m.Y')}}
+                                                        ) -
+                                                        "{{$control->text}}"
                                                         <br>
                                                     @endif
                                                 @empty
@@ -58,7 +90,8 @@
                                                 @forelse($f->warmingControl as $control)
                                                     @if($control->level == 2)
                                                         {{$control->user->Registration->last_name}}:
-                                                        ({{\Carbon\Carbon::parse($control->created_at)->translatedFormat('d.m.Y')}})
+                                                        ({{\Carbon\Carbon::parse($control->created_at)->translatedFormat('d.m.Y')}}
+                                                        )
                                                         "{{$control->text}}"
                                                         <br>
                                                     @endif
@@ -90,16 +123,18 @@
                                             </td>
                                         </tr>
                                         </tbody>
-                                        @if($loop->last)
+                                @if($loop->last)
                                     </table>
-                           @endif
+                                @endif
 
                             @endforeach
-                        @endforeach
-                    </div>
-                </div>
+                        </div>
+                @endforeach
             </div>
+
+
         </div>
+    </div>
     </div>
 @endsection('info')
 @section('script')

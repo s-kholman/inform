@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\harvest\HarvestAction;
 use App\Http\Requests\WarmingRequest;
 use App\Models\StorageName;
 use App\Models\Warming;
@@ -10,12 +11,13 @@ use Illuminate\Support\Facades\Auth;
 
 class WarmingController extends Controller
 {
-    public function index()
+    public function index(HarvestAction $harvestAction)
     {
         $warming = Warming::query()
-            ->with(['warmingControl', 'warmingControl.user.Registration'])
+            ->with(['warmingControl', 'warmingControl.user.Registration', 'storageName.filial'])
+            ->where('harvest_year_id', $harvestAction->HarvestYear(now()))
             ->get()
-            ->sortBy('warming_date')
+            ->sortBy(['storageName.filial.name','warming_date'])
             ->groupBy('storageName.filial_id')
         ;
         return view('warming.index', ['warming' => $warming]);
@@ -47,7 +49,7 @@ class WarmingController extends Controller
         return redirect()->route('warming.index');
     }
 
-    public function store(WarmingRequest $warmingRequest)
+    public function store(WarmingRequest $warmingRequest, HarvestAction $harvestAction)
     {
         $warmingModel = Warming::query()
             ->create([
@@ -56,6 +58,7 @@ class WarmingController extends Controller
                 'warming_date' => $warmingRequest['warming_date'],
                 'sowing_date' => $warmingRequest['sowing_date'],
                 'comment' => $warmingRequest['comment'],
+                'harvest_year_id' => $harvestAction->HarvestYear(now()),
             ]);
 
         $this->warmingControl($warmingModel, $warmingRequest);
