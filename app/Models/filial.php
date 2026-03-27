@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\svyaz;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 
 class filial extends Model
 {
     protected $fillable = ['name'];
-    public function Pole(){
+
+    public function Pole(): HasOne
+    {
         return $this->hasMany(Pole::class);
     }
 
-    public function Registration(){
+    public function Registration(): HasMany
+    {
         return $this->hasMany(Registration::class);
     }
 
