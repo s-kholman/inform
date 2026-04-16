@@ -28,6 +28,10 @@ use App\Http\Controllers\MachineController;
 use App\Http\Controllers\MaxBot\MaxBotTestController;
 use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
+use App\Http\Controllers\ObjectControl\ObjectControlController;
+use App\Http\Controllers\ObjectControl\ObjectControlPointController;
+use App\Http\Controllers\ObjectControl\ObjectNameController;
+use App\Http\Controllers\ObjectControl\ObjectTypeController;
 use App\Http\Controllers\PassFilialController;
 use App\Http\Controllers\PeatController;
 use App\Http\Controllers\PeatExtractionController;
@@ -78,6 +82,8 @@ use App\Http\Controllers\WarmingController;
 use App\Http\Controllers\WateringController;
 use App\Http\Controllers\Yandex\AliceController;
 use App\Http\Middleware\VerifyCsrfToken;
+use App\Models\ObjectControl\ObjectControlPoint;
+use App\Models\ObjectControl\ObjectName;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -112,7 +118,7 @@ Route::post('esp/upload/bin', [DeviceESPUpdateController::class, 'store'])->name
 Route::get('esp/settings', [DeviceESPSettingsController::class, 'show'])->name('esp.settings.show')->middleware('can:DeviceESP.user.view');
 Route::post('esp/settings/store', [DeviceESPSettingsController::class, 'store'])->name('esp.settings.store')->middleware('can:DeviceESP.user.view');
 
-Route::get('product/monitoring/devices', [ProductMonitoringDeviceController::class, 'show'])->name('product.monitoring.devices.show');
+//Route::get('product/monitoring/devices', [ProductMonitoringDeviceController::class, 'show'])->name('product.monitoring.devices.show');
 Route::get('product/monitoring/devices/show/storage/{id}/year/{year}', [ProductMonitoringDeviceController::class, 'showStorage'])->name('product.monitoring.devices.show.storage');
 Route::get('product/monitoring/devices/show/storage/{id}/year/{year}/day/{day}', [ProductMonitoringDeviceController::class, 'showDay'])->name('product.monitoring.devices.show.storage.day');
 Route::delete('product/monitoring/devices/destroy/{productMonitoringDevice}', [ProductMonitoringDeviceController::class, 'destroy'])->name('product.monitoring.devices.destroy');
@@ -311,10 +317,6 @@ Route::get('/printers', [PrinterController::class, 'index'])->name('Printer.inde
 Route::get('/printer/{id}/show/{currentStatus}', [PrinterController::class, 'show'])->name('printer.show')->middleware('can:viewAny, App\Models\administrator');
 Route::post('/printers', [PrinterController::class, 'index'])->name('printer.toDayGet')->middleware('can:viewAny, App\Models\administrator');
 
-//Route::get('/daily', [PrinterController::class, 'daily']);
-//Route::get('/dailyone', [PrinterController::class, 'dailyone']);
-//Route::get('/job', [PrinterController::class, 'job']);
-
 Route::view('/reference', 'printer.reference');
 
 Route::resource('type_field_work', TypeFieldWorkController::class)->middleware('can:viewAny, App\Models\administrator');
@@ -332,16 +334,7 @@ Route::get('/pass/index', [PassFilialController::class, 'index'])->middleware('c
 Route::get('/pass/check', [PassFilialController::class, 'check']);
 Route::post('/pass/store', [PassFilialController::class, 'store'])->middleware('can:PassFilial.completed.create')->name('pass.filial.store');
 
-Route::get('test', \App\Http\Controllers\TestController::class);
-
-//Route::get('test', App\Http\Controllers\TermoPrinter\TermoPrinterController::class)->middleware('auth');
-
-/*$text['body'] = 'Вы будите получать уведомления об этапах выполнения.';
-$text['status'] = 'зарегистрирована';
-$text['identification'] = 'identification';
-Route::get('/test', function () use ($text) {
-    return new App\Mail\RequestSSLMail('Имя Я.К.', $text);
-});*/
+//Route::get('test', \App\Http\Controllers\TestController::class);
 
 Route::get('/card/{messages?}', [CardsController::class, 'index'])->name('card.index')->middleware('can:Card.user.view');
 Route::post('/createDischarge', [CardsController::class, 'createDischarge'])->name('card.loadInformation')->middleware('can:Card.user.view');
@@ -413,6 +406,18 @@ Route::post('vpn/access/request', IKEv2AccessRequestToCabinet::class)->middlewar
 Route::group(['middleware' => ['can:super-user']], function () {
     Route::get('max/bot', [MaxBotTestController::class, 'index']);
 });
+
+Route::group(['middleware' => ['can:ControlObject.user.view']], function (){
+    Route::get('object/control/index/', [ObjectControlController::class, 'index'])->name('object.control.index');
+    Route::post('object/control/index/', [ObjectControlController::class, 'index'])->name('object.control.index');
+    Route::get('object/control/create', [ObjectControlController::class, 'create'])->name('object.control.create')->middleware('can:ControlObject.completed.create');
+    Route::post('object/control/store', [ObjectControlController::class, 'store'])->name('object.control.store')->middleware('can:ControlObject.completed.store');
+    Route::get('object/control/name/index', [ObjectNameController::class, 'index'])->name('object.control.name.index')->middleware('can:super-user');
+    Route::post('object/control/name/store', [ObjectNameController::class, 'store'])->name('object.control.name.store')->middleware('can:super-user');
+    Route::resource('object_control_type', ObjectTypeController::class)->middleware('can:super-user');
+    Route::resource('object_control_point', ObjectControlPointController::class)->middleware('can:super-user');
+});
+
 
 Auth::routes();
 

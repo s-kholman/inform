@@ -11,7 +11,7 @@ class filial extends Model
 {
     protected $fillable = ['name'];
 
-    public function Pole(): HasOne
+    public function Pole(): HasMany
     {
         return $this->hasMany(Pole::class);
     }

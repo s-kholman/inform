@@ -18,7 +18,6 @@
                 <select name="select" id="txtSelect" class="form-select @error('select') is-invalid @enderror">
                     <option value="">Выберите значение</option>
                     @foreach($parent_value as $item)
-
                         <option value="{{ $item->id }}">  {{ $item->name }} </option>
                     @endforeach
                 </select>
@@ -27,14 +26,16 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
+                <div class="mt-2">
+                    <input type="submit" class="btn btn-primary" value="Сохранить">
+                </div>
 
-                <input type="submit" class="btn btn-primary" value="Сохранить">
             </form>
     </div>
     @forelse($value as $device)
-        <div class="row">
-            <div class="col-3 border border-1">{{collect($device)[$const['parent_name']]['name']}}</div>
-            <div class="col-3 border border-1"><a href="\{{$const['route']}}\{{$device->id}}\edit">{{$device->name}}</a></div>
+        <div class="row mt-2">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-4 col-xxl-4 border border-1">{{$device[$const['parent_name']]['name'] ?? '1'}}</div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-4 col-xxl-4 border border-1"><a href="\{{$const['route']}}\{{$device->id}}\edit">{{$device->name}}</a></div>
         </div>
     @empty
     @endforelse
