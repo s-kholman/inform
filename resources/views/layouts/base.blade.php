@@ -9,6 +9,9 @@
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+
 </head>
 <body>
 
@@ -122,6 +125,18 @@
                             <i class="fs-4 bi-thermometer"></i> <span class="ms-1 d-none d-sm-inline">Мониторинг температуры</span></a>
                     </li>
                     @endcan
+
+                    @can('ControlObject.user.view')
+                        <li class="nav-item">
+{{--                            @can('ControlObject.completed.store')
+                                <a class="nav-link align-middle px-0" href="/object/control/create" class="nav-link px-0">--}}
+{{--                                    @elsecan('ControlObject.user.view')--}}
+                                <a class="nav-link align-middle px-0" href="/object/control/index" class="nav-link px-0">
+{{--                                    @endcan--}}
+                                <i class="fs-4 bi-building-check"></i> <span class="ms-1 d-none d-sm-inline">Контроль объектов</span></a>
+                        </li>
+                    @endcan
+
                     <li class="nav-item">
                         <a class="nav-link align-middle px-0" href="/peat" class="nav-link px-0">
                             <i class="fs-4 bi-square-fill"></i> <span class="ms-1 d-none d-sm-inline">Торф</span></a>
@@ -178,6 +193,15 @@
                             <li>
                                 <a href="/activation" class="nav-link px-0"> <span class="d-none d-sm-inline">Активация пользователей</span></a>
                             </li>
+                            <li>
+                                <a href="/object/control/name/index" class="nav-link px-0"> <span class="d-none d-sm-inline">Объекты контроля</span></a>
+                            </li>
+                            <li>
+                                <a href="/object_control_type" class="nav-link px-0"> <span class="d-none d-sm-inline">Типы объектов контроля</span></a>
+                            </li>
+                            <li>
+                                <a href="/object_control_point" class="nav-link px-0"> <span class="d-none d-sm-inline">Точки объектов контроля</span></a>
+                            </li>
 
                             <li>
                                 <a href="/storagename" class="nav-link px-0"> <span class="d-none d-sm-inline">Склад</span></a>
@@ -230,6 +254,7 @@
 @yield('script')
 <script src="/bootstrap/js/bootstrap.js"></script>
 <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script> <!-- Русская локализация -->
 </body>
 </html>

@@ -18,6 +18,7 @@
         "evilfreelancer/routeros-api-php": "^1.5",
         "guzzlehttp/guzzle": "^7.2",
         "icehouse-ventures/laravel-chartjs": "^4.2",
+        "kerigard/laravel-lang-ru": "^2.1",
         "laravel/framework": "^12",
         "laravel/sanctum": "^4",
         "laravel/tinker": "^2.8",
