@@ -6,10 +6,22 @@
     <form action="{{route('role.store')}}" method="post">
         <div class="col-sm-6">
             @csrf
-            <label for="model">Введите название модели</label>
+            <label for="model">Введите название модели / роли</label>
             <input name="model" id="model"
                    class="form-control @error('model') is-invalid @enderror">
             @error('model')
+            <span class="invalid-feedback">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
+        </div>
+
+        <div class="col-sm-6">
+            @csrf
+            <label for="description">Описание роли</label>
+            <input name="description" id="model"
+                   class="form-control @error('description') is-invalid @enderror">
+            @error('description')
             <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>

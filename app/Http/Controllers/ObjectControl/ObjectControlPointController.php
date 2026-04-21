@@ -15,7 +15,7 @@ class ObjectControlPointController extends Controller
     private const ERROR_MESSAGES = [
         'required' => 'Заполните это поле',
         'numeric' => 'Выберите из списка',
-        'max' => 'Значение не должно быть длинне :max символов',
+        'max' => 'Значение не должно быть длине :max символов',
         'unique' => 'Значение не уникально'
     ];
 
@@ -25,7 +25,7 @@ class ObjectControlPointController extends Controller
     ];
 
     private const ADD_VALIDATOR = [
-        'name' => 'required|max:255|unique:szrs,name',
+        'name' => 'required|max:255|unique:object_control_points,name',
         'select' => 'numeric'
     ];
     private const TITLE = [
@@ -86,7 +86,7 @@ class ObjectControlPointController extends Controller
                 ->create(
                     [
                         'name' => $validated['name'],
-                        'filial_id' => $validated['select']
+                        'object_type_id' => $validated['select']
                     ]
                 );
         }

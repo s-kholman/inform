@@ -26,7 +26,7 @@
                     <th>ФИО</th>
                     @forelse($roles as $role)
                         @if($role->name <> 'name' && $role->name <> 'user_id')
-                            <th class="vertical-align"><label class="rotate">{{$role->name}}</label></th>
+                            <th class="vertical-align"><label class="rotate">{{$role->description ?? $role->name}}</label></th>
                         @endif
                     @empty
                     @endforelse

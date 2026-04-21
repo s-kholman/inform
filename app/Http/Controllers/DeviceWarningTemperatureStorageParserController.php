@@ -39,10 +39,14 @@ class DeviceWarningTemperatureStorageParserController extends Controller
                 ->get()
                 ->filter(fn($user) => $user->roles->where('name', '=', $parser->role->name)
                     ->toArray())
+                ->filter(fn($user) => $user->roles->where('name', '=', 'DeviceWarningTemperatureStorage.user')
+                    ->toArray())
             ;
 
             if ($users->isNotEmpty()) {
+
                 $sms = new SmsSend();
+
                 $maxBotSendMessage = new MaxBotSendMessageController();
 
                 $message = $parser->storageName->name;

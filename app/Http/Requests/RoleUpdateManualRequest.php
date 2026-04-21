@@ -22,7 +22,8 @@ class RoleUpdateManualRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role.*' => 'required|string'
+            'user' => 'required|exists:users,id',
+            'role.*' => 'required|exists:roles,id',
         ];
     }
 }

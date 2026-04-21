@@ -8,7 +8,10 @@
             <h5 class="card-title">Добавление ролей</h5>
             <ol class="list-group list-group-numbered">
                 <li class="list-group-item card-text">
-                    Роли добавляем в справочнике <a href="/role"> Создать роли</a>. Роль должна начинаться "DeviceWarningTemperatureStorage" + название филиала (HRAN, LIPIHA). Тип роли "User"
+                    Роли добавляем в справочнике <a href="/role"> Создать роли</a>. Роль должна начинаться "MessageSendFilial_" + ID филиала. Тип роли "User"
+                </li>
+                <li class="list-group-item card-text">
+                    На пользователя назначаем общею роль из п.1 (по филиалу) и роль "DeviceWarningTemperatureStorage.user" & "Оповещение о температуре в боксе"
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
@@ -41,7 +44,7 @@
             <select name="role" id="role" class="form-select @error('role') is-invalid @enderror" disabled>
                 <option value="0"></option>
                 @forelse($role as $item)
-                    <option value="{{$item->id}}"> {{$item->name}}</option>
+                    <option value="{{$item->id}}">{{$item->description ?? $item->name}}</option>
                 @empty
                     <option value="">Записи не найдены</option>
                 @endforelse
@@ -114,7 +117,7 @@
                     <td>{{$item->temperature_max}}</td>
                     <td>{{$item->temperature_min}}</td>
                     <td @if($item->active)style="color: #1c7430"@else style="color: #c92828"@endif>{{$item->active ? 'Включено' : 'Выключено'}}</td>
-                    <td>{{$item->role->name}}</td>
+                    <td>{{$item->role->description ?? $item->role->name}}</td>
                     <td>
                         <div class="dropdown">
                             <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle"
@@ -154,7 +157,7 @@
                     @endif
                     <tr>
                         <td>{{$loop->iteration}}</td>
-                        <td>{{$item->name}}</td>
+                        <td>{{$item->description ?? $item->name}}</td>
                         <td>
                             @forelse($item->Users as $fio )
                                 {{$fio->registration->last_name}}<br>

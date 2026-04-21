@@ -379,13 +379,16 @@ Route::get('prikopki/year/{year}/pole/{pole}', [PrikopkiController::class, 'Show
 
 Route::group(['middleware' => ['can:super-user']], function () {
     Route::resource('role', RoleController::class);
-    Route::post('updateRoles',[RoleController::class, 'updateRoles'])->name('roles.update.admin');
-    Route::get('showRoles',[RoleController::class, 'showRoles'])->name('roles.show.admin');
+    //Route::post('updateRoles',[RoleController::class, 'updateRoles'])->name('roles.update.admin');
+    //Route::get('showRoles',[RoleController::class, 'showRoles'])->name('roles.show.admin');
     Route::post('user/role/destroy/{registration}', [RoleUserController::class, 'userRoleDestroy'])->name('user.role.destroy');
     Route::post('user/role/add/{registration}', [RoleUserController::class, 'userRoleAdd'])->name('user.role.add');
     Route::get('role', [RoleController::class, 'index'])->name('role.index');
     Route::get('permissions/role', [RoleController::class, 'permissions'])->name('permissions.role.index');
     Route::post('permissions/role/add', [RoleController::class, 'permissionsAdd'])->name('permissions.role.add');
+    //
+    Route::get('roles/user', [RoleController::class, 'rolesUserIndex'])->name('roles.user.index');
+    Route::post('roles/user/store', [RoleController::class, 'rolesUserStore'])->name('roles.user.store');
 });
 
 

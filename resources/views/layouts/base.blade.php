@@ -235,7 +235,7 @@
                             </li>
 
                             <li>
-                                <a href="{{route('roles.show.admin')}}" class="nav-link px-0"> <span class="d-none d-sm-inline">Назначить права пользователям</span></a>
+                                <a href="{{route('roles.user.index')}}" class="nav-link px-0"> <span class="d-none d-sm-inline">Назначить права пользователям</span></a>
                             </li>
 
                             @endcan
