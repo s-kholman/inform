@@ -23,6 +23,10 @@ class MaxBotValidateToPhoneController extends Controller
                 ->first()
             ;
 
+            $api = new Api(env('MAXBOT_ACCESS_TOKEN'));
+
+            $this->sendMessageAdmin($message, $api, $validate);
+
             if (!empty($registration)){
                 $maxUser = MaxBotUser::query()
                     ->where('max_user_id', $message['body']['attachments'][0]['payload']['max_info']['user_id'])
@@ -40,19 +44,6 @@ class MaxBotValidateToPhoneController extends Controller
                 }
 
             } else {
-                $api = new Api(env('MAXBOT_ACCESS_TOKEN'));
-
-                $api->sendMessage(
-                    env('MAXBOT_ADMIN_USER'),
-                    null,
-                    'В чат бота отправили контакт id '.
-                    $message['body']['attachments'][0]['payload']['max_info']['user_id']. ' '.
-                    $message['body']['attachments'][0]['payload']['max_info']['first_name']. ' '.
-                    $message['body']['attachments'][0]['payload']['max_info']['last_name']. ' '.
-                    ', телефон ' . $validate['phone'],
-                    null,
-                    MessageFormat::Markdown
-                );
 
                 $api->sendMessage(
                     $message['body']['attachments'][0]['payload']['max_info']['user_id'],
@@ -63,5 +54,20 @@ class MaxBotValidateToPhoneController extends Controller
                 );
             }
         }
+    }
+
+    private function sendMessageAdmin($message, $api, $validate): void
+    {
+        $api->sendMessage(
+            env('MAXBOT_ADMIN_USER'),
+            null,
+            'В чат бота отправили контакт id '.
+            $message['body']['attachments'][0]['payload']['max_info']['user_id']. ' '.
+            $message['body']['attachments'][0]['payload']['max_info']['first_name']. ' '.
+            $message['body']['attachments'][0]['payload']['max_info']['last_name']. ' '.
+            ', телефон ' . $validate['phone'],
+            null,
+            MessageFormat::Markdown
+        );
     }
 }

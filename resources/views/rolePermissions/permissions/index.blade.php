@@ -12,7 +12,7 @@
             <select name="role" class="form-select" aria-label="Все роли" id="role">
                 <option value="0">Выберите роль</option>
                 @forelse(\Spatie\Permission\Models\Role::all() as $role)
-                    <option value="{{$role->id}}">{{$role->name}}</option>
+                    <option value="{{$role->id}}">{{$role->name}} {{$role->description}}</option>
                 @empty
                 @endforelse
             </select>

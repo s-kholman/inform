@@ -7,7 +7,9 @@ use App\Http\Requests\RoleRequest;
 use App\Http\Requests\RoleUpdateManualRequest;
 use App\Models\User;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
@@ -16,6 +18,65 @@ use Spatie\Permission\PermissionRegistrar;
 
 class RoleController extends Controller
 {
+    public function rolesUserIndex(): Response
+    {
+        $users = User::query()
+            ->with(['Registration', 'Roles'])
+            ->get()
+            ->where('Registration.activation', true)
+            ->sortBy('Registration.last_name')
+            ;
+
+        $roles = Role::query()
+           // ->where('name', '<>', 'super-user')
+            ->get()
+            ->groupBy('id')
+            ;
+
+        return response()->view('rolePermissions.role.show_user',
+            [
+                'users' => $users,
+                'roles' => $roles,
+            ]
+        );
+    }
+
+    public function rolesUserStore(RoleUpdateManualRequest $manualRequest): RedirectResponse
+    {
+
+        DB::beginTransaction();
+
+        try {
+
+            DB::table('model_has_roles')
+                ->where('model_id', $manualRequest['user'])
+                ->delete();
+
+            foreach ($manualRequest['role'] as $value) {
+
+                DB::table('model_has_roles')->insert(
+                    [
+                        'role_id' => $value,
+                        'model_type' => 'App\Models\User',
+                        'model_id' => $manualRequest['user'],
+                    ]
+                );
+            }
+
+            app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
+
+            DB::commit();
+
+        } catch (QueryException $exception) {
+
+            DB::rollBack();
+
+            return redirect()->route('roles.user.index');
+
+        }
+
+        return redirect()->route('roles.user.index');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -41,7 +102,12 @@ class RoleController extends Controller
     {
 
         foreach ($roleRequest['roles'] as $role) {
-            Role::create(['name' => $roleRequest['model'] . '.' . $role]);
+            Role::create(
+                [
+                    'name' => $roleRequest['model'] . '.' . $role,
+                    'guard_name' => 'web',
+                    'description' => $roleRequest->description,
+                ]);
         }
 
         return redirect()->route('role.index');

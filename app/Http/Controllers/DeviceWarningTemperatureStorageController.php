@@ -18,7 +18,7 @@ class DeviceWarningTemperatureStorageController extends Controller
 
         $role = Role::query()
             ->with('Users.Registration')
-            ->where('name', 'LIKE', 'DeviceWarningTemperatureStorage%')
+            ->where('name', 'LIKE', 'MessageSendFilial_%')
             ->get();
 
         $storageName = StorageName::query()

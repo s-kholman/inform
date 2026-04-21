@@ -118,10 +118,8 @@ class ObjectControlController extends Controller
     }
 
     public function store(Request $request): RedirectResponse
-        //public function store(ObjectControlRequest $request): RedirectResponse
-
     {
-        // dd($request->post());
+
         foreach ($request->post() as $key => $value) {
 
             if (str_contains($key, 'verified_')) {
@@ -156,41 +154,67 @@ class ObjectControlController extends Controller
     {
 
         $full = ObjectControl::query()
-            ->with(['filial', 'objectName', 'Pole', 'objectControlPoint'])
+            ->with(['filial', 'objectName.ObjectType.Role', 'Pole', 'objectControlPoint'])
             ->where('id', $objectControl->id)
-            ->first()
+            ->first();
+
+        $users = User::query()
+                ->with(['roles', 'Registration.MaxBotUser'])
+/*                ->with(['roles' => function ($query) use ($full) {
+                    $query->where('name', '=' , $full->objectName->ObjectType->Role->name);
+                }])*/
+                /*->select(
+                    [
+                        'users.id as user_id',
+                        'registrations.id as registrations_id',
+                        'max_bot_users.id as max_bot_users_id',
+                        'max_bot_users.status_bot as max_bot_users_status_bot',
+                        'roles.name as role_name',
+                    ])
+                ->leftJoin('registrations', 'users.id', '=', 'registrations.user_id')
+                ->leftJoin('max_bot_users', 'registrations.id', '=', 'max_bot_users.registration_id')
+                ->leftJoin('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+                ->leftJoin('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                ->where('max_bot_users.status_bot', true)
+                ->where('roles.name', 'MessageSendFilial_' . $full->filial_id . '.user')*/
+                ->get()
+            ->filter(fn($user) => $user->roles->where('name', '=', 'MessageSendFilial_' . $full->filial_id . '.user')
+                ->toArray())
+            ->filter(fn($user) => $user->roles->where('name', '=', $full->objectName->ObjectType->Role->name)
+                ->toArray())
         ;
 
-        $users = User::with(['roles', 'Registration.MaxBotUser'])
-            ->get()
-            ->filter(fn($user) => $user->roles->where('name', '=', 'objectControllAlarmMessageWater.user')
-                ->toArray());
+        if (!empty($users)) {
 
-        $message = 'Оповещение по объектам контроля: ' . PHP_EOL;
-        $message .= 'Филиал - **' . $full->filial->name .'**'. PHP_EOL;
-        $message .= 'Объект: ' . $full->objectName->name;
-        if (!empty($full->Pole)){
-            $message .= ' (' . $full->Pole->name. ')' . PHP_EOL;
-        } else {
-            $message .= PHP_EOL;
-        }
-        $message .= 'Точка контроля: ' . $full->objectControlPoint->name . PHP_EOL;
-        $message .= 'Сообщение : ' . $full->messages . PHP_EOL;
-        $message .= 'Дата: ' . Carbon::parse($full->date)->format('d.m.Y');
+            $message = 'Оповещение по объектам контроля: ' . PHP_EOL;
+            $message .= 'Филиал - **' . $full->filial->name . '**' . PHP_EOL;
+            $message .= 'Объект: ' . $full->objectName->name;
+            if (!empty($full->Pole)) {
+                $message .= ' (' . $full->Pole->name . ')' . PHP_EOL;
+            } else {
+                $message .= PHP_EOL;
+            }
+            $message .= 'Точка контроля: ' . $full->objectControlPoint->name . PHP_EOL;
+            $message .= 'Сообщение : ' . $full->messages . PHP_EOL;
+            $message .= 'Дата: ' . Carbon::parse($full->date)->format('d.m.Y');
 
-        foreach ($users as $user) {
+            foreach ($users as $user) {
 
-            if ($users->isNotEmpty()) {
+                if ($users->isNotEmpty()) {
 
-                $maxBotSendMessage = new MaxBotSendMessageController();
+                    $maxBotSendMessage = new MaxBotSendMessageController();
 
-                try {
-                    $maxBotSendMessage($user->Registration->MaxBotUser, $message);
-                } catch (\Throwable $exception) {
-                    Log::warning('Error send "Water" message MAX: ' . $exception);
+                    try {
+
+                        $maxBotSendMessage($user->Registration->MaxBotUser, $message);
+
+                    } catch (\Throwable $exception) {
+
+                        Log::warning('Error send "Water" message MAX: ' . $exception);
+
+                    }
                 }
             }
         }
-
     }
 }

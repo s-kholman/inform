@@ -43,7 +43,7 @@
                     </select>
                 </div>
 
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2 col-xxl-2 form-group">
+                <div class="col-xs-4 col-sm-4 col-md-5 col-lg-4 col-xl-3 col-xxl-3 form-group">
                     <label for="date_range">Диапазон дат:</label>
                     <input
                         type="text"
