@@ -27,7 +27,7 @@ class MaxBotStatusController extends Controller
                     ]
                 );
 
-            if ($status_bot){
+            if ($WebHook->post('update_type') == 'bot_started'){
 
                 $api->sendMessage(
                     env('MAXBOT_ADMIN_USER'),
@@ -43,8 +43,10 @@ class MaxBotStatusController extends Controller
 
                 $identificationUser = new MaxBotIdentificationUserController();
                 $identificationUser($maxBotUser);
-            } else {
 
+            }
+
+            if ($WebHook->post('update_type') == 'bot_stopped' &&  env('MAXBOT_ADMIN_USER') <> $maxUser['user_id']) {
 
                 $api->sendMessage(
                     env('MAXBOT_ADMIN_USER'),

@@ -107,8 +107,10 @@
         }
     }
 </style>
+<link rel="stylesheet" href="{{ asset('/scripts/maxBot/css/qrCodeShowModal.css') }}">
 @section('info')
     <div class="container">
+        @include('maxBot.qrBot')
         <div class="row  text-center">
             <div class="col-12 p-">
                 <p><h4>Отчет о температуре хранения продукции в боксах:</h4></p>
@@ -218,6 +220,8 @@
 
 @endsection('info')
 @section('script')
+    <script src="{{ asset('/scripts/sweetalert2/js/sweetalert2.all.js') }}"></script>
+    <script src="{{ asset('/scripts/maxBot/js/qrCodeShowModal.js') }}"></script>
     <script>
         // Get the modal
         let modal = document.getElementById("myModal");

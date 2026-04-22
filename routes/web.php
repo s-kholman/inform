@@ -25,6 +25,7 @@ use App\Http\Controllers\GuesController;
 use App\Http\Controllers\HarvestYearController;
 use App\Http\Controllers\HeightController;
 use App\Http\Controllers\MachineController;
+use App\Http\Controllers\MaxBot\MaxBotQrCodeController;
 use App\Http\Controllers\MaxBot\MaxBotTestController;
 use App\Http\Controllers\MidOidController;
 use App\Http\Controllers\NomenklatureController;
@@ -421,6 +422,7 @@ Route::group(['middleware' => ['can:ControlObject.user.view']], function (){
     Route::resource('object_control_point', ObjectControlPointController::class)->middleware('can:super-user');
 });
 
+Route::get('/qr-modal', [MaxBotQrCodeController::class, 'showQrModal'])->name('qr.modal');
 
 Auth::routes();
 

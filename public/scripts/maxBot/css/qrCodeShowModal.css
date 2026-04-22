@@ -1,0 +1,37 @@
+.qr-pulse-button {
+    background: #043dff;
+/*    max-height: 10px;
+    max-width: 10px;*/
+    color: white;
+    border: none;
+    padding: 5px 16px;
+    font-size: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 0 0 rgba(73, 113, 255, 0.7);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(116, 165, 255, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+    }
+}
+
+.inform-max-bot{
+    text-align: justify;
+    font-size: 12px;
+    background-color: #f3f3f3;
+}
+
+.qr-pulse-button:hover {
+    animation: none;
+    background: #3061ff;
+}
+
