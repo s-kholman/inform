@@ -14,5 +14,6 @@ class MaxBotUser extends Model
             'registration_id',
             'description',
             'status_bot',
+            'phone',
         ];
 }

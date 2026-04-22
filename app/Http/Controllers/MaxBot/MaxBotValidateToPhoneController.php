@@ -35,7 +35,8 @@ class MaxBotValidateToPhoneController extends Controller
                 if (!empty($maxUser)){
                     $maxUser->update(
                         [
-                            'registration_id' => $registration->id
+                            'registration_id' => $registration->id,
+                            'phone' => $validate['phone'],
                         ]
                     );
 
