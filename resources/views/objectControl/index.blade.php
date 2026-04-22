@@ -14,11 +14,15 @@
         background-color: #faa1a1; /* Устанавливает фон для элементов с классом */
     }
 </style>
+<link rel="stylesheet" href="{{ asset('/scripts/maxBot/css/qrCodeShowModal.css') }}">
 @section('info')
     <div class="container">
+        @include('maxBot.qrBot')
+        {{--<button id="showQrModalBtn" class="qr-pulse-button">Оповещение в MAX</button>--}}
         <form action="{{route('object.control.index')}}" method="POST">
             <div class="row justify-content-center text-center">
                 @csrf
+
                 <input hidden id="pole_id" name="pole_id" value="{{$pole_id}}">
                 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
                     <label for="dateSelect">Выберите филиал</label>
@@ -167,6 +171,10 @@
 
 @endsection('info')
 @section('script')
+
+    <script src="{{ asset('/scripts/sweetalert2/js/sweetalert2.all.js') }}"></script>
+    <script src="{{ asset('/scripts/maxBot/js/qrCodeShowModal.js') }}"></script>
+
     <script>
         const pole = {!! $poles !!};
         const pole_id = {!! $pole_id !!};
