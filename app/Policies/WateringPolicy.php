@@ -10,31 +10,25 @@ use Illuminate\Auth\Access\Response;
 
 class WateringPolicy
 {
-    private  RegistrationCheckAction $registrationCheckAction;
-
-    public function __construct()
-    {
-        $this->registrationCheckAction = new RegistrationCheckAction;
-    }
 
     public function myView (User $user): bool
     {
-        return $user->email == 'sergey@krimm.ru';
+        return $user->can('super-user.moonlighter');
     }
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $this->registrationCheckAction->check($user);
+        return $user->can('Watering.user.view');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Watering $watering): bool
+    public function view(User $user): bool
     {
-        return true;
+        return $user->can('Watering.user.view');
     }
 
     /**
@@ -42,7 +36,7 @@ class WateringPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->can('Watering.completed.create');
     }
 
     /**
@@ -50,7 +44,15 @@ class WateringPolicy
      */
     public function update(User $user, Watering $watering): bool
     {
-        return true;
+        return $user->can('Watering.completed.create');
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function store(User $user): bool
+    {
+        return $user->can('Watering.completed.store');
     }
 
     /**
@@ -59,9 +61,11 @@ class WateringPolicy
     public function delete(User $user, Watering $watering): bool
     {
         $createdMinutes = Carbon::now()->diffInMinutes($watering->created_at);
-        if (($createdMinutes <= 60 && $user->Registration->filial_id == $watering->filial_id) || ($user->email == 'sergey@krimm.ru')){
-            return true;
+
+        if (($createdMinutes <= 60 && $user->Registration->filial_id == $watering->filial_id) || ($user->can('super-user.moonlighter'))){
+            return $user->can('Watering.completed.delete');
         }
+
         return false;
     }
 

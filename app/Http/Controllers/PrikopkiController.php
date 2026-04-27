@@ -21,6 +21,8 @@ class PrikopkiController extends Controller
 
     public function index()
     {
+        $this->authorize('view', Prikopki::class);
+
         $prikopkis = Prikopki::query()
             ->with(['HarvestYear'])
             ->where('harvest_year_id', '<>', null)
@@ -33,6 +35,8 @@ class PrikopkiController extends Controller
 
     public function create(HarvestAction $harvestAction)
     {
+        $this->authorize('create', Prikopki::class);
+
         $sevooborot_arr = [];
         $filial_id = Auth::user()->Registration->filial_id;
 
@@ -65,6 +69,8 @@ class PrikopkiController extends Controller
 
     public function store(PrikopkiRequest $request)
     {
+        $this->authorize('store', Prikopki::class);
+
         $harvest_year = new HarvestAction();
         $model = Prikopki::query()
             ->create([
@@ -88,6 +94,8 @@ class PrikopkiController extends Controller
 
     public function show(Request $request)
     {
+        $this->authorize('show', Prikopki::class);
+
         $prikopkis = Prikopki::query()
             ->with(['sevooborot', 'PrikopkiSquare'])
             ->orderBy('date')
@@ -104,8 +112,10 @@ class PrikopkiController extends Controller
 
     public function destroy(Prikopki $prikopki)
     {
-        $this->authorize('delete', $prikopki);
+        $this->authorize('destroy', $prikopki);
+
         $prikopki->delete();
+
         return response()->json(['status' => true, "redirect_url" => url('prikopki')]);
     }
 

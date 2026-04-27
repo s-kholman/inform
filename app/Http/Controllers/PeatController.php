@@ -43,6 +43,8 @@ class PeatController extends Controller
 
     public function store(PeatRequest $request, HarvestAction $harvestAction)
     {
+        $this->authorize('store', Peat::class);
+
         Peat::query()->firstOrCreate(
             [
                 'date' => $request->date,
@@ -60,6 +62,7 @@ class PeatController extends Controller
     public function destroy(Peat $peat)
     {
         $this->authorize('delete', $peat);
+
         $peat->delete();
         return redirect()->route('peat.show', ['peat' => $peat->harvest_year_id]);
     }

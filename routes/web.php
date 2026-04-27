@@ -83,8 +83,6 @@ use App\Http\Controllers\WarmingController;
 use App\Http\Controllers\WateringController;
 use App\Http\Controllers\Yandex\AliceController;
 use App\Http\Middleware\VerifyCsrfToken;
-use App\Models\ObjectControl\ObjectControlPoint;
-use App\Models\ObjectControl\ObjectName;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -212,12 +210,9 @@ Route::resource('pole.sevooborot', SevooborotController::class)->middleware('aut
 /**
  * Новые формы и маршруты для полива
  */
-Route::post('watering/store',[WateringController::class, 'store'])->name('watering.store');
-Route::get('watering/index',[WateringController::class, 'index'])->middleware('auth');
-Route::get('watering/create',[WateringController::class, 'create'])->middleware('can:viewAny,App\Models\Watering');;
-Route::get('/watering/show/{filial_id}/{pole_id}',[WateringController::class, 'show'])->name('watering.show');
-Route::delete('/watering/destroy/{watering}', [WateringController::class, 'destroy'])->name('watering.destroy')->middleware('can:delete,watering');
-Route::get('/watering/edit/{watering}', [WateringController::class, 'edit'])->middleware('can:viewAny,App\Models\Watering');
+Route::resource('watering',WateringController::class);
+Route::get('/watering/{filial_id}/{pole_id}',[WateringController::class, 'show'])->name('watering.show.filial')->middleware('can:Watering.user.view');
+
 
 Route::get('/sokar', [SokarController::class, 'index'])->name('index.get');
 Route::resource('size', SizeController::class);
@@ -372,11 +367,11 @@ Route::delete('/sowing_control_potato/{sowing_control_potato}', [SowingControlPo
     ->middleware('can:delete,sowing_control_potato');
 });
 
-
-Route::resource('prikopki', PrikopkiController::class)->middleware('auth');
-Route::get('prikopki/year/{year}', [PrikopkiController::class, 'ShowYear'])->name('prikopki.showyear');
-Route::get('prikopki/year/{year}/pole/{pole}', [PrikopkiController::class, 'ShowYearPole'])->name('prikopki.year.pole');
-
+Route::group(['middleware' => ['can:Prikopki.user.view']], function () {
+    Route::resource('prikopki', PrikopkiController::class);
+    Route::get('prikopki/year/{year}', [PrikopkiController::class, 'ShowYear'])->name('prikopki.showyear');
+    Route::get('prikopki/year/{year}/pole/{pole}', [PrikopkiController::class, 'ShowYearPole'])->name('prikopki.year.pole');
+});
 
 Route::group(['middleware' => ['can:super-user']], function () {
     Route::resource('role', RoleController::class);
@@ -404,6 +399,7 @@ Route::group(['middleware' => ['can:Voucher.user.create']], function (){
 });
 
 Route::resource('warming', WarmingController::class);
+
 Route::resource('vpn', VpnInfoController::class)->middleware('can:VpnInfo.user.view');
 Route::post('vpn/access/request', IKEv2AccessRequestToCabinet::class)->middleware('can:VpnInfo.user.create')->name('vpn.access.request');
 

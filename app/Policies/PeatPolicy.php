@@ -2,40 +2,38 @@
 
 namespace App\Policies;
 
-use App\Actions\registration\RegistrationCheckAction;
 use App\Models\Peat;
 use App\Models\User;
 use Carbon\Carbon;
 
 class PeatPolicy
 {
-    private  RegistrationCheckAction $registrationCheckAction;
 
-    public function __construct()
+    public function view(User $user): bool
     {
-        $this->registrationCheckAction = new RegistrationCheckAction;
+        return $user->can('Peat.user.view');
     }
 
-    public function view(User $user)
+    public function viewAdmin(User $user): bool
     {
-        return $this->registrationCheckAction->check($user);
+        return $user->can('super-user.moonlighter');
     }
 
-    public function viewAdmin(User $user)
+    public function create(User $user): bool
     {
-        return $user->email == 'sergey@krimm.ru' ? true : false;
+        return $user->can('Peat.completed.create');
     }
 
-    public function create(User $user)
+    public function store(User $user): bool
     {
-        return $this->registrationCheckAction->check($user);
+        return $user->can('Peat.completed.store');
     }
 
-    public function delete(User $user, Peat $peat)
+    public function delete(User $user, Peat $peat): bool
     {
         $createdMinutes = Carbon::now()->diffInMinutes($peat->created_at);
         if (($createdMinutes <= 60 && $user->Registration->filial_id == $peat->filial_id)){
-            return true;
+            return $user->can('Peat.completed.delete');
         }
         return false;
     }

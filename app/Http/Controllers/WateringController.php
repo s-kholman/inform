@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 class WateringController extends Controller
 {
     public function index(){
+        $this->authorize('view', Watering::class);
+
         $pole = Watering::query()
             ->with(['Filial', 'Pole'])
             ->distinct('pole_id')
@@ -29,6 +31,8 @@ class WateringController extends Controller
     }
 
     public function show(Request $request, HarvestShow $harvestShow){
+
+        $this->authorize('view', Watering::class);
 
         $watering = Watering::query()
             ->with('HarvestYear')
@@ -60,6 +64,7 @@ class WateringController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Watering::class);
 
         $poles = Pole::query()
             ->where('filial_id', Auth::user()->FilialName->id)
@@ -73,6 +78,8 @@ class WateringController extends Controller
 
     public function store(WateringStoreRequest $watering, HarvestAction $harvestAction)
     {
+        $this->authorize('store', Watering::class);
+
         Watering::query()
             ->create([
                 'filial_id' => Auth::user()->FilialName->id,
@@ -86,17 +93,27 @@ class WateringController extends Controller
                 'comment' => $watering['comment'],
                 'harvest_year_id' => $harvestAction->HarvestYear($watering['date']),
             ]);
-        return redirect()->route('watering.show', ['filial_id' => Auth::user()->FilialName->id, 'pole_id' => $watering['pole']]);
+
+        return redirect()->route('watering.show.filial', ['filial_id' => Auth::user()->FilialName->id, 'pole_id' => $watering['pole']]);
     }
 
     public function destroy(Watering $watering)
     {
+        $this->authorize('delete', $watering);
+
         $watering->delete();
-        return response()->json(['status'=>true,"redirect_url"=>url('watering/show', ['filial_id' => $watering->filial_id, 'pole_id' => $watering->pole_id])]);
+
+        return response()->json(
+            [
+                'status'=>true,
+                "redirect_url"=>route('watering.show.filial', ['filial_id' => $watering->filial_id, 'pole_id' => $watering->pole_id])
+            ]);
     }
 
     public function edit(Watering $watering)
     {
+        $this->authorize('edit', Watering::class);
+
         return view('watering.edit', ['watering' => $watering]);
     }
 

@@ -95,7 +95,7 @@
                 </div>
                 <div class="col-8">
                     <a class="btn btn-outline-success"
-                       href="/watering/index">К списку полей</a>
+                       href="/watering">К списку полей</a>
                 </div>
             </div>
 

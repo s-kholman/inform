@@ -19,11 +19,13 @@
 
         <div class="row m-4">
             <div class="col-3">
-                <a class="btn btn-outline-success" href="/watering/index">Назад</a>
+                <a class="btn btn-outline-success" href="/watering">Назад</a>
             </div>
-            <div class="col-3">
-                <a class="btn btn-outline-success" href="/watering/create">Внести полив</a>
-            </div>
+            @can('Watering.completed.create')
+                <div class="col-3">
+                    <a class="btn btn-outline-success" href="/watering/create">Внести полив</a>
+                </div>
+            @endcan
         </div>
 
         <div class="row m-4">

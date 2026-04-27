@@ -5,9 +5,11 @@
 
     <div class="container gx-4">
         <div class="row">
+            @can('Prikopki.completed.create')
             <div class="col-4 p-3"><a class="btn btn-outline-success" href="{{route('prikopki.create')}}">Внести
                     прикопки</a></div>
             <div class="col-4 p-3"></div>
+            @endcan
         </div>
 
         <div class="row">

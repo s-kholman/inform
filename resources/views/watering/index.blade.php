@@ -5,9 +5,9 @@
 @section('info')
     <div class="container">
         <div class="row">
-            @can('viewAny', 'App\Models\watering')
+            @can('Watering.completed.create')
                 <div class="col-4 p-3"><a class="btn btn-outline-success" href="/watering/create">Внести полив</a></div>
-            @endcan
+
 
             <div class="col-4 p-3">
 
@@ -26,7 +26,7 @@
                 </div>
 
             </div>
-
+            @endcan
         </div>
 
         <div class="row">
@@ -34,7 +34,7 @@
                 <div class="col">
                     <b>{{$filial_name}}</b>
                     @foreach($pole as $pole_name => $temp)
-                        <br><a href="/watering/show/{{$temp[0]->filial_id}}/{{$temp[0]->pole_id}}">{{$pole_name}}</a>
+                        <br><a href="/watering/{{$temp[0]->filial_id}}/{{$temp[0]->pole_id}}">{{$pole_name}}</a>
                     @endforeach
                 </div>
             @empty

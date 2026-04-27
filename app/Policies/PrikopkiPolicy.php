@@ -2,38 +2,33 @@
 
 namespace App\Policies;
 
-use App\Actions\registration\RegistrationCheckAction;
 use App\Models\Prikopki;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Log;
 
 class PrikopkiPolicy
 {
 
-    public function __construct()
-    {
-        $this->registrationCheckAction = new RegistrationCheckAction;
-    }
-
     public function myView (User $user): bool
     {
-        return $user->email == 'sergey@krimm.ru';
+        return $user->can('super-user.moonlighter');
     }
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('Prikopki.user.view');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Prikopki $prikopki): bool
+    public function view(User $user): bool
     {
-        return true;
+        return $user->can('Prikopki.user.view');
     }
 
     /**
@@ -41,7 +36,15 @@ class PrikopkiPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->can('Prikopki.completed.create');
+    }
+
+    /**
+     * Determine whether the user can store models.
+     */
+    public function store(User $user): bool
+    {
+        return $user->can('Prikopki.completed.store');
     }
 
     /**
@@ -49,17 +52,19 @@ class PrikopkiPolicy
      */
     public function update(User $user, Prikopki $prikopki): bool
     {
-        return true;
+        return $user->can('Prikopki.completed.store');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Prikopki $prikopki): bool
+    public function destroy(User $user, Prikopki $prikopki): bool
     {
+
         $createdMinutes = Carbon::now()->diffInMinutes($prikopki->created_at);
-        if (($createdMinutes <= 60 && $user->Registration->filial_id == $prikopki->filial_id) || ($user->email == 'sergey@krimm.ru')){
-            return true;
+
+        if (($createdMinutes <= 60 && $user->Registration->filial_id == $prikopki->filial_id) || ($user->can('super-user.moonlighter'))){
+            return $user->can('Prikopki.completed.delete');
         }
         return false;
     }

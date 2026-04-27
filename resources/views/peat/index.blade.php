@@ -13,9 +13,11 @@
 
     <div class="container">
         <div class="row p-5">
+            @can('create', 'App\Models\Peat')
             <div class="col-4 text-center">
                 <a class="btn btn-info" href="/peat/create">Внести данные</a>
             </div>
+            @endcan
             @can('viewAdmin', 'App\Models\Peat')
             <div class="col-4 text-center">
                 <a class="btn btn-info" href="/extraction">Внести место добычи</a>
@@ -77,7 +79,7 @@
                                 @foreach($filial as $filial_id => $peat_extraction)
                                     @foreach($peat_extraction as $peat_extraction_id => $pole)
                                         @foreach($pole as $pole_id => $value)
-                                            @if(($value->harvest_year_id ?? false) && array_key_exists($value->harvest_year_id, $harvest_show) && $harvest_show[$value->harvest_year_id])
+                                            @if(($value->harvest_year_id ?? false) && array_key_exists($value->harvest_year_id, $harvest_show) && $harvest_show[$value->harvest_year_id] && \Illuminate\Support\Facades\Auth::user()->can('Peat.user.view'))
                                                 <td><a href="/peat/{{$value->id ?? 0}}/edit">{{$value->volume ?? null}}</a></td>
                                             @else
                                                 <td>{{$value->volume ?? null}}</td>

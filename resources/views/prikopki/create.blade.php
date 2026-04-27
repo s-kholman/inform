@@ -209,9 +209,12 @@
                 </span>
                 @enderror
 
-                <input type="submit" class="btn btn-primary" value="Сохранить">
+                <div class="mt-2">
+                    <input type="submit" class="btn btn-primary" value="Сохранить">
 
-                <a class="btn btn-info" href="/prikopki">Назад</a>
+                    <a class="btn btn-info" href="/prikopki">Назад</a>
+                </div>
+
             </form>
         </div>
     </div>

@@ -13,6 +13,8 @@ class WarmingController extends Controller
 {
     public function index(HarvestAction $harvestAction)
     {
+        $this->authorize('view', Warming::class);
+
         $warming = Warming::query()
             ->with(['warmingControl', 'warmingControl.user.Registration', 'storageName.filial'])
             ->where('harvest_year_id', $harvestAction->HarvestYear(now()))
@@ -25,16 +27,24 @@ class WarmingController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Warming::class);
+
         $storage_name = StorageName::query()->get()->sortBy('name');
+
         return view('warming.create', ['storage_name' => $storage_name]);
     }
 
     public function edit(Warming $warming)
     {
+        $this->authorize('edit', Warming::class);
+
         return view('warming.edit', ['warming' => $warming]);
     }
 
     public function update(WarmingRequest $warmingRequest, Warming $warming){
+
+        $this->authorize('update', Warming::class);
+
         $warming->update(
             [
                 'volume' => $warmingRequest['volume'],
@@ -51,6 +61,8 @@ class WarmingController extends Controller
 
     public function store(WarmingRequest $warmingRequest, HarvestAction $harvestAction)
     {
+        $this->authorize('update', Warming::class);
+
         $warmingModel = Warming::query()
             ->create([
                 'storage_name_id' => $warmingRequest['storage_name_id'],
@@ -68,6 +80,7 @@ class WarmingController extends Controller
 
     public function destroy(Warming $warming)
     {
+        $this->authorize('delete', $warming);
 
         $svyaz = WarmingControl::query()
             ->where('warming_id', $warming->id)

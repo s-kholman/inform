@@ -3,14 +3,16 @@
 
 @section('info')
     <div class="container gx-4">
-        <div class="row">
-            <div class="col-4 p-3"><a class="btn btn-outline-success" href="{{route('prikopki.create')}}">Внести
-                    прикопки</a></div>
-            <div class="col-4 p-3"></div>
-        </div>
+        @can('Prikopki.completed.create')
+            <div class="row">
+                <div class="col-4 p-3"><a class="btn btn-outline-success" href="{{route('prikopki.create')}}">Внести
+                        прикопки</a></div>
+                <div class="col-4 p-3"></div>
+            </div>
+        @endcan
         <div class="row">
             <table class="table table-bordered">
-                <caption class="caption-top text-center">Информация о прикопках <b>{{--{{$pole_name}}--}}</b></caption>
+                <caption class="caption-top text-center">Информация о прикопках</caption>
                 <thead>
                 <tr>
                     @foreach($prikopkis->groupBy('filial.name') as $filial => $value)
